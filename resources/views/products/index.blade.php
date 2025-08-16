@@ -1,0 +1,119 @@
+@extends('layouts.app')
+
+@section('title', 'Beauty Products - Premium Skincare, Makeup & Beauty Accessories | Zayn\'s Beauty')
+@section('description', 'Shop premium beauty products including skincare, makeup, and beauty accessories. Discover trending and featured products from top beauty brands. Free shipping on orders over KES 5,000.')
+@section('keywords', 'beauty products, skincare, makeup, beauty accessories, premium beauty, beauty brands, trending products, featured products')
+@section('canonical', request()->url())
+
+@section('og_type', 'website')
+@section('og_image', asset('images/og-image.jpg'))
+
+@section('breadcrumbs')
+    <a href="{{ route('home') }}">Home</a>
+    <span>/</span>
+    <span class="text-gray-500">Products</span>
+@endsection
+
+@section('structured_data')
+<script type="application/ld+json">
+{
+    "@@context": "https://schema.org",
+    "@@type": "CollectionPage",
+    "name": "Beauty Products",
+    "description": "Premium beauty products including skincare, makeup, and beauty accessories",
+    "url": "{{ request()->url() }}",
+    "mainEntity": {
+        "@@type": "ItemList",
+        "numberOfItems": {{ $products->count() }},
+        "itemListElement": [
+            @php
+                $items = [];
+                foreach($products as $index => $product) {
+                    $items[] = json_encode([
+                        '@type' => 'ListItem',
+                        'position' => $index + 1,
+                        'item' => [
+                            '@type' => 'Product',
+                            'name' => $product->name,
+                            'description' => $product->description ?? 'Premium beauty product',
+                            'url' => route('products.show', $product),
+                            'image' => \App\Helpers\ImageHelper::getProductImageUrl($product->image),
+                            'brand' => [
+                                '@type' => 'Brand',
+                                'name' => $product->brand->name ?? 'Zayn\'s Beauty'
+                            ],
+                            'category' => $product->category->name ?? 'Beauty Products',
+                            'offers' => [
+                                '@type' => 'Offer',
+                                'price' => $product->price,
+                                'priceCurrency' => 'KES',
+                                'availability' => 'https://schema.org/InStock',
+                                'url' => route('products.show', $product)
+                            ]
+                        ]
+                    ]);
+                }
+                echo implode(",\n            ", $items);
+            @endphp
+        ]
+    }
+}
+</script>
+@endsection
+
+@section('content')
+<div class="bg-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Page Header -->
+        <div class="mb-8">
+            @if(request('tag') === 'featured')
+                <h1 class="text-3xl font-bold text-gray-900 mb-4">Featured Products</h1>
+                <p class="text-gray-600">Discover our handpicked selection of premium beauty products</p>
+            @elseif(request('tag') === 'trending')
+                <h1 class="text-3xl font-bold text-gray-900 mb-4">Trending Products</h1>
+                <p class="text-gray-600">Most popular products loved by our customers</p>
+            @else
+                <h1 class="text-3xl font-bold text-gray-900 mb-4">All Products</h1>
+                <p class="text-gray-600">Discover our complete collection of premium beauty products</p>
+            @endif
+        </div>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <!-- Sidebar Filters -->
+            <div class="lg:col-span-1">
+                @include('components.product-filters')
+            </div>
+            
+            <!-- Products Grid -->
+            <div class="lg:col-span-3">
+                @if($products->count() > 0)
+                    <!-- Results Count -->
+                    <div class="mb-6">
+                        <p class="text-gray-600">Showing {{ $products->count() }} of {{ $products->total() }} products</p>
+                    </div>
+                    
+                    <!-- Products Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                        @foreach($products as $product)
+                            @include('components.product-card', ['product' => $product])
+                        @endforeach
+                    </div>
+                    
+                    <!-- Pagination -->
+                    <div class="mt-8">
+                        {{ $products->links() }}
+                    </div>
+                @else
+                    <div class="text-center py-12">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.47-.881-6.08-2.33" />
+                        </svg>
+                        <h3 class="mt-2 text-sm font-medium text-gray-900">No products found</h3>
+                        <p class="mt-1 text-sm text-gray-500">Try adjusting your search or filter criteria.</p>
+                    </div>
+                @endif
+            </div>
+        </div>
+    </div>
+</div>
+@endsection 
