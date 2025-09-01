@@ -19,12 +19,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Register settings helper globally
-        if (!function_exists('setting')) {
-            function setting($key, $default = null) {
-                return \App\Helpers\SettingsHelper::get($key, $default);
-            }
-        }
+        // Settings helper removed to avoid function redeclaration conflicts
 
         // Share contact information with all views
         \Illuminate\Support\Facades\View::composer('*', function ($view) {
