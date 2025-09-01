@@ -12,9 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('reviews', function (Blueprint $table) {
-            // Drop existing unique constraints
-            $table->dropUnique('unique_product_review');
-            $table->dropUnique('unique_bundle_review');
+            // Drop existing unique constraints if they exist
+            try {
+                $table->dropUnique('unique_product_review');
+            } catch (Exception $e) {
+                // Index might not exist or be in use
+            }
+            
+            try {
+                $table->dropUnique('unique_bundle_review');
+            } catch (Exception $e) {
+                // Index might not exist or be in use
+            }
             
             // Add new unique constraints that handle nullable user_id
             $table->unique(['order_id', 'product_id'], 'unique_product_review_per_order');
