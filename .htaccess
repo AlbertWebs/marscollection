@@ -1,0 +1,16 @@
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # If the request is not already for the public directory and the requested
+    # resource does not exist as a file or directory, route the request into public/
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ public/$1 [L,QSA]
+</IfModule>
+
+# Ensure base URL loads the Laravel front controller when hitting the project root
+DirectoryIndex public/index.php
+
