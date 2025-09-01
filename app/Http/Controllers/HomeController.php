@@ -28,7 +28,8 @@ class HomeController extends Controller
 
     public function contact()
     {
-        return view('contact');
+        $faqs = config('faqs', []);
+        return view('contact', compact('faqs'));
     }
 
     public function submitContact(Request $request)

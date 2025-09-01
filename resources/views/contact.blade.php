@@ -136,7 +136,7 @@
                             <div>
                                 <h3 class="font-semibold text-gray-900 mb-1">Email</h3>
                                 <p class="text-gray-600">{{ \App\Helpers\SettingsHelper::getEmail('primary') }}</p>
-                                <p class="text-gray-600">{{ \App\Helpers\SettingsHelper::getEmail('support') }}</p>
+                                <p class="text-gray-600">{{ \App\Helpers\SettingsHelper::getEmail('secondary') }}</p>
                             </div>
                         </div>
                         
@@ -237,37 +237,20 @@
             </div>
             
             <div class="space-y-6">
-                <div class="bg-gray-50 rounded-lg p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">How can I track my order?</h3>
-                    <p class="text-gray-600">
-                        Once your order ships, you'll receive a tracking number via email. 
-                        You can also check your order status in your account dashboard.
-                    </p>
-                </div>
-                
-                <div class="bg-gray-50 rounded-lg p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">What's your return policy?</h3>
-                    <p class="text-gray-600">
-                        We offer a 30-day return policy for unused items in original packaging. 
-                        Contact our customer service team to initiate a return.
-                    </p>
-                </div>
-                
-                <div class="bg-gray-50 rounded-lg p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Do you ship internationally?</h3>
-                    <p class="text-gray-600">
-                        Currently, we ship within Kenya. We're working on expanding our 
-                        shipping options to other East African countries.
-                    </p>
-                </div>
-                
-                <div class="bg-gray-50 rounded-lg p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Can I get beauty advice?</h3>
-                    <p class="text-gray-600">
-                        Absolutely! Our beauty consultants are available in-store and online. 
-                        Book a consultation or reach out to us for personalized beauty advice.
-                    </p>
-                </div>
+                @if(!empty($faqs))
+                    @foreach($faqs as $faq)
+                        <div class="bg-gray-50 rounded-lg p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $faq['question'] }}</h3>
+                            <p class="text-gray-600">
+                                {{ $faq['answer'] }}
+                            </p>
+                        </div>
+                    @endforeach
+                @else
+                    <div class="bg-gray-50 rounded-lg p-6">
+                        <p class="text-gray-600">No frequently asked questions available at the moment. Please check back later.</p>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
