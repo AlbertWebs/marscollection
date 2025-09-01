@@ -150,9 +150,8 @@
                             <div>
                                 <h3 class="font-semibold text-gray-900 mb-1">Address</h3>
                                 <p class="text-gray-600">
-                                    Zayn's Beauty Store<br>
-                                    Westlands Mall, 2nd Floor<br>
-                                    Nairobi, Kenya
+                                    {{ \App\Helpers\SettingsHelper::getBusinessName() }}<br>
+                                    {!! nl2br(e(\App\Helpers\SettingsHelper::getAddress('full'))) !!}
                                 </p>
                             </div>
                         </div>
@@ -166,15 +165,15 @@
                     <div class="space-y-3">
                         <div class="flex justify-between">
                             <span class="text-gray-600">Monday - Friday</span>
-                            <span class="font-semibold text-gray-900">9:00 AM - 8:00 PM</span>
+                            <span class="font-semibold text-gray-900">{{ \App\Helpers\SettingsHelper::getBusinessHours('monday_friday') }}</span>
                         </div>
                         <div class="flex justify-between">
                             <span class="text-gray-600">Saturday</span>
-                            <span class="font-semibold text-gray-900">9:00 AM - 6:00 PM</span>
+                            <span class="font-semibold text-gray-900">{{ \App\Helpers\SettingsHelper::getBusinessHours('saturday') }}</span>
                         </div>
                         <div class="flex justify-between">
                             <span class="text-gray-600">Sunday</span>
-                            <span class="font-semibold text-gray-900">10:00 AM - 4:00 PM</span>
+                            <span class="font-semibold text-gray-900">{{ \App\Helpers\SettingsHelper::getBusinessHours('sunday') }}</span>
                         </div>
                     </div>
                     
