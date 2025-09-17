@@ -1,4 +1,4 @@
-<header class="bg-white border-b border-gray-100 sticky top-0 z-50">
+<header class="bg-white border-b-2 border-gray-100 sticky top-0 z-50">
     <!-- Main Header -->
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
@@ -105,8 +105,8 @@
                     <!-- Category Links with Horizontal Scroll -->
                     <div class="flex gap-0 overflow-x-auto scrollbar-hide flex-1">
                         @foreach($categories as $category)
-                            <a href="{{ route('categories.index') }}" 
-                               class="inline-flex items-center px-4 py-2 h-10 text-sm font-medium text-gray-700 hover:text-pink-600 hover:bg-pink-100 transition-all duration-200 whitespace-nowrap flex-shrink-0">
+                        <a href="{{ route('products.index', ['category_id' => $category->id]) }}" 
+                        class="inline-flex items-center px-4 py-2 h-10 text-sm font-medium text-gray-700 hover:text-pink-600 hover:bg-pink-100 transition-all duration-200 whitespace-nowrap flex-shrink-0">
                                 {{ $category->name }}
                             </a>
                         @endforeach
