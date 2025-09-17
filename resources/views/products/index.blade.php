@@ -78,10 +78,25 @@
             @endif
         </div>
         
+        <!-- Mobile Filter Toggle -->
+        <div class="lg:hidden mb-6">
+            <button id="mobile-filter-toggle" class="w-full bg-pink-600 text-white px-4 py-3 rounded-md hover:bg-pink-700 transition-colors font-semibold flex items-center justify-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+                </svg>
+                Filters
+                <svg id="filter-arrow" class="w-5 h-5 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+        </div>
+
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
             <!-- Sidebar Filters -->
             <div class="lg:col-span-1">
-                @include('components.product-filters')
+                <div id="mobile-filters" class="hidden lg:block">
+                    @include('components.product-filters')
+                </div>
             </div>
             
             <!-- Products Grid -->
@@ -116,4 +131,28 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const mobileFilterToggle = document.getElementById('mobile-filter-toggle');
+    const mobileFilters = document.getElementById('mobile-filters');
+    const filterArrow = document.getElementById('filter-arrow');
+    
+    if (mobileFilterToggle && mobileFilters && filterArrow) {
+        mobileFilterToggle.addEventListener('click', function() {
+            const isHidden = mobileFilters.classList.contains('hidden');
+            
+            if (isHidden) {
+                // Show filters
+                mobileFilters.classList.remove('hidden');
+                filterArrow.style.transform = 'rotate(180deg)';
+            } else {
+                // Hide filters
+                mobileFilters.classList.add('hidden');
+                filterArrow.style.transform = 'rotate(0deg)';
+            }
+        });
+    }
+});
+</script>
 @endsection 
