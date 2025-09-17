@@ -21,9 +21,12 @@ class AppServiceProvider extends ServiceProvider
     {
         // Settings helper removed to avoid function redeclaration conflicts
 
-        // Share contact information with all views
+        // Share contact information and categories with all views
         \Illuminate\Support\Facades\View::composer('*', function ($view) {
-            $view->with('contact', \App\Helpers\SettingsHelper::getContactInfo());
+            $view->with([
+                'contact' => \App\Helpers\SettingsHelper::getContactInfo(),
+                'categories' => \App\Models\Category::where('is_active', true)->get()
+            ]);
         });
 
         // Register blade directive for contact info

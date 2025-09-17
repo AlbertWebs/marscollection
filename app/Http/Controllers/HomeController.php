@@ -16,9 +16,8 @@ class HomeController extends Controller
     {
         $trendingProducts = Product::where('is_trending', true)->limit(5)->get();
         $featuredProducts = Product::where('is_featured', true)->limit(10)->get();
-        $categories = Category::where('is_active', true)->get();
 
-        return view('home', compact('trendingProducts', 'featuredProducts', 'categories'));
+        return view('home', compact('trendingProducts', 'featuredProducts'));
     }
 
     public function about()

@@ -412,11 +412,43 @@ class AdminController extends Controller
         return redirect()->route('admin.brands.index')->with('success', 'Brand deleted successfully!');
     }
 
+    // Product Search API for Bundles
+    public function searchProducts(Request $request)
+    {
+        $query = $request->get('q', '');
+        $page = $request->get('page', 1);
+        $perPage = 20;
+        
+        $products = Product::where('is_active', true)
+            ->when($query, function ($q) use ($query) {
+                return $q->where('name', 'like', "%{$query}%")
+                        ->orWhereHas('brand', function ($brandQuery) use ($query) {
+                            $brandQuery->where('name', 'like', "%{$query}%");
+                        })
+                        ->orWhereHas('category', function ($categoryQuery) use ($query) {
+                            $categoryQuery->where('name', 'like', "%{$query}%");
+                        });
+            })
+            ->with(['brand', 'category'])
+            ->orderBy('name')
+            ->paginate($perPage, ['*'], 'page', $page);
+        
+        return response()->json([
+            'products' => $products->items(),
+            'pagination' => [
+                'current_page' => $products->currentPage(),
+                'last_page' => $products->lastPage(),
+                'per_page' => $products->perPage(),
+                'total' => $products->total(),
+                'has_more' => $products->hasMorePages()
+            ]
+        ]);
+    }
+
     // Bundles CRUD
     public function createBundle()
     {
-        $products = Product::where('is_active', true)->get();
-        return view('admin.bundles.create', compact('products'));
+        return view('admin.bundles.create');
     }
 
     public function storeBundle(Request $request)
@@ -448,9 +480,8 @@ class AdminController extends Controller
 
     public function editBundle(Bundle $bundle)
     {
-        $products = Product::where('is_active', true)->get();
         $bundle->load('bundleItems.product');
-        return view('admin.bundles.edit', compact('bundle', 'products'));
+        return view('admin.bundles.edit', compact('bundle'));
     }
 
     public function updateBundle(Request $request, Bundle $bundle)
@@ -643,7 +674,23 @@ class AdminController extends Controller
 
     public function updateSettings(Request $request)
     {
-        $settings = $request->except('_token', '_method');
+        $validated = $request->validate([
+            'hero_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'video_thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        ]);
+
+        $settings = $request->except('_token', '_method', 'hero_image', 'video_thumbnail');
+        
+        // Handle image uploads
+        if ($request->hasFile('hero_image')) {
+            $heroImagePath = $request->file('hero_image')->store('settings', 'public');
+            $settings['hero_image'] = $heroImagePath;
+        }
+        
+        if ($request->hasFile('video_thumbnail')) {
+            $videoThumbnailPath = $request->file('video_thumbnail')->store('settings', 'public');
+            $settings['video_thumbnail'] = $videoThumbnailPath;
+        }
         
         foreach ($settings as $key => $value) {
             // Handle boolean settings (checkboxes)

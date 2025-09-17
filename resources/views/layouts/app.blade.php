@@ -110,6 +110,15 @@
         .product-schema {
             display: none;
         }
+        
+        /* Hide scrollbar for horizontal scrolling categories */
+        .scrollbar-hide {
+            -ms-overflow-style: none;  /* Internet Explorer 10+ */
+            scrollbar-width: none;  /* Firefox */
+        }
+        .scrollbar-hide::-webkit-scrollbar { 
+            display: none;  /* Safari and Chrome */
+        }
     </style>
 
     @yield('head')

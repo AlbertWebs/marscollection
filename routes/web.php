@@ -119,6 +119,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::put('/bundles/{bundle}', [AdminController::class, 'updateBundle'])->name('bundles.update');
     Route::delete('/bundles/{bundle}', [AdminController::class, 'deleteBundle'])->name('bundles.destroy');
     
+    // Product Search API for Bundles
+    Route::get('/search-products', [AdminController::class, 'searchProducts'])->name('search-products');
+    
     // Services Management
     Route::get('/services', [AdminController::class, 'services'])->name('services.index');
     Route::get('/services/create', [AdminController::class, 'createService'])->name('services.create');

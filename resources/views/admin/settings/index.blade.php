@@ -11,7 +11,7 @@
 
 
 
-    <form method="POST" action="{{ route('admin.settings.update') }}" class="space-y-8">
+    <form method="POST" action="{{ route('admin.settings.update') }}" enctype="multipart/form-data" class="space-y-8">
         @csrf
         @method('PUT')
         
@@ -179,10 +179,34 @@
                               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500">{{ $heroSettings->where('key', 'hero_subtitle')->first()->value ?? '' }}</textarea>
                 </div>
                 <div class="md:col-span-2">
-                    <label for="hero_image" class="block text-sm font-medium text-gray-700">Hero Image URL</label>
-                    <input type="url" id="hero_image" name="hero_image" 
-                           value="{{ $heroSettings->where('key', 'hero_image')->first()->value ?? '' }}"
-                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500">
+                    <label for="hero_image" class="block text-sm font-medium text-gray-700">Hero Image</label>
+                    
+                    <!-- Current Image Preview -->
+                    @php
+                        $currentHeroImage = $heroSettings->where('key', 'hero_image')->first()->value ?? '';
+                    @endphp
+                    @if($currentHeroImage)
+                        <div class="mt-2 mb-4">
+                            <p class="text-sm text-gray-600 mb-2">Current Image:</p>
+                            <div class="flex items-center space-x-4">
+                                <img src="{{ $currentHeroImage }}" alt="Hero Image" 
+                                     class="w-32 h-20 object-cover rounded-lg border border-gray-200">
+                                <div>
+                                    <p class="text-sm text-gray-500">{{ basename($currentHeroImage) }}</p>
+                                    <p class="text-xs text-gray-400">Click "Choose File" to replace this image</p>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                    
+                    <div class="mt-1 flex items-center">
+                        <input type="file" id="hero_image" name="hero_image" accept="image/*"
+                               class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100 @error('hero_image') border-red-500 @enderror">
+                    </div>
+                    <p class="mt-1 text-sm text-gray-500">Upload a hero image (JPG, PNG, GIF, WebP). Max size: 2MB. Leave empty to keep current image.</p>
+                    @error('hero_image')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
                 <div>
                     <label for="hero_stats_customers" class="block text-sm font-medium text-gray-700">Happy Customers Count</label>
@@ -237,10 +261,34 @@
                     <p class="mt-1 text-sm text-gray-500">Extract the ID from YouTube URL: https://www.youtube.com/watch?v=<strong>BNmXh0p0Py4</strong></p>
                 </div>
                 <div>
-                    <label for="video_thumbnail" class="block text-sm font-medium text-gray-700">Video Thumbnail URL</label>
-                    <input type="url" id="video_thumbnail" name="video_thumbnail" 
-                           value="{{ $videoSettings->where('key', 'video_thumbnail')->first()->value ?? '' }}"
-                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500">
+                    <label for="video_thumbnail" class="block text-sm font-medium text-gray-700">Video Thumbnail</label>
+                    
+                    <!-- Current Image Preview -->
+                    @php
+                        $currentVideoThumbnail = $videoSettings->where('key', 'video_thumbnail')->first()->value ?? '';
+                    @endphp
+                    @if($currentVideoThumbnail)
+                        <div class="mt-2 mb-4">
+                            <p class="text-sm text-gray-600 mb-2">Current Thumbnail:</p>
+                            <div class="flex items-center space-x-4">
+                                <img src="{{ $currentVideoThumbnail }}" alt="Video Thumbnail" 
+                                     class="w-24 h-16 object-cover rounded-lg border border-gray-200">
+                                <div>
+                                    <p class="text-sm text-gray-500">{{ basename($currentVideoThumbnail) }}</p>
+                                    <p class="text-xs text-gray-400">Click "Choose File" to replace this image</p>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                    
+                    <div class="mt-1 flex items-center">
+                        <input type="file" id="video_thumbnail" name="video_thumbnail" accept="image/*"
+                               class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100 @error('video_thumbnail') border-red-500 @enderror">
+                    </div>
+                    <p class="mt-1 text-sm text-gray-500">Upload a video thumbnail (JPG, PNG, GIF, WebP). Max size: 2MB. Leave empty to keep current image.</p>
+                    @error('video_thumbnail')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
             </div>
         </div>
