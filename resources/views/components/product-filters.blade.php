@@ -1,4 +1,4 @@
-<div class="bg-gray-50 rounded-lg p-6 lg:sticky lg:top-24">
+<div class="bg-gray-50 rounded-lg p-6 lg:sticky lg:top-28">
     <h2 class="text-lg font-semibold text-gray-900 mb-4">Filters</h2>
     
     <form method="GET" action="{{ route('products.index') }}" class="space-y-6">

@@ -99,26 +99,22 @@
                 </div>
             </div>
             
-            <!-- Products Grid -->
             <div class="lg:col-span-3">
                 @if($products->count() > 0)
-                    <!-- Results Count -->
                     <div class="mb-6">
                         <p class="text-gray-600">Showing {{ $products->count() }} of {{ $products->total() }} products</p>
                     </div>
                     
-                    <!-- Products Grid -->
                     <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 xl:gap-4">
                         @foreach($products as $product)
                             @include('components.product-card', ['product' => $product])
                         @endforeach
                     </div>
                     
-                    <!-- Pagination -->
                     <div class="mt-8">
                         {{ $products->links() }}
                     </div>
-                @else
+                    @else
                     <div class="text-center py-12">
                         <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.47-.881-6.08-2.33" />
