@@ -98,8 +98,8 @@
             <div class="container mx-auto px-0 sm:px-6 lg:px-8">
                 <div class="h-10 flex items-center gap-0 sm:gap-4">
                     <!-- Categories Label -->
-                    <div class="bg-pink-100 px-3 py-2 flex-shrink-0">
-                        <a href="{{ route('categories.index') }}" class="text-xs font-medium text-pink-700 uppercase tracking-wide">Categories</a>
+                    <div class="bg-pink-600 text-white px-3 py-2 flex-shrink-0">
+                        <a href="{{ route('categories.index') }}" class="text-xs font-medium text-white uppercase tracking-wide">Categories</a>
                     </div>
                     
                     <!-- Category Links with Horizontal Scroll -->
