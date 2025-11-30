@@ -25,7 +25,7 @@ class AppServiceProvider extends ServiceProvider
         \Illuminate\Support\Facades\View::composer('*', function ($view) {
             $view->with([
                 'contact' => \App\Helpers\SettingsHelper::getContactInfo(),
-                'categories' => \App\Models\Category::where('is_active', true)->get()
+                'activeCategories' => \App\Models\Category::where('is_active', true)->get()
             ]);
         });
 
