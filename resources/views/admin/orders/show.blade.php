@@ -5,18 +5,18 @@
 @section('content')
 <div class="space-y-6">
     <!-- Header -->
-    <div class="flex justify-between items-center">
-        <h1 class="text-2xl font-bold text-gray-900">Order #{{ $order->id }}</h1>
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <h1 class="text-xl lg:text-2xl font-bold text-gray-900">Order #{{ $order->id }}</h1>
         <a href="{{ route('admin.orders.index') }}" 
-           class="text-pink-600 hover:text-pink-700">
+           class="text-pink-600 hover:text-pink-700 text-sm sm:text-base">
             ← Back to Orders
         </a>
     </div>
 
     <!-- Order Information -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
         <!-- Order Details -->
-        <div class="bg-white shadow rounded-lg p-6">
+        <div class="bg-white shadow rounded-lg p-4 lg:p-6">
             <h3 class="text-lg font-medium text-gray-900 mb-4">Order Information</h3>
             <div class="space-y-4">
                 <div class="flex justify-between">
@@ -47,7 +47,7 @@
         </div>
 
         <!-- Status Update -->
-        <div class="bg-white shadow rounded-lg p-6">
+        <div class="bg-white shadow rounded-lg p-4 lg:p-6">
             <h3 class="text-lg font-medium text-gray-900 mb-4">Update Status</h3>
             <form method="POST" action="{{ route('admin.orders.update-status', $order) }}">
                 @csrf
@@ -75,24 +75,24 @@
 
     <!-- Order Items -->
     <div class="bg-white shadow rounded-lg overflow-hidden">
-        <div class="px-6 py-4 border-b border-gray-200">
-            <h3 class="text-lg font-medium text-gray-900">Order Items</h3>
+        <div class="px-4 lg:px-6 py-4 border-b border-gray-200">
+            <h3 class="text-base lg:text-lg font-medium text-gray-900">Order Items</h3>
         </div>
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                        <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item</th>
+                        <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">Type</th>
+                        <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Qty</th>
+                        <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">Price</th>
+                        <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($order->orderItems as $item)
                         <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td class="px-3 lg:px-6 py-4">
                                 <div class="flex items-center space-x-3">
                                     @if($item->bundle_id)
                                         <!-- Bundle Image -->
@@ -176,16 +176,16 @@
                                     @endif
                                 </div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td class="px-3 lg:px-6 py-4 whitespace-nowrap hidden sm:table-cell">
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
                                     @if($item->bundle_id) bg-purple-100 text-purple-800 @else bg-blue-100 text-blue-800 @endif">
-                                    {{ $item->bundle_id ? 'Bundle Item' : 'Product' }}
+                                    {{ $item->bundle_id ? 'Bundle' : 'Product' }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td class="px-3 lg:px-6 py-4 whitespace-nowrap">
                                 <span class="text-sm text-gray-900">{{ $item->quantity }}</span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td class="px-3 lg:px-6 py-4 whitespace-nowrap hidden md:table-cell">
                                 <span class="text-sm text-gray-900">
                                     @if($item->bundle_id)
                                         KSh {{ number_format($item->bundle_price ?? 0) }}
@@ -194,7 +194,7 @@
                                     @endif
                                 </span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td class="px-3 lg:px-6 py-4 whitespace-nowrap">
                                 <span class="text-sm font-medium text-gray-900">KSh {{ number_format($item->subtotal ?? 0) }}</span>
                             </td>
                         </tr>

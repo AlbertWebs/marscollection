@@ -6,12 +6,12 @@
 <div class="space-y-6">
     <!-- Header -->
     <div class="flex justify-between items-center">
-        <h1 class="text-2xl font-bold text-gray-900">Appointments Management</h1>
+        <h1 class="text-xl lg:text-2xl font-bold text-gray-900">Appointments Management</h1>
     </div>
 
     <!-- Tabs -->
-    <div class="border-b border-gray-200">
-        <nav class="-mb-px flex space-x-8">
+    <div class="border-b border-gray-200 overflow-x-auto">
+        <nav class="-mb-px flex space-x-4 sm:space-x-8 min-w-max sm:min-w-0">
             <a href="{{ route('admin.appointments.index') }}" 
                class="border-b-2 border-pink-500 py-2 px-1 text-sm font-medium text-pink-600">
                 Appointments
@@ -24,8 +24,8 @@
     </div>
 
     <!-- Filters -->
-    <div class="bg-white shadow rounded-lg p-6">
-        <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div class="bg-white shadow rounded-lg p-4 lg:p-6">
+        <form method="GET" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
                 <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Search</label>
                 <input type="text" id="search" name="search" value="{{ request('search') }}"
@@ -61,48 +61,61 @@
     <div class="bg-white shadow rounded-lg overflow-hidden">
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
+                <thead class="bg-gray-50 hidden sm:table-header-group">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Service</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date & Time</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+                        <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">Service</th>
+                        <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date & Time</th>
+                        <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">Price</th>
+                        <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($appointments as $appointment)
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4">
-                                <div>
+                        <tr class="hover:bg-gray-50 border-b border-gray-200 sm:border-0">
+                            <td class="px-3 lg:px-6 py-3 sm:py-4">
+                                <div class="space-y-1">
                                     <div class="text-sm font-medium text-gray-900">{{ $appointment->customer_name }}</div>
-                                    <div class="text-sm text-gray-500">{{ $appointment->customer_email }}</div>
-                                    <div class="text-sm text-gray-500">{{ $appointment->customer_phone }}</div>
+                                    <div class="text-xs sm:text-sm text-gray-500">{{ $appointment->customer_email }}</div>
+                                    <div class="text-xs sm:text-sm text-gray-500">{{ $appointment->customer_phone }}</div>
+                                    <div class="flex items-center gap-2 text-xs sm:hidden mt-1">
+                                        <span class="text-gray-500">{{ $appointment->service_type_label }}</span>
+                                        <span class="text-gray-400">•</span>
+                                        <span class="text-gray-500">{{ $appointment->formatted_price }}</span>
+                                    </div>
                                 </div>
                             </td>
-                            <td class="px-6 py-4">
+                            <td class="px-3 lg:px-6 py-4 hidden md:table-cell">
                                 <div>
                                     <div class="text-sm font-medium text-gray-900">{{ $appointment->service_type_label }}</div>
                                     <div class="text-sm text-gray-500">{{ $appointment->formatted_duration }}</div>
                                 </div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900">{{ $appointment->appointment_date->format('M d, Y') }}</div>
-                                <div class="text-sm text-gray-500">{{ $appointment->appointment_time->format('g:i A') }}</div>
+                            <td class="px-3 lg:px-6 py-3 sm:py-4">
+                                <div class="space-y-0.5">
+                                    <div class="text-sm text-gray-900">{{ $appointment->appointment_date->format('M d, Y') }}</div>
+                                    <div class="text-xs sm:text-sm text-gray-500">{{ $appointment->appointment_time->format('g:i A') }}</div>
+                                    <div class="sm:hidden mt-1">
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium 
+                                            bg-{{ $appointment->status_color }}-100 text-{{ $appointment->status_color }}-800">
+                                            {{ ucfirst($appointment->status) }}
+                                        </span>
+                                    </div>
+                                </div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td class="px-3 lg:px-6 py-4 whitespace-nowrap hidden sm:table-cell">
                                 <span class="text-sm font-medium text-gray-900">{{ $appointment->formatted_price }}</span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td class="px-3 lg:px-6 py-4 whitespace-nowrap hidden sm:table-cell">
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
                                     bg-{{ $appointment->status_color }}-100 text-{{ $appointment->status_color }}-800">
                                     {{ ucfirst($appointment->status) }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <td class="px-3 lg:px-6 py-3 sm:py-4 whitespace-nowrap text-sm font-medium">
                                 <a href="{{ route('admin.appointments.show', $appointment) }}" 
-                                   class="text-pink-600 hover:text-pink-900">View Details</a>
+                                   class="text-pink-600 hover:text-pink-900 whitespace-nowrap">View</a>
                             </td>
                         </tr>
                     @empty
@@ -118,7 +131,7 @@
         
         <!-- Pagination -->
         @if($appointments->hasPages())
-            <div class="px-6 py-4 border-t border-gray-200">
+            <div class="px-4 lg:px-6 py-4 border-t border-gray-200">
                 {{ $appointments->links() }}
             </div>
         @endif

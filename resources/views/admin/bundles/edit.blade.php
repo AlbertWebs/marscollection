@@ -5,8 +5,8 @@
 @section('content')
 <div class="space-y-6">
     <!-- Header -->
-    <div class="flex justify-between items-center">
-        <h1 class="text-2xl font-bold text-gray-900">Edit Bundle</h1>
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <h1 class="text-xl lg:text-2xl font-bold text-gray-900">Edit Bundle</h1>
         <a href="{{ route('admin.bundles.index') }}" 
            class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg">
             Back to Bundles
@@ -129,7 +129,7 @@
                 </label>
             </div>
 
-            <div class="flex justify-end space-x-3">
+            <div class="flex flex-col sm:flex-row justify-end gap-3">
                 <a href="{{ route('admin.bundles.index') }}" 
                    class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg">
                     Cancel

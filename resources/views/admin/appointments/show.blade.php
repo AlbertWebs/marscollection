@@ -5,17 +5,17 @@
 @section('content')
 <div class="space-y-6">
     <!-- Header -->
-    <div class="flex justify-between items-center">
-        <h1 class="text-2xl font-bold text-gray-900">Appointment #{{ $appointment->id }}</h1>
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <h1 class="text-xl lg:text-2xl font-bold text-gray-900">Appointment #{{ $appointment->id }}</h1>
         <a href="{{ route('admin.appointments.index') }}" 
-           class="text-pink-600 hover:text-pink-700">
+           class="text-pink-600 hover:text-pink-700 text-sm sm:text-base">
             ← Back to Appointments
         </a>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
         <!-- Appointment Information -->
-        <div class="bg-white shadow rounded-lg p-6">
+        <div class="bg-white shadow rounded-lg p-4 lg:p-6">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">Appointment Information</h3>
             <div class="space-y-4">
                 <div class="flex justify-between">
@@ -53,8 +53,8 @@
         </div>
 
         <!-- Customer Information -->
-        <div class="bg-white shadow rounded-lg p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Customer Information</h3>
+        <div class="bg-white shadow rounded-lg p-4 lg:p-6">
+            <h3 class="text-base lg:text-lg font-semibold text-gray-900 mb-4">Customer Information</h3>
             <div class="space-y-4">
                 <div class="flex justify-between">
                     <span class="text-sm font-medium text-gray-500">Name:</span>
@@ -79,12 +79,12 @@
     </div>
 
     <!-- Status Update -->
-    <div class="bg-white shadow rounded-lg p-6">
-        <h3 class="text-lg font-semibold text-gray-900 mb-4">Update Status</h3>
+    <div class="bg-white shadow rounded-lg p-4 lg:p-6">
+        <h3 class="text-base lg:text-lg font-semibold text-gray-900 mb-4">Update Status</h3>
         <form method="POST" action="{{ route('admin.appointments.update-status', $appointment) }}">
             @csrf
             @method('PUT')
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
                 <div>
                     <label for="status" class="block text-sm font-medium text-gray-700 mb-2">Appointment Status</label>
                     <select id="status" name="status" 

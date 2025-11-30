@@ -1,10 +1,10 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold text-gray-900">Contact Message Details</h1>
-        <div class="flex space-x-3">
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 lg:py-8">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <h1 class="text-xl lg:text-2xl font-bold text-gray-900">Contact Message Details</h1>
+        <div class="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
             <a href="{{ route('admin.contacts.index') }}" 
                class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">
                 Back to Messages
@@ -22,10 +22,10 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
         <!-- Main Message Content -->
         <div class="lg:col-span-2">
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 lg:p-6">
                 <div class="flex items-center justify-between mb-6">
                     <h2 class="text-xl font-semibold text-gray-900">{{ $contact->subject_display }}</h2>
                     @if($contact->is_bot)

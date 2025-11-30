@@ -6,7 +6,7 @@
 <div class="space-y-6">
     <!-- Header -->
     <div class="flex justify-between items-center">
-        <h1 class="text-2xl font-bold text-gray-900">Settings</h1>
+        <h1 class="text-xl lg:text-2xl font-bold text-gray-900">Settings</h1>
     </div>
 
 
@@ -16,9 +16,9 @@
         @method('PUT')
         
         <!-- Contact Settings -->
-        <div class="bg-white shadow rounded-lg p-6">
-            <h2 class="text-lg font-medium text-gray-900 mb-4">Contact Information</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white shadow rounded-lg p-4 lg:p-6">
+            <h2 class="text-base lg:text-lg font-medium text-gray-900 mb-4">Contact Information</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
                 <div>
                     <label for="contact_phone_primary" class="block text-sm font-medium text-gray-700">Primary Phone</label>
                     <input type="text" id="contact_phone_primary" name="contact_phone_primary" 
@@ -70,9 +70,9 @@
         </div>
 
         <!-- Business Settings -->
-        <div class="bg-white shadow rounded-lg p-6">
-            <h2 class="text-lg font-medium text-gray-900 mb-4">Business Information</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white shadow rounded-lg p-4 lg:p-6">
+            <h2 class="text-base lg:text-lg font-medium text-gray-900 mb-4">Business Information</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
                 <div>
                     <label for="business_name" class="block text-sm font-medium text-gray-700">Business Name</label>
                     <input type="text" id="business_name" name="business_name" 
@@ -106,9 +106,9 @@
         </div>
 
         <!-- Email Settings -->
-        <div class="bg-white shadow rounded-lg p-6">
-            <h2 class="text-lg font-medium text-gray-900 mb-4">Email Settings</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white shadow rounded-lg p-4 lg:p-6">
+            <h2 class="text-base lg:text-lg font-medium text-gray-900 mb-4">Email Settings</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
                 <div>
                     <label for="email_admin" class="block text-sm font-medium text-gray-700">Admin Email</label>
                     <input type="email" id="email_admin" name="email_admin" 
@@ -131,9 +131,9 @@
         </div>
 
         <!-- Social Media Settings -->
-        <div class="bg-white shadow rounded-lg p-6">
-            <h2 class="text-lg font-medium text-gray-900 mb-4">Social Media</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white shadow rounded-lg p-4 lg:p-6">
+            <h2 class="text-base lg:text-lg font-medium text-gray-900 mb-4">Social Media</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
                 <div>
                     <label for="social_facebook" class="block text-sm font-medium text-gray-700">Facebook URL</label>
                     <input type="url" id="social_facebook" name="social_facebook" 
@@ -156,9 +156,9 @@
         </div>
 
         <!-- Hero Section Settings -->
-        <div class="bg-white shadow rounded-lg p-6">
-            <h2 class="text-lg font-medium text-gray-900 mb-4">Hero Section</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white shadow rounded-lg p-4 lg:p-6">
+            <h2 class="text-base lg:text-lg font-medium text-gray-900 mb-4">Hero Section</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
                 <div class="md:col-span-2">
                     <label for="hero_enabled" class="flex items-center">
                         <input type="checkbox" id="hero_enabled" name="hero_enabled" value="1"
@@ -230,9 +230,9 @@
         </div>
 
         <!-- Video Section Settings -->
-        <div class="bg-white shadow rounded-lg p-6">
-            <h2 class="text-lg font-medium text-gray-900 mb-4">Video Section</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white shadow rounded-lg p-4 lg:p-6">
+            <h2 class="text-base lg:text-lg font-medium text-gray-900 mb-4">Video Section</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
                 <div class="md:col-span-2">
                     <label for="video_enabled" class="flex items-center">
                         <input type="checkbox" id="video_enabled" name="video_enabled" value="1"
@@ -296,7 +296,7 @@
         <!-- Submit Button -->
         <div class="flex justify-end">
             <button type="submit" 
-                    class="bg-pink-600 hover:bg-pink-700 text-white px-6 py-2 rounded-lg font-medium">
+                    class="bg-pink-600 hover:bg-pink-700 text-white px-4 lg:px-6 py-2 rounded-lg font-medium w-full sm:w-auto">
                 Save Settings
             </button>
         </div>

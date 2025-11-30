@@ -5,21 +5,21 @@
 @section('content')
 <div class="space-y-6">
     <!-- Header -->
-    <div class="flex justify-between items-center">
-        <h1 class="text-2xl font-bold text-gray-900">Edit Product</h1>
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <h1 class="text-xl lg:text-2xl font-bold text-gray-900">Edit Product</h1>
         <a href="{{ route('admin.products.index') }}" 
-           class="text-pink-600 hover:text-pink-700">
+           class="text-pink-600 hover:text-pink-700 text-sm sm:text-base">
             ← Back to Products
         </a>
     </div>
 
     <!-- Product Form -->
-    <div class="bg-white shadow rounded-lg p-6">
+    <div class="bg-white shadow rounded-lg p-4 lg:p-6">
         <form method="POST" action="{{ route('admin.products.update', $product) }}" enctype="multipart/form-data" class="space-y-6">
             @csrf
             @method('PUT')
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
                 <!-- Product Name -->
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700">Product Name</label>
@@ -134,9 +134,9 @@
             </div>
 
             <!-- Submit Button -->
-            <div class="flex justify-end space-x-3">
+            <div class="flex flex-col sm:flex-row justify-end gap-3">
                 <a href="{{ route('admin.products.index') }}" 
-                   class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg">
+                   class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-lg text-center">
                     Cancel
                 </a>
                 <button type="submit" 

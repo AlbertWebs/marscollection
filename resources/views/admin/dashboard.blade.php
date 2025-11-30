@@ -5,7 +5,7 @@
 @section('content')
 <div class="space-y-6">
     <!-- Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
         <div class="bg-white rounded-lg shadow p-6">
             <div class="flex items-center">
                 <div class="p-3 rounded-full bg-pink-100 text-pink-600">
@@ -67,7 +67,7 @@
     </div>
 
     <!-- Additional Stats -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
         <div class="bg-white rounded-lg shadow p-6">
             <div class="flex items-center">
                 <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
@@ -112,7 +112,7 @@
     </div>
 
     <!-- Recent Orders and Top Products -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
         <!-- Recent Orders -->
         <div class="bg-white rounded-lg shadow">
             <div class="px-6 py-4 border-b border-gray-200">
@@ -193,8 +193,8 @@
         <div class="px-6 py-4 border-b border-gray-200">
             <h3 class="text-lg font-medium text-gray-900">Quick Actions</h3>
         </div>
-        <div class="p-6">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="p-4 lg:p-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <a href="{{ route('admin.products.create') }}" 
                    class="flex items-center p-4 bg-pink-50 rounded-lg hover:bg-pink-100 transition-colors">
                     <svg class="w-8 h-8 text-pink-600 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

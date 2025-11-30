@@ -6,12 +6,12 @@
 <div class="space-y-6">
     <!-- Header -->
     <div class="flex justify-between items-center">
-        <h1 class="text-2xl font-bold text-gray-900">Appointments Management</h1>
+        <h1 class="text-xl lg:text-2xl font-bold text-gray-900">Appointments Management</h1>
     </div>
 
     <!-- Tabs -->
-    <div class="border-b border-gray-200">
-        <nav class="-mb-px flex space-x-8">
+    <div class="border-b border-gray-200 overflow-x-auto">
+        <nav class="-mb-px flex space-x-4 sm:space-x-8 min-w-max sm:min-w-0">
             <a href="{{ route('admin.appointments.index') }}" 
                class="border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
                 Appointments
@@ -23,14 +23,14 @@
         </nav>
     </div>
 
-    <div class="flex justify-between items-center">
-        <h2 class="text-xl font-semibold text-gray-900">Booking Settings</h2>
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <h2 class="text-lg lg:text-xl font-semibold text-gray-900">Booking Settings</h2>
         <p class="text-sm text-gray-600">Configure business hours, breaks, and disabled time slots for each day</p>
     </div>
 
     <!-- Settings Form -->
     <div class="bg-white shadow rounded-lg">
-        <form method="POST" action="{{ route('admin.booking-settings.update') }}" class="p-6">
+        <form method="POST" action="{{ route('admin.booking-settings.update') }}" class="p-4 lg:p-6">
             @csrf
             @method('PUT')
             
@@ -52,7 +52,7 @@
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                             <!-- Business Hours -->
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Business Hours Start</label>
@@ -81,7 +81,7 @@
                         <!-- Break Time -->
                         <div class="mt-4">
                             <h4 class="text-sm font-medium text-gray-700 mb-2">Break Time</h4>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Break Start</label>
                                     <input type="time" 

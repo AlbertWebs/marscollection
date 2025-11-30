@@ -85,3 +85,29 @@
         height: 1.25rem;
     }
 }
+
+/* Instagram Reels Marquee Animation */
+@keyframes marquee {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.animate-marquee {
+    animation: marquee 30s linear infinite;
+    display: flex;
+    width: fit-content;
+}
+
+.animate-marquee:hover {
+    animation-play-state: paused;
+}
+
+@media (max-width: 768px) {
+    .animate-marquee {
+        animation-duration: 20s;
+    }
+}

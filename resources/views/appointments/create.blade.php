@@ -207,6 +207,9 @@
     </div>
 </div>
 
+<!-- Instagram Reels Marquee -->
+@include('components.instagram-reels-marquee')
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     let currentDate = new Date();

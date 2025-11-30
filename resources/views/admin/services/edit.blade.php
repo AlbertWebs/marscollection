@@ -5,8 +5,8 @@
 @section('content')
 <div class="space-y-6">
     <!-- Header -->
-    <div class="flex justify-between items-center">
-        <h1 class="text-2xl font-bold text-gray-900">Edit Service</h1>
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <h1 class="text-xl lg:text-2xl font-bold text-gray-900">Edit Service</h1>
         <a href="{{ route('admin.services.index') }}" 
            class="text-pink-600 hover:text-pink-700">
             ← Back to Services
@@ -14,12 +14,12 @@
     </div>
 
     <!-- Form -->
-    <div class="bg-white shadow rounded-lg p-6">
+    <div class="bg-white shadow rounded-lg p-4 lg:p-6">
         <form method="POST" action="{{ route('admin.services.update', $service) }}" class="space-y-6">
             @csrf
             @method('PUT')
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Service Name *</label>
                     <input type="text" id="name" name="name" value="{{ old('name', $service->name) }}" required
@@ -39,7 +39,7 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
                 <div>
                     <label for="duration" class="block text-sm font-medium text-gray-700 mb-2">Duration (minutes) *</label>
                     <input type="number" id="duration" name="duration" value="{{ old('duration', $service->duration) }}" min="15" required

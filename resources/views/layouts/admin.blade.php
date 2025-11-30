@@ -16,10 +16,18 @@
 </head>
 <body class="font-sans antialiased">
     <div class="min-h-screen bg-gray-100">
+        <!-- Mobile menu overlay -->
+        <div id="mobile-menu-overlay" class="fixed inset-0 bg-gray-900 bg-opacity-50 z-40 lg:hidden hidden"></div>
+        
         <!-- Sidebar -->
-        <div class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg">
-            <div class="flex items-center justify-center h-16 bg-gradient-to-r from-pink-600 to-purple-600">
+        <div id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform -translate-x-full transition-transform duration-300 ease-in-out lg:translate-x-0">
+            <div class="flex items-center justify-between h-16 bg-gradient-to-r from-pink-600 to-purple-600 px-4">
                 <h1 class="text-xl font-bold text-white">Zayn's Beauty</h1>
+                <button id="close-sidebar" class="lg:hidden text-white hover:text-gray-200">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
             </div>
             
             <nav class="mt-8">
@@ -159,31 +167,39 @@
         </div>
 
         <!-- Main content -->
-        <div class="ml-64">
+        <div class="lg:ml-64">
             <!-- Top navigation -->
             <div class="bg-white shadow-sm border-b">
-                <div class="flex items-center justify-between px-6 py-4">
-                    <h2 class="text-xl font-semibold text-gray-800">@yield('title', 'Dashboard')</h2>
-                    
+                <div class="flex items-center justify-between px-4 lg:px-6 py-4">
                     <div class="flex items-center space-x-4">
-                        <span class="text-sm text-gray-600">Welcome, {{ auth()->user()->name }}</span>
+                        <button id="open-sidebar" class="lg:hidden text-gray-600 hover:text-gray-900">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
+                        </button>
+                        <h2 class="text-lg lg:text-xl font-semibold text-gray-800">@yield('title', 'Dashboard')</h2>
+                    </div>
+                    
+                    <div class="flex items-center space-x-2 lg:space-x-4">
+                        <span class="text-xs lg:text-sm text-gray-600 hidden sm:inline">Welcome, {{ auth()->user()->name }}</span>
                         
                         <form method="POST" action="{{ route('logout') }}" class="inline">
                             @csrf
-                            <button type="submit" class="text-sm text-gray-600 hover:text-gray-900">
+                            <button type="submit" class="text-xs lg:text-sm text-gray-600 hover:text-gray-900 px-2 lg:px-0">
                                 Logout
                             </button>
                         </form>
                         
-                        <a href="{{ route('home') }}" class="text-sm text-pink-600 hover:text-pink-700">
-                            View Site
+                        <a href="{{ route('home') }}" class="text-xs lg:text-sm text-pink-600 hover:text-pink-700 px-2 lg:px-0">
+                            <span class="hidden sm:inline">View Site</span>
+                            <span class="sm:hidden">Site</span>
                         </a>
                     </div>
                 </div>
             </div>
 
             <!-- Page content -->
-            <main class="p-6">
+            <main class="p-4 lg:p-6">
                 @if(session('success'))
                     <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
                         {{ session('success') }}
@@ -200,5 +216,45 @@
             </main>
         </div>
     </div>
+
+    <script>
+        // Mobile sidebar toggle
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('mobile-menu-overlay');
+        const openBtn = document.getElementById('open-sidebar');
+        const closeBtn = document.getElementById('close-sidebar');
+
+        function openSidebar() {
+            sidebar.classList.remove('-translate-x-full');
+            overlay.classList.remove('hidden');
+        }
+
+        function closeSidebar() {
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+        }
+
+        if (openBtn) {
+            openBtn.addEventListener('click', openSidebar);
+        }
+
+        if (closeBtn) {
+            closeBtn.addEventListener('click', closeSidebar);
+        }
+
+        if (overlay) {
+            overlay.addEventListener('click', closeSidebar);
+        }
+
+        // Close sidebar when clicking on a link (mobile only)
+        const sidebarLinks = sidebar.querySelectorAll('a');
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 1024) {
+                    closeSidebar();
+                }
+            });
+        });
+    </script>
 </body>
 </html> 

@@ -1,10 +1,10 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold text-gray-900">Contact Messages</h1>
-        <div class="flex space-x-3">
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 lg:py-8">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <h1 class="text-xl lg:text-2xl font-bold text-gray-900">Contact Messages</h1>
+        <div class="flex flex-wrap gap-2 sm:gap-3 w-full sm:w-auto">
             <a href="{{ route('admin.contacts.index', ['type' => 'legitimate']) }}" 
                class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 {{ request('type') === 'legitimate' ? 'bg-green-700' : '' }}">
                 Legitimate Messages
@@ -44,7 +44,7 @@
     </div>
 
     <!-- Stats -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 mb-6">
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div class="flex items-center">
                 <div class="p-2 bg-green-100 rounded-lg">
@@ -93,32 +93,49 @@
         @if($contacts->count() > 0)
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
+                    <thead class="bg-gray-50 hidden sm:table-header-group">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                            <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">Email</th>
+                            <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">Subject</th>
+                            <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                            <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">Date</th>
+                            <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @foreach($contacts as $contact)
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">{{ $contact->full_name }}</div>
-                                    @if($contact->phone)
-                                        <div class="text-sm text-gray-500">{{ $contact->phone }}</div>
-                                    @endif
+                            <tr class="hover:bg-gray-50 border-b border-gray-200 sm:border-0">
+                                <td class="px-3 lg:px-6 py-3 sm:py-4">
+                                    <div class="space-y-1">
+                                        <div class="flex items-center justify-between gap-2">
+                                            <div class="text-sm font-medium text-gray-900">{{ $contact->full_name }}</div>
+                                            <div class="sm:hidden">
+                                                @if($contact->is_bot)
+                                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                                        Bot
+                                                    </span>
+                                                @else
+                                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                        Legitimate
+                                                    </span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="text-xs sm:text-sm text-gray-500 sm:hidden">{{ $contact->email }}</div>
+                                        @if($contact->phone)
+                                            <div class="text-xs sm:text-sm text-gray-500">{{ $contact->phone }}</div>
+                                        @endif
+                                        <div class="text-xs text-gray-500 md:hidden">{{ Str::limit($contact->subject_display, 30) }}</div>
+                                    </div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-3 lg:px-6 py-4 whitespace-nowrap hidden sm:table-cell">
                                     <div class="text-sm text-gray-900">{{ $contact->email }}</div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-3 lg:px-6 py-4 hidden md:table-cell">
                                     <div class="text-sm text-gray-900">{{ $contact->subject_display }}</div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-3 lg:px-6 py-4 whitespace-nowrap hidden sm:table-cell">
                                     @if($contact->is_bot)
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                                             Bot
@@ -129,20 +146,20 @@
                                         </span>
                                     @endif
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <td class="px-3 lg:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500 hidden lg:table-cell">
                                     {{ $contact->created_at->format('M d, Y H:i') }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <div class="flex space-x-2">
+                                <td class="px-3 lg:px-6 py-3 sm:py-4 whitespace-nowrap text-sm font-medium">
+                                    <div class="flex items-center gap-2">
                                         <a href="{{ route('admin.contacts.show', $contact) }}" 
-                                           class="text-pink-600 hover:text-pink-900">View</a>
+                                           class="text-pink-600 hover:text-pink-900 whitespace-nowrap">View</a>
                                         <form action="{{ route('admin.contacts.destroy', $contact) }}" 
                                               method="POST" 
                                               class="inline"
                                               onsubmit="return confirm('Are you sure you want to delete this message?')">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="text-red-600 hover:text-red-900">Delete</button>
+                                            <button type="submit" class="text-red-600 hover:text-red-900 whitespace-nowrap">Delete</button>
                                         </form>
                                     </div>
                                 </td>
