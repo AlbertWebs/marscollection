@@ -93,7 +93,7 @@
     <div class="h-px bg-gray-200"></div>
     
     <!-- Categories Navigation -->
-    @if($categories->count() > 0)
+    @if($activeCategories->count() > 0)
         <div class="border-gray-100">
             <div class="container mx-auto px-0 sm:px-6 lg:px-8">
                 <div class="h-10 flex items-center gap-0 sm:gap-4">
@@ -104,7 +104,7 @@
                     
                     <!-- Category Links with Horizontal Scroll -->
                     <div class="flex gap-0 overflow-x-auto scrollbar-hide flex-1">
-                        @foreach($categories as $category)
+                        @foreach($activeCategories as $category)
                         <a href="{{ route('products.index', ['category_id' => $category->id]) }}" 
                         class="inline-flex items-center px-4 py-2 h-10 text-sm font-medium {{ request('category_id') == $category->id ? 'text-pink-600 ' : 'text-gray-700 hover:text-pink-600 hover:bg-pink-100' }} transition-all duration-200 whitespace-nowrap flex-shrink-0">
                                 {{ $category->name }}

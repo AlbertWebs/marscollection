@@ -56,7 +56,7 @@
                class="block text-sm {{ !request('category_id') ? 'text-pink-600 font-medium' : 'text-gray-600 hover:text-pink-600' }}">
                 All Categories
             </a>
-            @foreach($categories as $category)
+            @foreach($activeCategories as $category)
                 <a href="{{ route('products.index', array_merge(request()->except(['category_id', 'brand_id']), ['category_id' => $category->id])) }}" 
                    class="block text-sm {{ request('category_id') == $category->id ? 'text-pink-600 font-medium' : 'text-gray-600 hover:text-pink-600' }}">
                     {{ $category->name }}

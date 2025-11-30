@@ -11,7 +11,7 @@
         
         <!-- Categories Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            @foreach($categories as $category)
+            @foreach($activeCategories as $category)
                 <a href="{{ route('products.index', ['category_id' => $category->id]) }}" class="group">
                     <div class="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-300 overflow-hidden">
                         <!-- Category Image -->
