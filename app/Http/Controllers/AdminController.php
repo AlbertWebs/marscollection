@@ -306,7 +306,9 @@ class AdminController extends Controller
 
     public function categories()
     {
-        $categories = Category::withCount('products')->paginate(15);
+        $categories = Category::query()
+            ->withCount('products')
+            ->paginate(15);
         return view('admin.categories.index', compact('categories'));
     }
 
