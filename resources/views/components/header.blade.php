@@ -1,3 +1,8 @@
+@php
+    $navLinkClass = 'px-3 py-2 text-sm font-medium transition-colors';
+    $mobileNavLinkClass = 'block py-3 text-lg font-medium transition-colors border-b border-gray-100';
+@endphp
+
 <header class="bg-white border-b-2 border-gray-100 sticky top-0 z-50">
     <!-- Main Header -->
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -11,13 +16,13 @@
             
             <!-- Navigation -->
             <nav class="hidden md:flex space-x-8">
-                <a href="{{ route('home') }}" class="text-gray-700 hover:text-pink-600 px-3 py-2 text-sm font-medium transition-colors">Home</a>
-                <a href="{{ route('products.index') }}" class="text-gray-700 hover:text-pink-600 px-3 py-2 text-sm font-medium transition-colors">Products</a>
-                <a href="{{ route('categories.index') }}" class="text-gray-700 hover:text-pink-600 px-3 py-2 text-sm font-medium transition-colors">Categories</a>
-                <a href="{{ route('brands.index') }}" class="text-gray-700 hover:text-pink-600 px-3 py-2 text-sm font-medium transition-colors">Brands</a>
-                <a href="{{ route('appointments.create') }}" class="text-gray-700 hover:text-pink-600 px-3 py-2 text-sm font-medium transition-colors">Book Appointment</a>
-                <a href="{{ route('about') }}" class="text-gray-700 hover:text-pink-600 px-3 py-2 text-sm font-medium transition-colors">About</a>
-                <a href="{{ route('contact') }}" class="text-gray-700 hover:text-pink-600 px-3 py-2 text-sm font-medium transition-colors">Contact</a>
+                <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $navLinkClass }}">Home</a>
+                <a href="{{ route('products.index') }}" class="{{ request()->routeIs('products.*') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $navLinkClass }}">Products</a>
+                <a href="{{ route('categories.index') }}" class="{{ request()->routeIs('categories.*') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $navLinkClass }}">Categories</a>
+                <a href="{{ route('brands.index') }}" class="{{ request()->routeIs('brands.*') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $navLinkClass }}">Brands</a>
+                <a href="{{ route('appointments.create') }}" class="{{ request()->routeIs('appointments.*') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $navLinkClass }}">Book Appointment</a>
+                <a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $navLinkClass }}">About</a>
+                <a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') || request()->routeIs('contact.submit') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $navLinkClass }}">Contact</a>
             </nav>
             
             <!-- User Actions -->
@@ -139,13 +144,13 @@
         <!-- Navigation -->
         <nav class="p-6">
             <div class="space-y-4">
-                <a href="{{ route('home') }}" class="block text-gray-700 hover:text-pink-600 py-3 text-lg font-medium transition-colors border-b border-gray-100">Home</a>
-                <a href="{{ route('products.index') }}" class="block text-gray-700 hover:text-pink-600 py-3 text-lg font-medium transition-colors border-b border-gray-100">Products</a>
-                <a href="{{ route('categories.index') }}" class="block text-gray-700 hover:text-pink-600 py-3 text-lg font-medium transition-colors border-b border-gray-100">Categories</a>
-                <a href="{{ route('brands.index') }}" class="block text-gray-700 hover:text-pink-600 py-3 text-lg font-medium transition-colors border-b border-gray-100">Brands</a>
-                <a href="{{ route('appointments.create') }}" class="block text-gray-700 hover:text-pink-600 py-3 text-lg font-medium transition-colors border-b border-gray-100">Book Appointment</a>
-                <a href="{{ route('about') }}" class="block text-gray-700 hover:text-pink-600 py-3 text-lg font-medium transition-colors border-b border-gray-100">About</a>
-                <a href="{{ route('contact') }}" class="block text-gray-700 hover:text-pink-600 py-3 text-lg font-medium transition-colors border-b border-gray-100">Contact</a>
+                <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $mobileNavLinkClass }}">Home</a>
+                <a href="{{ route('products.index') }}" class="{{ request()->routeIs('products.*') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $mobileNavLinkClass }}">Products</a>
+                <a href="{{ route('categories.index') }}" class="{{ request()->routeIs('categories.*') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $mobileNavLinkClass }}">Categories</a>
+                <a href="{{ route('brands.index') }}" class="{{ request()->routeIs('brands.*') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $mobileNavLinkClass }}">Brands</a>
+                <a href="{{ route('appointments.create') }}" class="{{ request()->routeIs('appointments.*') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $mobileNavLinkClass }}">Book Appointment</a>
+                <a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $mobileNavLinkClass }}">About</a>
+                <a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') || request()->routeIs('contact.submit') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $mobileNavLinkClass }}">Contact</a>
             </div>
         </nav>
         
