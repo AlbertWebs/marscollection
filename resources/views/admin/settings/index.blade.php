@@ -293,6 +293,43 @@
             </div>
         </div>
 
+        <!-- Promotional Banner -->
+        <div class="bg-white shadow rounded-lg p-4 lg:p-6">
+            <h2 class="text-base lg:text-lg font-medium text-gray-900 mb-1">Promotional Banner</h2>
+            <p class="text-sm text-gray-500 mb-4">Thin bar shown at the top of every page. Use it for announcements, free delivery thresholds, or ongoing offers.</p>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
+                <div class="lg:col-span-2">
+                    <label for="banner_enabled" class="flex items-center">
+                        <input type="checkbox" id="banner_enabled" name="banner_enabled" value="1"
+                               {{ ($bannerSettings->where('key', 'banner_enabled')->first()->value ?? '0') == '1' ? 'checked' : '' }}
+                               class="rounded border-gray-300 text-pink-600 shadow-sm focus:border-pink-300 focus:ring focus:ring-pink-200 focus:ring-opacity-50">
+                        <span class="ml-2 text-sm font-medium text-gray-700">Show banner on site</span>
+                    </label>
+                </div>
+                <div class="lg:col-span-2">
+                    <label for="banner_text" class="block text-sm font-medium text-gray-700">Banner Message</label>
+                    <input type="text" id="banner_text" name="banner_text"
+                           value="{{ $bannerSettings->where('key', 'banner_text')->first()->value ?? '' }}"
+                           placeholder="e.g. Free delivery on orders over KSh 2,000 — this weekend only"
+                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500">
+                </div>
+                <div>
+                    <label for="banner_cta_text" class="block text-sm font-medium text-gray-700">Button Text <span class="text-gray-400 font-normal">(optional)</span></label>
+                    <input type="text" id="banner_cta_text" name="banner_cta_text"
+                           value="{{ $bannerSettings->where('key', 'banner_cta_text')->first()->value ?? '' }}"
+                           placeholder="e.g. Shop Now"
+                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500">
+                </div>
+                <div>
+                    <label for="banner_cta_url" class="block text-sm font-medium text-gray-700">Button URL <span class="text-gray-400 font-normal">(optional)</span></label>
+                    <input type="text" id="banner_cta_url" name="banner_cta_url"
+                           value="{{ $bannerSettings->where('key', 'banner_cta_url')->first()->value ?? '/products' }}"
+                           placeholder="/products"
+                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500">
+                </div>
+            </div>
+        </div>
+
         <!-- Submit Button -->
         <div class="flex justify-end">
             <button type="submit" 

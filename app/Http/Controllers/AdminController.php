@@ -670,8 +670,9 @@ class AdminController extends Controller
         $socialSettings = Setting::getByGroup('social');
         $heroSettings = Setting::getByGroup('hero');
         $videoSettings = Setting::getByGroup('video');
+        $bannerSettings = Setting::getByGroup('banner');
 
-        return view('admin.settings.index', compact('contactSettings', 'businessSettings', 'emailSettings', 'socialSettings', 'heroSettings', 'videoSettings'));
+        return view('admin.settings.index', compact('contactSettings', 'businessSettings', 'emailSettings', 'socialSettings', 'heroSettings', 'videoSettings', 'bannerSettings'));
     }
 
     public function updateSettings(Request $request)
@@ -705,7 +706,7 @@ class AdminController extends Controller
         }
         
         // Handle unchecked checkboxes by setting them to '0'
-        $checkboxSettings = ['hero_enabled', 'video_enabled'];
+        $checkboxSettings = ['hero_enabled', 'video_enabled', 'banner_enabled'];
         foreach ($checkboxSettings as $checkboxKey) {
             if (!array_key_exists($checkboxKey, $settings)) {
                 Setting::updateValue($checkboxKey, '0');

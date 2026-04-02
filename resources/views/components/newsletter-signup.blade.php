@@ -1,27 +1,22 @@
-<section class="py-16 bg-gray-900 relative overflow-hidden">
-    <!-- Background overlay -->
-    <div class="absolute inset-0 bg-pink-500 opacity-10"></div>
-    
-    <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">
-            Subscribe to our newsletter
-        </h2>
-        <p class="text-xl text-pink-100 mb-8 max-w-2xl mx-auto">
-            Subscribe to our newsletter and be the first to know about new arrivals, exclusive offers, and beauty tips.
-        </p>
-        
-        <form class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-            <input type="email" 
-                   placeholder="Your email address" 
-                   class="flex-1 px-6 py-4 bg-white bg-opacity-90 border border-transparent rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent">
-            <button type="submit" 
-                    class="bg-pink-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-pink-700 transition-colors duration-300 transform hover:scale-105">
-                SUBSCRIBE
+<section class="py-14 bg-pink-50 border-t border-pink-100">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-xl text-center">
+        <h2 class="text-2xl font-bold text-gray-900 mb-2">Get beauty tips & offers first</h2>
+        <p class="text-gray-500 text-sm mb-6">New arrivals, exclusive deals, and skincare advice — straight to your inbox. No spam.</p>
+
+        <form action="{{ route('contact.submit') }}" method="POST"
+              class="flex flex-col sm:flex-row gap-3">
+            @csrf
+            <input type="hidden" name="subject" value="Newsletter Signup">
+            <input type="hidden" name="first_name" value="Newsletter">
+            <input type="hidden" name="last_name" value="Subscriber">
+            <input type="hidden" name="message" value="Newsletter signup request">
+            <input type="email" name="email" required
+                   placeholder="your@email.com"
+                   class="flex-1 px-4 py-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent">
+            <button type="submit"
+                    class="bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-6 py-3 rounded-lg transition-colors">
+                Subscribe
             </button>
         </form>
-        
-        <p class="text-pink-200 text-sm mt-4">
-            By subscribing, you agree to our Privacy Policy and consent to receive updates from our company.
-        </p>
     </div>
-</section> 
+</section>
