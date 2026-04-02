@@ -5,6 +5,15 @@ use Illuminate\Http\Request;
 
 define('LARAVEL_START', microtime(true));
 
+// Suppress PDO::MYSQL_ATTR_SSL_CA deprecation from vendor files (PHP 8.4+)
+// Remove once Laravel framework updates its config stubs
+set_error_handler(function ($severity, $message) {
+    if ($severity === E_DEPRECATED && str_contains($message, 'MYSQL_ATTR_SSL_CA')) {
+        return true;
+    }
+    return false;
+}, E_DEPRECATED);
+
 // Determine if the application is in maintenance mode...
 if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php')) {
     require $maintenance;
