@@ -48,7 +48,7 @@ class SettingsSeeder extends Seeder
         Setting::set('hero_enabled', '1', 'Enable Hero Section', 'hero', 'boolean');
         Setting::set('hero_title', 'Natural Beauty', 'Hero Title', 'hero', 'string');
         Setting::set('hero_subtitle', 'Premium beauty products that enhance your natural radiance. From skincare essentials to makeup must-haves, we bring you the finest quality products for your beauty journey.', 'Hero Description', 'hero', 'textarea');
-        Setting::set('hero_image', 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80', 'Hero Image URL', 'hero', 'string');
+        Setting::set('hero_image', 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=1600&q=85', 'Hero Image URL', 'hero', 'string');
         Setting::set('hero_stats_customers', '500+', 'Happy Customers Count', 'hero', 'string');
         Setting::set('hero_stats_products', '100+', 'Premium Products Count', 'hero', 'string');
         Setting::set('hero_stats_rating', '5', 'Average Rating', 'hero', 'string');
