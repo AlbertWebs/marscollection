@@ -66,7 +66,7 @@ return new class extends Migration
             ],
             [
                 'key' => 'hero_stats_rating',
-                'value' => '5★',
+                'value' => '5',
                 'type' => 'string',
                 'group' => 'hero',
                 'label' => 'Average Rating',

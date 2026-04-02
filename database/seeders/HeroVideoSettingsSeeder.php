@@ -20,7 +20,7 @@ class HeroVideoSettingsSeeder extends Seeder
         Setting::set('hero_image', 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80', 'Hero Image URL', 'hero', 'string');
         Setting::set('hero_stats_customers', '500+', 'Happy Customers Count', 'hero', 'string');
         Setting::set('hero_stats_products', '100+', 'Premium Products Count', 'hero', 'string');
-        Setting::set('hero_stats_rating', '5★', 'Average Rating', 'hero', 'string');
+        Setting::set('hero_stats_rating', '5', 'Average Rating', 'hero', 'string');
 
         // Video Section Settings
         Setting::set('video_enabled', '1', 'Enable Video Section', 'video', 'boolean');
