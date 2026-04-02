@@ -1,77 +1,68 @@
 @extends('layouts.app')
 
+@section('title', 'Order Placed - Zayn\'s Beauty')
+
 @section('content')
-<div class="bg-gray-50 min-h-screen">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div class="bg-white rounded-md p-8 shadow-sm text-center">
-            <!-- Success Icon -->
-            <div class="mb-8">
-                <div class="bg-green-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto">
-                    <svg class="w-12 h-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                </div>
-            </div>
+<div class="bg-gray-50 min-h-screen py-12">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-2xl">
 
-            <!-- Success Message -->
-            <h1 class="text-3xl font-bold text-gray-900 mb-4">Order Placed Successfully!</h1>
-            <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-                Thank you for your order! We've received your purchase and will begin processing it right away.
+        {{-- Success card --}}
+        <div class="bg-white border border-gray-100 rounded-sm shadow-sm p-10 text-center mb-5">
+            <div class="w-14 h-14 bg-green-50 rounded-sm flex items-center justify-center mx-auto mb-6">
+                <svg class="w-7 h-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+            </div>
+            <h1 class="text-2xl font-bold text-gray-900 mb-2">Order Placed Successfully!</h1>
+            <p class="text-gray-500 text-sm max-w-sm mx-auto">
+                Thank you for your order. We've received it and will begin processing right away.
             </p>
+        </div>
 
-            <!-- What's Next -->
-            <div class="bg-blue-50 rounded-md p-6 mb-8">
-                <h2 class="text-lg font-semibold text-blue-900 mb-4">What's Next?</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                    <div class="text-center">
-                        <div class="bg-blue-100 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-2">
-                            <span class="text-blue-600 font-bold">1</span>
-                        </div>
-                        <p class="text-blue-800">You'll receive an email confirmation with your order details</p>
-                    </div>
-                    <div class="text-center">
-                        <div class="bg-blue-100 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-2">
-                            <span class="text-blue-600 font-bold">2</span>
-                        </div>
-                        <p class="text-blue-800">We'll process your order and notify you when it ships</p>
-                    </div>
-                    <div class="text-center">
-                        <div class="bg-blue-100 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-2">
-                            <span class="text-blue-600 font-bold">3</span>
-                        </div>
-                        <p class="text-blue-800">Track your order status in your account dashboard</p>
-                    </div>
+        {{-- What's next --}}
+        <div class="bg-white border border-gray-100 rounded-sm shadow-sm p-6 mb-5">
+            <p class="text-xs uppercase tracking-widest text-gray-400 font-medium mb-5">What Happens Next</p>
+            <div class="space-y-4">
+                <div class="flex items-start gap-4">
+                    <span class="w-6 h-6 rounded-sm bg-pink-50 text-pink-600 text-xs font-bold flex items-center justify-center shrink-0">1</span>
+                    <p class="text-sm text-gray-600">You'll receive an email confirmation with your order details</p>
                 </div>
-            </div>
-
-            <!-- Contact Information -->
-            <div class="bg-gray-50 rounded-md p-6 mb-8">
-                <h3 class="text-lg font-semibold text-gray-900 mb-2">Need Help?</h3>
-                <p class="text-gray-600 mb-4">
-                    If you have any questions about your order, please don't hesitate to contact us.
-                </p>
-                <div class="flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-4 text-sm">
-                    <span class="text-gray-700">
-                        <strong>Email:</strong> {{ \App\Helpers\SettingsHelper::getEmail('support') }}
-                    </span>
-                    <span class="text-gray-700">
-                        <strong>Phone:</strong> {{ \App\Helpers\SettingsHelper::getPhone('primary') }}
-                    </span>
+                <div class="flex items-start gap-4">
+                    <span class="w-6 h-6 rounded-sm bg-pink-50 text-pink-600 text-xs font-bold flex items-center justify-center shrink-0">2</span>
+                    <p class="text-sm text-gray-600">We'll process your order and notify you when it ships</p>
                 </div>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="{{ route('home') }}" 
-                   class="bg-pink-600 text-white py-3 px-8 rounded-md hover:bg-pink-700 transition-colors font-semibold">
-                    Continue Shopping
-                </a>
-                <a href="{{ route('contact') }}" 
-                   class="bg-gray-600 text-white py-3 px-8 rounded-md hover:bg-gray-700 transition-colors font-semibold">
-                    Contact Support
-                </a>
+                <div class="flex items-start gap-4">
+                    <span class="w-6 h-6 rounded-sm bg-pink-50 text-pink-600 text-xs font-bold flex items-center justify-center shrink-0">3</span>
+                    <p class="text-sm text-gray-600">Track your order status in your account dashboard</p>
+                </div>
             </div>
         </div>
+
+        {{-- Need help --}}
+        <div class="bg-white border border-gray-100 rounded-sm shadow-sm p-5 mb-5 text-center text-sm text-gray-500">
+            <p class="mb-1 font-medium text-gray-700">Need help with your order?</p>
+            <div class="flex flex-wrap items-center justify-center gap-4 mt-2">
+                @if(\App\Helpers\SettingsHelper::getEmail('support'))
+                <span><strong class="text-gray-700">Email:</strong> {{ \App\Helpers\SettingsHelper::getEmail('support') }}</span>
+                @endif
+                @if(\App\Helpers\SettingsHelper::getPhone('primary'))
+                <span><strong class="text-gray-700">Phone:</strong> {{ \App\Helpers\SettingsHelper::getPhone('primary') }}</span>
+                @endif
+            </div>
+        </div>
+
+        {{-- Actions --}}
+        <div class="flex gap-3">
+            <a href="{{ route('home') }}"
+               class="flex-1 bg-pink-600 hover:bg-pink-700 text-white py-3 rounded-sm text-sm font-semibold transition-colors text-center">
+                Continue Shopping
+            </a>
+            <a href="{{ route('contact') }}"
+               class="flex-1 border border-gray-200 hover:border-gray-300 bg-white text-gray-700 py-3 rounded-sm text-sm font-medium transition-colors text-center">
+                Contact Support
+            </a>
+        </div>
+
     </div>
 </div>
-@endsection 
+@endsection
