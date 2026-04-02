@@ -61,7 +61,9 @@
                             <a href="{{ route('admin.bundles.index') }}" 
                                class="flex items-center px-4 py-2 text-gray-700 rounded-md hover:bg-gray-100 {{ request()->routeIs('admin.bundles.*') ? 'bg-pink-100 text-pink-700' : '' }}">
                                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3l2.5 2.5L17 3l2 2.5-2 2.5h2a1 1 0 011 1v3H4V9a1 1 0 011-1h2L5 5.5 7 3l2.5 2.5L12 3z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 12h16v7a2 2 0 01-2 2H6a2 2 0 01-2-2v-7z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v11"></path>
                                 </svg>
                                 Bundles
                             </a>
