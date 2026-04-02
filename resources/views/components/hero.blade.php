@@ -2,7 +2,7 @@
     $heroEnabled = \App\Models\Setting::get('hero_enabled', '1');
     $heroTitle = \App\Models\Setting::get('hero_title', 'Beauty, Curated For You');
     $heroSubtitle = \App\Models\Setting::get('hero_subtitle', 'Skincare, makeup & salon services — all in one place. Real products, real results.');
-    $heroImage = \App\Models\Setting::get('hero_image', 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');
+    $heroImage = \App\Models\Setting::get('hero_image', 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=1600&q=85');
     $heroStatsCustomers = \App\Models\Setting::get('hero_stats_customers', '500+');
     $heroStatsProducts = \App\Models\Setting::get('hero_stats_products', '100+');
     $heroStatsRating = \App\Models\Setting::get('hero_stats_rating', '4.9');
@@ -15,7 +15,7 @@
         <img src="{{ $heroImage }}"
              alt="Zayn's Beauty"
              class="w-full h-full object-cover object-center">
-        <div class="absolute inset-0 bg-black/50"></div>
+        <div class="absolute inset-0 bg-black/35"></div>
     </div>
 
     <!-- Content -->
@@ -38,11 +38,11 @@
             <!-- CTAs -->
             <div class="flex flex-wrap gap-4">
                 <a href="{{ route('products.index') }}"
-                   class="inline-block bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold tracking-wide uppercase px-8 py-4 transition-colors duration-200">
+                   class="inline-block bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold tracking-wide uppercase px-8 py-4 rounded-full transition-colors duration-200">
                     Shop Now
                 </a>
                 <a href="{{ route('appointments.create') }}"
-                   class="inline-block border border-white/60 hover:border-white text-white text-sm font-semibold tracking-wide uppercase px-8 py-4 transition-colors duration-200 hover:bg-white/10">
+                   class="inline-block border border-white/60 hover:border-white text-white text-sm font-semibold tracking-wide uppercase px-8 py-4 rounded-full transition-colors duration-200 hover:bg-white/10">
                     Book Appointment
                 </a>
             </div>
