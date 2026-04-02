@@ -22,7 +22,9 @@
         <!-- Sidebar -->
         <div id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform -translate-x-full transition-transform duration-300 ease-in-out lg:translate-x-0">
             <div class="flex items-center justify-between h-16 bg-gradient-to-r from-pink-600 to-purple-600 px-4">
-                <h1 class="text-xl font-bold text-white">Zayn's Beauty</h1>
+                <a href="{{ route('admin.dashboard') }}" aria-label="Zayn's Beauty Admin" class="flex items-center">
+                    <img src="{{ asset('logo.svg') }}" alt="Zayn's Beauty" class="h-9 w-auto">
+                </a>
                 <button id="close-sidebar" class="lg:hidden text-white hover:text-gray-200">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
