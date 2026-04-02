@@ -159,7 +159,7 @@
             // Set background color based on type
             const bgColor = type === 'success' ? 'bg-green-500' : 'bg-red-500';
             
-            toast.className = `${bgColor} text-white px-6 py-3 rounded-sm shadow-lg transform translate-x-full transition-all duration-300 flex items-center space-x-2 opacity-90 hover:opacity-100`;
+            toast.className = `${bgColor} text-white px-6 py-3 rounded-md shadow-lg transform translate-x-full transition-all duration-300 flex items-center space-x-2 opacity-90 hover:opacity-100`;
             toast.innerHTML = `
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     ${type === 'success' ? 

@@ -25,7 +25,7 @@
     $altText = $productName . ' - ' . $productBrand . ' ' . $productCategory . ' | Zayn\'s Beauty';
 @endphp
 
-<article class="bg-white rounded-sm overflow-hidden group cursor-pointer fade-in" itemscope itemtype="https://schema.org/Product">
+<article class="bg-white rounded-md overflow-hidden group cursor-pointer fade-in" itemscope itemtype="https://schema.org/Product">
     <a href="{{ route('products.show', $product) }}" class="block" aria-label="View details for {{ $productName }}">
         <div class="relative overflow-hidden">
             <img src="{{ $imageUrl }}" 
@@ -37,7 +37,7 @@
             <!-- Hover Overlay with Add to Cart Button -->
             <div class="absolute inset-0 bg-gray-900/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                 <button onclick="event.preventDefault(); addToCart({{ $productId }})" 
-                        class="bg-white text-gray-900 px-6 py-3 rounded-sm font-semibold hover:bg-pink-600 hover:text-white transition-colors duration-200 flex items-center space-x-2 shadow-lg"
+                        class="bg-white text-gray-900 px-6 py-3 rounded-md font-semibold hover:bg-pink-600 hover:text-white transition-colors duration-200 flex items-center space-x-2 shadow-lg"
                         aria-label="Add {{ $productName }} to cart">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>

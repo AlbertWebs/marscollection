@@ -32,7 +32,7 @@
             <div class="max-w-4xl mx-auto">
                 <!-- Step 1: Calendar & Time Selection -->
                 <div id="step-1">
-                    <div class="bg-white rounded-sm shadow-sm border border-gray-100 p-8">
+                    <div class="bg-white rounded-md shadow-sm border border-gray-100 p-8">
                         <h2 class="text-2xl font-bold text-gray-900 mb-6">Step 1: Choose Your Date & Time</h2>
                         
                         <!-- Service Selection -->
@@ -40,7 +40,7 @@
                             <label class="block text-sm font-medium text-gray-700 mb-3">Choose Your Service *</label>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 @foreach($serviceTypes as $type => $label)
-                                    <label class="flex items-center p-4 border border-gray-200 rounded-sm cursor-pointer hover:border-pink-300 transition-colors">
+                                    <label class="flex items-center p-4 border border-gray-200 rounded-md cursor-pointer hover:border-pink-300 transition-colors">
                                         <input type="radio" name="service_type" value="{{ $type }}" 
                                                class="w-4 h-4 text-pink-600 border-gray-300 focus:ring-pink-500"
                                                required>
@@ -59,15 +59,15 @@
                         <!-- Calendar -->
                         <div class="mb-8">
                             <label class="block text-sm font-medium text-gray-700 mb-3">Select Date *</label>
-                            <div class="bg-gray-50 rounded-sm p-4">
+                            <div class="bg-gray-50 rounded-md p-4">
                                 <div class="flex items-center justify-between mb-4">
-                                    <button type="button" id="prev-month" class="p-2 hover:bg-gray-200 rounded-sm">
+                                    <button type="button" id="prev-month" class="p-2 hover:bg-gray-200 rounded-md">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                                         </svg>
                                     </button>
                                     <h3 id="current-month" class="text-lg font-semibold text-gray-900"></h3>
-                                    <button type="button" id="next-month" class="p-2 hover:bg-gray-200 rounded-sm">
+                                    <button type="button" id="next-month" class="p-2 hover:bg-gray-200 rounded-md">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                                         </svg>
@@ -102,7 +102,7 @@
                         <!-- Next Step Button -->
                         <div class="mt-8">
                             <button type="button" id="next-step" 
-                                    class="w-full bg-pink-600 text-white py-4 rounded-sm font-semibold hover:bg-pink-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                    class="w-full bg-pink-600 text-white py-4 rounded-md font-semibold hover:bg-pink-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                     disabled>
                                 Continue to Step 2
                             </button>
@@ -112,7 +112,7 @@
 
                 <!-- Step 2: Customer Details -->
                 <div id="step-2" class="hidden">
-                    <div class="bg-white rounded-sm shadow-sm border border-gray-100 p-8">
+                    <div class="bg-white rounded-md shadow-sm border border-gray-100 p-8">
                         <h2 class="text-2xl font-bold text-gray-900 mb-6">Step 2: Your Details</h2>
                         
                         <form method="POST" action="{{ route('appointments.store') }}" class="space-y-6">
@@ -122,7 +122,7 @@
                             <input type="hidden" id="selected-time" name="appointment_time">
                             
                             <!-- Selected Appointment Summary -->
-                            <div class="bg-gray-50 rounded-sm p-4 mb-6">
+                            <div class="bg-gray-50 rounded-md p-4 mb-6">
                                 <h3 class="font-semibold text-gray-900 mb-2">Appointment Summary</h3>
                                 <div class="space-y-2 text-sm">
                                     <div class="flex justify-between">
@@ -149,7 +149,7 @@
                                 <div>
                                     <label for="customer_name" class="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
                                     <input type="text" id="customer_name" name="customer_name" 
-                                           class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                                           class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                                            required>
                                     @error('customer_name')
                                         <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
@@ -159,7 +159,7 @@
                                 <div>
                                     <label for="customer_phone" class="block text-sm font-medium text-gray-700 mb-2">Phone Number *</label>
                                     <input type="tel" id="customer_phone" name="customer_phone" 
-                                           class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                                           class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                                            required>
                                     @error('customer_phone')
                                         <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
@@ -170,7 +170,7 @@
                             <div>
                                 <label for="customer_email" class="block text-sm font-medium text-gray-700 mb-2">Email Address *</label>
                                 <input type="email" id="customer_email" name="customer_email" 
-                                       class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                                       class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                                        required>
                                 @error('customer_email')
                                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
@@ -182,7 +182,7 @@
                                 <label for="special_requests" class="block text-sm font-medium text-gray-700 mb-2">Special Requests</label>
                                 <textarea id="special_requests" name="special_requests" rows="4"
                                           placeholder="Any specific requests, allergies, or preferences..."
-                                          class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"></textarea>
+                                          class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"></textarea>
                                 @error('special_requests')
                                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                                 @enderror
@@ -191,11 +191,11 @@
                             <!-- Action Buttons -->
                             <div class="flex space-x-4">
                                 <button type="button" id="back-step" 
-                                        class="flex-1 bg-gray-200 text-gray-700 py-4 px-6 rounded-sm font-semibold hover:bg-gray-300 transition-all duration-300">
+                                        class="flex-1 bg-gray-200 text-gray-700 py-4 px-6 rounded-md font-semibold hover:bg-gray-300 transition-all duration-300">
                                     Back to Step 1
                                 </button>
                                 <button type="submit" 
-                                        class="flex-1 bg-pink-600 text-white py-4 px-6 rounded-sm font-semibold hover:bg-pink-700 transition-colors">
+                                        class="flex-1 bg-pink-600 text-white py-4 px-6 rounded-md font-semibold hover:bg-pink-700 transition-colors">
                                     Book Appointment
                                 </button>
                             </div>
@@ -285,7 +285,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Format date as YYYY-MM-DD without timezone issues
             const formattedDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
             
-            let classes = 'h-10 flex items-center justify-center text-sm font-medium rounded-sm cursor-pointer transition-colors';
+            let classes = 'h-10 flex items-center justify-center text-sm font-medium rounded-md cursor-pointer transition-colors';
             
             if (isPast) {
                 classes += ' text-gray-400 cursor-not-allowed';
@@ -344,7 +344,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     data.available_slots.forEach(slot => {
                         const button = document.createElement('button');
                         button.type = 'button';
-                        button.className = 'p-3 border border-gray-300 rounded-sm text-sm font-medium hover:border-pink-300 hover:bg-pink-50 transition-colors';
+                        button.className = 'p-3 border border-gray-300 rounded-md text-sm font-medium hover:border-pink-300 hover:bg-pink-50 transition-colors';
                         button.textContent = formatTime(slot);
                         button.dataset.time = slot;
                         button.onclick = () => selectTime(button);

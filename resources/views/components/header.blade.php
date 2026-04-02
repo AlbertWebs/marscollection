@@ -31,7 +31,7 @@
                 <form action="{{ route('products.index') }}" method="GET" class="hidden md:block">
                     <div class="relative">
                         <input type="text" name="search" placeholder="Search products..." 
-                               class="w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent">
+                               class="w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -52,7 +52,7 @@
                     <span class="cart-count absolute top-2 -right-2 bg-pink-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold shadow-sm">0</span>
                     
                     <!-- Cart Dropdown -->
-                    <div class="absolute right-0 mt-2 w-72 bg-white rounded-sm shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 transform origin-top-right">
+                    <div class="absolute right-0 mt-2 w-72 bg-white rounded-md shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 transform origin-top-right">
                         <!-- Dropdown Arrow -->
                         <div class="absolute -top-2 right-4 w-4 h-4 bg-white border-t border-l border-gray-200 transform rotate-45"></div>
                         <div class="p-4">
@@ -76,7 +76,7 @@
                                     <span id="cart-dropdown-total" class="text-lg font-bold text-pink-600">KES 0</span>
                                 </div>
                                 <div class="flex space-x-2">
-                                    <a href="{{ route('cart.index') }}" class="flex-1 bg-pink-600 text-white py-2 px-4 rounded-sm text-sm font-medium hover:bg-pink-700 transition-colors text-center">
+                                    <a href="{{ route('cart.index') }}" class="flex-1 bg-pink-600 text-white py-2 px-4 rounded-md text-sm font-medium hover:bg-pink-700 transition-colors text-center">
                                         View Cart
                                     </a>
                                     
@@ -159,7 +159,7 @@
             <form action="{{ route('products.index') }}" method="GET">
                 <div class="relative">
                     <input type="text" name="search" placeholder="Search products..." 
-                           class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent">
+                           class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -276,7 +276,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             html += `
                 <div class="flex items-center space-x-3">
-                    <img src="${itemImage}" alt="${itemName}" class="w-12 h-12 object-cover rounded-sm">
+                    <img src="${itemImage}" alt="${itemName}" class="w-12 h-12 object-cover rounded-md">
                     <div class="flex-1 min-w-0">
                         <h4 class="text-sm font-medium text-gray-900 truncate">${itemName}</h4>
                         <p class="text-xs text-gray-500">${itemType} • Qty: ${item.quantity}</p>

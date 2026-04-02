@@ -9,7 +9,7 @@
             <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 md:gap-8">
                 <!-- Cart Items -->
                 <div class="xl:col-span-2">
-                    <div class="bg-white rounded-sm shadow-sm border border-gray-200">
+                    <div class="bg-white rounded-md shadow-sm border border-gray-200">
                         <div class="p-4 md:p-6">
                             <h2 class="text-lg font-semibold text-gray-900 mb-4">Cart Items ({{ $cartItems->count() }})</h2>
                             
@@ -21,7 +21,7 @@
                                             @if($item->bundle_id)
                                                 <img src="{{ $item->bundle->image }}" 
                                                      alt="{{ $item->bundle->name }}" 
-                                                     class="w-16 h-16 object-cover rounded-sm flex-shrink-0">
+                                                     class="w-16 h-16 object-cover rounded-md flex-shrink-0">
                                                 
                                                 <div class="flex-1 min-w-0">
                                                     <h3 class="text-sm font-semibold text-gray-900 line-clamp-2">{{ $item->bundle->name }}</h3>
@@ -32,7 +32,7 @@
                                             @else
                                                 <img src="{{ $item->product->image }}" 
                                                      alt="{{ $item->product->name }}" 
-                                                     class="w-16 h-16 object-cover rounded-sm flex-shrink-0">
+                                                     class="w-16 h-16 object-cover rounded-md flex-shrink-0">
                                                 
                                                 <div class="flex-1 min-w-0">
                                                     <h3 class="text-sm font-semibold text-gray-900 line-clamp-2">{{ $item->product->name }}</h3>
@@ -44,7 +44,7 @@
                                         
                                         <div class="flex items-center justify-between">
                                             <!-- Quantity Controls -->
-                                            <div class="flex items-center border border-gray-300 rounded-sm">
+                                            <div class="flex items-center border border-gray-300 rounded-md">
                                                 <button onclick="updateQuantity({{ $item->id }}, {{ $item->quantity - 1 }})" 
                                                         class="px-4 py-2 text-gray-600 hover:text-gray-900 {{ $item->quantity <= 1 ? 'opacity-50 cursor-not-allowed' : '' }}">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -75,7 +75,7 @@
                                     @if($item->bundle_id)
                                         <img src="{{ $item->bundle->image }}" 
                                              alt="{{ $item->bundle->name }}" 
-                                             class="w-20 h-20 object-cover rounded-sm">
+                                             class="w-20 h-20 object-cover rounded-md">
                                         
                                         <div class="ml-4 flex-1">
                                             <h3 class="text-lg font-semibold text-gray-900">{{ $item->bundle->name }}</h3>
@@ -86,7 +86,7 @@
                                     @else
                                         <img src="{{ $item->product->image }}" 
                                              alt="{{ $item->product->name }}" 
-                                             class="w-20 h-20 object-cover rounded-sm">
+                                             class="w-20 h-20 object-cover rounded-md">
                                         
                                         <div class="ml-4 flex-1">
                                             <h3 class="text-lg font-semibold text-gray-900">{{ $item->product->name }}</h3>
@@ -97,7 +97,7 @@
                                     
                                     <div class="flex items-center space-x-4">
                                         <!-- Quantity Controls -->
-                                        <div class="flex items-center border border-gray-300 rounded-sm">
+                                        <div class="flex items-center border border-gray-300 rounded-md">
                                             <button onclick="updateQuantity({{ $item->id }}, {{ $item->quantity - 1 }})" 
                                                     class="px-3 py-1 text-gray-600 hover:text-gray-900 {{ $item->quantity <= 1 ? 'opacity-50 cursor-not-allowed' : '' }}">
                                                 -
@@ -126,7 +126,7 @@
                 
                 <!-- Order Summary & Delivery Form -->
                 <div class="xl:col-span-1">
-                    <div class="bg-white rounded-sm shadow-sm border border-gray-200 p-4 md:p-6">
+                    <div class="bg-white rounded-md shadow-sm border border-gray-200 p-4 md:p-6">
                         <h2 class="text-lg font-semibold text-gray-900 mb-4">Order Summary</h2>
                         
                         <div class="space-y-3 mb-6">
@@ -156,25 +156,25 @@
                                     <div>
                                         <label for="customer_name" class="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
                                         <input type="text" id="customer_name" name="customer_name" required
-                                               class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm">
+                                               class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm">
                                     </div>
                                     
                                     <div>
                                         <label for="customer_email" class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
                                         <input type="email" id="customer_email" name="customer_email" required
-                                               class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm">
+                                               class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm">
                                     </div>
                                     
                                     <div>
                                         <label for="customer_phone" class="block text-sm font-medium text-gray-700 mb-1">Phone *</label>
                                         <input type="tel" id="customer_phone" name="customer_phone" required
-                                               class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm">
+                                               class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm">
                                     </div>
                                     
                                     <div>
                                         <label for="customer_city" class="block text-sm font-medium text-gray-700 mb-1">City *</label>
                                         <input type="text" id="customer_city" name="customer_city" required
-                                               class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm"
+                                               class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm"
                                                oninput="calculateShipping()">
                                         <p class="text-xs text-gray-500 mt-1">Enter your city to see shipping cost</p>
                                     </div>
@@ -183,13 +183,13 @@
                                         <label for="delivery_address" class="block text-sm font-medium text-gray-700 mb-1">Delivery Address *</label>
                                         <textarea id="delivery_address" name="delivery_address" rows="3" required
                                                   placeholder="Enter your complete delivery address"
-                                                  class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm"></textarea>
+                                                  class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm"></textarea>
                                     </div>
                                     
                                     <div>
                                         <label for="payment_method" class="block text-sm font-medium text-gray-700 mb-1">Payment Method *</label>
                                         <select id="payment_method" name="payment_method" required
-                                                class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm">
+                                                class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm">
                                             <option value="cash_on_delivery">Cash on Delivery</option>
                                             <option value="credit_card">Credit Card</option>
                                             <option value="bank_transfer">Bank Transfer</option>
@@ -200,13 +200,13 @@
                                         <label for="notes" class="block text-sm font-medium text-gray-700 mb-1">Order Notes</label>
                                         <textarea id="notes" name="notes" rows="2"
                                                   placeholder="Any special instructions..."
-                                                  class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm"></textarea>
+                                                  class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm"></textarea>
                                     </div>
                                 </div>
                             </div>
                             
                             <button type="submit" 
-                                    class="w-full bg-gradient-to-r from-pink-600 to-purple-600 text-white py-4 md:py-3 rounded-sm font-semibold hover:from-pink-700 hover:to-purple-700 transition-all duration-300">
+                                    class="w-full bg-gradient-to-r from-pink-600 to-purple-600 text-white py-4 md:py-3 rounded-md font-semibold hover:from-pink-700 hover:to-purple-700 transition-all duration-300">
                                 Place Order
                             </button>
                         </form>
@@ -227,7 +227,7 @@
                 <h3 class="mt-2 text-sm font-medium text-gray-900">Your cart is empty</h3>
                 <p class="mt-1 text-sm text-gray-500">Start shopping to add items to your cart.</p>
                 <div class="mt-6">
-                    <a href="{{ route('products.index') }}" class="bg-pink-600 text-white px-6 py-3 rounded-sm font-semibold hover:bg-pink-700 transition-colors">
+                    <a href="{{ route('products.index') }}" class="bg-pink-600 text-white px-6 py-3 rounded-md font-semibold hover:bg-pink-700 transition-colors">
                         Start Shopping
                     </a>
                 </div>
@@ -250,7 +250,7 @@ function showToast(message, type = 'success') {
     // Set background color based on type
     const bgColor = type === 'success' ? 'bg-green-500' : 'bg-red-500';
     
-    toast.className = `${bgColor} text-white px-6 py-3 rounded-sm shadow-lg transform translate-x-full transition-all duration-300 flex items-center space-x-2 opacity-90 hover:opacity-100`;
+    toast.className = `${bgColor} text-white px-6 py-3 rounded-md shadow-lg transform translate-x-full transition-all duration-300 flex items-center space-x-2 opacity-90 hover:opacity-100`;
     toast.innerHTML = `
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             ${type === 'success' ? 
@@ -356,14 +356,14 @@ function removeFromCart(cartItemId) {
     const confirmDialog = document.createElement('div');
     confirmDialog.className = 'fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50';
     confirmDialog.innerHTML = `
-        <div class="bg-white rounded-sm p-6 max-w-sm mx-4">
+        <div class="bg-white rounded-md p-6 max-w-sm mx-4">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">Remove Item</h3>
             <p class="text-gray-600 mb-6">Are you sure you want to remove this item from your cart?</p>
             <div class="flex space-x-3">
-                <button onclick="this.closest('.fixed').remove()" class="flex-1 px-4 py-2 text-gray-600 border border-gray-300 rounded-sm hover:bg-gray-50 transition-colors">
+                <button onclick="this.closest('.fixed').remove()" class="flex-1 px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors">
                     Cancel
                 </button>
-                <button onclick="confirmRemoveFromCart(${cartItemId})" class="flex-1 px-4 py-2 bg-red-600 text-white rounded-sm hover:bg-red-700 transition-colors">
+                <button onclick="confirmRemoveFromCart(${cartItemId})" class="flex-1 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors">
                     Remove
                 </button>
             </div>

@@ -7,7 +7,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Main Blog Card -->
             <div class="lg:col-span-2">
-                <div class="bg-white border border-gray-200 rounded-sm overflow-hidden group">
+                <div class="bg-white border border-gray-200 rounded-md overflow-hidden group">
                     <img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" 
                          alt="Skincare Tips" 
                          class="w-full h-64 object-cover">
@@ -32,7 +32,7 @@
             <!-- Smaller Blog Cards -->
             <div class="space-y-6">
                 <!-- Blog Card 1 -->
-                <div class="bg-white border border-gray-200 rounded-sm overflow-hidden group">
+                <div class="bg-white border border-gray-200 rounded-md overflow-hidden group">
                     <img src="https://images.unsplash.com/photo-1586495777744-4413f21062fa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" 
                          alt="Makeup Guide" 
                          class="w-full h-32 object-cover">
@@ -50,7 +50,7 @@
                 </div>
                 
                 <!-- Blog Card 2 -->
-                <div class="bg-white border border-gray-200 rounded-sm overflow-hidden group">
+                <div class="bg-white border border-gray-200 rounded-md overflow-hidden group">
                     <img src="https://images.unsplash.com/photo-1541643600914-78b084683601?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" 
                          alt="Foundation Guide" 
                          class="w-full h-32 object-cover">
@@ -68,7 +68,7 @@
                 </div>
                 
                 <!-- Blog Card 3 -->
-                <div class="bg-white border border-gray-200 rounded-sm overflow-hidden group">
+                <div class="bg-white border border-gray-200 rounded-md overflow-hidden group">
                     <img src="https://images.unsplash.com/photo-1556228720-195a672e8a03?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" 
                          alt="Skincare Secrets" 
                          class="w-full h-32 object-cover">

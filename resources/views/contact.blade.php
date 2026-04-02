@@ -19,9 +19,9 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <!-- Contact Form -->
-            <div class="bg-white rounded-sm p-8">
+            <div class="bg-white rounded-md p-8">
                 @if(session('success'))
-                    <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-sm">
+                    <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-md">
                         <p class="text-green-800">{{ session('success') }}</p>
                     </div>
                 @endif
@@ -38,7 +38,7 @@
                                    id="first_name" 
                                    name="first_name" 
                                    required
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent">
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent">
                         </div>
                         <div>
                             <label for="last_name" class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
@@ -46,7 +46,7 @@
                                    id="last_name" 
                                    name="last_name" 
                                    required
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent">
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent">
                         </div>
                     </div>
                     
@@ -56,7 +56,7 @@
                                id="email" 
                                name="email" 
                                required
-                               class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent">
+                               class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent">
                     </div>
                     
                     <div>
@@ -64,7 +64,7 @@
                         <input type="tel" 
                                id="phone" 
                                name="phone"
-                               class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent">
+                               class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent">
                     </div>
                     
                     <div>
@@ -72,7 +72,7 @@
                         <select id="subject" 
                                 name="subject" 
                                 required
-                                class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent">
+                                class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent">
                             <option value="">Select a subject</option>
                             <option value="general">General Inquiry</option>
                             <option value="product">Product Information</option>
@@ -91,7 +91,7 @@
                                   rows="5" 
                                   required
                                   placeholder="Tell us how we can help you..."
-                                  class="w-full px-4 py-3 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent resize-none"></textarea>
+                                  class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent resize-none"></textarea>
                     </div>
                     
                     <!-- Hidden honeypot fields -->
@@ -101,7 +101,7 @@
                     </div>
                     
                     <button type="submit" 
-                            class="w-full bg-gradient-to-r from-pink-600 to-purple-600 text-white font-semibold py-3 px-6 rounded-sm hover:from-pink-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105">
+                            class="w-full bg-gradient-to-r from-pink-600 to-purple-600 text-white font-semibold py-3 px-6 rounded-md hover:from-pink-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105">
                         Send Message
                     </button>
                 </form>
@@ -110,7 +110,7 @@
             <!-- Contact Information -->
             <div class="space-y-8">
                 <!-- Contact Details -->
-                <div class="bg-white rounded-sm p-8">
+                <div class="bg-white rounded-md p-8">
                     <h2 class="text-2xl font-bold text-gray-900 mb-6">Get in Touch</h2>
                     
                     <div class="space-y-6">
@@ -159,7 +159,7 @@
                 </div>
                 
                 <!-- Business Hours -->
-                <div class="bg-white rounded-sm p-8">
+                <div class="bg-white rounded-md p-8">
                     <h2 class="text-2xl font-bold text-gray-900 mb-6">Business Hours</h2>
                     
                     <div class="space-y-3">
@@ -177,7 +177,7 @@
                         </div>
                     </div>
                     
-                    <div class="mt-6 p-4 bg-pink-50 rounded-sm">
+                    <div class="mt-6 p-4 bg-pink-50 rounded-md">
                         <p class="text-sm text-pink-800">
                             <strong>Note:</strong> We're closed on public holidays. 
                             Online orders are processed 24/7!
@@ -186,7 +186,7 @@
                 </div>
                 
                 <!-- Social Media -->
-                <div class="bg-white rounded-sm p-8">
+                <div class="bg-white rounded-md p-8">
                     <h2 class="text-2xl font-bold text-gray-900 mb-6">Follow Us</h2>
                     
                     <div class="flex space-x-4">
@@ -239,7 +239,7 @@
             <div class="space-y-6">
                 @if(!empty($faqs))
                     @foreach($faqs as $faq)
-                        <div class="bg-gray-50 rounded-sm p-6">
+                        <div class="bg-gray-50 rounded-md p-6">
                             <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $faq['question'] }}</h3>
                             <p class="text-gray-600">
                                 {{ $faq['answer'] }}
@@ -247,7 +247,7 @@
                         </div>
                     @endforeach
                 @else
-                    <div class="bg-gray-50 rounded-sm p-6">
+                    <div class="bg-gray-50 rounded-md p-6">
                         <p class="text-gray-600">No frequently asked questions available at the moment. Please check back later.</p>
                     </div>
                 @endif

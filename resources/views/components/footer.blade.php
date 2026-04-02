@@ -124,9 +124,9 @@
                     <input type="hidden" name="last_name" value="Subscriber">
                     <input type="hidden" name="message" value="Newsletter signup">
                     <input type="email" name="email" required placeholder="your@email.com"
-                           class="w-full px-3 py-2.5 bg-gray-800 border border-gray-700 rounded-sm text-white text-sm placeholder-gray-500 focus:outline-none focus:border-pink-500 transition-colors">
+                           class="w-full px-3 py-2.5 bg-gray-800 border border-gray-700 rounded-md text-white text-sm placeholder-gray-500 focus:outline-none focus:border-pink-500 transition-colors">
                     <button type="submit"
-                            class="w-full bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold py-2.5 rounded-sm transition-colors">
+                            class="w-full bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold py-2.5 rounded-md transition-colors">
                         Subscribe
                     </button>
                 </form>

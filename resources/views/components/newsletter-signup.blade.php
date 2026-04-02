@@ -12,9 +12,9 @@
             <input type="hidden" name="message" value="Newsletter signup request">
             <input type="email" name="email" required
                    placeholder="your@email.com"
-                   class="flex-1 px-4 py-3 border border-gray-300 rounded-sm text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent">
+                   class="flex-1 px-4 py-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent">
             <button type="submit"
-                    class="bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-6 py-3 rounded-sm transition-colors">
+                    class="bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold px-6 py-3 rounded-md transition-colors">
                 Subscribe
             </button>
         </form>

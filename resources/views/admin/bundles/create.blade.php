@@ -8,13 +8,13 @@
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h1 class="text-xl lg:text-2xl font-bold text-gray-900">Create Bundle</h1>
         <a href="{{ route('admin.bundles.index') }}" 
-           class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-sm">
+           class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md">
             Back to Bundles
         </a>
     </div>
 
     <!-- Form -->
-    <div class="bg-white shadow rounded-sm">
+    <div class="bg-white shadow rounded-md">
         <div class="px-6 py-4 border-b border-gray-200">
             <h3 class="text-lg font-medium text-gray-900">Bundle Information</h3>
         </div>
@@ -25,7 +25,7 @@
             <div>
                 <label for="name" class="block text-sm font-medium text-gray-700">Bundle Name</label>
                 <input type="text" name="name" id="name" 
-                       class="mt-1 block w-full border-gray-300 rounded-sm shadow-sm focus:ring-pink-500 focus:border-pink-500"
+                       class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500"
                        value="{{ old('name') }}" required>
                 @error('name')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -35,7 +35,7 @@
             <div>
                 <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
                 <textarea name="description" id="description" rows="4"
-                          class="mt-1 block w-full border-gray-300 rounded-sm shadow-sm focus:ring-pink-500 focus:border-pink-500">{{ old('description') }}</textarea>
+                          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500">{{ old('description') }}</textarea>
                 @error('description')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
@@ -47,7 +47,7 @@
                     <span id="savings-display" class="text-sm font-normal text-gray-500 ml-2"></span>
                 </label>
                 <input type="number" name="price" id="price" step="0.01" min="0"
-                       class="mt-1 block w-full border-gray-300 rounded-sm shadow-sm focus:ring-pink-500 focus:border-pink-500"
+                       class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500"
                        value="{{ old('price') }}" required>
                 <div id="price-breakdown" class="mt-2 text-sm text-gray-600 hidden">
                     <div>Individual Products Total: <span id="individual-total" class="font-medium">KSh 0</span></div>
@@ -65,18 +65,18 @@
                 <!-- Search Input -->
                 <div class="mt-2 mb-4">
                     <input type="text" id="product-search" placeholder="Search products by name, brand, or category..."
-                           class="block w-full border-gray-300 rounded-sm shadow-sm focus:ring-pink-500 focus:border-pink-500">
+                           class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500">
                 </div>
                 
                 <!-- Search Results -->
-                <div id="search-results" class="border border-gray-300 rounded-sm p-4 max-h-80 overflow-y-auto mb-4">
+                <div id="search-results" class="border border-gray-300 rounded-md p-4 max-h-80 overflow-y-auto mb-4">
                     <div class="text-center text-gray-500 py-8">
                         <p>Start typing to search for products...</p>
                     </div>
                 </div>
                 
                 <!-- Selected Products Display -->
-                <div id="selected-products" class="p-4 bg-gray-50 rounded-sm border border-gray-200">
+                <div id="selected-products" class="p-4 bg-gray-50 rounded-md border border-gray-200">
                     <h4 class="text-sm font-medium text-gray-700 mb-2">Selected Products (<span id="selected-count">0</span>)</h4>
                     <div id="selected-list" class="space-y-2">
                         <p class="text-sm text-gray-500 italic">No products selected yet. Use the search above to find and add products.</p>
@@ -94,7 +94,7 @@
             <div>
                 <label class="flex items-center">
                     <input type="checkbox" name="is_active" value="1"
-                           class="rounded-sm border-gray-300 text-pink-600 shadow-sm focus:border-pink-300 focus:ring focus:ring-pink-200 focus:ring-opacity-50"
+                           class="rounded-md border-gray-300 text-pink-600 shadow-sm focus:border-pink-300 focus:ring focus:ring-pink-200 focus:ring-opacity-50"
                            {{ old('is_active') ? 'checked' : '' }}>
                     <span class="ml-2 text-sm text-gray-900">Active Bundle</span>
                 </label>
@@ -102,11 +102,11 @@
 
             <div class="flex flex-col sm:flex-row justify-end gap-3">
                 <a href="{{ route('admin.bundles.index') }}" 
-                   class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-sm">
+                   class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md">
                     Cancel
                 </a>
                 <button type="submit" 
-                        class="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-sm">
+                        class="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-md">
                     Create Bundle
                 </button>
             </div>
@@ -182,10 +182,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const categoryName = product.category ? product.category.name : '';
             
             html += `
-                <div class="flex items-center justify-between p-3 border border-gray-200 rounded-sm hover:bg-gray-50">
+                <div class="flex items-center justify-between p-3 border border-gray-200 rounded-md hover:bg-gray-50">
                     <div class="flex items-center">
                         <input type="checkbox" 
-                               class="product-checkbox rounded-sm border-gray-300 text-pink-600 shadow-sm focus:border-pink-300 focus:ring focus:ring-pink-200 focus:ring-opacity-50"
+                               class="product-checkbox rounded-md border-gray-300 text-pink-600 shadow-sm focus:border-pink-300 focus:ring focus:ring-pink-200 focus:ring-opacity-50"
                                data-product-id="${product.id}"
                                data-product-name="${product.name}"
                                data-product-price="${product.price}"
@@ -212,7 +212,7 @@ document.addEventListener('DOMContentLoaded', function() {
             html += `
                 <div class="mt-4 text-center">
                     <button type="button" id="load-more" 
-                            class="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-sm text-sm">
+                            class="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-md text-sm">
                         Load More Products
                     </button>
                 </div>
@@ -264,7 +264,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function addSelectedProduct(product) {
         const productElement = document.createElement('div');
         productElement.id = `selected-${product.id}`;
-        productElement.className = 'flex items-center justify-between p-2 bg-white rounded-sm border border-gray-200';
+        productElement.className = 'flex items-center justify-between p-2 bg-white rounded-md border border-gray-200';
         productElement.innerHTML = `
             <div class="flex items-center">
                 <div class="text-sm font-medium text-gray-900">${product.name}</div>

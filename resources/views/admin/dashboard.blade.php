@@ -6,7 +6,7 @@
 <div class="space-y-6">
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-        <div class="bg-white rounded-sm shadow p-6">
+        <div class="bg-white rounded-md shadow p-6">
             <div class="flex items-center">
                 <div class="p-3 rounded-full bg-pink-100 text-pink-600">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -21,7 +21,7 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-sm shadow p-6">
+        <div class="bg-white rounded-md shadow p-6">
             <div class="flex items-center">
                 <div class="p-3 rounded-full bg-purple-100 text-purple-600">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -36,7 +36,7 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-sm shadow p-6">
+        <div class="bg-white rounded-md shadow p-6">
             <div class="flex items-center">
                 <div class="p-3 rounded-full bg-green-100 text-green-600">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -50,7 +50,7 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-sm shadow p-6">
+        <div class="bg-white rounded-md shadow p-6">
             <div class="flex items-center">
                 <div class="p-3 rounded-full bg-blue-100 text-blue-600">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -68,7 +68,7 @@
 
     <!-- Additional Stats -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-        <div class="bg-white rounded-sm shadow p-6">
+        <div class="bg-white rounded-md shadow p-6">
             <div class="flex items-center">
                 <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -82,7 +82,7 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-sm shadow p-6">
+        <div class="bg-white rounded-md shadow p-6">
             <div class="flex items-center">
                 <div class="p-3 rounded-full bg-indigo-100 text-indigo-600">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -96,7 +96,7 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-sm shadow p-6">
+        <div class="bg-white rounded-md shadow p-6">
             <div class="flex items-center">
                 <div class="p-3 rounded-full bg-red-100 text-red-600">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -114,7 +114,7 @@
     <!-- Recent Orders and Top Products -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
         <!-- Recent Orders -->
-        <div class="bg-white rounded-sm shadow">
+        <div class="bg-white rounded-md shadow">
             <div class="px-6 py-4 border-b border-gray-200">
                 <h3 class="text-lg font-medium text-gray-900">Recent Orders</h3>
             </div>
@@ -122,7 +122,7 @@
                 @if($stats['recent_orders']->count() > 0)
                     <div class="space-y-4">
                         @foreach($stats['recent_orders'] as $order)
-                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-sm">
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-md">
                                 <div>
                                     <p class="text-sm font-medium text-gray-900">Order #{{ $order->id }}</p>
                                     <p class="text-sm text-gray-600">{{ $order->user->name ?? 'Guest' }}</p>
@@ -152,7 +152,7 @@
         </div>
 
         <!-- Top Products -->
-        <div class="bg-white rounded-sm shadow">
+        <div class="bg-white rounded-md shadow">
             <div class="px-6 py-4 border-b border-gray-200">
                 <h3 class="text-lg font-medium text-gray-900">Top Products</h3>
             </div>
@@ -160,7 +160,7 @@
                 @if($stats['top_products']->count() > 0)
                     <div class="space-y-4">
                         @foreach($stats['top_products'] as $product)
-                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-sm">
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-md">
                                 <div>
                                     <p class="text-sm font-medium text-gray-900">{{ $product->name }}</p>
                                     <p class="text-sm text-gray-600">{{ $product->brand->name ?? 'No Brand' }}</p>
@@ -189,14 +189,14 @@
     </div>
 
     <!-- Quick Actions -->
-    <div class="bg-white rounded-sm shadow">
+    <div class="bg-white rounded-md shadow">
         <div class="px-6 py-4 border-b border-gray-200">
             <h3 class="text-lg font-medium text-gray-900">Quick Actions</h3>
         </div>
         <div class="p-4 lg:p-6">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <a href="{{ route('admin.products.create') }}" 
-                   class="flex items-center p-4 bg-pink-50 rounded-sm hover:bg-pink-100 transition-colors">
+                   class="flex items-center p-4 bg-pink-50 rounded-md hover:bg-pink-100 transition-colors">
                     <svg class="w-8 h-8 text-pink-600 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                     </svg>
@@ -207,7 +207,7 @@
                 </a>
 
                 <a href="{{ route('admin.orders.index') }}" 
-                   class="flex items-center p-4 bg-purple-50 rounded-sm hover:bg-purple-100 transition-colors">
+                   class="flex items-center p-4 bg-purple-50 rounded-md hover:bg-purple-100 transition-colors">
                     <svg class="w-8 h-8 text-purple-600 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
@@ -218,7 +218,7 @@
                 </a>
 
                 <a href="{{ route('admin.users.index') }}" 
-                   class="flex items-center p-4 bg-green-50 rounded-sm hover:bg-green-100 transition-colors">
+                   class="flex items-center p-4 bg-green-50 rounded-md hover:bg-green-100 transition-colors">
                     <svg class="w-8 h-8 text-green-600 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
                     </svg>

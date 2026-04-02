@@ -8,7 +8,7 @@
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h1 class="text-xl lg:text-2xl font-bold text-gray-900">Categories</h1>
         <a href="{{ route('admin.categories.create') }}" 
-           class="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-sm flex items-center w-full sm:w-auto justify-center">
+           class="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-md flex items-center w-full sm:w-auto justify-center">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
             </svg>
@@ -17,7 +17,7 @@
     </div>
 
     <!-- Categories Table -->
-    <div class="bg-white shadow rounded-sm overflow-hidden">
+    <div class="bg-white shadow rounded-md overflow-hidden">
         <div class="px-4 lg:px-6 py-4 border-b border-gray-200">
             <h3 class="text-base lg:text-lg font-medium text-gray-900">All Categories</h3>
         </div>

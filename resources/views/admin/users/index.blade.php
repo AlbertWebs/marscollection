@@ -10,7 +10,7 @@
     </div>
 
     <!-- Users Table -->
-    <div class="bg-white shadow rounded-sm overflow-hidden">
+    <div class="bg-white shadow rounded-md overflow-hidden">
         <div class="px-4 lg:px-6 py-4 border-b border-gray-200">
             <h3 class="text-base lg:text-lg font-medium text-gray-900">All Users</h3>
         </div>
@@ -68,7 +68,7 @@
                                     @csrf
                                     @method('PUT')
                                     <button type="submit" 
-                                            class="text-xs sm:text-sm px-2 sm:px-3 py-1 rounded-sm 
+                                            class="text-xs sm:text-sm px-2 sm:px-3 py-1 rounded-md 
                                                    @if($user->isAdmin()) 
                                                        bg-red-100 text-red-700 hover:bg-red-200 
                                                    @else 

@@ -11,7 +11,7 @@
             }
         }">
             <!-- FAQ Item 1 -->
-            <div class="bg-white rounded-sm mb-4 overflow-hidden">
+            <div class="bg-white rounded-md mb-4 overflow-hidden">
                 <button @click="toggleTab(1)" 
                         class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50 transition-colors">
                     <h3 class="text-lg font-semibold text-gray-900">How can I track my order?</h3>
@@ -38,7 +38,7 @@
             </div>
             
             <!-- FAQ Item 2 -->
-            <div class="bg-white rounded-sm mb-4 overflow-hidden">
+            <div class="bg-white rounded-md mb-4 overflow-hidden">
                 <button @click="toggleTab(2)" 
                         class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50 transition-colors">
                     <h3 class="text-lg font-semibold text-gray-900">What is your return policy?</h3>
@@ -65,7 +65,7 @@
             </div>
             
             <!-- FAQ Item 3 -->
-            <div class="bg-white rounded-sm mb-4 overflow-hidden">
+            <div class="bg-white rounded-md mb-4 overflow-hidden">
                 <button @click="toggleTab(3)" 
                         class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50 transition-colors">
                     <h3 class="text-lg font-semibold text-gray-900">Where do you ship?</h3>
@@ -92,7 +92,7 @@
             </div>
             
             <!-- FAQ Item 4 -->
-            <div class="bg-white rounded-sm mb-4 overflow-hidden">
+            <div class="bg-white rounded-md mb-4 overflow-hidden">
                 <button @click="toggleTab(4)" 
                         class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50 transition-colors">
                     <h3 class="text-lg font-semibold text-gray-900">How do I book an appointment?</h3>
@@ -119,7 +119,7 @@
             </div>
             
             <!-- FAQ Item 5 -->
-            <div class="bg-white rounded-sm mb-4 overflow-hidden">
+            <div class="bg-white rounded-md mb-4 overflow-hidden">
                 <button @click="toggleTab(5)" 
                         class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50 transition-colors">
                     <h3 class="text-lg font-semibold text-gray-900">How do I choose the right products?</h3>
@@ -147,7 +147,7 @@
             </div>
             
             <!-- FAQ Item 6 -->
-            <div class="bg-white rounded-sm mb-4 overflow-hidden">
+            <div class="bg-white rounded-md mb-4 overflow-hidden">
                 <button @click="toggleTab(6)" 
                         class="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50 transition-colors">
                     <h3 class="text-lg font-semibold text-gray-900">What payment methods do you accept?</h3>
