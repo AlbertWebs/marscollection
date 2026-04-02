@@ -13,7 +13,9 @@
 
             <!-- Brand column -->
             <div class="md:col-span-4">
-                <a href="{{ route('home') }}" class="text-white text-xl font-bold tracking-tight">Zayn's Beauty</a>
+                <a href="{{ route('home') }}" aria-label="Zayn's Beauty">
+                    <img src="{{ asset('logo.svg') }}" alt="Zayn's Beauty" class="h-9 w-auto brightness-0 invert">
+                </a>
                 <p class="mt-3 text-sm leading-relaxed text-gray-500 max-w-xs">
                     Premium beauty products and salon services — based in Nairobi, serving all of Kenya.
                 </p>

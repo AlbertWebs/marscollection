@@ -4,7 +4,9 @@
         <div class="flex justify-between items-center h-16">
             <!-- Logo -->
             <div class="flex-shrink-0">
-                <a href="{{ route('home') }}" class="text-2xl font-bold text-pink-600">Zayn's Beauty</a>
+                <a href="{{ route('home') }}" aria-label="Zayn's Beauty">
+                    <img src="{{ asset('logo.svg') }}" alt="Zayn's Beauty" class="h-10 w-auto">
+                </a>
             </div>
             
             <!-- Navigation -->
