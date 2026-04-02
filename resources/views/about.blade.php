@@ -1,129 +1,125 @@
 @extends('layouts.app')
 
+@section('title', 'About Zayn\'s Beauty')
+
 @section('content')
-<div class="bg-gradient-to-br from-pink-50 to-purple-50 min-h-screen">
-    <!-- Hero Section -->
-    <div class="bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-            <div class="text-center">
-                <h1 class="text-4xl font-bold text-gray-900 mb-4">About Zayn's Beauty</h1>
-                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-                    Your trusted destination for premium beauty products and expert beauty advice. 
-                    We're passionate about helping you discover your unique beauty and confidence.
-                </p>
+<div class="min-h-screen bg-stone-50">
+    <section class="border-b border-stone-200 bg-white">
+        <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+            <div class="grid gap-10 lg:grid-cols-[minmax(0,1.2fr)_minmax(280px,0.8fr)] lg:items-end">
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-[0.3em] text-pink-600">About Us</p>
+                    <h1 class="mt-4 max-w-3xl text-4xl font-semibold tracking-tight text-stone-900 sm:text-5xl">
+                        A beauty store built around what people actually want to buy and use.
+                    </h1>
+                    <p class="mt-6 max-w-2xl text-base leading-7 text-stone-600 sm:text-lg">
+                        Zayn's Beauty brings together beauty products, salon services, and practical guidance in one place.
+                        The aim is simple: make it easier to shop well, book well, and come back because the experience is clear and reliable.
+                    </p>
+                </div>
+                <div class="border-l-0 border-stone-200 pt-0 lg:border-l lg:pl-8">
+                    <dl class="space-y-5">
+                        <div>
+                            <dt class="text-xs font-semibold uppercase tracking-[0.24em] text-stone-500">Focus</dt>
+                            <dd class="mt-1 text-lg text-stone-900">Beauty retail and services</dd>
+                        </div>
+                        <div>
+                            <dt class="text-xs font-semibold uppercase tracking-[0.24em] text-stone-500">Based In</dt>
+                            <dd class="mt-1 text-lg text-stone-900">Nairobi, Kenya</dd>
+                        </div>
+                        <div>
+                            <dt class="text-xs font-semibold uppercase tracking-[0.24em] text-stone-500">What We Care About</dt>
+                            <dd class="mt-1 text-lg text-stone-900">Useful selection, honest service, smooth delivery</dd>
+                        </div>
+                    </dl>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Our Story Section -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+    <section class="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
+        <div class="grid gap-12 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
             <div>
-                <h2 class="text-3xl font-bold text-gray-900 mb-6">Our Story</h2>
-                <p class="text-gray-600 mb-6">
-                    Founded with a vision to make premium beauty accessible to everyone, Zayn's Beauty 
-                    began as a small local store with big dreams. Today, we've grown into a trusted 
-                    beauty destination, serving customers across Kenya with carefully curated products 
-                    from the world's leading beauty brands.
+                <p class="text-sm font-semibold uppercase tracking-[0.24em] text-stone-500">Who We Are</p>
+                <h2 class="mt-3 text-3xl font-semibold tracking-tight text-stone-900">Built for everyday beauty shopping, not just polished marketing.</h2>
+            </div>
+            <div class="space-y-5 text-base leading-7 text-stone-700">
+                <p>
+                    Zayn's Beauty was built to serve customers looking for a dependable beauty destination rather than a noisy catalogue.
+                    That means keeping the product mix focused, making service booking straightforward, and speaking in a way that feels clear instead of inflated.
                 </p>
-                <p class="text-gray-600 mb-6">
-                    Our journey started with a simple belief: everyone deserves to feel beautiful and 
-                    confident. This philosophy drives everything we do, from the products we select to 
-                    the service we provide.
+                <p>
+                    We sell products people come back for, not just products that photograph well. We also treat salon and appointment services as part of the same customer experience, not as a separate business bolted on at the side.
                 </p>
-                <p class="text-gray-600">
-                    We're not just selling beauty products - we're building a community of confident, 
-                    empowered individuals who embrace their unique beauty.
+                <p>
+                    The result is a store that aims to feel edited, practical, and easy to trust.
                 </p>
             </div>
-            <div class="relative">
-                <div class="bg-gradient-to-br from-pink-400 to-purple-500 rounded-2xl p-8 text-white">
-                    <h3 class="text-2xl font-bold mb-4">Our Mission</h3>
-                    <p class="text-lg">
-                        To empower individuals with premium beauty products and expert guidance, 
-                        helping them discover and enhance their natural beauty while building confidence 
-                        and self-expression.
+        </div>
+    </section>
+
+    <section class="border-y border-stone-200 bg-white">
+        <div class="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
+            <div class="grid gap-10 lg:grid-cols-3">
+                <div>
+                    <p class="text-sm font-semibold uppercase tracking-[0.24em] text-stone-500">Selection</p>
+                    <p class="mt-4 text-lg leading-8 text-stone-800">
+                        We focus on products that fit real routines, skin needs, and beauty habits rather than filling the store with noise.
+                    </p>
+                </div>
+                <div>
+                    <p class="text-sm font-semibold uppercase tracking-[0.24em] text-stone-500">Service</p>
+                    <p class="mt-4 text-lg leading-8 text-stone-800">
+                        Whether someone is shopping online or booking an appointment, the process should feel direct, helpful, and well handled.
+                    </p>
+                </div>
+                <div>
+                    <p class="text-sm font-semibold uppercase tracking-[0.24em] text-stone-500">Standards</p>
+                    <p class="mt-4 text-lg leading-8 text-stone-800">
+                        We care about product quality, accurate communication, and delivering an experience that feels considered from start to finish.
                     </p>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Values Section -->
-    <div class="bg-white py-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-gray-900 mb-4">Our Values</h2>
-                <p class="text-xl text-gray-600">The principles that guide everything we do</p>
+    <section class="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
+        <div class="grid gap-12 lg:grid-cols-[minmax(0,1fr)_320px]">
+            <div>
+                <p class="text-sm font-semibold uppercase tracking-[0.24em] text-stone-500">How We Work</p>
+                <div class="mt-5 space-y-8">
+                    <div class="border-b border-stone-200 pb-6">
+                        <h3 class="text-2xl font-semibold text-stone-900">We keep the offer tight.</h3>
+                        <p class="mt-3 text-base leading-7 text-stone-700">
+                            A better beauty store is not always the one with the most products. It is the one that makes choosing easier.
+                            We prefer a tighter, clearer offer over a crowded shelf.
+                        </p>
+                    </div>
+                    <div class="border-b border-stone-200 pb-6">
+                        <h3 class="text-2xl font-semibold text-stone-900">We value clarity over slogans.</h3>
+                        <p class="mt-3 text-base leading-7 text-stone-700">
+                            Customers should know what they are buying, what to expect from delivery, and how to get help when they need it.
+                            That standard shapes both the site and the service behind it.
+                        </p>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-semibold text-stone-900">We want repeat trust, not one-time attention.</h3>
+                        <p class="mt-3 text-base leading-7 text-stone-700">
+                            The long-term goal is to be the kind of store people recommend because it is dependable, not because it made a loud first impression.
+                        </p>
+                    </div>
+                </div>
             </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="text-center">
-                    <div class="bg-pink-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                        <svg class="w-8 h-8 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Quality First</h3>
-                    <p class="text-gray-600">
-                        We carefully select only the highest quality products from trusted brands, 
-                        ensuring you get the best for your beauty routine.
-                    </p>
-                </div>
-                
-                <div class="text-center">
-                    <div class="bg-purple-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                        <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Customer Focus</h3>
-                    <p class="text-gray-600">
-                        Your satisfaction is our priority. We provide personalized service and expert 
-                        advice to help you make the best beauty choices.
-                    </p>
-                </div>
-                
-                <div class="text-center">
-                    <div class="bg-pink-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                        <svg class="w-8 h-8 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Innovation</h3>
-                    <p class="text-gray-600">
-                        We stay ahead of beauty trends and continuously update our product range 
-                        to bring you the latest innovations in beauty care.
-                    </p>
+
+            <div class="self-start border border-stone-200 bg-white p-6">
+                <p class="text-sm font-semibold uppercase tracking-[0.24em] text-stone-500">Contact</p>
+                <div class="mt-5 space-y-4 text-sm leading-6 text-stone-700">
+                    <p><strong class="font-semibold text-stone-900">Email:</strong> {{ \App\Helpers\SettingsHelper::getEmail('support') }}</p>
+                    <p><strong class="font-semibold text-stone-900">Phone:</strong> {{ \App\Helpers\SettingsHelper::getPhone('primary') }}</p>
+                    <p><strong class="font-semibold text-stone-900">Address:</strong> {{ \App\Helpers\SettingsHelper::getAddress('full') }}</p>
                 </div>
             </div>
         </div>
-    </div>
-
-
-
-    <!-- Stats Section -->
-    <div class="bg-white py-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
-                <div>
-                    <div class="text-3xl font-bold text-pink-600 mb-2">5000+</div>
-                    <div class="text-gray-600">Happy Customers</div>
-                </div>
-                <div>
-                    <div class="text-3xl font-bold text-purple-600 mb-2">1000+</div>
-                    <div class="text-gray-600">Products</div>
-                </div>
-                <div>
-                    <div class="text-3xl font-bold text-pink-600 mb-2">50+</div>
-                    <div class="text-gray-600">Brands</div>
-                </div>
-                <div>
-                    <div class="text-3xl font-bold text-purple-600 mb-2">5+</div>
-                    <div class="text-gray-600">Years Experience</div>
-                </div>
-            </div>
-        </div>
-    </div>
+    </section>
 </div>
-@endsection 
+@endsection
