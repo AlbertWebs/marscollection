@@ -310,7 +310,7 @@
                     <label for="banner_text" class="block text-sm font-medium text-gray-700">Banner Message</label>
                     <input type="text" id="banner_text" name="banner_text"
                            value="{{ $bannerSettings->where('key', 'banner_text')->first()->value ?? '' }}"
-                           placeholder="e.g. Free delivery on orders over KSh 2,000 — this weekend only"
+                           placeholder="e.g. Free delivery on orders over KSh 2,000 this weekend only"
                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500">
                 </div>
                 <div>

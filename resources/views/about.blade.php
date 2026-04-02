@@ -32,7 +32,7 @@
                     the service we provide.
                 </p>
                 <p class="text-gray-600">
-                    We're not just selling beauty products – we're building a community of confident, 
+                    We're not just selling beauty products - we're building a community of confident, 
                     empowered individuals who embrace their unique beauty.
                 </p>
             </div>

@@ -3,7 +3,7 @@
          alt="Beauty products"
          class="absolute inset-0 w-full h-full object-cover opacity-20">
     <div class="relative container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <p class="text-pink-400 uppercase tracking-widest text-xs font-medium mb-4">Zayn's Beauty — Nairobi</p>
+        <p class="text-pink-400 uppercase tracking-widest text-xs font-medium mb-4">Zayn's Beauty - Nairobi</p>
         <h2 class="text-3xl md:text-4xl font-bold text-white mb-4 max-w-xl mx-auto leading-tight">
             Your next favourite product is one click away
         </h2>

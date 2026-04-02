@@ -1,7 +1,7 @@
 <section class="py-14 bg-pink-50 border-t border-pink-100">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-xl text-center">
         <h2 class="text-2xl font-bold text-gray-900 mb-2">Get beauty tips & offers first</h2>
-        <p class="text-gray-500 text-sm mb-6">New arrivals, exclusive deals, and skincare advice — straight to your inbox. No spam.</p>
+        <p class="text-gray-500 text-sm mb-6">New arrivals, exclusive deals, and skincare advice, straight to your inbox. No spam.</p>
 
         <form action="{{ route('contact.submit') }}" method="POST"
               class="flex flex-col sm:flex-row gap-3">

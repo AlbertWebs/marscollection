@@ -9,7 +9,7 @@
                 <div class="relative z-10 p-8">
                     <p class="text-pink-300 text-xs uppercase tracking-widest font-medium mb-3">Professional Services</p>
                     <h2 class="text-2xl font-bold mb-3">Salon & Beauty Services</h2>
-                    <p class="text-gray-300 text-sm mb-6 max-w-xs">From facials to full glam — book a session with our certified beauty experts in Nairobi.</p>
+                    <p class="text-gray-300 text-sm mb-6 max-w-xs">From facials to full glam, book a session with our certified beauty experts in Nairobi.</p>
                     <a href="{{ route('appointments.create') }}"
                        class="inline-block bg-white text-gray-900 text-sm font-semibold px-6 py-3 rounded-lg hover:bg-pink-50 transition-colors">
                         Book Appointment
@@ -25,7 +25,7 @@
                 <div class="relative z-10 p-8">
                     <p class="text-pink-600 text-xs uppercase tracking-widest font-medium mb-3">New Arrivals</p>
                     <h2 class="text-2xl font-bold mb-3">Fresh Stock, Every Week</h2>
-                    <p class="text-gray-600 text-sm mb-6 max-w-xs">Skincare, makeup and accessories — sourced and stocked for Nairobi's climate and skin tones.</p>
+                    <p class="text-gray-600 text-sm mb-6 max-w-xs">Skincare, makeup and accessories, sourced and stocked for Nairobi's climate and skin tones.</p>
                     <a href="{{ route('products.index') }}"
                        class="inline-block bg-pink-600 text-white text-sm font-semibold px-6 py-3 rounded-lg hover:bg-pink-700 transition-colors">
                         Shop Now
