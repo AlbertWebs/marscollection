@@ -3,7 +3,7 @@
 @section('title', 'Appointments - Zayn\'s Beauty')
 
 @section('content')
-<div class="bg-gradient-to-br from-pink-50 to-purple-50 min-h-screen py-12">
+<div class="bg-gray-50 min-h-screen py-12">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-6xl mx-auto">
             <!-- Header -->
@@ -17,7 +17,7 @@
             <!-- Book New Appointment Button -->
             <div class="text-center mb-8">
                 <a href="{{ route('appointments.create') }}" 
-                   class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-pink-600 to-purple-600 text-white font-semibold rounded-md hover:from-pink-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105">
+                   class="inline-flex items-center px-6 py-3 bg-pink-600 hover:bg-pink-700 text-white font-semibold rounded-sm transition-colors">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                     </svg>

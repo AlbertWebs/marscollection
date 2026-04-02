@@ -3,7 +3,7 @@
 @section('title', 'Appointment Details - Zayn\'s Beauty')
 
 @section('content')
-<div class="bg-gradient-to-br from-pink-50 to-purple-50 min-h-screen py-12">
+<div class="bg-gray-50 min-h-screen py-12">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-4xl mx-auto">
             <!-- Header -->

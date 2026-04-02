@@ -48,9 +48,9 @@
                         <p class="text-sm text-gray-600">Discover our latest products and exclusive offers</p>
                     </div>
                     
-                    <div class="bg-purple-50 rounded-md p-4">
-                        <div class="w-12 h-12 bg-purple-100 rounded-md flex items-center justify-center mx-auto mb-3">
-                            <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="bg-pink-50 rounded-sm p-4">
+                        <div class="w-12 h-12 bg-pink-100 rounded-sm flex items-center justify-center mx-auto mb-3">
+                            <svg class="w-6 h-6 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                             </svg>
                         </div>

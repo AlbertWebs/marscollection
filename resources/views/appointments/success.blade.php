@@ -3,7 +3,7 @@
 @section('title', 'Appointment Booked Successfully - Zayn\'s Beauty')
 
 @section('content')
-<div class="bg-gradient-to-br from-pink-50 to-purple-50 min-h-screen py-12">
+<div class="bg-gray-50 min-h-screen py-12">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-4xl mx-auto">
             <!-- Success Header -->
@@ -52,7 +52,7 @@
 
                     <!-- Calendar -->
                     <div class="flex items-start space-x-4">
-                        <div class="w-12 h-12 bg-purple-100 rounded-md flex items-center justify-center">
+                        <div class="w-12 h-12 bg-pink-50 rounded-sm flex items-center justify-center">
                             <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                             </svg>
@@ -102,7 +102,7 @@
             <!-- Action Buttons -->
             <div class="flex flex-col sm:flex-row gap-4">
                 <a href="{{ route('home') }}" 
-                   class="flex-1 bg-gradient-to-r from-pink-600 to-purple-600 text-white py-4 px-6 rounded-md font-semibold hover:from-pink-700 hover:to-purple-700 transition-all duration-300 text-center">
+                   class="flex-1 bg-pink-600 hover:bg-pink-700 text-white py-4 px-6 rounded-sm font-semibold transition-colors text-center">
                     Back to Home
                 </a>
                 <a href="{{ route('appointments.create') }}" 

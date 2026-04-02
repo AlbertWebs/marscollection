@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="bg-gradient-to-br from-pink-50 to-purple-50 min-h-screen">
+<div class="bg-gray-50 min-h-screen">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div class="bg-white rounded-md p-8 shadow-sm text-center">
             <!-- Success Icon -->
