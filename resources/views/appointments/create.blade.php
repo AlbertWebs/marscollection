@@ -3,7 +3,7 @@
 @section('title', 'Book Appointment - Zayn\'s Beauty')
 
 @section('content')
-<div class="bg-gradient-to-br from-pink-50 to-purple-50 min-h-screen py-12">
+<div class="bg-gray-50 min-h-screen py-12">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-4xl mx-auto">
             <!-- Header -->
@@ -32,7 +32,7 @@
             <div class="max-w-4xl mx-auto">
                 <!-- Step 1: Calendar & Time Selection -->
                 <div id="step-1">
-                    <div class="bg-white rounded-sm shadow-xl p-8">
+                    <div class="bg-white rounded-sm shadow-sm border border-gray-100 p-8">
                         <h2 class="text-2xl font-bold text-gray-900 mb-6">Step 1: Choose Your Date & Time</h2>
                         
                         <!-- Service Selection -->
@@ -102,7 +102,7 @@
                         <!-- Next Step Button -->
                         <div class="mt-8">
                             <button type="button" id="next-step" 
-                                    class="w-full bg-gradient-to-r from-pink-600 to-purple-600 text-white py-4 rounded-sm font-semibold hover:from-pink-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    class="w-full bg-pink-600 text-white py-4 rounded-sm font-semibold hover:bg-pink-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                     disabled>
                                 Continue to Step 2
                             </button>
@@ -112,7 +112,7 @@
 
                 <!-- Step 2: Customer Details -->
                 <div id="step-2" class="hidden">
-                    <div class="bg-white rounded-sm shadow-xl p-8">
+                    <div class="bg-white rounded-sm shadow-sm border border-gray-100 p-8">
                         <h2 class="text-2xl font-bold text-gray-900 mb-6">Step 2: Your Details</h2>
                         
                         <form method="POST" action="{{ route('appointments.store') }}" class="space-y-6">
@@ -195,7 +195,7 @@
                                     Back to Step 1
                                 </button>
                                 <button type="submit" 
-                                        class="flex-1 bg-gradient-to-r from-pink-600 to-purple-600 text-white py-4 px-6 rounded-sm font-semibold hover:from-pink-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105">
+                                        class="flex-1 bg-pink-600 text-white py-4 px-6 rounded-sm font-semibold hover:bg-pink-700 transition-colors">
                                     Book Appointment
                                 </button>
                             </div>

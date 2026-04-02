@@ -19,13 +19,13 @@
             <h3 class="text-lg font-medium text-gray-900">Brand Information</h3>
         </div>
         
-        <form method="POST" action="{{ route('admin.brands.update', $brand) }}" class="p-6 space-y-6">
+        <form method="POST" action="{{ route('admin.brands.update', $brand) }}" class="p-6 space-y-6" enctype="multipart/form-data">
             @csrf
             @method('PUT')
-            
+
             <div>
                 <label for="name" class="block text-sm font-medium text-gray-700">Brand Name</label>
-                <input type="text" name="name" id="name" 
+                <input type="text" name="name" id="name"
                        class="mt-1 block w-full border-gray-300 rounded-sm shadow-sm focus:ring-pink-500 focus:border-pink-500"
                        value="{{ old('name', $brand->name) }}" required>
                 @error('name')
@@ -38,6 +38,22 @@
                 <textarea name="description" id="description" rows="4"
                           class="mt-1 block w-full border-gray-300 rounded-sm shadow-sm focus:ring-pink-500 focus:border-pink-500">{{ old('description', $brand->description) }}</textarea>
                 @error('description')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div>
+                <label for="logo" class="block text-sm font-medium text-gray-700">Brand Logo</label>
+                @if($brand->logo)
+                    <div class="mt-2 mb-3 flex items-center gap-4">
+                        <img src="{{ Storage::url($brand->logo) }}" alt="{{ $brand->name }}" class="h-12 w-auto object-contain border border-gray-200 rounded-sm p-1">
+                        <span class="text-xs text-gray-500">Current logo — upload a new file to replace it.</span>
+                    </div>
+                @endif
+                <input type="file" name="logo" id="logo" accept="image/*"
+                       class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-sm file:border-0 file:text-sm file:font-medium file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100">
+                <p class="mt-1 text-xs text-gray-500">PNG, JPG, WebP or SVG. Max 2MB. Recommended: transparent background PNG.</p>
+                @error('logo')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
             </div>

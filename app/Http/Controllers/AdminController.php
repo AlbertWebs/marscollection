@@ -380,7 +380,12 @@ class AdminController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:brands',
             'description' => 'nullable|string',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,svg|max:2048',
         ]);
+
+        if ($request->hasFile('logo')) {
+            $validated['logo'] = $request->file('logo')->store('brands', 'public');
+        }
 
         Brand::create($validated);
 
@@ -397,7 +402,15 @@ class AdminController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:brands,name,' . $brand->id,
             'description' => 'nullable|string',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,svg|max:2048',
         ]);
+
+        if ($request->hasFile('logo')) {
+            if ($brand->logo) {
+                \Storage::disk('public')->delete($brand->logo);
+            }
+            $validated['logo'] = $request->file('logo')->store('brands', 'public');
+        }
 
         $brand->update($validated);
 
