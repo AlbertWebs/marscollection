@@ -1,6 +1,6 @@
 <section class="py-12 bg-gray-50">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 fade-in">
             <!-- Book a Service -->
             <div class="relative overflow-hidden rounded-xl bg-gray-900 text-white">
                 <img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=800&q=80"

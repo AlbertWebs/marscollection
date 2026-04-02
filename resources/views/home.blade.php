@@ -16,7 +16,7 @@
     @if($trendingProducts->count() > 0)
         <section class="py-16 bg-white">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-12">
+                <div class="text-center mb-12 fade-in">
                     <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">TRENDING PRODUCTS</h1>
                     <p class="text-lg text-gray-600 max-w-2xl mx-auto">
                         Discover our most popular beauty products that customers love
@@ -37,7 +37,7 @@
     @if($featuredProducts->count() > 0)
         <section class="py-16 bg-gray-50">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-12">
+                <div class="text-center mb-12 fade-in">
                     <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">FEATURED PRODUCTS</h2>
                     <p class="text-xl text-gray-600 max-w-2xl mx-auto">
                         Discover our most popular beauty products that customers love
