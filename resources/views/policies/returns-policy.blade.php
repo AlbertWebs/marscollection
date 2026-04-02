@@ -1,136 +1,150 @@
 @extends('layouts.app')
 
+@section('title', 'Returns Policy - Zayn\'s Beauty')
+
 @section('content')
-<div class="bg-gradient-to-br from-pink-50 to-purple-50 min-h-screen">
-    <!-- Hero Section -->
-    <div class="bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-            <div class="text-center">
-                <h1 class="text-4xl font-bold text-gray-900 mb-4">Returns Policy</h1>
-                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-                    We want you to be completely satisfied with your purchase. Learn about our return process.
-                </p>
+<div class="min-h-screen bg-stone-50">
+    <section class="border-b border-stone-200 bg-white">
+        <div class="mx-auto max-w-5xl px-4 py-14 sm:px-6 lg:px-8">
+            <p class="text-xs font-semibold uppercase tracking-[0.3em] text-pink-600">Customer Care</p>
+            <h1 class="mt-4 max-w-3xl text-4xl font-semibold tracking-tight text-stone-900 sm:text-5xl">Returns Policy</h1>
+            <p class="mt-5 max-w-2xl text-base leading-7 text-stone-600 sm:text-lg">
+                We handle returns carefully because beauty products are personal-use items. This page explains what we can accept,
+                what we cannot accept, and how to contact us before sending anything back.
+            </p>
+            <div class="mt-6 text-sm text-stone-500">
+                Returns support: {{ \App\Helpers\SettingsHelper::getEmailByType('returns') }} · {{ \App\Helpers\SettingsHelper::getPhone('primary') }}
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Content Section -->
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div class="bg-white rounded-2xl p-8 shadow-sm">
-            <div class="prose prose-lg max-w-none">
-                <h2 class="text-2xl font-bold text-gray-900 mb-6">Return Policy Overview</h2>
-                <p class="text-gray-600 mb-6">
-                    We accept returns within 30 days of purchase for most items. All returned items must be 
-                    unused, unopened, and in their original packaging.
-                </p>
+    <section class="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
+        <div class="grid gap-10 lg:grid-cols-[220px_minmax(0,1fr)]">
+            <aside class="lg:sticky lg:top-24 lg:self-start">
+                <nav class="space-y-3 text-sm text-stone-600">
+                    <a href="#overview" class="block hover:text-pink-600">Overview</a>
+                    <a href="#eligible" class="block hover:text-pink-600">Eligible Returns</a>
+                    <a href="#not-eligible" class="block hover:text-pink-600">Items We Cannot Accept</a>
+                    <a href="#process" class="block hover:text-pink-600">How Returns Work</a>
+                    <a href="#refunds" class="block hover:text-pink-600">Refunds</a>
+                    <a href="#damaged-items" class="block hover:text-pink-600">Damaged or Incorrect Items</a>
+                    <a href="#exchanges" class="block hover:text-pink-600">Exchanges</a>
+                    <a href="#contact" class="block hover:text-pink-600">Contact</a>
+                </nav>
+            </aside>
 
-                <h2 class="text-2xl font-bold text-gray-900 mb-6">What Can Be Returned</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                    <div class="bg-green-50 p-6 rounded-lg">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-3">✅ Acceptable Returns</h3>
-                        <ul class="text-gray-600 text-sm space-y-2">
-                            <li>• Unopened products in original packaging</li>
-                            <li>• Products with manufacturing defects</li>
-                            <li>• Wrong items received</li>
-                            <li>• Damaged items during shipping</li>
+            <div class="bg-white px-6 py-8 shadow-sm ring-1 ring-stone-200 sm:px-10">
+                <div id="overview" class="border-b border-stone-200 pb-8">
+                    <h2 class="text-2xl font-semibold text-stone-900">Overview</h2>
+                    <div class="mt-5 space-y-4 text-base leading-7 text-stone-700">
+                        <p>
+                            Most eligible products may be returned within 30 days of purchase if they are unused, unopened, and in their
+                            original packaging.
+                        </p>
+                        <p>
+                            Before returning any order, contact our team first. We will review the issue and confirm the next step so your
+                            return is handled correctly.
+                        </p>
+                    </div>
+                </div>
+
+                <div id="eligible" class="border-b border-stone-200 py-8">
+                    <h2 class="text-2xl font-semibold text-stone-900">Eligible Returns</h2>
+                    <ul class="mt-5 space-y-3 text-base leading-7 text-stone-700">
+                        <li>Unopened products in original packaging</li>
+                        <li>Items with confirmed manufacturing defects</li>
+                        <li>Orders that arrived damaged in transit</li>
+                        <li>Incorrect items sent by our team</li>
+                    </ul>
+                </div>
+
+                <div id="not-eligible" class="border-b border-stone-200 py-8">
+                    <h2 class="text-2xl font-semibold text-stone-900">Items We Cannot Accept</h2>
+                    <ul class="mt-5 space-y-3 text-base leading-7 text-stone-700">
+                        <li>Opened or used beauty products</li>
+                        <li>Personal care items that cannot be resold for hygiene reasons</li>
+                        <li>Clearance or final-sale items, unless they arrive faulty or incorrect</li>
+                        <li>Gift cards</li>
+                    </ul>
+                </div>
+
+                <div id="process" class="border-b border-stone-200 py-8">
+                    <h2 class="text-2xl font-semibold text-stone-900">How Returns Work</h2>
+                    <ol class="mt-5 space-y-5 text-base leading-7 text-stone-700">
+                        <li>
+                            <strong class="font-semibold text-stone-900">1. Contact us first.</strong>
+                            Email {{ \App\Helpers\SettingsHelper::getEmailByType('returns') }} or call {{ \App\Helpers\SettingsHelper::getPhone('primary') }}
+                            with your order number and the reason for the return.
+                        </li>
+                        <li>
+                            <strong class="font-semibold text-stone-900">2. Wait for confirmation.</strong>
+                            We will confirm whether the item qualifies and explain what to send back.
+                        </li>
+                        <li>
+                            <strong class="font-semibold text-stone-900">3. Pack the item securely.</strong>
+                            Include the order details and keep the product in its original condition.
+                        </li>
+                        <li>
+                            <strong class="font-semibold text-stone-900">4. Send it using a traceable method.</strong>
+                            Keep your shipping receipt until the return has been completed.
+                        </li>
+                    </ol>
+                </div>
+
+                <div id="refunds" class="border-b border-stone-200 py-8">
+                    <h2 class="text-2xl font-semibold text-stone-900">Refunds</h2>
+                    <div class="mt-5 space-y-4 text-base leading-7 text-stone-700">
+                        <p>
+                            Once we receive and inspect an approved return, refunds are usually processed within 5 to 7 business days.
+                        </p>
+                        <ul class="space-y-3">
+                            <li>Refunds are sent back to the original payment method.</li>
+                            <li>Original delivery charges are not refunded unless the item was faulty, damaged, or incorrect.</li>
+                            <li>We will notify you by email once the refund has been processed.</li>
                         </ul>
                     </div>
-                    <div class="bg-red-50 p-6 rounded-lg">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-3">❌ Non-Returnable Items</h3>
-                        <ul class="text-gray-600 text-sm space-y-2">
-                            <li>• Opened or used products</li>
-                            <li>• Personal care items (for hygiene reasons)</li>
-                            <li>• Sale or clearance items</li>
-                            <li>• Gift cards</li>
-                        </ul>
+                </div>
+
+                <div id="damaged-items" class="border-b border-stone-200 py-8">
+                    <h2 class="text-2xl font-semibold text-stone-900">Damaged or Incorrect Items</h2>
+                    <div class="mt-5 space-y-4 text-base leading-7 text-stone-700">
+                        <p>
+                            If your order arrives damaged or you receive the wrong item, contact us as soon as possible after delivery.
+                        </p>
+                        <p>
+                            Include your order number and, where possible, clear photos of the item and packaging. This helps us resolve the
+                            issue faster and arrange a replacement or refund where appropriate.
+                        </p>
                     </div>
                 </div>
 
-                <h2 class="text-2xl font-bold text-gray-900 mb-6">Return Process</h2>
-                <div class="bg-gray-50 p-6 rounded-lg mb-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Step-by-Step Return Process</h3>
-                    <div class="space-y-4">
-                        <div class="flex items-start space-x-4">
-                            <div class="bg-pink-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold flex-shrink-0">1</div>
-                            <div>
-                                <h4 class="font-medium text-gray-900">Contact Customer Service</h4>
-                                <p class="text-gray-600">Email us at {{ \App\Helpers\SettingsHelper::getEmailByType('returns') }} or call {{ \App\Helpers\SettingsHelper::getPhone('primary') }}</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start space-x-4">
-                            <div class="bg-pink-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold flex-shrink-0">2</div>
-                            <div>
-                                <h4 class="font-medium text-gray-900">Get Return Authorization</h4>
-                                <p class="text-gray-600">We'll provide you with a return authorization number</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start space-x-4">
-                            <div class="bg-pink-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold flex-shrink-0">3</div>
-                            <div>
-                                <h4 class="font-medium text-gray-900">Package Your Return</h4>
-                                <p class="text-gray-600">Include the return authorization number and original receipt</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start space-x-4">
-                            <div class="bg-pink-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold flex-shrink-0">4</div>
-                            <div>
-                                <h4 class="font-medium text-gray-900">Ship Your Return</h4>
-                                <p class="text-gray-600">Use a trackable shipping method and keep your receipt</p>
-                            </div>
-                        </div>
+                <div id="exchanges" class="border-b border-stone-200 py-8">
+                    <h2 class="text-2xl font-semibold text-stone-900">Exchanges</h2>
+                    <div class="mt-5 space-y-4 text-base leading-7 text-stone-700">
+                        <p>
+                            Exchanges are handled case by case, depending on product condition and available stock.
+                        </p>
+                        <p>
+                            If you would like a replacement item, contact us first and we will advise whether an exchange or refund is the
+                            better route for your order.
+                        </p>
                     </div>
                 </div>
 
-                <h2 class="text-2xl font-bold text-gray-900 mb-6">Refund Information</h2>
-                <p class="text-gray-600 mb-6">
-                    Once we receive and inspect your return, we'll process your refund within 5-7 business days.
-                </p>
-                <ul class="list-disc pl-6 text-gray-600 mb-6">
-                    <li>Refunds will be issued to the original payment method</li>
-                    <li>Shipping costs are non-refundable unless the item was defective or wrong</li>
-                    <li>You'll receive an email confirmation when your refund is processed</li>
-                </ul>
-
-                <h2 class="text-2xl font-bold text-gray-900 mb-6">Return Shipping</h2>
-                <p class="text-gray-600 mb-6">
-                    Customers are responsible for return shipping costs unless the item was defective, 
-                    damaged during shipping, or the wrong item was sent.
-                </p>
-
-                <h2 class="text-2xl font-bold text-gray-900 mb-6">Exchanges</h2>
-                <p class="text-gray-600 mb-6">
-                    We offer exchanges for different sizes, colors, or similar products. Exchanges follow 
-                    the same process as returns. If the new item costs more, you'll need to pay the difference.
-                </p>
-
-                <h2 class="text-2xl font-bold text-gray-900 mb-6">Damaged or Defective Items</h2>
-                <p class="text-gray-600 mb-6">
-                    If you receive a damaged or defective item, please contact us immediately. We'll provide 
-                    a prepaid return label and expedite your replacement or refund.
-                </p>
-
-                <h2 class="text-2xl font-bold text-gray-900 mb-6">Contact Information</h2>
-                <p class="text-gray-600 mb-6">
-                    For return-related questions, please contact us:
-                </p>
-                <div class="bg-gray-50 p-4 rounded-lg">
-                    <p class="text-gray-700">
-                        <strong>Email:</strong> {{ \App\Helpers\SettingsHelper::getEmailByType('returns') }}<br>
-                        <strong>Phone:</strong> {{ \App\Helpers\SettingsHelper::getPhone('primary') }}<br>
-                        <strong>Hours:</strong> Monday - Friday, {{ \App\Helpers\SettingsHelper::getBusinessHours('monday_friday') }}<br>
-                        <strong>Address:</strong> {{ \App\Helpers\SettingsHelper::getAddress('full') }}
-                    </p>
-                </div>
-
-                <div class="mt-8 p-4 bg-blue-50 rounded-lg">
-                    <p class="text-sm text-blue-800">
-                        <strong>Note:</strong> This returns policy is subject to change. Please check back 
-                        periodically for updates. For questions about specific items, please contact our 
-                        customer service team.
+                <div id="contact" class="pt-8">
+                    <h2 class="text-2xl font-semibold text-stone-900">Contact</h2>
+                    <div class="mt-5 space-y-3 text-base leading-7 text-stone-700">
+                        <p><strong class="font-semibold text-stone-900">Email:</strong> {{ \App\Helpers\SettingsHelper::getEmailByType('returns') }}</p>
+                        <p><strong class="font-semibold text-stone-900">Phone:</strong> {{ \App\Helpers\SettingsHelper::getPhone('primary') }}</p>
+                        <p><strong class="font-semibold text-stone-900">Hours:</strong> Monday to Friday, {{ \App\Helpers\SettingsHelper::getBusinessHours('monday_friday') }}</p>
+                        <p><strong class="font-semibold text-stone-900">Address:</strong> {{ \App\Helpers\SettingsHelper::getAddress('full') }}</p>
+                    </div>
+                    <p class="mt-6 text-sm leading-6 text-stone-500">
+                        This policy may be updated from time to time. For questions about a specific order, contact our team before returning the item.
                     </p>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 </div>
-@endsection 
+@endsection
