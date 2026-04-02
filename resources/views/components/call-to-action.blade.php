@@ -11,7 +11,7 @@
             Curated beauty picks, delivered to your door. Free delivery on orders over KSh 2,000.
         </p>
         <a href="{{ route('products.index') }}"
-           class="inline-block bg-pink-600 hover:bg-pink-700 text-white font-semibold px-8 py-4 rounded-lg transition-colors duration-200">
+           class="inline-block bg-pink-600 hover:bg-pink-700 text-white font-semibold px-8 py-4 rounded-sm transition-colors duration-200">
             Browse All Products
         </a>
     </div>

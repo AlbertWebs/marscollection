@@ -17,14 +17,14 @@
             <!-- Navigation -->
             <div class="flex justify-between items-center mb-8">
                 <a href="{{ route('appointments.index') }}" 
-                   class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
+                   class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                     </svg>
                     Back to Appointments
                 </a>
                 <a href="{{ route('appointments.create') }}" 
-                   class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
+                   class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-sm text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                     </svg>
@@ -33,7 +33,7 @@
             </div>
 
             <!-- Appointment Details -->
-            <div class="bg-white rounded-2xl shadow-xl p-8">
+            <div class="bg-white rounded-sm shadow-xl p-8">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <!-- Left Column -->
                     <div>
@@ -121,7 +121,7 @@
                 @endif
 
                 <!-- Important Information -->
-                <div class="mt-8 p-6 bg-blue-50 rounded-lg">
+                <div class="mt-8 p-6 bg-blue-50 rounded-sm">
                     <h3 class="text-lg font-semibold text-blue-900 mb-3">Important Information</h3>
                     <ul class="space-y-2 text-blue-800">
                         <li class="flex items-start">

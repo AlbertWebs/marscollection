@@ -16,7 +16,7 @@
     $displayRating = $bundleRating > 0 ? $bundleRating : 5;
 @endphp
 
-<div class="bg-white rounded-xl overflow-hidden group shadow-sm hover:shadow-lg transition-shadow duration-300">
+<div class="bg-white rounded-sm overflow-hidden group shadow-sm hover:shadow-lg transition-shadow duration-300">
     <div class="relative overflow-hidden">
         <img src="{{ $bundleImage }}" 
              alt="{{ $bundleName }}" 
@@ -24,7 +24,7 @@
         
         <!-- Hover Overlay with Add to Cart Button -->
         <div class="absolute inset-0 bg-gray-900/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-            <button onclick="addBundleToCart({{ $bundleId }})" class="bg-white text-gray-900 px-6 py-3 rounded-lg font-semibold hover:bg-pink-600 hover:text-white transition-all duration-300 transform hover:scale-105 flex items-center space-x-2 shadow-lg">
+            <button onclick="addBundleToCart({{ $bundleId }})" class="bg-white text-gray-900 px-6 py-3 rounded-sm font-semibold hover:bg-pink-600 hover:text-white transition-all duration-300 transform hover:scale-105 flex items-center space-x-2 shadow-lg">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
                 </svg>
@@ -68,7 +68,7 @@
         </div>
         
         <!-- Quick Add to Cart Button -->
-        <button onclick="addBundleToCart({{ $bundleId }})" class="w-full bg-pink-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-pink-700 transition-colors duration-200 flex items-center justify-center space-x-2">
+        <button onclick="addBundleToCart({{ $bundleId }})" class="w-full bg-pink-600 text-white py-2 px-4 rounded-sm font-semibold hover:bg-pink-700 transition-colors duration-200 flex items-center justify-center space-x-2">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
             </svg>

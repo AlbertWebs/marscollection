@@ -38,11 +38,11 @@
             <!-- CTAs -->
             <div class="flex flex-wrap gap-4">
                 <a href="{{ route('products.index') }}"
-                   class="inline-block bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold tracking-wide uppercase px-8 py-4 rounded-lg transition-colors duration-200">
+                   class="inline-block bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold tracking-wide uppercase px-8 py-4 rounded-sm transition-colors duration-200">
                     Shop Now
                 </a>
                 <a href="{{ route('appointments.create') }}"
-                   class="inline-block border border-white/60 hover:border-white text-white text-sm font-semibold tracking-wide uppercase px-8 py-4 rounded-lg transition-colors duration-200 hover:bg-white/10">
+                   class="inline-block border border-white/60 hover:border-white text-white text-sm font-semibold tracking-wide uppercase px-8 py-4 rounded-sm transition-colors duration-200 hover:bg-white/10">
                     Book Appointment
                 </a>
             </div>

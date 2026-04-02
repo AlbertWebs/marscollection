@@ -9,9 +9,9 @@
             </h2>
         </div>
         
-        <div class="bg-white shadow rounded-lg p-6">
+        <div class="bg-white shadow rounded-sm p-6">
             @if (session('resent'))
-                <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+                <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-sm">
                     {{ __('A fresh verification link has been sent to your email address.') }}
                 </div>
             @endif

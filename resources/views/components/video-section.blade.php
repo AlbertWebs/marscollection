@@ -24,7 +24,7 @@
                 document.body.style.overflow = 'auto';
             }
         }">
-            <div class="relative rounded-2xl overflow-hidden shadow-2xl cursor-pointer" @click="openModal()">
+            <div class="relative rounded-sm overflow-hidden shadow-2xl cursor-pointer" @click="openModal()">
                 <img src="{{ $videoThumbnail }}" 
                      alt="Woman applying skincare" 
                      class="w-full h-96 object-cover">

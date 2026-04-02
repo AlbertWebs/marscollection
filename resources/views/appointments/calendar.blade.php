@@ -17,14 +17,14 @@
             <!-- Navigation -->
             <div class="flex justify-between items-center mb-8">
                 <a href="{{ route('appointments.index') }}" 
-                   class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
+                   class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                     </svg>
                     Back to List
                 </a>
                 <a href="{{ route('appointments.create') }}" 
-                   class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
+                   class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-sm text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                     </svg>
@@ -33,10 +33,10 @@
             </div>
 
             <!-- Calendar -->
-            <div class="bg-white rounded-2xl shadow-xl p-8">
+            <div class="bg-white rounded-sm shadow-xl p-8">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     @foreach($appointments as $date => $dayAppointments)
-                        <div class="border border-gray-200 rounded-lg p-4">
+                        <div class="border border-gray-200 rounded-sm p-4">
                             <h3 class="text-lg font-semibold text-gray-900 mb-3">
                                 {{ \Carbon\Carbon::parse($date)->format('M d, Y') }}
                                 <span class="text-sm font-normal text-gray-500">
@@ -46,7 +46,7 @@
                             
                             <div class="space-y-2">
                                 @foreach($dayAppointments as $appointment)
-                                    <div class="bg-gray-50 rounded-lg p-3">
+                                    <div class="bg-gray-50 rounded-sm p-3">
                                         <div class="flex justify-between items-start">
                                             <div class="flex-1">
                                                 <div class="text-sm font-medium text-gray-900">
@@ -82,7 +82,7 @@
                         <p class="mt-1 text-sm text-gray-500">No appointments found in the calendar.</p>
                         <div class="mt-6">
                             <a href="{{ route('appointments.create') }}" 
-                               class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
+                               class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-sm text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                                 </svg>

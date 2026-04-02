@@ -41,7 +41,7 @@
                 @foreach($reels as $reel)
                     <a href="{{ $reel['url'] }}" target="_blank" rel="noopener noreferrer" 
                        class="flex-shrink-0 group">
-                        <div class="relative w-48 h-64 sm:w-64 sm:h-80 md:w-72 md:h-96 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                        <div class="relative w-48 h-64 sm:w-64 sm:h-80 md:w-72 md:h-96 rounded-sm overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
                             <img src="{{ $reel['thumbnail'] }}" 
                                  alt="Instagram Reel" 
                                  class="w-full h-full object-cover">

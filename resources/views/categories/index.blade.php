@@ -13,7 +13,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             @foreach($activeCategories as $category)
                 <a href="{{ route('products.index', ['category_id' => $category->id]) }}" class="group">
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-300 overflow-hidden">
+                    <div class="bg-white rounded-sm shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-300 overflow-hidden">
                         <!-- Category Image -->
                         <div class="aspect-w-16 aspect-h-9 bg-gray-100">
                             @if($category->image)

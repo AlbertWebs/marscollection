@@ -1,4 +1,4 @@
-<div class="bg-gray-50 rounded-lg p-6 lg:sticky lg:top-28">
+<div class="bg-gray-50 rounded-sm p-6 lg:sticky lg:top-28">
     <h2 class="text-lg font-semibold text-gray-900 mb-4">Filters</h2>
     
     <form method="GET" action="{{ route('products.index') }}" class="space-y-6">
@@ -6,7 +6,7 @@
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Search</label>
             <input type="text" name="search" value="{{ request('search') }}" 
-                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+                   class="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-pink-500"
                    placeholder="Search products...">
         </div>
         
@@ -21,7 +21,7 @@
                            value="{{ request('min_price', '') }}"
                            placeholder="1000"
                            min="0"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm">
+                           class="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm">
                 </div>
                 <div>
                     <label class="block text-xs text-gray-600 mb-1">Max Price</label>
@@ -30,13 +30,13 @@
                            value="{{ request('max_price', '') }}"
                            placeholder="50000"
                            min="0"
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm">
+                           class="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm">
                 </div>
             </div>
         </div>
         
         <!-- Filter Button -->
-        <button type="submit" class="w-full bg-pink-600 text-white px-6 py-3 rounded-md hover:bg-pink-700 transition-colors font-semibold">
+        <button type="submit" class="w-full bg-pink-600 text-white px-6 py-3 rounded-sm hover:bg-pink-700 transition-colors font-semibold">
             Apply Filters
         </button>
         
@@ -88,7 +88,7 @@
             <h3 class="text-sm font-medium text-gray-900 mb-3">Active Filters:</h3>
             <div class="space-y-2">
                 @if(request('search'))
-                    <div class="flex items-center justify-between bg-white rounded px-3 py-2">
+                    <div class="flex items-center justify-between bg-white rounded-sm px-3 py-2">
                         <span class="text-sm text-gray-600">Search: "{{ request('search') }}"</span>
                         <a href="{{ route('products.index', array_merge(request()->except('search'), ['search' => ''])) }}" class="text-pink-600 hover:text-pink-800 text-xs">×</a>
                     </div>
@@ -96,7 +96,7 @@
                 @if(request('category_id'))
                     @php $selectedCategory = $activeCategories->find(request('category_id')) @endphp
                     @if($selectedCategory)
-                        <div class="flex items-center justify-between bg-white rounded px-3 py-2">
+                        <div class="flex items-center justify-between bg-white rounded-sm px-3 py-2">
                             <span class="text-sm text-gray-600">Category: {{ $selectedCategory->name }}</span>
                             <a href="{{ route('products.index', array_merge(request()->except('category_id'), ['category_id' => ''])) }}" class="text-pink-600 hover:text-pink-800 text-xs">×</a>
                         </div>
@@ -105,14 +105,14 @@
                 @if(request('brand_id'))
                     @php $selectedBrand = $brands->find(request('brand_id')) @endphp
                     @if($selectedBrand)
-                        <div class="flex items-center justify-between bg-white rounded px-3 py-2">
+                        <div class="flex items-center justify-between bg-white rounded-sm px-3 py-2">
                             <span class="text-sm text-gray-600">Brand: {{ $selectedBrand->name }}</span>
                             <a href="{{ route('products.index', array_merge(request()->except('brand_id'), ['brand_id' => ''])) }}" class="text-pink-600 hover:text-pink-800 text-xs">×</a>
                         </div>
                     @endif
                 @endif
                 @if(request('min_price') || request('max_price'))
-                    <div class="flex items-center justify-between bg-white rounded px-3 py-2">
+                    <div class="flex items-center justify-between bg-white rounded-sm px-3 py-2">
                         <span class="text-sm text-gray-600">
                             Price: 
                             @if(request('min_price'))${{ request('min_price') }}@endif

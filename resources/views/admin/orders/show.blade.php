@@ -16,7 +16,7 @@
     <!-- Order Information -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
         <!-- Order Details -->
-        <div class="bg-white shadow rounded-lg p-4 lg:p-6">
+        <div class="bg-white shadow rounded-sm p-4 lg:p-6">
             <h3 class="text-lg font-medium text-gray-900 mb-4">Order Information</h3>
             <div class="space-y-4">
                 <div class="flex justify-between">
@@ -47,7 +47,7 @@
         </div>
 
         <!-- Status Update -->
-        <div class="bg-white shadow rounded-lg p-4 lg:p-6">
+        <div class="bg-white shadow rounded-sm p-4 lg:p-6">
             <h3 class="text-lg font-medium text-gray-900 mb-4">Update Status</h3>
             <form method="POST" action="{{ route('admin.orders.update-status', $order) }}">
                 @csrf
@@ -56,7 +56,7 @@
                     <div>
                         <label for="status" class="block text-sm font-medium text-gray-700">Order Status</label>
                         <select id="status" name="status" 
-                                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm rounded-md">
+                                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm rounded-sm">
                             <option value="pending" {{ $order->status === 'pending' ? 'selected' : '' }}>Pending</option>
                             <option value="processing" {{ $order->status === 'processing' ? 'selected' : '' }}>Processing</option>
                             <option value="shipped" {{ $order->status === 'shipped' ? 'selected' : '' }}>Shipped</option>
@@ -65,7 +65,7 @@
                         </select>
                     </div>
                     <button type="submit" 
-                            class="w-full bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg">
+                            class="w-full bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-sm">
                         Update Status
                     </button>
                 </div>
@@ -74,7 +74,7 @@
     </div>
 
     <!-- Order Items -->
-    <div class="bg-white shadow rounded-lg overflow-hidden">
+    <div class="bg-white shadow rounded-sm overflow-hidden">
         <div class="px-4 lg:px-6 py-4 border-b border-gray-200">
             <h3 class="text-base lg:text-lg font-medium text-gray-900">Order Items</h3>
         </div>
@@ -100,9 +100,9 @@
                                             @if($item->bundle && $item->bundle->image)
                                                 <img src="{{ $item->bundle->image }}" 
                                                      alt="{{ $item->bundle->name }}" 
-                                                     class="w-12 h-12 rounded-lg object-cover">
+                                                     class="w-12 h-12 rounded-sm object-cover">
                                             @else
-                                                <div class="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center">
+                                                <div class="w-12 h-12 bg-gray-200 rounded-sm flex items-center justify-center">
                                                     <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
                                                     </svg>
@@ -123,9 +123,9 @@
                                                                 @if($product->image)
                                                                     <img src="{{ $product->image }}" 
                                                                          alt="{{ $product->name }}" 
-                                                                         class="w-6 h-6 rounded object-cover">
+                                                                         class="w-6 h-6 rounded-sm object-cover">
                                                                 @else
-                                                                    <div class="w-6 h-6 bg-gray-100 rounded flex items-center justify-center">
+                                                                    <div class="w-6 h-6 bg-gray-100 rounded-sm flex items-center justify-center">
                                                                         <svg class="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
                                                                         </svg>
@@ -156,9 +156,9 @@
                                             @if($item->product && $item->product->image)
                                                 <img src="{{ $item->product->image }}" 
                                                      alt="{{ $item->product->name }}" 
-                                                     class="w-12 h-12 rounded-lg object-cover">
+                                                     class="w-12 h-12 rounded-sm object-cover">
                                             @else
-                                                <div class="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center">
+                                                <div class="w-12 h-12 bg-gray-200 rounded-sm flex items-center justify-center">
                                                     <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
                                                     </svg>

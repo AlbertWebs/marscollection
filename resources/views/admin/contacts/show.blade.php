@@ -6,7 +6,7 @@
         <h1 class="text-xl lg:text-2xl font-bold text-gray-900">Contact Message Details</h1>
         <div class="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
             <a href="{{ route('admin.contacts.index') }}" 
-               class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">
+               class="px-4 py-2 bg-gray-600 text-white rounded-sm hover:bg-gray-700">
                 Back to Messages
             </a>
             <form action="{{ route('admin.contacts.destroy', $contact) }}" 
@@ -15,7 +15,7 @@
                   onsubmit="return confirm('Are you sure you want to delete this message?')">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-sm hover:bg-red-700">
                     Delete Message
                 </button>
             </form>
@@ -25,7 +25,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
         <!-- Main Message Content -->
         <div class="lg:col-span-2">
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 lg:p-6">
+            <div class="bg-white rounded-sm shadow-sm border border-gray-200 p-4 lg:p-6">
                 <div class="flex items-center justify-between mb-6">
                     <h2 class="text-xl font-semibold text-gray-900">{{ $contact->subject_display }}</h2>
                     @if($contact->is_bot)
@@ -46,7 +46,7 @@
                 </div>
 
                 <div class="prose max-w-none">
-                    <div class="bg-gray-50 rounded-lg p-4 mb-6">
+                    <div class="bg-gray-50 rounded-sm p-4 mb-6">
                         <p class="text-gray-700 whitespace-pre-wrap">{{ $contact->message }}</p>
                     </div>
                 </div>
@@ -96,11 +96,11 @@
         <!-- Sidebar -->
         <div class="lg:col-span-1">
             <!-- Quick Actions -->
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+            <div class="bg-white rounded-sm shadow-sm border border-gray-200 p-6 mb-6">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
                 <div class="space-y-3">
                     <a href="mailto:{{ $contact->email }}?subject=Re: {{ $contact->subject_display }}" 
-                       class="w-full flex items-center justify-center px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700">
+                       class="w-full flex items-center justify-center px-4 py-2 bg-pink-600 text-white rounded-sm hover:bg-pink-700">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                         </svg>
@@ -108,7 +108,7 @@
                     </a>
                     @if($contact->phone)
                         <a href="tel:{{ $contact->phone }}" 
-                           class="w-full flex items-center justify-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                           class="w-full flex items-center justify-center px-4 py-2 bg-green-600 text-white rounded-sm hover:bg-green-700">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
                             </svg>
@@ -119,7 +119,7 @@
             </div>
 
             <!-- Technical Details -->
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div class="bg-white rounded-sm shadow-sm border border-gray-200 p-6">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">Technical Details</h3>
                 <dl class="space-y-3">
                     <div>

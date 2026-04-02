@@ -8,24 +8,24 @@
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h1 class="text-xl lg:text-2xl font-bold text-gray-900">Services Management</h1>
         <a href="{{ route('admin.services.create') }}" 
-           class="bg-pink-600 text-white px-4 py-2 rounded-lg hover:bg-pink-700 transition-colors w-full sm:w-auto text-center">
+           class="bg-pink-600 text-white px-4 py-2 rounded-sm hover:bg-pink-700 transition-colors w-full sm:w-auto text-center">
             Add New Service
         </a>
     </div>
 
     <!-- Filters -->
-    <div class="bg-white shadow rounded-lg p-4 lg:p-6">
+    <div class="bg-white shadow rounded-sm p-4 lg:p-6">
         <form method="GET" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
                 <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Search</label>
                 <input type="text" id="search" name="search" value="{{ request('search') }}"
                        placeholder="Search services..."
-                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                       class="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-pink-500">
             </div>
             <div>
                 <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
                 <select id="status" name="status" 
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                        class="w-full px-3 py-2 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-pink-500">
                     <option value="">All Status</option>
                     <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Active</option>
                     <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
@@ -33,7 +33,7 @@
             </div>
             <div class="flex items-end">
                 <button type="submit" 
-                        class="w-full bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition-colors">
+                        class="w-full bg-gray-600 text-white px-4 py-2 rounded-sm hover:bg-gray-700 transition-colors">
                     Filter
                 </button>
             </div>
@@ -41,7 +41,7 @@
     </div>
 
     <!-- Services Table -->
-    <div class="bg-white shadow rounded-lg overflow-hidden">
+    <div class="bg-white shadow rounded-sm overflow-hidden">
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50 hidden sm:table-header-group">

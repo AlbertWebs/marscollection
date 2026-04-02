@@ -102,7 +102,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <!-- Product Image -->
             <div class="space-y-4">
-                <div class="bg-gray-50 rounded-lg overflow-hidden">
+                <div class="bg-gray-50 rounded-sm overflow-hidden">
                     @if($product->image)
                         <img src="{{ \App\Helpers\ImageHelper::getProductImageUrl($product->image) }}" 
                              alt="{{ $product->name }} - {{ $product->brand->name ?? 'Zayn\'s Beauty' }} {{ $product->category->name ?? 'Beauty Product' }}" 
@@ -162,7 +162,7 @@
                         <span class="text-3xl font-bold text-gray-900">{{ $product->formatted_price }}</span>
                         @if($product->original_price && $product->original_price > $product->price)
                             <span class="text-lg text-gray-500 line-through">{{ $product->formatted_original_price }}</span>
-                            <span class="px-2 py-1 text-xs font-semibold bg-red-100 text-red-600 rounded">
+                            <span class="px-2 py-1 text-xs font-semibold bg-red-100 text-red-600 rounded-sm">
                                 {{ round((($product->original_price - $product->price) / $product->original_price) * 100) }}% OFF
                             </span>
                         @endif
@@ -223,7 +223,7 @@
                 <div class="space-y-4">
                     @if($product->stock_quantity > 0)
                         <button onclick="addToCart({{ $product->id }})" 
-                                class="w-full bg-pink-600 text-white py-4 px-6 rounded-lg font-semibold hover:bg-pink-700 transition-all duration-300 flex items-center justify-center space-x-2"
+                                class="w-full bg-pink-600 text-white py-4 px-6 rounded-sm font-semibold hover:bg-pink-700 transition-all duration-300 flex items-center justify-center space-x-2"
                                 aria-label="Add {{ $product->name }} to cart">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
@@ -232,7 +232,7 @@
                         </button>
                     @else
                         <button disabled 
-                                class="w-full bg-gray-300 text-gray-500 py-4 px-6 rounded-lg font-semibold cursor-not-allowed">
+                                class="w-full bg-gray-300 text-gray-500 py-4 px-6 rounded-sm font-semibold cursor-not-allowed">
                             Out of Stock
                         </button>
                     @endif
@@ -282,7 +282,7 @@
             @if($product->reviews_count > 0)
                 <div class="space-y-6">
                     @foreach($product->reviews()->latest()->take(5)->get() as $review)
-                        <div class="border border-gray-200 rounded-lg p-6">
+                        <div class="border border-gray-200 rounded-sm p-6">
                             <div class="flex items-start justify-between mb-4">
                                 <div class="flex items-center space-x-3">
                                     <div class="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center">

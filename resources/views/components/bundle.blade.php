@@ -6,7 +6,7 @@
             @endphp
 
             @foreach($bundles as $bundle)
-            <div class="group bg-gradient-to-br from-amber-50 via-pink-50 to-orange-50 rounded-2xl md:rounded-3xl p-4 md:p-8 relative overflow-hidden transition-all duration-500 transform hover:-translate-y-1 md:hover:-translate-y-2 border border-amber-100/50">
+            <div class="group bg-gradient-to-br from-amber-50 via-pink-50 to-orange-50 rounded-sm md:rounded-sm p-4 md:p-8 relative overflow-hidden transition-all duration-500 transform hover:-translate-y-1 md:hover:-translate-y-2 border border-amber-100/50">
                 <div class="relative z-10">
                     <h3 class="text-xl md:text-2xl lg:text-3xl xl:text-4xl font-semibold text-gray-900 mb-4 md:mb-6 leading-tight line-clamp-2 min-h-0 md:h-24 flex items-center">{{ $bundle->name }}</h3>
                 </div>
@@ -16,7 +16,7 @@
                     <div class="relative mb-4">
                         <img src="{{ $bundle->image }}" 
                              alt="{{ $bundle->name }}" 
-                             class="w-full h-48 md:h-72 object-cover rounded-xl md:rounded-2xl group-hover:scale-105 transition-transform duration-500"> 
+                             class="w-full h-48 md:h-72 object-cover rounded-sm md:rounded-sm group-hover:scale-105 transition-transform duration-500"> 
                         @if($bundle->badge)
                             <div class="absolute -top-2 -right-2 {{ $bundle->badge_color === 'purple' ? 'bg-purple-500' : ($bundle->badge_color === 'green' ? 'bg-green-500' : ($bundle->badge_color === 'red' ? 'bg-red-500' : 'bg-pink-500')) }} text-white text-xs px-2 py-1 rounded-full font-medium">{{ $bundle->badge }}</div>
                         @endif
@@ -37,7 +37,7 @@
                         <h2 class="font-bold text-2xl md:text-4xl text-pink-600">{{ $bundle->formatted_price }}</h2>
                         
                         <!-- Add to Cart Button -->
-                        <button onclick="addBundleToCart({{ $bundle->id }})" class="w-full md:w-auto mt-4 bg-pink-600 text-white px-4 md:px-6 py-3 rounded-lg font-semibold hover:bg-pink-700 transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2 shadow-lg">
+                        <button onclick="addBundleToCart({{ $bundle->id }})" class="w-full md:w-auto mt-4 bg-pink-600 text-white px-4 md:px-6 py-3 rounded-sm font-semibold hover:bg-pink-700 transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2 shadow-lg">
                             <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
                             </svg>
@@ -51,7 +51,7 @@
                     <div class="relative">
                             <img src="{{ $bundle->image }}" 
                                  alt="{{ $bundle->name }}" 
-                             class="h-72 aspect-square object-cover rounded-2xl group-hover:scale-105 transition-transform duration-500"> 
+                             class="h-72 aspect-square object-cover rounded-sm group-hover:scale-105 transition-transform duration-500"> 
                             @if($bundle->badge)
                                 <div class="absolute -top-2 -right-2 {{ $bundle->badge_color === 'purple' ? 'bg-purple-500' : ($bundle->badge_color === 'green' ? 'bg-green-500' : ($bundle->badge_color === 'red' ? 'bg-red-500' : 'bg-pink-500')) }} text-white text-xs px-2 py-1 rounded-full font-medium">{{ $bundle->badge }}</div>
                             @endif
@@ -72,7 +72,7 @@
                             <h2 class="font-bold text-4xl text-pink-600">{{ $bundle->formatted_price }}</h2>
                             
                             <!-- Add to Cart Button -->
-                            <button onclick="addBundleToCart({{ $bundle->id }})" class="mt-4 bg-pink-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-pink-700 transition-all duration-300 transform hover:scale-105 flex items-center space-x-2 shadow-lg">
+                            <button onclick="addBundleToCart({{ $bundle->id }})" class="mt-4 bg-pink-600 text-white px-6 py-3 rounded-sm font-semibold hover:bg-pink-700 transition-all duration-300 transform hover:scale-105 flex items-center space-x-2 shadow-lg">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
                                 </svg>
