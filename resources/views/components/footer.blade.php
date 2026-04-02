@@ -134,7 +134,7 @@
         <!-- Bottom bar -->
         <div class="border-t border-gray-800 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-gray-600">
             <span>© {{ date('Y') }} Zayn's Beauty. All rights reserved.</span>
-            <span>Made with care in Nairobi 🇰🇪</span>
+            <span>Designed by <a href="https://velinexlabs.com" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">Velinex Labs</a></span>
         </div>
     </div>
 </footer>
