@@ -110,7 +110,7 @@ class AdminController extends Controller
             'brand_id' => 'required|exists:brands,id',
             'stock_quantity' => 'required|integer|min:0',
             'is_active' => 'boolean',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
         // Handle image upload
@@ -142,7 +142,7 @@ class AdminController extends Controller
             'brand_id' => 'required|exists:brands,id',
             'stock_quantity' => 'required|integer|min:0',
             'is_active' => 'boolean',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
         // Handle image upload

@@ -94,7 +94,7 @@
                     </div>
                 @endif
                 @if(request('category_id'))
-                    @php $selectedCategory = $categories->find(request('category_id')) @endphp
+                    @php $selectedCategory = $activeCategories->find(request('category_id')) @endphp
                     @if($selectedCategory)
                         <div class="flex items-center justify-between bg-white rounded px-3 py-2">
                             <span class="text-sm text-gray-600">Category: {{ $selectedCategory->name }}</span>
