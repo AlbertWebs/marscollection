@@ -67,12 +67,12 @@
         "url": "{{ url('/') }}",
         "logo": "{{ asset('logo.svg') }}",
         "image": "{{ asset('images/og-image.jpg') }}",
-        @if($s_phone)"telephone": "{{ $s_phone }}",@endif
-        @if($s_email)"email": "{{ $s_email }}",@endif
+        @if($s_phone)"telephone": {!! json_encode($s_phone) !!},@endif
+        @if($s_email)"email": {!! json_encode($s_email) !!},@endif
         "address": {
             "@@type": "PostalAddress",
-            "streetAddress": "{{ $s_address }}",
-            "addressLocality": "{{ $s_city }}",
+            "streetAddress": {!! json_encode($s_address) !!},
+            "addressLocality": {!! json_encode($s_city) !!},
             "addressRegion": "Nairobi County",
             "addressCountry": "KE"
         },
