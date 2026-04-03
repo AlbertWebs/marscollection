@@ -174,16 +174,20 @@
     </div>
 </div>
 
+@php
+    $servicesJson = $services->map(fn($s) => [
+        'id'          => $s->id,
+        'name'        => $s->name,
+        'description' => $s->description,
+        'price'       => $s->formatted_price,
+        'duration'    => $s->formatted_duration,
+        'status'      => $s->is_active ? 'Active' : 'Inactive',
+        'edit_url'    => route('admin.services.edit', $s),
+    ]);
+@endphp
+
 <script>
-const services = @json($services->map(fn($s) => [
-    'id'          => $s->id,
-    'name'        => $s->name,
-    'description' => $s->description,
-    'price'       => $s->formatted_price,
-    'duration'    => $s->formatted_duration,
-    'status'      => $s->is_active ? 'Active' : 'Inactive',
-    'edit_url'    => route('admin.services.edit', $s),
-]));
+const services = @json($servicesJson);
 
 function openServiceDrawer(id) {
     const service = services.find(s => s.id === id);
