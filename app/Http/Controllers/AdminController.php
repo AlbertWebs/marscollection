@@ -183,6 +183,18 @@ class AdminController extends Controller
         return redirect()->route('admin.products.index')->with('success', 'Product deleted successfully!');
     }
 
+    public function toggleProductFlag(Request $request, Product $product)
+    {
+        $request->validate([
+            'field' => 'required|in:is_active,is_featured,is_trending',
+            'value' => 'required|boolean',
+        ]);
+
+        $product->update([$request->field => $request->value]);
+
+        return response()->json(['success' => true, 'value' => (bool) $product->{$request->field}]);
+    }
+
     public function bulkAction(Request $request)
     {
         $validated = $request->validate([

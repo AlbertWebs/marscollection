@@ -87,6 +87,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::put('/products/{product}', [AdminController::class, 'updateProduct'])->name('products.update');
     Route::delete('/products/{product}', [AdminController::class, 'deleteProduct'])->name('products.destroy');
     Route::post('/products/bulk-action', [AdminController::class, 'bulkAction'])->name('products.bulk-action');
+    Route::patch('/products/{product}/toggle-flag', [AdminController::class, 'toggleProductFlag'])->name('products.toggle-flag');
     
     // Orders Management
     Route::get('/orders', [AdminController::class, 'orders'])->name('orders.index');

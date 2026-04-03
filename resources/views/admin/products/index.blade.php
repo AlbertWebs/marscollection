@@ -112,7 +112,7 @@
                         <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">Brand</th>
                         <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
                         <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">Stock</th>
-                        <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Flags</th>
                         <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>
@@ -140,10 +140,31 @@
                                     </div>
                                     <div class="flex items-center gap-3 text-xs sm:text-sm sm:hidden">
                                         <span class="font-medium text-gray-900">KSh {{ number_format($product->price) }}</span>
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium 
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium
                                             @if($product->is_active) bg-green-100 text-green-800 @else bg-red-100 text-red-800 @endif">
                                             {{ $product->is_active ? 'Active' : 'Inactive' }}
                                         </span>
+                                    </div>
+                                    <!-- Mobile toggles -->
+                                    <div class="flex items-center gap-3 sm:hidden mt-1">
+                                        <label class="flex items-center gap-1 cursor-pointer text-xs text-gray-500">
+                                            <input type="checkbox" class="flag-toggle rounded border-gray-300 text-pink-600 focus:ring-pink-500"
+                                                   data-product-id="{{ $product->id }}" data-field="is_active"
+                                                   {{ $product->is_active ? 'checked' : '' }}>
+                                            Active
+                                        </label>
+                                        <label class="flex items-center gap-1 cursor-pointer text-xs text-yellow-600">
+                                            <input type="checkbox" class="flag-toggle rounded border-yellow-300 text-yellow-500 focus:ring-yellow-400"
+                                                   data-product-id="{{ $product->id }}" data-field="is_featured"
+                                                   {{ $product->is_featured ? 'checked' : '' }}>
+                                            Featured
+                                        </label>
+                                        <label class="flex items-center gap-1 cursor-pointer text-xs text-blue-600">
+                                            <input type="checkbox" class="flag-toggle rounded border-blue-300 text-blue-500 focus:ring-blue-400"
+                                                   data-product-id="{{ $product->id }}" data-field="is_trending"
+                                                   {{ $product->is_trending ? 'checked' : '' }}>
+                                            Trending
+                                        </label>
                                     </div>
                                     <div class="text-xs text-gray-500 sm:hidden">
                                         Stock: {{ $product->stock }}
@@ -164,11 +185,33 @@
                             <td class="px-3 lg:px-6 py-4 whitespace-nowrap hidden sm:table-cell">
                                 <span class="text-sm text-gray-900">{{ $product->stock }}</span>
                             </td>
-                            <td class="px-3 lg:px-6 py-4 whitespace-nowrap hidden sm:table-cell">
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
-                                    @if($product->is_active) bg-green-100 text-green-800 @else bg-red-100 text-red-800 @endif">
-                                    {{ $product->is_active ? 'Active' : 'Inactive' }}
-                                </span>
+                            <td class="px-3 lg:px-6 py-4 hidden sm:table-cell">
+                                <div class="flex flex-col gap-1.5">
+                                    <label class="flex items-center gap-1.5 cursor-pointer group">
+                                        <input type="checkbox" class="flag-toggle rounded border-gray-300 text-green-600 focus:ring-green-500"
+                                               data-product-id="{{ $product->id }}" data-field="is_active"
+                                               {{ $product->is_active ? 'checked' : '' }}>
+                                        <span class="text-xs {{ $product->is_active ? 'text-green-700 font-medium' : 'text-gray-400' }} flag-label">
+                                            Active
+                                        </span>
+                                    </label>
+                                    <label class="flex items-center gap-1.5 cursor-pointer group">
+                                        <input type="checkbox" class="flag-toggle rounded border-yellow-300 text-yellow-500 focus:ring-yellow-400"
+                                               data-product-id="{{ $product->id }}" data-field="is_featured"
+                                               {{ $product->is_featured ? 'checked' : '' }}>
+                                        <span class="text-xs {{ $product->is_featured ? 'text-yellow-600 font-medium' : 'text-gray-400' }} flag-label">
+                                            Featured
+                                        </span>
+                                    </label>
+                                    <label class="flex items-center gap-1.5 cursor-pointer group">
+                                        <input type="checkbox" class="flag-toggle rounded border-blue-300 text-blue-500 focus:ring-blue-400"
+                                               data-product-id="{{ $product->id }}" data-field="is_trending"
+                                               {{ $product->is_trending ? 'checked' : '' }}>
+                                        <span class="text-xs {{ $product->is_trending ? 'text-blue-600 font-medium' : 'text-gray-400' }} flag-label">
+                                            Trending
+                                        </span>
+                                    </label>
+                                </div>
                             </td>
                             <td class="px-3 lg:px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <div class="flex items-center gap-2 sm:flex-col sm:items-start sm:gap-1 lg:flex-row lg:gap-2">
@@ -224,6 +267,56 @@ document.addEventListener('DOMContentLoaded', function() {
             selectAll.indeterminate = checkedBoxes.length > 0 && checkedBoxes.length < productCheckboxes.length;
         });
     });
+
+    // Inline flag toggles
+    document.querySelectorAll('.flag-toggle').forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            const productId = this.dataset.productId;
+            const field = this.dataset.field;
+            const value = this.checked;
+            const label = this.nextElementSibling;
+            const originalChecked = !value;
+
+            // Optimistically update label style
+            updateFlagLabel(label, field, value);
+
+            fetch(`/admin/products/${productId}/toggle-flag`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({ field: field, value: value ? 1 : 0 })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) {
+                    // Revert on failure
+                    this.checked = originalChecked;
+                    updateFlagLabel(label, field, originalChecked);
+                }
+            })
+            .catch(() => {
+                // Revert on network error
+                this.checked = originalChecked;
+                updateFlagLabel(label, field, originalChecked);
+            });
+        });
+    });
+
+    function updateFlagLabel(label, field, active) {
+        if (!label) return;
+        label.classList.remove('text-green-700', 'text-yellow-600', 'text-blue-600', 'text-gray-400', 'font-medium');
+        if (active) {
+            label.classList.add('font-medium');
+            if (field === 'is_active') label.classList.add('text-green-700');
+            else if (field === 'is_featured') label.classList.add('text-yellow-600');
+            else if (field === 'is_trending') label.classList.add('text-blue-600');
+        } else {
+            label.classList.add('text-gray-400');
+        }
+    }
 
     // Bulk actions
     applyBulkAction.addEventListener('click', function() {
