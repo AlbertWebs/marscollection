@@ -112,6 +112,13 @@ class CheckoutController extends Controller
         // Send admin email notification
         $this->sendAdminOrderNotification($order);
 
+        // Send customer email notification
+        try {
+            Mail::to($order->customer_email)->send(new \App\Mail\OrderPlacedCustomer($order));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to send customer order notification: ' . $e->getMessage());
+        }
+
         return redirect()->route('checkout.success', $order)->with('success', 'Order placed successfully!');
     }
 

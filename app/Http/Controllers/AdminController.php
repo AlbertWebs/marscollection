@@ -259,6 +259,15 @@ class AdminController extends Controller
             $this->generateReviewLink($order);
         }
 
+        // Notify customer on shipped or cancelled status
+        if ($order->status !== $oldStatus && in_array($order->status, ['shipped', 'cancelled'])) {
+            try {
+                \Illuminate\Support\Facades\Mail::to($order->customer_email)->send(new \App\Mail\OrderStatusUpdated($order));
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('Failed to send order status updated email: ' . $e->getMessage());
+            }
+        }
+
         return redirect()->route('admin.orders.show', $order)->with('success', 'Order status updated successfully!');
     }
 
@@ -696,7 +705,18 @@ class AdminController extends Controller
                 
             } catch (\Exception $e) {
                 // Log error but don't fail the status update
-                \Log::error('Failed to send confirmation emails: ' . $e->getMessage());
+                \Illuminate\Support\Facades\Log::error('Failed to send confirmation emails: ' . $e->getMessage());
+            }
+        }
+        
+        // Send cancellation email when status changes to cancelled
+        if ($validated['status'] === 'cancelled' && $oldStatus !== 'cancelled') {
+            try {
+                // Send cancellation email to client
+                Mail::to($appointment->customer_email)->send(new \App\Mail\AppointmentCancelled($appointment));
+            } catch (\Exception $e) {
+                // Log error but don't fail the status update
+                \Illuminate\Support\Facades\Log::error('Failed to send cancellation emails: ' . $e->getMessage());
             }
         }
         

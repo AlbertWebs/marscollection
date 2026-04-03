@@ -74,7 +74,14 @@ class AppointmentController extends Controller
             Mail::to(\App\Models\Setting::get('email_admin', 'admin@zaynsbeauty.com'))->send(new AppointmentBooked($appointment));
         } catch (\Exception $e) {
             // Log error but don't fail the booking
-            \Log::error('Failed to send admin notification email: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Failed to send admin notification email: ' . $e->getMessage());
+        }
+
+        // Send email notification to customer
+        try {
+            Mail::to($appointment->customer_email)->send(new \App\Mail\AppointmentPendingCustomer($appointment));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to send customer notification email: ' . $e->getMessage());
         }
 
         return redirect()->route('appointments.success')
