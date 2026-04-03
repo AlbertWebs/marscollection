@@ -44,13 +44,20 @@
                                        required>
                                 <div class="min-w-0">
                                     <p class="text-sm font-semibold text-gray-900">{{ $label }}</p>
+                                    <div class="flex items-center gap-2 mt-0.5">
+                                        <p class="text-xs font-semibold text-pink-600">{{ $formattedPrices[$type] }}</p>
+                                        <span class="text-gray-300">•</span>
+                                        <p class="text-[10px] uppercase tracking-wider text-gray-500">{{ $formattedDurations[$type] }}</p>
+                                    </div>
                                     @if(!empty($serviceDescriptions[$type]))
-                                        <div class="service-desc-wrap mt-1">
+                                        <div class="service-desc-wrap mt-2">
                                             <div class="service-desc text-xs text-gray-500 line-clamp-2 overflow-hidden transition-all duration-300 prose prose-sm prose-pink max-w-none">
                                                 {!! $serviceDescriptions[$type] !!}
                                             </div>
                                             <div class="hidden service-full-html">{!! $serviceDescriptions[$type] !!}</div>
                                             <div class="hidden service-title-text">{{ $label }}</div>
+                                            <div class="hidden service-duration-text text-gray-500">{{ $formattedDurations[$type] }}</div>
+                                            <div class="hidden service-price-text text-pink-600 font-bold font-medium">{{ $formattedPrices[$type] }}</div>
                                             <button type="button" onclick="event.preventDefault(); openServiceDialog(this)"
                                                     class="text-xs text-pink-500 hover:text-pink-700 mt-0.5 flex items-center gap-0.5 font-medium">
                                                 <span class="btn-label">Read more</span>
@@ -213,6 +220,16 @@
                         </button>
                     </div>
                 </div>
+                <div class="px-4 py-2 bg-gray-50 border-b border-gray-100 flex items-center justify-between text-xs sm:text-sm">
+                    <div class="flex items-center gap-2">
+                        <span class="text-gray-400 font-medium uppercase tracking-wider">Price:</span>
+                        <span id="service-dialog-price" class="font-bold text-pink-600"></span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-gray-400 font-medium uppercase tracking-wider">Duration:</span>
+                        <span id="service-dialog-duration" class="font-semibold text-gray-700"></span>
+                    </div>
+                </div>
                 <div class="relative mt-6 flex-1 px-4 sm:px-6">
                     <div id="service-dialog-content" class="prose prose-sm prose-pink max-w-none text-gray-600">
                         <!-- Content goes here -->
@@ -228,8 +245,12 @@ function openServiceDialog(btn) {
     const wrap = btn.closest('.service-desc-wrap');
     const htmlContent = wrap.querySelector('.service-full-html').innerHTML;
     const titleText = wrap.querySelector('.service-title-text').textContent;
+    const durationText = wrap.querySelector('.service-duration-text').textContent;
+    const priceText = wrap.querySelector('.service-price-text').textContent;
     
     document.getElementById('service-dialog-title').textContent = titleText;
+    document.getElementById('service-dialog-duration').textContent = durationText;
+    document.getElementById('service-dialog-price').textContent = priceText;
     document.getElementById('service-dialog-content').innerHTML = htmlContent;
     
     const dialog = document.getElementById('service-dialog');

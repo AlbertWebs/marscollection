@@ -21,8 +21,15 @@ class AppointmentController extends Controller
         $serviceTypes = $services->pluck('name', 'slug')->toArray();
         $serviceDescriptions = $services->pluck('description', 'slug')->toArray();
         $prices = $services->pluck('price', 'slug')->toArray();
+        $formattedPrices = [];
+        $formattedDurations = [];
 
-        return view('appointments.create', compact('serviceTypes', 'serviceDescriptions', 'prices'));
+        foreach ($services as $service) {
+            $formattedPrices[$service->slug] = $service->formatted_price;
+            $formattedDurations[$service->slug] = $service->formatted_duration;
+        }
+
+        return view('appointments.create', compact('serviceTypes', 'serviceDescriptions', 'prices', 'formattedPrices', 'formattedDurations'));
     }
 
     public function store(Request $request)
