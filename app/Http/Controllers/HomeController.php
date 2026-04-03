@@ -15,15 +15,8 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $trendingProducts = Product::where('is_active', true)->where('is_trending', true)->limit(5)->get();
-        if ($trendingProducts->isEmpty()) {
-            $trendingProducts = Product::where('is_active', true)->latest()->limit(5)->get();
-        }
-
-        $featuredProducts = Product::where('is_active', true)->where('is_featured', true)->limit(10)->get();
-        if ($featuredProducts->isEmpty()) {
-            $featuredProducts = Product::where('is_active', true)->latest()->limit(10)->get();
-        }
+        $trendingProducts = Product::where('is_active', true)->where('is_trending', true)->latest()->limit(5)->get();
+        $featuredProducts = Product::where('is_active', true)->where('is_featured', true)->latest()->limit(10)->get();
 
         return view('home', compact('trendingProducts', 'featuredProducts'));
     }
