@@ -111,8 +111,13 @@ class AdminController extends Controller
             'brand_id' => 'required|exists:brands,id',
             'stock_quantity' => 'required|integer|min:0',
             'is_active' => 'boolean',
+            'is_featured' => 'boolean',
+            'is_trending' => 'boolean',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
+        $validated['is_active'] = $request->boolean('is_active');
+        $validated['is_featured'] = $request->boolean('is_featured');
+        $validated['is_trending'] = $request->boolean('is_trending');
 
         // Handle image upload
         if ($request->hasFile('image')) {
@@ -143,8 +148,13 @@ class AdminController extends Controller
             'brand_id' => 'required|exists:brands,id',
             'stock_quantity' => 'required|integer|min:0',
             'is_active' => 'boolean',
+            'is_featured' => 'boolean',
+            'is_trending' => 'boolean',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
+        $validated['is_active'] = $request->boolean('is_active');
+        $validated['is_featured'] = $request->boolean('is_featured');
+        $validated['is_trending'] = $request->boolean('is_trending');
 
         // Handle image upload
         if ($request->hasFile('image')) {

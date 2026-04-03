@@ -93,12 +93,22 @@
                     @enderror
                 </div>
 
-                <!-- Active Status -->
-                <div>
-                    <label for="is_active" class="flex items-center">
+                <!-- Flags -->
+                <div class="space-y-2">
+                    <label class="flex items-center">
                         <input type="checkbox" id="is_active" name="is_active" value="1" {{ old('is_active') ? 'checked' : '' }}
                                class="h-4 w-4 text-pink-600 focus:ring-pink-500 border-gray-300 rounded-md">
                         <span class="ml-2 text-sm text-gray-700">Active Product</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" id="is_featured" name="is_featured" value="1" {{ old('is_featured') ? 'checked' : '' }}
+                               class="h-4 w-4 text-pink-600 focus:ring-pink-500 border-gray-300 rounded-md">
+                        <span class="ml-2 text-sm text-gray-700">Featured (shown on homepage)</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" id="is_trending" name="is_trending" value="1" {{ old('is_trending') ? 'checked' : '' }}
+                               class="h-4 w-4 text-pink-600 focus:ring-pink-500 border-gray-300 rounded-md">
+                        <span class="ml-2 text-sm text-gray-700">Trending (shown on homepage)</span>
                     </label>
                 </div>
             </div>
