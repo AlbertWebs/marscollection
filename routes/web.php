@@ -17,6 +17,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about', [HomeController::class, 'about'])->name('about');
 Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
 Route::post('/contact', [HomeController::class, 'submitContact'])->name('contact.submit');
+Route::post('/newsletter/subscribe', [HomeController::class, 'subscribeNewsletter'])->name('newsletter.subscribe');
 Route::get('/search', [HomeController::class, 'search'])->name('search');
 
 // Sitemap
@@ -152,6 +153,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/contacts', [AdminController::class, 'contacts'])->name('contacts.index');
     Route::get('/contacts/{contact}', [AdminController::class, 'showContact'])->name('contacts.show');
     Route::delete('/contacts/{contact}', [AdminController::class, 'deleteContact'])->name('contacts.destroy');
+
+    // Newsletter Subscribers
+    Route::get('/newsletter-subscribers', [AdminController::class, 'newsletterSubscribers'])->name('newsletter-subscribers.index');
+    Route::delete('/newsletter-subscribers/{newsletterSubscriber}', [AdminController::class, 'deleteNewsletterSubscriber'])->name('newsletter-subscribers.destroy');
 });
 
 // Authentication Routes (Laravel UI)

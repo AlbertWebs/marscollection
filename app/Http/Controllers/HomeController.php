@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Contact;
 use App\Models\Brand;
 use App\Models\Bundle;
+use App\Models\NewsletterSubscriber;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -74,6 +75,37 @@ class HomeController extends Controller
         
         // Redirect to products page with search parameter
         return redirect()->route('products.index', ['search' => $query]);
+    }
+
+    public function subscribeNewsletter(Request $request)
+    {
+        $validated = $request->validate([
+            'email' => 'required|email|max:255',
+        ]);
+
+        $subscriber = NewsletterSubscriber::where('email', $validated['email'])->first();
+
+        if ($subscriber) {
+            $subscriber->update([
+                'is_active' => true,
+                'source' => 'website',
+                'ip_address' => $request->ip(),
+                'user_agent' => $request->userAgent(),
+                'subscribed_at' => now(),
+                'unsubscribed_at' => null,
+            ]);
+        } else {
+            NewsletterSubscriber::create([
+                'email' => $validated['email'],
+                'source' => 'website',
+                'ip_address' => $request->ip(),
+                'user_agent' => $request->userAgent(),
+                'is_active' => true,
+                'subscribed_at' => now(),
+            ]);
+        }
+
+        return back()->with('newsletter_success', 'You have been subscribed successfully.');
     }
 
     public function sitemap()

@@ -3,13 +3,15 @@
         <h2 class="text-2xl font-bold text-gray-900 mb-2">Get beauty tips & offers first</h2>
         <p class="text-gray-500 text-sm mb-6">New arrivals, exclusive deals, and skincare advice, straight to your inbox. No spam.</p>
 
-        <form action="{{ route('contact.submit') }}" method="POST"
+        @if(session('newsletter_success'))
+            <div class="mb-4 border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700 rounded-md">
+                {{ session('newsletter_success') }}
+            </div>
+        @endif
+
+        <form action="{{ route('newsletter.subscribe') }}" method="POST"
               class="flex flex-col sm:flex-row gap-3">
             @csrf
-            <input type="hidden" name="subject" value="Newsletter Signup">
-            <input type="hidden" name="first_name" value="Newsletter">
-            <input type="hidden" name="last_name" value="Subscriber">
-            <input type="hidden" name="message" value="Newsletter signup request">
             <input type="email" name="email" required
                    placeholder="your@email.com"
                    class="flex-1 px-4 py-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent">

@@ -14,6 +14,7 @@ use App\Models\BookingSetting;
 use App\Models\Setting;
 use App\Models\Review;
 use App\Models\Contact;
+use App\Models\NewsletterSubscriber;
 use App\Mail\AppointmentConfirmed;
 use App\Mail\ReviewLinkEmail;
 use Illuminate\Http\Request;
@@ -885,4 +886,29 @@ class AdminController extends Controller
         $contact->delete();
         return redirect()->route('admin.contacts.index')->with('success', 'Contact message deleted successfully.');
     }
-} 
+
+    public function newsletterSubscribers(Request $request)
+    {
+        $query = NewsletterSubscriber::query();
+
+        if ($request->has('search') && $request->search) {
+            $search = $request->search;
+            $query->where('email', 'like', "%{$search}%");
+        }
+
+        if ($request->has('status') && $request->status !== '') {
+            $query->where('is_active', $request->status === 'active');
+        }
+
+        $subscribers = $query->latest()->paginate(20)->withQueryString();
+
+        return view('admin.newsletter-subscribers.index', compact('subscribers'));
+    }
+
+    public function deleteNewsletterSubscriber(NewsletterSubscriber $newsletterSubscriber)
+    {
+        $newsletterSubscriber->delete();
+
+        return redirect()->route('admin.newsletter-subscribers.index')->with('success', 'Newsletter subscriber deleted successfully.');
+    }
+}

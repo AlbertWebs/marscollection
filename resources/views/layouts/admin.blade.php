@@ -113,6 +113,15 @@
                                 </svg>
                                 Contact Messages
                             </a>
+
+                            <a href="{{ route('admin.newsletter-subscribers.index') }}" 
+                               class="flex items-center px-4 py-2 text-gray-700 rounded-md hover:bg-gray-100 {{ request()->routeIs('admin.newsletter-subscribers.*') ? 'bg-pink-100 text-pink-700' : '' }}">
+                                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16v12H4z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8l8 5 8-5"></path>
+                                </svg>
+                                Newsletter
+                            </a>
                         </div>
                     </div>
 
