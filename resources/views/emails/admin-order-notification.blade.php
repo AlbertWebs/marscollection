@@ -7,7 +7,7 @@
     <style>
         body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
         .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-        .header { background: linear-gradient(135deg, #ec4899, #8b5cf6); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+        .header { background: #ec4899; color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
         .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; }
         .details-box { background: white; padding: 20px; border-radius: 8px; margin: 20px 0; border: 2px solid #f3f4f6; }
         .detail-row { display: flex; justify-content: space-between; margin: 10px 0; }
@@ -47,7 +47,7 @@
                 </div>
                 <div class="detail-row">
                     <span class="label">Payment Method:</span>
-                    <span class="value">{{ str_replace('_', ' ', Str::title($order->payment_method)) }}</span>
+                    <span class="value">{{ str_replace('_', ' ', \Illuminate\Support\Str::title($order->payment_method)) }}</span>
                 </div>
                 <div class="detail-row">
                     <span class="label">Delivery Address:</span>

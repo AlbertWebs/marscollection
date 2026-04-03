@@ -7,7 +7,7 @@
     <style>
         body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
         .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-        .header { background: linear-gradient(135deg, #ef4444, #b91c1c); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+        .header { background: #dc2626; color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
         .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; }
         .details-box { background: white; padding: 20px; border-radius: 8px; margin: 20px 0; border: 2px solid #fee2e2; }
         .footer { text-align: center; margin-top: 30px; color: #6b7280; font-size: 14px; }
