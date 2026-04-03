@@ -118,11 +118,10 @@ class AdminController extends Controller
         $validated['is_active'] = $request->boolean('is_active');
         $validated['is_featured'] = $request->boolean('is_featured');
         $validated['is_trending'] = $request->boolean('is_trending');
+        unset($validated['image']); // never trust validated image — only set from actual file upload
 
-        // Handle image upload
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('products', 's3');
-            $validated['image'] = $imagePath;
+            $validated['image'] = $request->file('image')->store('products', 's3');
         }
 
         Product::create($validated);
