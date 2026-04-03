@@ -2,89 +2,30 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://zaynsbeauty.com/sitemap.xml
+Sitemap: https://www.zaynsbeauty.co.ke/sitemap.xml
 
-# Crawl-delay for respectful crawling
-Crawl-delay: 1
-
-# Disallow admin and private areas
+# Disallow admin and auth pages
 Disallow: /admin/
 Disallow: /login
 Disallow: /register
 Disallow: /password/
-Disallow: /email/
-Disallow: /verify-email
 Disallow: /forgot-password
 Disallow: /reset-password
-Disallow: /confirm-password
+Disallow: /verify-email
 
-# Disallow cart and checkout pages (they're not meant for indexing)
+# Disallow cart and checkout (not useful to index)
 Disallow: /cart
 Disallow: /checkout/
-
-# Disallow search results pages
-Disallow: /search
-Disallow: /products?search=
-Disallow: /products?category=
-Disallow: /products?brand=
 
 # Allow important pages
 Allow: /products/
 Allow: /categories/
 Allow: /brands/
 Allow: /bundles/
-Allow: /appointments/
+Allow: /appointments/book
 Allow: /about
 Allow: /contact
 Allow: /privacy-policy
 Allow: /terms-of-service
 Allow: /shipping-info
 Allow: /returns-policy
-
-# Specific rules for different bots
-User-agent: Googlebot
-Allow: /
-Crawl-delay: 1
-
-User-agent: Bingbot
-Allow: /
-Crawl-delay: 1
-
-User-agent: Slurp
-Allow: /
-Crawl-delay: 2
-
-User-agent: DuckDuckBot
-Allow: /
-Crawl-delay: 1
-
-User-agent: Baiduspider
-Allow: /
-Crawl-delay: 2
-
-User-agent: YandexBot
-Allow: /
-Crawl-delay: 2
-
-# Block bad bots
-User-agent: AhrefsBot
-Disallow: /
-
-User-agent: SemrushBot
-Disallow: /
-
-User-agent: MJ12bot
-Disallow: /
-
-User-agent: DotBot
-Disallow: /
-
-User-agent: BLEXBot
-Disallow: /
-
-User-agent: Screaming Frog SEO Spider
-Disallow: /
-
-# Block archive.org (optional - remove if you want to be archived)
-User-agent: ia_archiver
-Disallow: /

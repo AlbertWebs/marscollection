@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'Zayn\'s Beauty - Premium Beauty Products & Professional Services | Kenya')
-@section('description', 'Discover premium beauty products, professional beauty services, and expert beauty consultations in Kenya. Shop the latest trends in skincare, makeup, and beauty accessories. Book appointments online.')
-@section('keywords', 'beauty products Kenya, skincare Nairobi, makeup Kenya, beauty services, beauty salon Nairobi, beauty consultation, premium beauty products, beauty accessories')
+@section('title', 'Zayn\'s Beauty | Makeup Products & Beauty Shop in Nairobi, Kenya')
+@section('description', 'Shop authentic makeup products, skincare & beauty supplies in Nairobi, Kenya. Same-day delivery within CBD. Book professional makeup appointments online. Genuine products guaranteed.')
+@section('keywords', 'makeup products Nairobi, beauty shop Nairobi, makeup Nairobi Kenya, skincare Nairobi, buy makeup online Kenya, beauty products Kenya, makeup store Nairobi, authentic makeup Kenya, professional makeup Nairobi')
 @section('canonical', url('/'))
 
 @section('og_type', 'website')
@@ -17,9 +17,9 @@
         <section class="py-16 bg-white">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-12 fade-in">
-                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">TRENDING PRODUCTS</h1>
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Trending Products</h2>
                     <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                        Discover our most popular beauty products that customers love
+                        Our most popular makeup and beauty products in Nairobi
                     </p>
                 </div>
                 
@@ -38,9 +38,9 @@
         <section class="py-16 bg-gray-50">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-12 fade-in">
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">FEATURED PRODUCTS</h2>
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Featured Products</h2>
                     <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-                        Discover our most popular beauty products that customers love
+                        Hand-picked beauty products available in Nairobi — delivered to your door
                     </p>
                 </div>
                 

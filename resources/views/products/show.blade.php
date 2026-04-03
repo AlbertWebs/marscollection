@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('title', $product->name . ' - ' . ($product->brand->name ?? 'Zayn\'s Beauty') . ' | Premium Beauty Products')
-@section('description', $product->description ?? $product->name . ' - Premium beauty product from ' . ($product->brand->name ?? 'Zayn\'s Beauty') . '. Shop now for the best price and quality.')
-@section('keywords', $product->name . ', ' . ($product->category->name ?? 'beauty products') . ', ' . ($product->brand->name ?? 'Zayn\'s Beauty') . ', premium beauty, skincare, makeup')
+@section('title', $product->name . ' | ' . ($product->brand->name ?? 'Zayn\'s Beauty') . ' - Nairobi, Kenya')
+@section('description', ($product->description ? Str::limit($product->description, 140) : $product->name . ' available at Zayn\'s Beauty in Nairobi, Kenya. Authentic product, fast delivery. Order online today.'))
+@section('keywords', $product->name . ' Nairobi, buy ' . $product->name . ' Kenya, ' . ($product->category->name ?? 'beauty products') . ' Nairobi, ' . ($product->brand->name ?? 'Zayn\'s Beauty') . ', makeup products Nairobi, beauty shop Kenya')
 @section('canonical', route('products.show', $product))
 
 @section('og_type', 'product')

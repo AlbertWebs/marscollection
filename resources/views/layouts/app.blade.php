@@ -6,10 +6,10 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Primary Meta Tags -->
-    <title>@yield('title', 'Zayn\'s Beauty - Premium Beauty Products & Professional Services')</title>
-    <meta name="title" content="@yield('title', 'Zayn\'s Beauty - Premium Beauty Products & Professional Services')">
-    <meta name="description" content="@yield('description', 'Discover premium beauty products, professional beauty services, and expert beauty consultations. Shop the latest trends in skincare, makeup, and beauty accessories.')">
-    <meta name="keywords" content="@yield('keywords', 'beauty products, skincare, makeup, beauty services, beauty salon, beauty consultation, premium beauty, beauty accessories')">
+    <title>@yield('title', 'Zayn\'s Beauty | Makeup Products & Beauty Shop in Nairobi, Kenya')</title>
+    <meta name="title" content="@yield('title', 'Zayn\'s Beauty | Makeup Products & Beauty Shop in Nairobi, Kenya')">
+    <meta name="description" content="@yield('description', 'Shop authentic makeup products, skincare & beauty supplies in Nairobi, Kenya. Same-day delivery within CBD. Book professional makeup appointments online.')">
+    <meta name="keywords" content="@yield('keywords', 'makeup products Nairobi, beauty shop Nairobi, makeup Nairobi Kenya, skincare Nairobi, buy makeup online Kenya, beauty products Kenya, makeup store Nairobi, professional makeup Nairobi')">
     <meta name="author" content="Zayn's Beauty">
     <meta name="robots" content="@yield('robots', 'index, follow')">
     <meta name="language" content="English">
@@ -45,38 +45,60 @@
     <meta name="geo.position" content="@yield('geo_position', '')">
     <meta name="ICBM" content="@yield('icbm', '')">
     
-    <!-- Business Schema -->
+    <!-- LocalBusiness Schema -->
+    @php
+        $s_phone     = \App\Models\Setting::get('contact_phone_primary', '');
+        $s_email     = \App\Models\Setting::get('contact_email_primary', '');
+        $s_address   = \App\Models\Setting::get('contact_address_full', '');
+        $s_city      = \App\Models\Setting::get('contact_address_city', 'Nairobi');
+        $s_instagram = \App\Models\Setting::get('social_instagram', '');
+        $s_facebook  = \App\Models\Setting::get('social_facebook', '');
+        $s_twitter   = \App\Models\Setting::get('social_twitter', '');
+        $s_hours_wk  = \App\Models\Setting::get('business_hours_monday_friday', 'Mo-Fr 09:00-18:00');
+        $s_hours_sat = \App\Models\Setting::get('business_hours_saturday', 'Sa 10:00-17:00');
+        $s_sameAs    = array_filter([$s_instagram, $s_facebook, $s_twitter]);
+    @endphp
     <script type="application/ld+json">
     {
         "@@context": "https://schema.org",
-        "@@type": "BeautySalon",
+        "@@type": ["BeautySalon", "Store"],
         "name": "Zayn's Beauty",
-        "description": "Premium beauty products and professional beauty services",
+        "description": "Authentic makeup products, skincare and beauty supplies in Nairobi, Kenya. Shop online with same-day CBD delivery or book a professional makeup appointment.",
         "url": "{{ url('/') }}",
-        "logo": "{{ asset('images/logo.png') }}",
+        "logo": "{{ asset('logo.svg') }}",
         "image": "{{ asset('images/og-image.jpg') }}",
-        "telephone": "@yield('phone', '+254-XXX-XXX-XXX')",
-        "email": "@yield('email', 'info@zaynsbeauty.com')",
+        @if($s_phone)"telephone": "{{ $s_phone }}",@endif
+        @if($s_email)"email": "{{ $s_email }}",@endif
         "address": {
             "@@type": "PostalAddress",
-            "streetAddress": "@yield('street_address', '')",
-            "addressLocality": "@yield('city', 'Nairobi')",
-            "addressRegion": "@yield('region', 'Nairobi')",
-            "postalCode": "@yield('postal_code', '')",
+            "streetAddress": "{{ $s_address }}",
+            "addressLocality": "{{ $s_city }}",
+            "addressRegion": "Nairobi County",
             "addressCountry": "KE"
         },
-        "geo": {
-            "@@type": "GeoCoordinates",
-            "latitude": "@yield('latitude', '')",
-            "longitude": "@yield('longitude', '')"
+        "openingHoursSpecification": [
+            {
+                "@@type": "OpeningHoursSpecification",
+                "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
+                "opens": "09:00",
+                "closes": "18:00"
+            },
+            {
+                "@@type": "OpeningHoursSpecification",
+                "dayOfWeek": "Saturday",
+                "opens": "10:00",
+                "closes": "17:00"
+            }
+        ],
+        "areaServed": {
+            "@@type": "City",
+            "name": "Nairobi"
         },
-        "openingHours": "@yield('opening_hours', 'Mo-Fr 09:00-18:00')",
-        "priceRange": "@yield('price_range', '$$')",
-        "sameAs": [
-            "@yield('facebook_url', '')",
-            "@yield('instagram_url', '')",
-            "@yield('twitter_url', '')"
-        ]
+        "priceRange": "KES",
+        "currenciesAccepted": "KES",
+        "paymentAccepted": "Cash, Mobile Money",
+        "hasMap": "https://maps.google.com/?q=Nairobi+Kenya",
+        @if(count($s_sameAs))"sameAs": {{ json_encode(array_values($s_sameAs)) }}@endif
     }
     </script>
 
