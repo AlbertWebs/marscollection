@@ -46,14 +46,16 @@
                                     <p class="text-sm font-semibold text-gray-900">{{ $label }}</p>
                                     @if(!empty($serviceDescriptions[$type]))
                                         <div class="service-desc-wrap mt-1">
-                                            <div class="service-desc text-xs text-gray-500 whitespace-pre-line line-clamp-2 overflow-hidden transition-all duration-300">
-                                                {{ $serviceDescriptions[$type] }}
+                                            <div class="service-desc text-xs text-gray-500 line-clamp-2 overflow-hidden transition-all duration-300 prose prose-sm prose-pink max-w-none">
+                                                {!! $serviceDescriptions[$type] !!}
                                             </div>
-                                            <button type="button" onclick="event.preventDefault(); toggleServiceDesc(this)"
+                                            <div class="hidden service-full-html">{!! $serviceDescriptions[$type] !!}</div>
+                                            <div class="hidden service-title-text">{{ $label }}</div>
+                                            <button type="button" onclick="event.preventDefault(); openServiceDialog(this)"
                                                     class="text-xs text-pink-500 hover:text-pink-700 mt-0.5 flex items-center gap-0.5 font-medium">
-                                                <span class="btn-label">Show more</span>
-                                                <svg class="btn-icon w-3 h-3 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                                <span class="btn-label">Read more</span>
+                                                <svg class="btn-icon w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                                                 </svg>
                                             </button>
                                         </div>
@@ -193,22 +195,72 @@
 
 @include('components.instagram-reels-marquee')
 
+{{-- Sidebar Dialog for Service Description --}}
+<div id="service-dialog" class="fixed inset-0 z-50 hidden" aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
+    <div class="fixed inset-0 bg-gray-500/75 transition-opacity opacity-0" id="service-dialog-backdrop" onclick="closeServiceDialog()"></div>
+    <div class="fixed inset-y-0 right-0 z-10 flex max-w-full pl-10 sm:pl-16">
+        <div class="w-screen max-w-md transform transition ease-in-out duration-300 translate-x-full" id="service-dialog-panel">
+            <div class="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
+                <div class="px-4 py-6 sm:px-6 border-b border-gray-100 flex items-start justify-between">
+                    <h2 class="text-base font-semibold leading-6 text-gray-900" id="service-dialog-title">Service Details</h2>
+                    <div class="ml-3 flex h-7 items-center">
+                        <button type="button" onclick="closeServiceDialog()" class="relative rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2">
+                            <span class="absolute -inset-2.5"></span>
+                            <span class="sr-only">Close panel</span>
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="relative mt-6 flex-1 px-4 sm:px-6">
+                    <div id="service-dialog-content" class="prose prose-sm prose-pink max-w-none text-gray-600">
+                        <!-- Content goes here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
-function toggleServiceDesc(btn) {
+function openServiceDialog(btn) {
     const wrap = btn.closest('.service-desc-wrap');
-    const desc = wrap.querySelector('.service-desc');
-    const label = btn.querySelector('.btn-label');
-    const icon = btn.querySelector('.btn-icon');
-    const isCollapsed = desc.classList.contains('line-clamp-2');
-    if (isCollapsed) {
-        desc.classList.remove('line-clamp-2');
-        label.textContent = 'Show less';
-        icon.style.transform = 'rotate(180deg)';
-    } else {
-        desc.classList.add('line-clamp-2');
-        label.textContent = 'Show more';
-        icon.style.transform = '';
-    }
+    const htmlContent = wrap.querySelector('.service-full-html').innerHTML;
+    const titleText = wrap.querySelector('.service-title-text').textContent;
+    
+    document.getElementById('service-dialog-title').textContent = titleText;
+    document.getElementById('service-dialog-content').innerHTML = htmlContent;
+    
+    const dialog = document.getElementById('service-dialog');
+    const backdrop = document.getElementById('service-dialog-backdrop');
+    const panel = document.getElementById('service-dialog-panel');
+    
+    dialog.classList.remove('hidden');
+    // slight delay for transition
+    setTimeout(() => {
+        backdrop.classList.remove('opacity-0');
+        backdrop.classList.add('opacity-100');
+        panel.classList.remove('translate-x-full');
+        panel.classList.add('translate-x-0');
+    }, 10);
+    
+    document.body.style.overflow = 'hidden';
+}
+
+function closeServiceDialog() {
+    const backdrop = document.getElementById('service-dialog-backdrop');
+    const panel = document.getElementById('service-dialog-panel');
+    
+    backdrop.classList.remove('opacity-100');
+    backdrop.classList.add('opacity-0');
+    panel.classList.remove('translate-x-0');
+    panel.classList.add('translate-x-full');
+    
+    setTimeout(() => {
+        document.getElementById('service-dialog').classList.add('hidden');
+        document.body.style.overflow = '';
+    }, 300);
 }
 
 document.addEventListener('DOMContentLoaded', function () {
