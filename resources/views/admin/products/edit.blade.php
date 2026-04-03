@@ -94,6 +94,37 @@
                     @enderror
                 </div>
 
+                <!-- SKU -->
+                <div>
+                    <label for="sku" class="block text-sm font-medium text-gray-700">SKU</label>
+                    <input type="text" id="sku" name="sku" value="{{ old('sku', $product->sku) }}"
+                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm @error('sku') border-red-500 @enderror">
+                    @error('sku')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+                </div>
+
+                <!-- Badge -->
+                <div>
+                    <label for="badge" class="block text-sm font-medium text-gray-700">Badge <span class="text-gray-400 font-normal">- label shown on product card</span></label>
+                    <input type="text" id="badge" name="badge" value="{{ old('badge', $product->badge) }}"
+                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
+                           placeholder="e.g. NEW, SALE, HOT">
+                </div>
+
+                <!-- Badge Color -->
+                <div>
+                    <label for="badge_color" class="block text-sm font-medium text-gray-700">Badge Color</label>
+                    <select id="badge_color" name="badge_color"
+                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm">
+                        <option value="">None</option>
+                        <option value="pink" {{ old('badge_color', $product->badge_color) === 'pink' ? 'selected' : '' }}>Pink</option>
+                        <option value="red" {{ old('badge_color', $product->badge_color) === 'red' ? 'selected' : '' }}>Red</option>
+                        <option value="green" {{ old('badge_color', $product->badge_color) === 'green' ? 'selected' : '' }}>Green</option>
+                        <option value="blue" {{ old('badge_color', $product->badge_color) === 'blue' ? 'selected' : '' }}>Blue</option>
+                        <option value="yellow" {{ old('badge_color', $product->badge_color) === 'yellow' ? 'selected' : '' }}>Yellow</option>
+                        <option value="gray" {{ old('badge_color', $product->badge_color) === 'gray' ? 'selected' : '' }}>Gray</option>
+                    </select>
+                </div>
+
                 <!-- Flags -->
                 <div class="space-y-2">
                     <label class="flex items-center">

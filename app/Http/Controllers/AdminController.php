@@ -103,17 +103,20 @@ class AdminController extends Controller
     public function storeProduct(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'price' => 'required|numeric|min:0',
+            'name'           => 'required|string|max:255',
+            'description'    => 'required|string',
+            'price'          => 'required|numeric|min:0',
             'original_price' => 'nullable|numeric|min:0',
-            'category_id' => 'required|exists:categories,id',
-            'brand_id' => 'required|exists:brands,id',
+            'category_id'    => 'required|exists:categories,id',
+            'brand_id'       => 'required|exists:brands,id',
             'stock_quantity' => 'required|integer|min:0',
-            'is_active' => 'boolean',
-            'is_featured' => 'boolean',
-            'is_trending' => 'boolean',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'sku'            => 'nullable|string|max:100|unique:products,sku',
+            'badge'          => 'nullable|string|max:50',
+            'badge_color'    => 'nullable|string|max:50',
+            'is_active'      => 'boolean',
+            'is_featured'    => 'boolean',
+            'is_trending'    => 'boolean',
+            'image'          => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
         $validated['is_active'] = $request->boolean('is_active');
         $validated['is_featured'] = $request->boolean('is_featured');
@@ -139,17 +142,20 @@ class AdminController extends Controller
     public function updateProduct(Request $request, Product $product)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'price' => 'required|numeric|min:0',
+            'name'           => 'required|string|max:255',
+            'description'    => 'required|string',
+            'price'          => 'required|numeric|min:0',
             'original_price' => 'nullable|numeric|min:0',
-            'category_id' => 'required|exists:categories,id',
-            'brand_id' => 'required|exists:brands,id',
+            'category_id'    => 'required|exists:categories,id',
+            'brand_id'       => 'required|exists:brands,id',
             'stock_quantity' => 'required|integer|min:0',
-            'is_active' => 'boolean',
-            'is_featured' => 'boolean',
-            'is_trending' => 'boolean',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'sku'            => 'nullable|string|max:100|unique:products,sku,' . $product->id,
+            'badge'          => 'nullable|string|max:50',
+            'badge_color'    => 'nullable|string|max:50',
+            'is_active'      => 'boolean',
+            'is_featured'    => 'boolean',
+            'is_trending'    => 'boolean',
+            'image'          => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
         $validated['is_active'] = $request->boolean('is_active');
         $validated['is_featured'] = $request->boolean('is_featured');
