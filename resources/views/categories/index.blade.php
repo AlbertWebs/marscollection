@@ -18,7 +18,7 @@
         @if($activeCategories->count() > 0)
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
             @foreach($activeCategories as $category)
-                <a href="{{ route('products.index', ['category_id' => $category->id]) }}" class="group">
+                <a href="{{ route('products.index', ['category' => $category->slug]) }}" class="group">
                     <div class="bg-white border border-gray-100 rounded-sm shadow-sm hover:shadow-md transition-shadow overflow-hidden">
                         @if($category->image)
                             <img src="{{ $category->image }}" alt="{{ $category->name }}"

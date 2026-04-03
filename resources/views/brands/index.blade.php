@@ -18,7 +18,7 @@
         @if($brands->count() > 0)
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
             @foreach($brands as $brand)
-                <a href="{{ route('products.index', ['brand_id' => $brand->id]) }}" class="group">
+                <a href="{{ route('products.index', ['brand' => $brand->slug]) }}" class="group">
                     <div class="bg-white border border-gray-100 rounded-sm shadow-sm hover:shadow-md transition-shadow overflow-hidden">
                         <div class="h-40 bg-gray-50 flex items-center justify-center p-5 border-b border-gray-100">
                             @if($brand->logo)

@@ -13,14 +13,14 @@ class ProductController extends Controller
     {
         $query = Product::where('is_active', true)->with(['category', 'brand']);
 
-        // Filter by category
-        if ($request->has('category_id') && $request->category_id !== '' && $request->category_id !== null) {
-            $query->where('category_id', $request->category_id);
+        // Filter by category slug
+        if ($request->filled('category')) {
+            $query->whereHas('category', fn($q) => $q->where('slug', $request->category));
         }
 
-        // Filter by brand
-        if ($request->has('brand_id') && $request->brand_id !== '' && $request->brand_id !== null) {
-            $query->where('brand_id', $request->brand_id);
+        // Filter by brand slug
+        if ($request->filled('brand')) {
+            $query->whereHas('brand', fn($q) => $q->where('slug', $request->brand));
         }
 
         // Filter by price range
