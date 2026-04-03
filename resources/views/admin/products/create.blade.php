@@ -152,29 +152,4 @@
     </div>
 </div>
 
-@section('scripts')
-<script>
-    const quill = new Quill('#description-editor', {
-        theme: 'snow',
-        placeholder: 'Write product description...',
-        modules: {
-            toolbar: [
-                ['bold', 'italic', 'underline'],
-                [{ list: 'ordered' }, { list: 'bullet' }],
-                ['link'],
-                ['clean']
-            ]
-        }
-    });
-
-    // Pre-fill with existing content (old() on validation fail)
-    const existing = document.getElementById('description').value;
-    if (existing) quill.root.innerHTML = existing;
-
-    // On submit copy HTML to hidden textarea
-    document.querySelector('form').addEventListener('submit', function () {
-        document.getElementById('description').value = quill.root.innerHTML;
-    });
-</script>
-@endsection
 @endsection 
