@@ -44,11 +44,6 @@
                                        required>
                                 <div class="min-w-0">
                                     <p class="text-sm font-semibold text-gray-900">{{ $label }}</p>
-                                    <div class="flex items-center gap-2 mt-0.5">
-                                        <p class="text-xs font-semibold text-pink-600">{{ $formattedPrices[$type] }}</p>
-                                        <span class="text-gray-300">•</span>
-                                        <p class="text-[10px] uppercase tracking-wider text-gray-500">{{ $formattedDurations[$type] }}</p>
-                                    </div>
                                     @if(!empty($serviceDescriptions[$type]))
                                         <div class="service-desc-wrap mt-2">
                                             <div class="service-desc text-xs text-gray-500 line-clamp-2 overflow-hidden transition-all duration-300 prose prose-sm prose-pink max-w-none">
