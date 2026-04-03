@@ -194,9 +194,9 @@
 
                 <!-- Description -->
                 @if($product->description)
-                    <div class="space-y-2">
-                        <h3 class="text-lg font-semibold text-gray-900">Description</h3>
-                        <div class="prose prose-sm max-w-none text-gray-600 leading-relaxed">
+                    <div class="border-t border-gray-100 pt-5">
+                        <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-3">Description</h3>
+                        <div class="prose max-w-none">
                             {!! $product->description !!}
                         </div>
                     </div>
