@@ -123,7 +123,7 @@
                     <div class="mt-2 mb-4">
                         <p class="text-sm text-gray-600 mb-2">Current Image:</p>
                         <div class="flex items-center space-x-4">
-                            <img src="{{ $product->image }}" alt="{{ $product->name }}" 
+                            <img src="{{ \App\Helpers\ImageHelper::getProductImageUrl($product->image) }}" alt="{{ $product->name }}"
                                  class="w-24 h-24 object-cover rounded-md border border-gray-200">
                             <div>
                                 <p class="text-sm text-gray-500">{{ basename($product->image) }}</p>

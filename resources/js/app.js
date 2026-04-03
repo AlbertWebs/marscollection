@@ -1,7 +1,10 @@
 import './bootstrap';
 import Alpine from 'alpinejs';
 import Quill from 'quill';
+import Table from 'quill/modules/table';
 import 'quill/dist/quill.snow.css';
+
+Quill.register({ 'modules/table': Table }, true);
 
 // Make Alpine available globally
 window.Alpine = Alpine;
@@ -29,12 +32,21 @@ document.addEventListener('DOMContentLoaded', () => {
             theme: 'snow',
             placeholder: 'Write product description...',
             modules: {
-                toolbar: [
-                    ['bold', 'italic', 'underline'],
-                    [{ list: 'ordered' }, { list: 'bullet' }],
-                    ['link'],
-                    ['clean']
-                ]
+                table: true,
+                toolbar: {
+                    container: [
+                        ['bold', 'italic', 'underline'],
+                        [{ list: 'ordered' }, { list: 'bullet' }],
+                        ['link'],
+                        [{ 'table': 'insert-table' }],
+                        ['clean']
+                    ],
+                    handlers: {
+                        table: function () {
+                            quill.getModule('table').insertTable(2, 3);
+                        }
+                    }
+                }
             }
         });
 

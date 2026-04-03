@@ -148,3 +148,6 @@
 .prose u { text-decoration: underline; }
 .prose a { color: #db2777; text-decoration: underline; }
 .prose p { margin: 0.5rem 0; }
+.prose table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+.prose table td, .prose table th { border: 1px solid #e5e7eb; padding: 0.5rem 0.75rem; text-align: left; }
+.prose table th { background: #f9fafb; font-weight: 600; }
