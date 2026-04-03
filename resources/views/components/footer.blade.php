@@ -9,7 +9,7 @@
 
 <footer class="bg-gray-950 text-gray-400">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-8">
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-10 mb-12">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 mb-12">
 
             <!-- Brand column -->
             <div class="md:col-span-4">
@@ -80,56 +80,61 @@
                 @endif
             </div>
 
-            <!-- Shop -->
-            <div class="md:col-span-2">
-                <h4 class="text-white text-sm font-semibold uppercase tracking-wider mb-4">Shop</h4>
-                <ul class="space-y-2.5 text-sm">
-                    <li><a href="{{ route('products.index') }}" class="hover:text-white transition-colors">All Products</a></li>
-                    <li><a href="{{ route('categories.index') }}" class="hover:text-white transition-colors">Categories</a></li>
-                    <li><a href="{{ route('brands.index') }}" class="hover:text-white transition-colors">Brands</a></li>
-                    <li><a href="{{ route('bundles.index') }}" class="hover:text-white transition-colors">Bundles</a></li>
-                    <li><a href="{{ route('cart.index') }}" class="hover:text-white transition-colors">My Cart</a></li>
-                </ul>
-            </div>
+            <!-- Nav columns: 2×2 on mobile, 4 equal cols on desktop -->
+            <div class="md:col-span-8 grid grid-cols-2 md:grid-cols-4 gap-6">
 
-            <!-- Services -->
-            <div class="md:col-span-2">
-                <h4 class="text-white text-sm font-semibold uppercase tracking-wider mb-4">Services</h4>
-                <ul class="space-y-2.5 text-sm">
-                    <li><a href="{{ route('appointments.create') }}" class="hover:text-white transition-colors">Book Appointment</a></li>
-                    <li><a href="{{ route('about') }}" class="hover:text-white transition-colors">About Us</a></li>
-                    <li><a href="{{ route('contact') }}" class="hover:text-white transition-colors">Contact</a></li>
-                </ul>
-            </div>
+                <!-- Shop -->
+                <div>
+                    <h4 class="text-white text-sm font-semibold uppercase tracking-wider mb-4">Shop</h4>
+                    <ul class="space-y-2.5 text-sm">
+                        <li><a href="{{ route('products.index') }}" class="hover:text-white transition-colors">All Products</a></li>
+                        <li><a href="{{ route('categories.index') }}" class="hover:text-white transition-colors">Categories</a></li>
+                        <li><a href="{{ route('brands.index') }}" class="hover:text-white transition-colors">Brands</a></li>
+                        <li><a href="{{ route('bundles.index') }}" class="hover:text-white transition-colors">Bundles</a></li>
+                        <li><a href="{{ route('cart.index') }}" class="hover:text-white transition-colors">My Cart</a></li>
+                    </ul>
+                </div>
 
-            <!-- Help -->
-            <div class="md:col-span-2">
-                <h4 class="text-white text-sm font-semibold uppercase tracking-wider mb-4">Help</h4>
-                <ul class="space-y-2.5 text-sm">
-                    <li><a href="{{ route('shipping-info') }}" class="hover:text-white transition-colors">Shipping Info</a></li>
-                    <li><a href="{{ route('returns-policy') }}" class="hover:text-white transition-colors">Returns Policy</a></li>
-                    <li><a href="{{ route('privacy-policy') }}" class="hover:text-white transition-colors">Privacy Policy</a></li>
-                    <li><a href="{{ route('terms-of-service') }}" class="hover:text-white transition-colors">Terms of Service</a></li>
-                </ul>
-            </div>
+                <!-- Services -->
+                <div>
+                    <h4 class="text-white text-sm font-semibold uppercase tracking-wider mb-4">Services</h4>
+                    <ul class="space-y-2.5 text-sm">
+                        <li><a href="{{ route('appointments.create') }}" class="hover:text-white transition-colors">Book Appointment</a></li>
+                        <li><a href="{{ route('about') }}" class="hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="{{ route('contact') }}" class="hover:text-white transition-colors">Contact</a></li>
+                    </ul>
+                </div>
 
-            <!-- Newsletter -->
-            <div class="md:col-span-2">
-                <h4 class="text-white text-sm font-semibold uppercase tracking-wider mb-4">Stay Updated</h4>
-                <p class="text-sm mb-4">New arrivals and offers, straight to your inbox.</p>
-                <form action="{{ route('contact.submit') }}" method="POST" class="space-y-2">
-                    @csrf
-                    <input type="hidden" name="subject" value="Newsletter Signup">
-                    <input type="hidden" name="first_name" value="Newsletter">
-                    <input type="hidden" name="last_name" value="Subscriber">
-                    <input type="hidden" name="message" value="Newsletter signup">
-                    <input type="email" name="email" required placeholder="your@email.com"
-                           class="w-full px-3 py-2.5 bg-gray-800 border border-gray-700 rounded-md text-white text-sm placeholder-gray-500 focus:outline-none focus:border-pink-500 transition-colors">
-                    <button type="submit"
-                            class="w-full bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold py-2.5 rounded-md transition-colors">
-                        Subscribe
-                    </button>
-                </form>
+                <!-- Help -->
+                <div>
+                    <h4 class="text-white text-sm font-semibold uppercase tracking-wider mb-4">Help</h4>
+                    <ul class="space-y-2.5 text-sm">
+                        <li><a href="{{ route('shipping-info') }}" class="hover:text-white transition-colors">Shipping Info</a></li>
+                        <li><a href="{{ route('returns-policy') }}" class="hover:text-white transition-colors">Returns Policy</a></li>
+                        <li><a href="{{ route('privacy-policy') }}" class="hover:text-white transition-colors">Privacy Policy</a></li>
+                        <li><a href="{{ route('terms-of-service') }}" class="hover:text-white transition-colors">Terms of Service</a></li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter -->
+                <div>
+                    <h4 class="text-white text-sm font-semibold uppercase tracking-wider mb-4">Stay Updated</h4>
+                    <p class="text-sm mb-4">New arrivals and offers, straight to your inbox.</p>
+                    <form action="{{ route('contact.submit') }}" method="POST" class="space-y-2">
+                        @csrf
+                        <input type="hidden" name="subject" value="Newsletter Signup">
+                        <input type="hidden" name="first_name" value="Newsletter">
+                        <input type="hidden" name="last_name" value="Subscriber">
+                        <input type="hidden" name="message" value="Newsletter signup">
+                        <input type="email" name="email" required placeholder="your@email.com"
+                               class="w-full px-3 py-2.5 bg-gray-800 border border-gray-700 rounded-md text-white text-sm placeholder-gray-500 focus:outline-none focus:border-pink-500 transition-colors">
+                        <button type="submit"
+                                class="w-full bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold py-2.5 rounded-md transition-colors">
+                            Subscribe
+                        </button>
+                    </form>
+                </div>
+
             </div>
         </div>
 
