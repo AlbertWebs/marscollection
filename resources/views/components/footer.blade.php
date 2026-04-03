@@ -117,7 +117,7 @@
                 </div>
 
                 <!-- Newsletter -->
-                <div>
+                <div class="col-span-2 md:col-span-1">
                     <h4 class="text-white text-sm font-semibold uppercase tracking-wider mb-4">Stay Updated</h4>
                     <p class="text-sm mb-4">New arrivals and offers, straight to your inbox.</p>
                     <form action="{{ route('contact.submit') }}" method="POST" class="space-y-2">
