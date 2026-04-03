@@ -2,6 +2,7 @@
 
 @section('title', 'Add New Product')
 
+
 @section('content')
 <div class="space-y-6">
     <!-- Header -->
@@ -128,9 +129,9 @@
 
             <!-- Description -->
             <div>
-                <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
-                <textarea id="description" name="description" rows="4" required
-                          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm @error('description') border-red-500 @enderror">{{ old('description') }}</textarea>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                <div id="description-editor" class="bg-white border border-gray-300 rounded-md @error('description') border-red-500 @enderror" style="min-height: 200px;"></div>
+                <textarea id="description" name="description" class="hidden" required>{{ old('description') }}</textarea>
                 @error('description')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
@@ -150,4 +151,30 @@
         </form>
     </div>
 </div>
+
+@section('scripts')
+<script>
+    const quill = new Quill('#description-editor', {
+        theme: 'snow',
+        placeholder: 'Write product description...',
+        modules: {
+            toolbar: [
+                ['bold', 'italic', 'underline'],
+                [{ list: 'ordered' }, { list: 'bullet' }],
+                ['link'],
+                ['clean']
+            ]
+        }
+    });
+
+    // Pre-fill with existing content (old() on validation fail)
+    const existing = document.getElementById('description').value;
+    if (existing) quill.root.innerHTML = existing;
+
+    // On submit copy HTML to hidden textarea
+    document.querySelector('form').addEventListener('submit', function () {
+        document.getElementById('description').value = quill.root.innerHTML;
+    });
+</script>
+@endsection
 @endsection 

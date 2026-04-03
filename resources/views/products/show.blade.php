@@ -196,7 +196,9 @@
                 @if($product->description)
                     <div class="space-y-2">
                         <h3 class="text-lg font-semibold text-gray-900">Description</h3>
-                        <p class="text-gray-600 leading-relaxed">{{ $product->description }}</p>
+                        <div class="prose prose-sm max-w-none text-gray-600 leading-relaxed">
+                            {!! $product->description !!}
+                        </div>
                     </div>
                 @endif
 

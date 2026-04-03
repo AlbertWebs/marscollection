@@ -1,5 +1,9 @@
 import './bootstrap';
 import Alpine from 'alpinejs';
+import Quill from 'quill';
+import 'quill/dist/quill.snow.css';
+
+window.Quill = Quill;
 
 // Make Alpine available globally
 window.Alpine = Alpine;
