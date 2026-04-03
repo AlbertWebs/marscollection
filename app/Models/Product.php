@@ -50,6 +50,9 @@ class Product extends Model
             if (empty($product->slug)) {
                 $product->slug = Str::slug($product->name);
             }
+            if (empty($product->sku)) {
+                $product->sku = strtoupper(Str::random(3)) . '-' . str_pad(mt_rand(1, 9999), 4, '0', STR_PAD_LEFT);
+            }
         });
 
         static::updating(function ($product) {
