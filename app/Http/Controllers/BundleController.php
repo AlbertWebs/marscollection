@@ -35,4 +35,10 @@ class BundleController extends Controller
 
         return view('bundles.trending', compact('bundles'));
     }
+
+    public function show(Bundle $bundle)
+    {
+        $bundle->load('products.category', 'products.brand');
+        return view('bundles.show', compact('bundle'));
+    }
 }

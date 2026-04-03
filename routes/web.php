@@ -47,6 +47,7 @@ Route::get('/brands/{brand}', [BrandController::class, 'show'])->name('brands.sh
 Route::get('/bundles', [BundleController::class, 'index'])->name('bundles.index');
 Route::get('/bundles/featured', [BundleController::class, 'featured'])->name('bundles.featured');
 Route::get('/bundles/trending', [BundleController::class, 'trending'])->name('bundles.trending');
+Route::get('/bundles/{bundle}', [BundleController::class, 'show'])->name('bundles.show');
 
 // Cart
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');

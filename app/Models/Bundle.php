@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Bundle extends Model
 {
@@ -11,6 +12,7 @@ class Bundle extends Model
 
     protected $fillable = [
         'name',
+        'slug',
         'description',
         'price',
         'original_price',
@@ -34,6 +36,22 @@ class Bundle extends Model
         'is_trending' => 'boolean',
         'is_active' => 'boolean',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($bundle) {
+            if (empty($bundle->slug)) {
+                $bundle->slug = Str::slug($bundle->name);
+            }
+        });
+    }
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
 
     public function products()
     {
