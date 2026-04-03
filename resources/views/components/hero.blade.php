@@ -36,7 +36,7 @@
             </p>
 
             <!-- CTAs -->
-            <div class="flex flex-wrap gap-4 hero-item" style="--delay:380ms">
+            <div class="flex flex-col sm:flex-row gap-4 hero-item" style="--delay:380ms">
                 <a href="{{ route('products.index') }}"
                    class="inline-block bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold tracking-wide uppercase px-8 py-4 rounded-md transition-colors duration-200">
                     Shop Now
