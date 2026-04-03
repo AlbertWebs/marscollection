@@ -17,7 +17,7 @@ class AppointmentController extends Controller
     public function create()
     {
         $services = Service::active()->ordered()->get();
-        
+
         $serviceTypes = $services->pluck('name', 'slug')->toArray();
         $serviceDescriptions = $services->pluck('description', 'slug')->toArray();
         $prices = $services->pluck('price', 'slug')->toArray();
@@ -72,7 +72,8 @@ class AppointmentController extends Controller
         // Send email notification to admin
         try {
             Mail::to(\App\Models\Setting::get('email_admin', 'admin@zaynsbeauty.com'))->send(new AppointmentBooked($appointment));
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e) {
             // Log error but don't fail the booking
             \Illuminate\Support\Facades\Log::error('Failed to send admin notification email: ' . $e->getMessage());
         }
@@ -80,21 +81,23 @@ class AppointmentController extends Controller
         // Send email notification to customer
         try {
             Mail::to($appointment->customer_email)->send(new \App\Mail\AppointmentPendingCustomer($appointment));
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('Failed to send customer notification email: ' . $e->getMessage());
         }
 
         // Send WhatsApp notification to admin
         try {
-            $adminPhone = \App\Models\Setting::get('contact_phone_primary', '254723343392');
+            $adminPhone = \App\Models\Setting::get('contact_phone_primary', '254707641446');
             $serviceName = \App\Models\Service::where('slug', $appointment->service_type)->first()->name ?? 'Service';
             $date = \Carbon\Carbon::parse($appointment->appointment_date)->format('l, F d, Y');
             $time = \Carbon\Carbon::parse($appointment->appointment_time)->format('g:i A');
-            
-            $message = "Hello Zayns, a new booking just happened for *{$serviceName}* on *{$date}* at *{$time}* by *{$appointment->customer_name}*. Please check the admin panel for details.";
-            
+
+            $message = "Hello zayns, a new booking just happened for *{$serviceName}* on *{$date}* at *{$time}* by *{$appointment->customer_name}*. Please check the admin panel for details.";
+
             \App\Services\WhatsAppService::sendMessage($adminPhone, $message);
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('Failed to send WhatsApp notification: ' . $e->getMessage());
         }
 
@@ -147,7 +150,7 @@ class AppointmentController extends Controller
     public function getAvailableSlots(Request $request)
     {
         $date = Carbon::parse($request->date);
-        
+
         // Get available slots based on booking settings
         $availableSlots = BookingSetting::getAvailableTimeSlots($date);
 
@@ -155,9 +158,9 @@ class AppointmentController extends Controller
         $bookedSlots = Appointment::where('appointment_date', $request->date)
             ->where('status', '!=', 'cancelled')
             ->pluck('appointment_time')
-            ->map(function($time) {
-                return $time->format('H:i');
-            })
+            ->map(function ($time) {
+            return $time->format('H:i');
+        })
             ->toArray();
 
         // Filter out booked slots

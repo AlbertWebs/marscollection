@@ -124,7 +124,7 @@ class CheckoutController extends Controller
             $adminPhone = \App\Models\Setting::get('contact_phone_primary', '254723343392');
             $total = number_format($order->total);
             
-            $message = "Hello Zayns, a new order *#{$order->order_number}* just happened by *{$order->customer_name}* for *KES {$total}*. Please check the admin panel to process.";
+            $message = "Hello zaysn, a new order *#{$order->order_number}* just happened by *{$order->customer_name}* for *KES {$total}*. Please check the admin panel to process.";
             
             \App\Services\WhatsAppService::sendMessage($adminPhone, $message);
         } catch (\Exception $e) {
