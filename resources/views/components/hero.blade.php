@@ -23,20 +23,20 @@
         <div class="max-w-2xl py-24">
 
             <!-- Tag line -->
-            <p class="text-pink-300 uppercase tracking-[0.25em] text-xs font-medium mb-6">Nairobi's Beauty Destination</p>
+            <p class="text-pink-300 uppercase tracking-[0.25em] text-xs font-medium mb-6 hero-item" style="--delay:0ms">Nairobi's Beauty Destination</p>
 
             <!-- Headline -->
-            <h1 class="text-white font-bold leading-tight mb-6" style="font-size: clamp(2.5rem, 6vw, 4.5rem); line-height: 1.1;">
+            <h1 class="text-white font-bold leading-tight mb-6 hero-item" style="font-size: clamp(2.5rem, 6vw, 4.5rem); line-height: 1.1; --delay:120ms">
                 {{ $heroTitle }}
             </h1>
 
             <!-- Subtitle -->
-            <p class="text-gray-300 text-lg mb-10 leading-relaxed max-w-lg">
+            <p class="text-gray-300 text-lg mb-10 leading-relaxed max-w-lg hero-item" style="--delay:260ms">
                 {{ $heroSubtitle }}
             </p>
 
             <!-- CTAs -->
-            <div class="flex flex-wrap gap-4">
+            <div class="flex flex-wrap gap-4 hero-item" style="--delay:380ms">
                 <a href="{{ route('products.index') }}"
                    class="inline-block bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold tracking-wide uppercase px-8 py-4 rounded-md transition-colors duration-200">
                     Shop Now
@@ -48,7 +48,7 @@
             </div>
 
             <!-- Stats -->
-            <div class="mt-16 flex gap-10">
+            <div class="mt-16 flex gap-10 hero-item" style="--delay:500ms">
                 <div>
                     <div class="text-white text-2xl font-bold">{{ $heroStatsCustomers }}</div>
                     <div class="text-gray-400 text-xs uppercase tracking-wider mt-1">Happy Clients</div>
