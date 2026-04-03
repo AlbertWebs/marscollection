@@ -19,8 +19,8 @@
                                     <div class="block md:hidden">
                                         <div class="flex items-start space-x-3 mb-3">
                                             @if($item->bundle_id)
-                                                <img src="{{ $item->bundle->image }}" 
-                                                     alt="{{ $item->bundle->name }}" 
+                                                <img src="{{ \App\Helpers\ImageHelper::getProductImageUrl($item->bundle->image) }}"
+                                                     alt="{{ $item->bundle->name }}"
                                                      class="w-16 h-16 object-cover rounded-md flex-shrink-0">
                                                 
                                                 <div class="flex-1 min-w-0">
@@ -30,8 +30,8 @@
                                                     <p class="text-xs text-gray-500">Bundle</p>
                                                 </div>
                                             @else
-                                                <img src="{{ $item->product->image }}" 
-                                                     alt="{{ $item->product->name }}" 
+                                                <img src="{{ \App\Helpers\ImageHelper::getProductImageUrl($item->product->image) }}"
+                                                     alt="{{ $item->product->name }}"
                                                      class="w-16 h-16 object-cover rounded-md flex-shrink-0">
                                                 
                                                 <div class="flex-1 min-w-0">
@@ -73,8 +73,8 @@
                                     <!-- Desktop Layout: Side by Side -->
                                     <div class="hidden md:flex items-center">
                                     @if($item->bundle_id)
-                                        <img src="{{ $item->bundle->image }}" 
-                                             alt="{{ $item->bundle->name }}" 
+                                        <img src="{{ \App\Helpers\ImageHelper::getProductImageUrl($item->bundle->image) }}"
+                                             alt="{{ $item->bundle->name }}"
                                              class="w-20 h-20 object-cover rounded-md">
                                         
                                         <div class="ml-4 flex-1">
@@ -84,8 +84,8 @@
                                             <p class="text-xs text-gray-500">Bundle</p>
                                         </div>
                                     @else
-                                        <img src="{{ $item->product->image }}" 
-                                             alt="{{ $item->product->name }}" 
+                                        <img src="{{ \App\Helpers\ImageHelper::getProductImageUrl($item->product->image) }}"
+                                             alt="{{ $item->product->name }}"
                                              class="w-20 h-20 object-cover rounded-md">
                                         
                                         <div class="ml-4 flex-1">

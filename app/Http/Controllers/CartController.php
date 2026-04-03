@@ -180,7 +180,7 @@ class CartController extends Controller
                     $items[] = [
                         'bundle_id' => $item->bundle_id,
                         'bundle_name' => $item->bundle->name,
-                        'bundle_image' => $item->bundle->image,
+                        'bundle_image' => \App\Helpers\ImageHelper::getProductImageUrl($item->bundle->image),
                         'quantity' => $item->quantity,
                         'price' => $item->bundle->price * $item->quantity
                     ];
@@ -189,7 +189,7 @@ class CartController extends Controller
                     $items[] = [
                         'product_id' => $item->product_id,
                         'product_name' => $item->product->name,
-                        'product_image' => $item->product->image,
+                        'product_image' => \App\Helpers\ImageHelper::getProductImageUrl($item->product->image),
                         'quantity' => $item->quantity,
                         'price' => $item->product->price * $item->quantity
                     ];
