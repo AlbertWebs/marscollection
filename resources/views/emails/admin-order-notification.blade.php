@@ -7,13 +7,17 @@
     <style>
         body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
         .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-        .header { background: #ec4899; color: white; padding: 20px; text-align: center; }
-        .content { background: #f9fafb; padding: 20px; }
-        .order-details { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; }
-        .item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; }
-        .total { font-weight: bold; font-size: 18px; padding: 15px 0; border-top: 2px solid #eee; }
-        .address { background: white; padding: 15px; margin: 10px 0; border-radius: 8px; }
-        .button { display: inline-block; background: #ec4899; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; }
+        .header { background: linear-gradient(135deg, #ec4899, #8b5cf6); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+        .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; }
+        .details-box { background: white; padding: 20px; border-radius: 8px; margin: 20px 0; border: 2px solid #f3f4f6; }
+        .detail-row { display: flex; justify-content: space-between; margin: 10px 0; }
+        .label { font-weight: bold; color: #6b7280; }
+        .value { color: #111827; }
+        .items-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .items-table th, .items-table td { padding: 10px; text-align: left; border-bottom: 1px solid #e5e7eb; }
+        .items-table th { color: #6b7280; font-weight: bold; }
+        .footer { text-align: center; margin-top: 30px; color: #6b7280; font-size: 14px; }
+        .button { display: inline-block; background: #ec4899; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin: 20px 0; }
     </style>
 </head>
 <body>
@@ -24,72 +28,82 @@
         </div>
         
         <div class="content">
-            <h2>Order Details</h2>
-            <div class="order-details">
-                <p><strong>Order Number:</strong> {{ $order->order_number }}</p>
-                <p><strong>Date:</strong> {{ $order->created_at->format('M d, Y H:i') }}</p>
-                <p><strong>Customer:</strong> {{ $order->customer_name }}</p>
-                <p><strong>Email:</strong> {{ $order->customer_email }}</p>
-                @if($order->customer_phone)
-                    <p><strong>Phone:</strong> {{ $order->customer_phone }}</p>
-                @endif
-                <p><strong>Payment Method:</strong> {{ ucwords(str_replace('_', ' ', $order->payment_method)) }}</p>
-                <p><strong>Status:</strong> {{ ucfirst($order->status) }}</p>
-            </div>
-
-            <h2>Order Items</h2>
-            <div class="order-details">
-                @foreach($order->items as $item)
-                    <div class="item">
-                        <div>
-                            <strong>{{ $item->product_name }}</strong><br>
-                            <small>Qty: {{ $item->quantity }}</small>
-                        </div>
-                        <div>${{ number_format($item->product_price * $item->quantity, 2) }}</div>
-                    </div>
-                @endforeach
-                
-                <div class="total">
-                    <div class="item">
-                        <span>Subtotal:</span>
-                        <span>${{ number_format($order->subtotal, 2) }}</span>
-                    </div>
-                    <div class="item">
-                        <span>Tax (15%):</span>
-                        <span>${{ number_format($order->tax, 2) }}</span>
-                    </div>
-                    <div class="item">
-                        <span>Shipping:</span>
-                        <span>${{ number_format($order->shipping_cost, 2) }}</span>
-                    </div>
-                    <div class="item">
-                        <span><strong>Total:</strong></span>
-                        <span><strong>${{ number_format($order->total, 2) }}</strong></span>
-                    </div>
+            <p>Admin,</p>
+            <p>A new order has been successfully placed by <strong>{{ $order->customer_name }}</strong>.</p>
+            
+            <div class="details-box">
+                <h3 style="margin-top: 0; color: #ec4899; border-bottom: 1px solid #eee; padding-bottom: 10px;">Order Details</h3>
+                <div class="detail-row">
+                    <span class="label">Date:</span>
+                    <span class="value">{{ $order->created_at->format('M d, Y g:i A') }}</span>
                 </div>
-            </div>
+                <div class="detail-row">
+                    <span class="label">Customer Phone:</span>
+                    <span class="value">{{ $order->customer_phone }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Customer Email:</span>
+                    <span class="value">{{ $order->customer_email }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Payment Method:</span>
+                    <span class="value">{{ str_replace('_', ' ', Str::title($order->payment_method)) }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Delivery Address:</span>
+                    <span class="value">{{ $order->shipping_address['street'] ?? '' }}, {{ $order->shipping_address['city'] ?? '' }}</span>
+                </div>
 
-            <h2>Shipping Address</h2>
-            <div class="address">
-                <p>{{ $order->customer_name }}</p>
-                <p>{{ $order->shipping_address['street'] }}</p>
-                <p>{{ $order->shipping_address['city'] }}, {{ $order->shipping_address['state'] }} {{ $order->shipping_address['zip_code'] }}</p>
-                <p>{{ $order->shipping_address['country'] }}</p>
-                @if($order->customer_phone)
-                    <p>Phone: {{ $order->customer_phone }}</p>
-                @endif
+                <h3 style="margin-top: 25px; border-bottom: 1px solid #eee; padding-bottom: 10px;">Items Ordered</h3>
+                <table class="items-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Qty</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($order->items as $item)
+                        <tr>
+                            <td>{{ $item->product_name ?? $item->bundle_name }}</td>
+                            <td>x{{ $item->quantity }}</td>
+                            <td>KES {{ number_format($item->subtotal) }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                
+                <div class="detail-row" style="margin-top: 15px;">
+                    <span class="label">Order Subtotal:</span>
+                    <span class="value">KES {{ number_format($order->subtotal) }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Shipping Cost:</span>
+                    <span class="value">KES {{ number_format($order->shipping_cost) }}</span>
+                </div>
+                <div class="detail-row" style="font-size: 18px; border-top: 1px solid #eee; padding-top: 10px; margin-top: 10px;">
+                    <span class="label" style="color: #ec4899;">Grand Total:</span>
+                    <span class="value" style="font-weight: bold;">KES {{ number_format($order->total) }}</span>
+                </div>
             </div>
 
             @if($order->notes)
-                <h2>Order Notes</h2>
-                <div class="address">
-                    <p>{{ $order->notes }}</p>
-                </div>
-            @endif
-
-            <div style="text-align: center; margin-top: 30px;">
-                <a href="{{ url('/admin/orders/' . $order->id) }}" class="button">View Order Details</a>
+            <div class="details-box">
+                <h3 style="margin-top: 0; color: #6b7280;">Customer Notes</h3>
+                <p style="margin: 0; font-style: italic;">"{{ $order->notes }}"</p>
             </div>
+            @endif
+            
+            <div style="text-align: center;">
+                <a href="{{ route('admin.orders.show', $order) }}" class="button">
+                    View Order in Admin Panel
+                </a>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>This is an automated notification from Zayn's Beauty Studio Engine.</p>
         </div>
     </div>
 </body>
