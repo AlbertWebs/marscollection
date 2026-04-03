@@ -40,11 +40,24 @@
                         @foreach($serviceTypes as $type => $label)
                             <label class="flex items-start gap-3 p-4 border border-gray-200 rounded-sm cursor-pointer hover:border-pink-300 hover:bg-pink-50/40 transition-colors has-[:checked]:border-pink-500 has-[:checked]:bg-pink-50">
                                 <input type="radio" name="service_type" value="{{ $type }}"
-                                       class="mt-0.5 w-4 h-4 text-pink-600 border-gray-300 focus:ring-pink-500"
+                                       class="mt-0.5 w-4 h-4 text-pink-600 border-gray-300 focus:ring-pink-500 flex-shrink-0"
                                        required>
-                                <div>
+                                <div class="min-w-0">
                                     <p class="text-sm font-semibold text-gray-900">{{ $label }}</p>
-                                    <p class="text-xs text-gray-500 mt-0.5">{{ $serviceDescriptions[$type] }}</p>
+                                    @if(!empty($serviceDescriptions[$type]))
+                                        <div class="service-desc-wrap mt-1">
+                                            <div class="service-desc text-xs text-gray-500 whitespace-pre-line line-clamp-2 overflow-hidden transition-all duration-300">
+                                                {{ $serviceDescriptions[$type] }}
+                                            </div>
+                                            <button type="button" onclick="event.preventDefault(); toggleServiceDesc(this)"
+                                                    class="text-xs text-pink-500 hover:text-pink-700 mt-0.5 flex items-center gap-0.5 font-medium">
+                                                <span class="btn-label">Show more</span>
+                                                <svg class="btn-icon w-3 h-3 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    @endif
                                 </div>
                             </label>
                         @endforeach
@@ -181,6 +194,23 @@
 @include('components.instagram-reels-marquee')
 
 <script>
+function toggleServiceDesc(btn) {
+    const wrap = btn.closest('.service-desc-wrap');
+    const desc = wrap.querySelector('.service-desc');
+    const label = btn.querySelector('.btn-label');
+    const icon = btn.querySelector('.btn-icon');
+    const isCollapsed = desc.classList.contains('line-clamp-2');
+    if (isCollapsed) {
+        desc.classList.remove('line-clamp-2');
+        label.textContent = 'Show less';
+        icon.style.transform = 'rotate(180deg)';
+    } else {
+        desc.classList.add('line-clamp-2');
+        label.textContent = 'Show more';
+        icon.style.transform = '';
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     let currentDate = new Date();
     let selectedDate = null;
