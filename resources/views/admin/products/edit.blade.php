@@ -178,7 +178,7 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
                 <div id="description-editor" class="bg-white border border-gray-300 rounded-md @error('description') border-red-500 @enderror" style="min-height: 200px;"></div>
-                <textarea id="description" name="description" class="hidden" required>{{ old('description', $product->description) }}</textarea>
+                <textarea id="description" name="description" class="hidden">{{ old('description', $product->description) }}</textarea>
                 @error('description')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror

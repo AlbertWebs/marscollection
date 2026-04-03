@@ -53,11 +53,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const textarea = document.getElementById('description');
         if (textarea.value) quill.root.innerHTML = textarea.value;
 
-        const form = editorEl.closest('form');
-        if (form) {
-            form.addEventListener('submit', () => {
-                textarea.value = quill.root.innerHTML;
-            });
-        }
+        // Sync to hidden textarea on every change so native form submit always has content
+        quill.on('text-change', () => {
+            textarea.value = quill.getText().trim() ? quill.root.innerHTML : '';
+        });
     }
 });
