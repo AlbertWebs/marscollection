@@ -119,6 +119,18 @@ class CheckoutController extends Controller
             \Illuminate\Support\Facades\Log::error('Failed to send customer order notification: ' . $e->getMessage());
         }
 
+        // Send WhatsApp notification to admin
+        try {
+            $adminPhone = \App\Models\Setting::get('contact_phone_primary', '254723343392');
+            $total = number_format($order->total);
+            
+            $message = "Hello Zayns, a new order *#{$order->order_number}* just happened by *{$order->customer_name}* for *KES {$total}*. Please check the admin panel to process.";
+            
+            \App\Services\WhatsAppService::sendMessage($adminPhone, $message);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to send order WhatsApp notification: ' . $e->getMessage());
+        }
+
         return redirect()->route('checkout.success', $order)->with('success', 'Order placed successfully!');
     }
 

@@ -84,6 +84,20 @@ class AppointmentController extends Controller
             \Illuminate\Support\Facades\Log::error('Failed to send customer notification email: ' . $e->getMessage());
         }
 
+        // Send WhatsApp notification to admin
+        try {
+            $adminPhone = \App\Models\Setting::get('contact_phone_primary', '254723343392');
+            $serviceName = \App\Models\Service::where('slug', $appointment->service_type)->first()->name ?? 'Service';
+            $date = \Carbon\Carbon::parse($appointment->appointment_date)->format('l, F d, Y');
+            $time = \Carbon\Carbon::parse($appointment->appointment_time)->format('g:i A');
+            
+            $message = "Hello Zayns, a new booking just happened for *{$serviceName}* on *{$date}* at *{$time}* by *{$appointment->customer_name}*. Please check the admin panel for details.";
+            
+            \App\Services\WhatsAppService::sendMessage($adminPhone, $message);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Failed to send WhatsApp notification: ' . $e->getMessage());
+        }
+
         return redirect()->route('appointments.success')
             ->with('success', 'Appointment booked successfully! We will contact you to confirm.');
     }
