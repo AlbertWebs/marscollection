@@ -21,7 +21,7 @@ class ImageHelper
             return $imagePath;
         }
 
-        // Otherwise, treat as local storage file
-        return asset('storage/' . $imagePath);
+        // Otherwise, treat as S3 storage path
+        return \Storage::disk('s3')->url($imagePath);
     }
 } 

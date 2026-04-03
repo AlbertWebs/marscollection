@@ -46,7 +46,7 @@
                 <label for="logo" class="block text-sm font-medium text-gray-700">Brand Logo</label>
                 @if($brand->logo)
                     <div class="mt-2 mb-3 flex items-center gap-4">
-                        <img src="{{ Storage::url($brand->logo) }}" alt="{{ $brand->name }}" class="h-12 w-auto object-contain border border-gray-200 rounded-md p-1">
+                        <img src="{{ str_starts_with($brand->logo, 'http') ? $brand->logo : Storage::disk('s3')->url($brand->logo) }}" alt="{{ $brand->name }}" class="h-12 w-auto object-contain border border-gray-200 rounded-md p-1">
                         <span class="text-xs text-gray-500">Current logo — upload a new file to replace it.</span>
                     </div>
                 @endif

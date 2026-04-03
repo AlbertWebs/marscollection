@@ -116,7 +116,7 @@ class AdminController extends Controller
 
         // Handle image upload
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('products', 'public');
+            $imagePath = $request->file('image')->store('products', 's3');
             $validated['image'] = $imagePath;
         }
 
@@ -148,12 +148,12 @@ class AdminController extends Controller
 
         // Handle image upload
         if ($request->hasFile('image')) {
-            // Delete old image if it exists
-            if ($product->image && file_exists(storage_path('app/public/' . $product->image))) {
-                unlink(storage_path('app/public/' . $product->image));
+            // Delete old image from S3 if it exists and is a path (not external URL)
+            if ($product->image && !str_starts_with($product->image, 'http')) {
+                \Storage::disk('s3')->delete($product->image);
             }
-            
-            $imagePath = $request->file('image')->store('products', 'public');
+
+            $imagePath = $request->file('image')->store('products', 's3');
             $validated['image'] = $imagePath;
         }
 
@@ -385,7 +385,7 @@ class AdminController extends Controller
         ]);
 
         if ($request->hasFile('logo')) {
-            $validated['logo'] = $request->file('logo')->store('brands', 'public');
+            $validated['logo'] = $request->file('logo')->store('brands', 's3');
         }
 
         Brand::create($validated);
@@ -407,10 +407,10 @@ class AdminController extends Controller
         ]);
 
         if ($request->hasFile('logo')) {
-            if ($brand->logo) {
-                \Storage::disk('public')->delete($brand->logo);
+            if ($brand->logo && !str_starts_with($brand->logo, 'http')) {
+                \Storage::disk('s3')->delete($brand->logo);
             }
-            $validated['logo'] = $request->file('logo')->store('brands', 'public');
+            $validated['logo'] = $request->file('logo')->store('brands', 's3');
         }
 
         $brand->update($validated);
@@ -700,13 +700,13 @@ class AdminController extends Controller
         
         // Handle image uploads
         if ($request->hasFile('hero_image')) {
-            $heroImagePath = $request->file('hero_image')->store('settings', 'public');
-            $settings['hero_image'] = $heroImagePath;
+            $heroImagePath = $request->file('hero_image')->store('settings', 's3');
+            $settings['hero_image'] = \Storage::disk('s3')->url($heroImagePath);
         }
-        
+
         if ($request->hasFile('video_thumbnail')) {
-            $videoThumbnailPath = $request->file('video_thumbnail')->store('settings', 'public');
-            $settings['video_thumbnail'] = $videoThumbnailPath;
+            $videoThumbnailPath = $request->file('video_thumbnail')->store('settings', 's3');
+            $settings['video_thumbnail'] = \Storage::disk('s3')->url($videoThumbnailPath);
         }
         
         foreach ($settings as $key => $value) {

@@ -9,7 +9,7 @@
         <div class="flex flex-wrap justify-center items-center gap-8 md:gap-14">
             @foreach($brands as $brand)
                 <a href="{{ route('brands.show', $brand) }}" title="{{ $brand->name }}">
-                        <img src="{{ Storage::url($brand->logo) }}"
+                        <img src="{{ str_starts_with($brand->logo, 'http') ? $brand->logo : Storage::disk('s3')->url($brand->logo) }}"
                              alt="{{ $brand->name }}"
                              class="h-8 w-auto object-contain grayscale hover:grayscale-0 opacity-60 hover:opacity-100 transition-all duration-200">
                 </a>

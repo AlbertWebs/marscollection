@@ -22,7 +22,7 @@
                     <div class="bg-white border border-gray-100 rounded-sm shadow-sm hover:shadow-md transition-shadow overflow-hidden">
                         <div class="h-40 bg-gray-50 flex items-center justify-center p-5 border-b border-gray-100">
                             @if($brand->logo)
-                                <img src="{{ Storage::url($brand->logo) }}" alt="{{ $brand->name }}"
+                                <img src="{{ str_starts_with($brand->logo, 'http') ? $brand->logo : Storage::disk('s3')->url($brand->logo) }}" alt="{{ $brand->name }}"
                                      class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300">
                             @else
                                 <span class="text-lg font-bold text-gray-300 uppercase tracking-wide">{{ Str::limit($brand->name, 12) }}</span>
