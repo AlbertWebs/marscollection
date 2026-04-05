@@ -102,11 +102,11 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <!-- Product Image -->
             <div class="space-y-4">
-                <div class="bg-gray-50 rounded-md overflow-hidden">
+                <div class="bg-gray-50 rounded-md overflow-hidden flex items-center justify-center" style="min-height: 400px;">
                     @if($product->image)
                         <img src="{{ \App\Helpers\ImageHelper::getProductImageUrl($product->image) }}" 
                              alt="{{ $product->name }} - {{ $product->brand->name ?? 'Zayn\'s Beauty' }} {{ $product->category->name ?? 'Beauty Product' }}" 
-                             class="w-full h-96 object-cover"
+                             class="w-full max-h-[500px] object-contain p-4"
                              loading="eager">
                     @else
                         <div class="w-full h-96 bg-gray-200 flex items-center justify-center">
