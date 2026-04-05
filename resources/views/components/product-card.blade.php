@@ -4,6 +4,7 @@
     $productImage = is_object($product) ? $product->image : $product['image'];
     $productCategory = is_object($product) ? $product->category->name : $product['category'];
     $productPrice = is_object($product) ? $product->formatted_price : $product['price'];
+    $productRawPrice = is_object($product) ? (float) $product->price : $product['price'];
     $productOriginalPrice = is_object($product) ? $product->formatted_original_price : ($product['original_price'] ?? null);
     $productRating = is_object($product) ? $product->rating : $product['rating'];
     $productDescription = is_object($product) ? $product->description : ($product['description'] ?? null);
@@ -70,7 +71,8 @@
                     <span class="text-lg sm:text-xl font-bold text-gray-900" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
                         <meta itemprop="priceCurrency" content="KES">
                         <meta itemprop="availability" content="https://schema.org/InStock">
-                        <span itemprop="price">{{ $productPrice }}</span>
+                        <meta itemprop="price" content="{{ $productRawPrice }}">
+                        <span>{{ $productPrice }}</span>
                     </span>
                     @if($productOriginalPrice)
                         <span class="text-sm sm:text-base text-gray-400 line-through">{{ $productOriginalPrice }}</span>

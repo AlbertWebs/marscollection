@@ -38,7 +38,7 @@
     "category": "{{ $product->category->name ?? 'Beauty Products' }}",
     "offers": {
         "@@type": "Offer",
-        "price": "{{ $product->price }}",
+        "price": {{ (float) $product->price }},
         "priceCurrency": "KES",
         "priceValidUntil": "{{ now()->addYear()->toISOString() }}",
         "availability": "{{ $product->stock_quantity > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock' }}",
