@@ -134,7 +134,7 @@
 
                     {{-- Hidden input submitted with form --}}
                     <input type="hidden" id="edit-colors" name="colors"
-                           value="{{ old('colors', is_array($product->colors) ? implode(',', array_map(fn($c) => str_contains($c, ':') ? $c : $c, $product->colors)) : '') }}">
+                           value="{{ old('colors', is_array($product->colors) ? implode(',', $product->colors) : '') }}">
 
                     {{-- Chips display --}}
                     <div id="edit-color-tags" class="flex flex-wrap gap-2 mb-3 min-h-[36px]"></div>
@@ -244,14 +244,19 @@
     let colors = [];
 
     // Parse existing product colors from PHP
-    @if($product->colors && count($product->colors) > 0)
-    colors = @json(array_map(function($c) {
-        $parts = explode(':', $c);
-        $name = trim($parts[0]);
-        $hex  = isset($parts[1]) ? trim($parts[1]) : '#cccccc';
-        return ['name' => $name, 'hex' => $hex];
-    }, $product->colors));
-    @endif
+    @php
+        $editColorsJson = '[]';
+        if ($product->colors && count($product->colors) > 0) {
+            $mapped = array_map(function($c) {
+                $parts = explode(':', $c);
+                $name = trim($parts[0]);
+                $hex  = isset($parts[1]) ? trim($parts[1]) : '#cccccc';
+                return ['name' => $name, 'hex' => $hex];
+            }, $product->colors);
+            $editColorsJson = json_encode(array_values($mapped));
+        }
+    @endphp
+    colors = {!! $editColorsJson !!};
 
     renderTags();
     sync();
