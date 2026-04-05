@@ -112,7 +112,7 @@
                         <img id="zoom-img"
                              src="{{ $productImgUrl }}"
                              alt="{{ $product->name }} - {{ $product->brand->name ?? 'Zayn\'s Beauty' }} {{ $product->category->name ?? 'Beauty Product' }}"
-                             class="w-full h-full object-contain p-3"
+                             class="max-w-full max-h-full object-contain p-3"
                              loading="eager"
                              draggable="false">
                         <!-- Lens overlay -->
