@@ -102,20 +102,51 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <!-- Product Image -->
             <div class="space-y-4">
-                <div class="bg-gray-50 rounded-md overflow-hidden flex items-center justify-center" style="min-height: 400px;">
-                    @if($product->image)
-                        <img src="{{ \App\Helpers\ImageHelper::getProductImageUrl($product->image) }}" 
-                             alt="{{ $product->name }} - {{ $product->brand->name ?? 'Zayn\'s Beauty' }} {{ $product->category->name ?? 'Beauty Product' }}" 
-                             class="w-full max-h-[500px] object-contain p-4"
-                             loading="eager">
-                    @else
-                        <div class="w-full h-96 bg-gray-200 flex items-center justify-center">
-                            <svg class="w-24 h-24 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                            </svg>
-                        </div>
-                    @endif
+                @if($product->image)
+                @php $productImgUrl = \App\Helpers\ImageHelper::getProductImageUrl($product->image); @endphp
+                <div class="relative">
+                    <!-- Image container -->
+                    <div id="zoom-container"
+                         class="bg-gray-50 rounded-md overflow-hidden flex items-center justify-center cursor-zoom-in select-none"
+                         style="height: 380px; position: relative;">
+                        <img id="zoom-img"
+                             src="{{ $productImgUrl }}"
+                             alt="{{ $product->name }} - {{ $product->brand->name ?? 'Zayn\'s Beauty' }} {{ $product->category->name ?? 'Beauty Product' }}"
+                             class="w-full h-full object-contain p-3"
+                             loading="eager"
+                             draggable="false">
+                        <!-- Lens overlay -->
+                        <div id="zoom-lens"
+                             class="hidden absolute border-2 border-pink-400 bg-pink-50/20 rounded pointer-events-none"
+                             style="width: 120px; height: 120px; z-index: 10;"></div>
+                    </div>
+                    <!-- Zoomed panel (desktop only, positioned by JS) -->
+                    <div id="zoom-panel"
+                         class="bg-white border border-gray-200 rounded-md shadow-xl overflow-hidden pointer-events-none"
+                         style="display:none; position:fixed; width: 380px; height: 380px; z-index: 50;"></div>
+                    <!-- Click hint badge -->
+                    <div class="absolute bottom-3 right-3 bg-black/50 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1 pointer-events-none">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"/></svg>
+                        Click to zoom
+                    </div>
                 </div>
+                @else
+                <div class="bg-gray-50 rounded-md overflow-hidden flex items-center justify-center" style="height: 380px;">
+                    <div class="flex items-center justify-center">
+                        <svg class="w-24 h-24 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                </div>
+                @endif
+            </div>
+
+            <!-- Lightbox Modal -->
+            <div id="lightbox" class="fixed inset-0 z-[999] hidden items-center justify-center bg-black/90" role="dialog" aria-modal="true" aria-label="Product image zoom">
+                <button id="lightbox-close" class="absolute top-4 right-4 text-white hover:text-pink-400 transition-colors" aria-label="Close zoom">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+                <img id="lightbox-img" src="" alt="{{ $product->name }}" class="max-w-[90vw] max-h-[90vh] object-contain rounded-md shadow-2xl">
             </div>
 
             <!-- Product Details -->
@@ -331,4 +362,101 @@
         </div>
     </div>
 </div>
-@endsection 
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const container = document.getElementById('zoom-container');
+    const img       = document.getElementById('zoom-img');
+    const lens      = document.getElementById('zoom-lens');
+    const panel     = document.getElementById('zoom-panel');
+    const panelInner= document.getElementById('zoom-panel-inner');
+    const lightbox  = document.getElementById('lightbox');
+    const lbImg     = document.getElementById('lightbox-img');
+    const lbClose   = document.getElementById('lightbox-close');
+
+    if (!container || !img) return;
+
+    const imgSrc = img.src;
+    const isDesktop = () => window.innerWidth >= 1024;
+
+    // ---------- Hover zoom (desktop only) ----------
+    container.addEventListener('mouseenter', function () {
+        if (!isDesktop()) return;
+        lens.classList.remove('hidden');
+        // Position panel fixed to the right of the container
+        const rect = container.getBoundingClientRect();
+        panel.style.display   = 'block';
+        panel.style.top       = rect.top + 'px';
+        panel.style.left      = (rect.right + 12) + 'px';
+        panel.style.width     = rect.width + 'px';
+        panel.style.height    = rect.height + 'px';
+        panelInner.style.backgroundImage = `url('${imgSrc}')`;
+    });
+
+    container.addEventListener('mouseleave', function () {
+        lens.classList.add('hidden');
+        panel.style.display = 'none';
+    });
+
+    container.addEventListener('mousemove', function (e) {
+        if (!isDesktop()) return;
+
+        const rect      = container.getBoundingClientRect();
+        const imgRect   = img.getBoundingClientRect();
+        const lensW     = lens.offsetWidth;
+        const lensH     = lens.offsetHeight;
+        const panelW    = panel.offsetWidth;
+        const panelH    = panel.offsetHeight;
+
+        // Cursor position relative to container
+        let cx = e.clientX - rect.left;
+        let cy = e.clientY - rect.top;
+
+        // Clamp lens within image bounds
+        let lx = cx - lensW / 2;
+        let ly = cy - lensH / 2;
+        lx = Math.max(imgRect.left - rect.left, Math.min(lx, imgRect.right  - rect.left - lensW));
+        ly = Math.max(imgRect.top  - rect.top,  Math.min(ly, imgRect.bottom - rect.top  - lensH));
+
+        lens.style.left = lx + 'px';
+        lens.style.top  = ly + 'px';
+
+        // Zoom ratio: panel size / lens size
+        const ratioX = panelW / lensW;
+        const ratioY = panelH / lensH;
+
+        // Background size = image rendered size * zoom ratio
+        const bgW = imgRect.width  * ratioX;
+        const bgH = imgRect.height * ratioY;
+
+        // Background position: offset from image top-left
+        const offsetX = (lx - (imgRect.left - rect.left)) * ratioX;
+        const offsetY = (ly - (imgRect.top  - rect.top))  * ratioY;
+
+        panelInner.style.backgroundSize     = `${bgW}px ${bgH}px`;
+        panelInner.style.backgroundPosition = `-${offsetX}px -${offsetY}px`;
+    });
+
+    // ---------- Click to lightbox ----------
+    container.addEventListener('click', function () {
+        lbImg.src = imgSrc;
+        lightbox.classList.remove('hidden');
+        lightbox.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+    });
+
+    function closeLightbox() {
+        lightbox.classList.add('hidden');
+        lightbox.classList.remove('flex');
+        document.body.style.overflow = '';
+    }
+
+    lbClose && lbClose.addEventListener('click', closeLightbox);
+    lightbox && lightbox.addEventListener('click', function (e) {
+        if (e.target === lightbox) closeLightbox();
+    });
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeLightbox();
+    });
+});
+</script>
+@endsection
