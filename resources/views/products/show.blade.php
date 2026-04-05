@@ -389,6 +389,12 @@ document.addEventListener('DOMContentLoaded', function () {
         panel.style.left      = (rect.right + 12) + 'px';
         panel.style.width     = rect.width + 'px';
         panel.style.height    = rect.height + 'px';
+
+        // Ensure lens has the same aspect ratio as panel to prevent stretching
+        const baseLensSize = 120;
+        lens.style.width  = baseLensSize + 'px';
+        lens.style.height = (baseLensSize * (rect.height / rect.width)) + 'px';
+
         panel.style.backgroundImage  = `url('${imgSrc}')`;
         panel.style.backgroundRepeat = 'no-repeat';
     });
