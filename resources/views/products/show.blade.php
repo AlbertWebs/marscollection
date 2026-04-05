@@ -381,10 +381,9 @@ document.addEventListener('DOMContentLoaded', function () {
     // ---------- Hover zoom (desktop only) ----------
     container.addEventListener('mouseenter', function () {
         if (!isDesktop()) return;
-        lens.classList.remove('hidden');
-        // Position panel fixed to the right of the container
+        // Basic setup on enter
         const rect = container.getBoundingClientRect();
-        panel.style.display   = 'block';
+        panel.style.display   = 'none'; // Will show only when over image
         panel.style.top       = rect.top + 'px';
         panel.style.left      = (rect.right + 12) + 'px';
         
@@ -411,14 +410,30 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const rect      = container.getBoundingClientRect();
         const imgRect   = img.getBoundingClientRect();
+
+        // Check if mouse is over the actual image area
+        const x = e.clientX;
+        const y = e.clientY;
+        const isOverImage = (x >= imgRect.left && x <= imgRect.right && y >= imgRect.top && y <= imgRect.bottom);
+
+        if (!isOverImage) {
+            lens.classList.add('hidden');
+            panel.style.display = 'none';
+            return;
+        }
+
+        // Show them if over image
+        lens.classList.remove('hidden');
+        panel.style.display = 'block';
+
         const lensW     = lens.offsetWidth;
         const lensH     = lens.offsetHeight;
         const panelW    = panel.offsetWidth;
         const panelH    = panel.offsetHeight;
 
         // Cursor position relative to container
-        let cx = e.clientX - rect.left;
-        let cy = e.clientY - rect.top;
+        let cx = x - rect.left;
+        let cy = y - rect.top;
 
         // Clamp lens within image bounds
         let lx = cx - lensW / 2;
