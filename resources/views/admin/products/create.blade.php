@@ -111,17 +111,46 @@
                            placeholder="e.g. NEW, SALE, HOT">
                 </div>
 
+                <!-- Badge Color -->
+                <div>
+                    <label for="badge_color" class="block text-sm font-medium text-gray-700">Badge Color</label>
+                    <select id="badge_color" name="badge_color"
+                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm">
+                        <option value="">None</option>
+                        <option value="pink" {{ old('badge_color') === 'pink' ? 'selected' : '' }}>Pink</option>
+                        <option value="red" {{ old('badge_color') === 'red' ? 'selected' : '' }}>Red</option>
+                        <option value="green" {{ old('badge_color') === 'green' ? 'selected' : '' }}>Green</option>
+                        <option value="blue" {{ old('badge_color') === 'blue' ? 'selected' : '' }}>Blue</option>
                         <option value="yellow" {{ old('badge_color') === 'yellow' ? 'selected' : '' }}>Yellow</option>
                         <option value="gray" {{ old('badge_color') === 'gray' ? 'selected' : '' }}>Gray</option>
                     </select>
                 </div>
 
-                <!-- Colors -->
+                <!-- Colors Tag Builder -->
                 <div class="lg:col-span-2">
-                    <label for="colors" class="block text-sm font-medium text-gray-700">Available Colors <span class="text-gray-400 font-normal">- optional, comma separated (e.g. Red, Blue or Rose:#FF0080)</span></label>
-                    <input type="text" id="colors" name="colors" value="{{ old('colors') }}"
-                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
-                           placeholder="e.g. Red, Blue, Pink or Rose Pink:#FF0080, Midnight Blue:#191970">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Available Colors
+                        <span class="text-gray-400 font-normal">- optional, customers select one when adding to cart</span>
+                    </label>
+
+                    {{-- Hidden input that gets submitted --}}
+                    <input type="hidden" id="colors" name="colors" value="{{ old('colors') }}">
+
+                    {{-- Color chips display --}}
+                    <div id="color-tags" class="flex flex-wrap gap-2 mb-3 min-h-[36px]"></div>
+
+                    {{-- Add color row --}}
+                    <div class="flex items-center gap-2">
+                        <input type="color" id="color-picker" value="#ec4899"
+                               class="h-9 w-12 cursor-pointer border border-gray-300 rounded-md p-0.5">
+                        <input type="text" id="color-name-input" placeholder="Color name (e.g. Rose Pink)"
+                               class="flex-1 border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
+                               onkeydown="if(event.key==='Enter'){event.preventDefault();createAddColor();}">
+                        <button type="button" onclick="createAddColor()"
+                                class="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap">
+                            + Add Color
+                        </button>
+                    </div>
                     @error('colors')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
                 </div>
 
@@ -183,4 +212,75 @@
     </div>
 </div>
 
-@endsection 
+@endsection
+
+@section('scripts')
+<script>
+// ---- Color Tag Builder (Create Form) ----
+(function () {
+    const tagsContainer = document.getElementById('color-tags');
+    const hiddenInput   = document.getElementById('colors');
+    const picker        = document.getElementById('color-picker');
+    const nameInput     = document.getElementById('color-name-input');
+
+    if (!tagsContainer || !hiddenInput) return;
+
+    let colors = [];
+
+    // Load pre-existing value (from old() on validation failure)
+    const initial = hiddenInput.value.trim();
+    if (initial) {
+        colors = initial.split(',').map(s => {
+            s = s.trim();
+            const idx = s.lastIndexOf(':');
+            if (idx > 0 && s[idx+1] === '#') {
+                return { name: s.slice(0, idx).trim(), hex: s.slice(idx+1).trim() };
+            }
+            return { name: s, hex: '#cccccc' };
+        }).filter(c => c.name);
+        renderTags();
+    }
+
+    window.createAddColor = function () {
+        const name = nameInput.value.trim();
+        const hex  = picker.value || '#cccccc';
+        if (!name) { nameInput.focus(); return; }
+        colors.push({ name, hex });
+        nameInput.value = '';
+        renderTags();
+        sync();
+    };
+
+    function removeColor(idx) {
+        colors.splice(idx, 1);
+        renderTags();
+        sync();
+    }
+
+    function renderTags() {
+        tagsContainer.innerHTML = '';
+        colors.forEach((c, i) => {
+            const chip = document.createElement('span');
+            chip.className = 'inline-flex items-center gap-1.5 bg-gray-100 border border-gray-200 rounded-full px-3 py-1 text-sm font-medium text-gray-800';
+            chip.innerHTML = `
+                <span class="inline-block w-4 h-4 rounded-full border border-gray-300 flex-shrink-0" style="background:${c.hex}"></span>
+                ${escapeHtml(c.name)}
+                <button type="button" onclick="removeColor_create(${i})" class="ml-1 text-gray-400 hover:text-red-500 leading-none">&times;</button>
+            `;
+            tagsContainer.appendChild(chip);
+        });
+    }
+
+    function sync() {
+        hiddenInput.value = colors.map(c => `${c.name}:${c.hex}`).join(',');
+    }
+
+    function escapeHtml(str) {
+        return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    // Expose remove globally so inline onclick works
+    window.removeColor_create = removeColor;
+})();
+</script>
+@endsection
