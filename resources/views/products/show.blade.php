@@ -368,7 +368,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const img       = document.getElementById('zoom-img');
     const lens      = document.getElementById('zoom-lens');
     const panel     = document.getElementById('zoom-panel');
-    const panelInner= document.getElementById('zoom-panel-inner');
+
     const lightbox  = document.getElementById('lightbox');
     const lbImg     = document.getElementById('lightbox-img');
     const lbClose   = document.getElementById('lightbox-close');
@@ -389,7 +389,8 @@ document.addEventListener('DOMContentLoaded', function () {
         panel.style.left      = (rect.right + 12) + 'px';
         panel.style.width     = rect.width + 'px';
         panel.style.height    = rect.height + 'px';
-        panelInner.style.backgroundImage = `url('${imgSrc}')`;
+        panel.style.backgroundImage  = `url('${imgSrc}')`;
+        panel.style.backgroundRepeat = 'no-repeat';
     });
 
     container.addEventListener('mouseleave', function () {
@@ -432,8 +433,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const offsetX = (lx - (imgRect.left - rect.left)) * ratioX;
         const offsetY = (ly - (imgRect.top  - rect.top))  * ratioY;
 
-        panelInner.style.backgroundSize     = `${bgW}px ${bgH}px`;
-        panelInner.style.backgroundPosition = `-${offsetX}px -${offsetY}px`;
+        panel.style.backgroundSize     = `${bgW}px ${bgH}px`;
+        panel.style.backgroundPosition = `-${offsetX}px -${offsetY}px`;
     });
 
     // ---------- Click to lightbox ----------
