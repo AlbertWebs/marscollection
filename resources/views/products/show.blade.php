@@ -234,7 +234,7 @@
                 @endif
 
                 <!-- Stock Status -->
-                <div class="space-y-2">
+                <div class="space-y-4">
                     @if($product->stock_quantity > 0)
                         <div class="flex items-center space-x-2 text-green-600">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
@@ -242,6 +242,42 @@
                             </svg>
                             <span class="font-medium">In Stock ({{ $product->stock_quantity }} available)</span>
                         </div>
+
+                        <!-- Color Selection -->
+                        @if($product->colors && count($product->colors) > 0)
+                            <div class="pt-4 border-t border-gray-100 space-y-3">
+                                <div class="flex justify-between items-center">
+                                    <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-widest">Select Color</h3>
+                                    <span id="color-label" class="text-sm font-bold text-pink-600"></span>
+                                </div>
+                                <div class="flex flex-wrap gap-4">
+                                    @foreach($product->colors as $index => $colorOption)
+                                        @php
+                                            $parts = explode(':', $colorOption);
+                                            $cName = trim($parts[0]);
+                                            $cVal  = isset($parts[1]) ? trim($parts[1]) : $cName;
+                                        @endphp
+                                        <button type="button" 
+                                                class="color-option-btn group relative"
+                                                onclick="handleColorSelect('{{ $cName }}', this)"
+                                                title="{{ $cName }}">
+                                            <div class="w-10 h-10 rounded-full border-2 border-gray-200 transition-all duration-200 group-hover:scale-110 flex items-center justify-center p-0.5"
+                                                 style="background-color: {{ $cVal }};">
+                                                <div class="hidden selected-check">
+                                                    <svg class="w-5 h-5 text-white drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                            <span class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] whitespace-nowrap opacity-0 group-hover:opacity-100 font-medium text-gray-500 transition-opacity">
+                                                {{ $cName }}
+                                            </span>
+                                        </button>
+                                    @endforeach
+                                </div>
+                                <input type="hidden" id="selected-color-input" value="">
+                            </div>
+                        @endif
                     @else
                         <div class="flex items-center space-x-2 text-red-600">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
@@ -255,8 +291,8 @@
                 <!-- Add to Cart Button -->
                 <div class="space-y-4">
                     @if($product->stock_quantity > 0)
-                        <button onclick="addToCart({{ $product->id }})" 
-                                class="w-full bg-pink-600 text-white py-4 px-6 rounded-md font-semibold hover:bg-pink-700 transition-all duration-300 flex items-center justify-center space-x-2"
+                        <button onclick="handleAddWithColor({{ $product->id }})" 
+                                class="w-full bg-pink-600 text-white py-4 px-6 rounded-md font-semibold hover:bg-pink-700 transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg hover:shadow-pink-200"
                                 aria-label="Add {{ $product->name }} to cart">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
@@ -482,5 +518,45 @@ document.addEventListener('DOMContentLoaded', function () {
         if (e.key === 'Escape') closeLightbox();
     });
 });
+
+// ---------- Color Selection Helpers ----------
+function handleColorSelect(name, btn) {
+    // Update hidden input
+    document.getElementById('selected-color-input').value = name;
+    
+    // Update label
+    document.getElementById('color-label').textContent = name;
+    
+    // Reset all buttons
+    document.querySelectorAll('.color-option-btn .rounded-full').forEach(el => {
+        el.classList.remove('border-pink-600', 'ring-2', 'ring-pink-200');
+        el.classList.add('border-gray-200');
+        el.querySelector('.selected-check').classList.add('hidden');
+    });
+    
+    // Highlight selected
+    const circle = btn.querySelector('.rounded-full');
+    circle.classList.remove('border-gray-200');
+    circle.classList.add('border-pink-600', 'ring-2', 'ring-pink-200');
+    circle.querySelector('.selected-check').classList.remove('hidden');
+}
+
+function handleAddWithColor(productId) {
+    const colorInput = document.getElementById('selected-color-input');
+    const color = colorInput ? colorInput.value : null;
+    
+    // If colors exist but none selected, alert user
+    if (colorInput && !color) {
+        showToast('Please select a color first', 'error');
+        
+        // Pulse the color section to draw attention
+        const colorSection = colorInput.parentElement;
+        colorSection.classList.add('animate-pulse');
+        setTimeout(() => colorSection.classList.remove('animate-pulse'), 1000);
+        return;
+    }
+    
+    addToCart(productId, 1, color);
+}
 </script>
 @endsection
