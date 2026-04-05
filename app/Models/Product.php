@@ -28,7 +28,8 @@ class Product extends Model
         'is_trending',
         'is_active',
         'stock_quantity',
-        'sku'
+        'sku',
+        'colors'
     ];
 
     protected $casts = [
@@ -40,6 +41,7 @@ class Product extends Model
         'is_featured' => 'boolean',
         'is_trending' => 'boolean',
         'is_active' => 'boolean',
+        'colors' => 'array',
     ];
 
     protected static function boot()

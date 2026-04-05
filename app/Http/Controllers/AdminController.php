@@ -117,6 +117,7 @@ class AdminController extends Controller
             'is_featured'    => 'boolean',
             'is_trending'    => 'boolean',
             'image'          => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'colors'         => 'nullable|string',
         ]);
         $validated['is_active'] = $request->boolean('is_active');
         $validated['is_featured'] = $request->boolean('is_featured');
@@ -125,6 +126,10 @@ class AdminController extends Controller
 
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('products', 's3');
+        }
+
+        if ($request->filled('colors')) {
+            $validated['colors'] = array_map('trim', explode(',', $request->colors));
         }
 
         Product::create($validated);
@@ -156,6 +161,7 @@ class AdminController extends Controller
             'is_featured'    => 'boolean',
             'is_trending'    => 'boolean',
             'image'          => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'colors'         => 'nullable|string',
         ]);
         $validated['is_active'] = $request->boolean('is_active');
         $validated['is_featured'] = $request->boolean('is_featured');
@@ -170,6 +176,12 @@ class AdminController extends Controller
 
             $imagePath = $request->file('image')->store('products', 's3');
             $validated['image'] = $imagePath;
+        }
+
+        if ($request->filled('colors')) {
+            $validated['colors'] = array_map('trim', explode(',', $request->colors));
+        } else {
+            $validated['colors'] = null;
         }
 
         $product->update($validated);

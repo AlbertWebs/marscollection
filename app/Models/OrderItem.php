@@ -18,7 +18,8 @@ class OrderItem extends Model
         'product_name',
         'product_price',
         'quantity',
-        'subtotal'
+        'subtotal',
+        'selected_color'
     ];
 
     protected $casts = [

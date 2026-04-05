@@ -36,14 +36,16 @@ class CartController extends Controller
             
             $request->validate([
                 'product_id' => 'required|exists:products,id',
-                'quantity' => 'required|integer|min:1'
+                'quantity' => 'required|integer|min:1',
+                'selected_color' => 'nullable|string|max:255'
             ]);
 
             $product = Product::findOrFail($request->product_id);
             Log::info('Product found', ['product_id' => $product->id, 'name' => $product->name]);
 
-            // Check if item already exists in cart
+            // Check if item already exists in cart with the same color
             $cartItem = Cart::where('product_id', $request->product_id)
+                ->where('selected_color', $request->selected_color)
                 ->where(function ($query) {
                     if (Auth::check()) {
                         $query->where('user_id', Auth::id());
@@ -63,7 +65,8 @@ class CartController extends Controller
                     'user_id' => Auth::id(),
                     'session_id' => session()->getId(),
                     'product_id' => $request->product_id,
-                    'quantity' => $request->quantity
+                    'quantity' => $request->quantity,
+                    'selected_color' => $request->selected_color
                 ]);
                 Log::info('New cart item created', ['cart_id' => $cartItem->id]);
             }
@@ -191,6 +194,7 @@ class CartController extends Controller
                         'product_name' => $item->product->name,
                         'product_image' => \App\Helpers\ImageHelper::getProductImageUrl($item->product->image),
                         'quantity' => $item->quantity,
+                        'selected_color' => $item->selected_color,
                         'price' => $item->product->price * $item->quantity
                     ];
                     $total += $item->product->price * $item->quantity;

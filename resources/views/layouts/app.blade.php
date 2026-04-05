@@ -244,8 +244,8 @@
         }
 
         // Add to cart functionality
-        function addToCart(productId, quantity = 1) {
-            console.log('Adding to cart:', productId, quantity);
+        function addToCart(productId, quantity = 1, color = null) {
+            console.log('Adding to cart:', productId, quantity, color);
             
             // Validate productId
             if (!productId || productId === 'null' || productId === 'undefined') {
@@ -256,7 +256,8 @@
             
             const requestData = {
                 product_id: productId,
-                quantity: quantity
+                quantity: quantity,
+                selected_color: color
             };
             
             console.log('Request data:', requestData);
@@ -347,6 +348,42 @@
                 console.error('Error adding bundle to cart:', error);
                 showToast('Error adding bundle to cart. Please try again.', 'error');
             });
+        }
+
+        // Card color selection helpers
+        function selectCardColor(dot, name) {
+            const container = dot.closest('.color-swatches-container');
+            const card = dot.closest('article');
+            const addBtn = card.querySelector('.card-add-btn');
+            const label = container.querySelector('.selected-color-text');
+            
+            // Update button data attribute
+            if (addBtn) addBtn.setAttribute('data-selected-color', name);
+            if (label) label.textContent = name;
+            
+            // Reset all dots in this card
+            container.querySelectorAll('.swatch-dot').forEach(d => {
+                d.classList.remove('ring-2', 'ring-pink-400', 'ring-offset-1', 'scale-110');
+            });
+            
+            // Highlight selected dot
+            dot.classList.add('ring-2', 'ring-pink-400', 'ring-offset-1', 'scale-110');
+        }
+
+        function handleCardAddToCart(btn, productId) {
+            const color = btn.getAttribute('data-selected-color');
+            const card = btn.closest('article');
+            const swatches = card.querySelector('.color-swatches-container');
+            
+            // If colors exist on card but none selected
+            if (swatches && !color) {
+                showToast('Please select a color first', 'error');
+                swatches.classList.add('animate-pulse', 'bg-pink-50', 'rounded', 'p-1');
+                setTimeout(() => swatches.classList.remove('animate-pulse', 'bg-pink-50'), 1500);
+                return;
+            }
+            
+            addToCart(productId, 1, color);
         }
 
         // Initialize cart count on page load

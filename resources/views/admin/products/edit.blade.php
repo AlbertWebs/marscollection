@@ -125,6 +125,15 @@
                     </select>
                 </div>
 
+                <!-- Colors -->
+                <div class="lg:col-span-2">
+                    <label for="colors" class="block text-sm font-medium text-gray-700">Available Colors <span class="text-gray-400 font-normal">- optional, comma separated (e.g. Red, Blue or Rose:#FF0080)</span></label>
+                    <input type="text" id="colors" name="colors" value="{{ old('colors', is_array($product->colors) ? implode(', ', $product->colors) : '') }}"
+                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
+                           placeholder="e.g. Red, Blue, Pink or Rose Pink:#FF0080, Midnight Blue:#191970">
+                    @error('colors')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+                </div>
+
                 <!-- Flags -->
                 <div class="space-y-2">
                     <label class="flex items-center">

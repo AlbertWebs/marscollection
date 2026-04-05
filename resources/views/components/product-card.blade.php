@@ -18,6 +18,10 @@
     $productId = is_object($product) ? $product->id : ($product['id'] ?? null);
     $productSlug = is_object($product) ? $product->slug : ($product['slug'] ?? null);
     $productBrand = is_object($product) ? ($product->brand->name ?? 'Zayn\'s Beauty') : ($product['brand'] ?? 'Zayn\'s Beauty');
+    $productColors = is_object($product) ? $product->colors : ($product['colors'] ?? null);
+    if (!is_array($productColors) && $productColors) {
+        $productColors = json_decode($productColors, true);
+    }
     
     // Handle image URL using helper
     $imageUrl = \App\Helpers\ImageHelper::getProductImageUrl($productImage);
@@ -37,8 +41,9 @@
             
             <!-- Hover Overlay with Add to Cart Button -->
             <div class="absolute inset-0 bg-gray-900/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                <button onclick="event.preventDefault(); addToCart({{ $productId }})" 
-                        class="bg-white text-gray-900 px-6 py-3 rounded-md font-semibold hover:bg-pink-600 hover:text-white transition-colors duration-200 flex items-center space-x-2 shadow-lg"
+                <button onclick="event.preventDefault(); handleCardAddToCart(this, {{ $productId }})" 
+                        class="card-add-btn bg-white text-gray-900 px-6 py-3 rounded-md font-semibold hover:bg-pink-600 hover:text-white transition-colors duration-200 flex items-center space-x-2 shadow-lg"
+                        data-selected-color=""
                         aria-label="Add {{ $productName }} to cart">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
@@ -99,6 +104,24 @@
                         <span>({{ $displayRating }}/5)</span>
                     </span>
                 </div>
+                
+                @if($productColors && count($productColors) > 0)
+                    <div class="flex flex-wrap gap-1.5 mt-3 color-swatches-container">
+                        @foreach($productColors as $colorOption)
+                            @php
+                                $parts = explode(':', $colorOption);
+                                $cName = trim($parts[0]);
+                                $cVal  = isset($parts[1]) ? trim($parts[1]) : $cName;
+                            @endphp
+                            <div class="w-3.5 h-3.5 rounded-full border border-gray-200 shadow-sm swatch-dot transition-all cursor-pointer hover:scale-110"
+                                 style="background-color: {{ $cVal }};"
+                                 title="{{ $cName }}"
+                                 onclick="event.preventDefault(); selectCardColor(this, '{{ $cName }}')">
+                            </div>
+                        @endforeach
+                        <span class="text-[10px] text-gray-400 ml-1 italic selected-color-text"></span>
+                    </div>
+                @endif
             </div>
         </div>
     </a>
