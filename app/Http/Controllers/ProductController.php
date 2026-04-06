@@ -48,7 +48,7 @@ class ProductController extends Controller
             });
         }
 
-        $products = $query->paginate(12);
+        $products = $query->paginate(24);
         $categories = Category::where('is_active', true)->get();
         $brands = Brand::where('is_active', true)->get();
 

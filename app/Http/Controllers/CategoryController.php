@@ -16,7 +16,7 @@ class CategoryController extends Controller
 
     public function show(Category $category)
     {
-        $products = $category->products()->paginate(12);
+        $products = $category->products()->paginate(24);
         return view('categories.show', compact('category', 'products'));
     }
 } 

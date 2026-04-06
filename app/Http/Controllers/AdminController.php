@@ -86,7 +86,7 @@ class AdminController extends Controller
             $query->where('brand_id', $request->brand);
         }
         
-        $products = $query->latest()->paginate(15)->withQueryString();
+        $products = $query->latest()->paginate(50)->withQueryString();
         $categories = Category::all();
         $brands = Brand::all();
         
@@ -247,7 +247,7 @@ class AdminController extends Controller
 
     public function orders()
     {
-        $orders = Order::with(['user', 'orderItems.product', 'orderItems.bundle'])->latest()->paginate(15);
+        $orders = Order::with(['user', 'orderItems.product', 'orderItems.bundle'])->latest()->paginate(50);
         return view('admin.orders.index', compact('orders'));
     }
 
@@ -337,7 +337,7 @@ class AdminController extends Controller
 
     public function users()
     {
-        $users = User::latest()->paginate(15);
+        $users = User::latest()->paginate(50);
         return view('admin.users.index', compact('users'));
     }
 
@@ -358,19 +358,19 @@ class AdminController extends Controller
     {
         $categories = Category::query()
             ->withCount('products')
-            ->paginate(15);
+            ->paginate(50);
         return view('admin.categories.index', compact('categories'));
     }
 
     public function brands()
     {
-        $brands = Brand::withCount('products')->paginate(15);
+        $brands = Brand::withCount('products')->paginate(50);
         return view('admin.brands.index', compact('brands'));
     }
 
     public function bundles()
     {
-        $bundles = Bundle::withCount('bundleItems')->paginate(15);
+        $bundles = Bundle::withCount('bundleItems')->paginate(50);
         return view('admin.bundles.index', compact('bundles'));
     }
 
@@ -604,7 +604,7 @@ class AdminController extends Controller
             $query->where('is_active', $request->status === 'active');
         }
         
-        $services = $query->ordered()->paginate(15)->withQueryString();
+        $services = $query->ordered()->paginate(50)->withQueryString();
         
         return view('admin.services.index', compact('services'));
     }
@@ -686,7 +686,7 @@ class AdminController extends Controller
             $query->where('appointment_date', '<=', $request->date_to);
         }
         
-        $appointments = $query->latest()->paginate(15)->withQueryString();
+        $appointments = $query->latest()->paginate(50)->withQueryString();
         
         return view('admin.appointments.index', compact('appointments'));
     }
@@ -872,7 +872,7 @@ class AdminController extends Controller
             });
         }
         
-        $reviews = $query->latest()->paginate(20);
+        $reviews = $query->latest()->paginate(50);
         
         return view('admin.reviews.index', compact('reviews'));
     }
@@ -931,7 +931,7 @@ class AdminController extends Controller
             });
         }
         
-        $contacts = $query->latest()->paginate(15)->withQueryString();
+        $contacts = $query->latest()->paginate(50)->withQueryString();
         
         return view('admin.contacts.index', compact('contacts'));
     }
@@ -960,7 +960,7 @@ class AdminController extends Controller
             $query->where('is_active', $request->status === 'active');
         }
 
-        $subscribers = $query->latest()->paginate(20)->withQueryString();
+        $subscribers = $query->latest()->paginate(50)->withQueryString();
 
         return view('admin.newsletter-subscribers.index', compact('subscribers'));
     }
