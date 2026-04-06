@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
-use App\Models\Category;
 use App\Models\Contact;
 use App\Models\Brand;
 use App\Models\Bundle;
@@ -146,17 +145,6 @@ class HomeController extends Controller
             $content .= '    <lastmod>' . $product->updated_at->toISOString() . '</lastmod>' . "\n";
             $content .= '    <changefreq>weekly</changefreq>' . "\n";
             $content .= '    <priority>0.8</priority>' . "\n";
-            $content .= '  </url>' . "\n";
-        }
-
-        // Categories
-        $categories = Category::where('is_active', true)->get();
-        foreach ($categories as $category) {
-            $content .= '  <url>' . "\n";
-            $content .= '    <loc>' . route('categories.show', $category) . '</loc>' . "\n";
-            $content .= '    <lastmod>' . $category->updated_at->toISOString() . '</lastmod>' . "\n";
-            $content .= '    <changefreq>weekly</changefreq>' . "\n";
-            $content .= '    <priority>0.7</priority>' . "\n";
             $content .= '  </url>' . "\n";
         }
 
