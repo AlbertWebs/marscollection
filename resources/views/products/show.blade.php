@@ -14,7 +14,7 @@
     <a href="{{ route('products.index') }}">Products</a>
     <span>/</span>
     @if($product->category)
-        <a href="{{ route('categories.show', $product->category) }}">{{ $product->category->name }}</a>
+        <a href="{{ route('products.index', ['category' => $product->category->slug]) }}">{{ $product->category->name }}</a>
         <span>/</span>
     @endif
     <span class="text-gray-500">{{ $product->name }}</span>
@@ -205,7 +205,7 @@
                     @if($product->category)
                         <div class="flex items-center space-x-1">
                             <span class="text-gray-500">Category:</span>
-                            <a href="{{ route('categories.show', $product->category) }}" 
+                            <a href="{{ route('products.index', ['category' => $product->category->slug]) }}" 
                                class="text-pink-600 hover:text-pink-700 font-medium">
                                 {{ $product->category->name }}
                             </a>
