@@ -19,9 +19,16 @@ class PerformanceOptimization
     {
         $response = $next($request);
 
-        // Only apply to HTML responses
+        // Only apply performance headers to HTML responses and NOT for admin pages
         if ($response instanceof Response && $this->isHtmlResponse($response)) {
-            $this->addPerformanceHeaders($response);
+            if ($request->is('admin') || $request->is('admin/*')) {
+                // For admin pages, ensure no caching at all
+                $response->headers->set('Cache-Control', 'no-cache, no-store, must-revalidate');
+                $response->headers->set('Pragma', 'no-cache');
+                $response->headers->set('Expires', '0');
+            } else {
+                $this->addPerformanceHeaders($response);
+            }
         }
 
         return $response;
