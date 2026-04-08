@@ -127,7 +127,7 @@
                             <td class="px-2 sm:px-3 lg:px-6 py-3 sm:py-4 hidden md:table-cell">
                                 <div class="w-10 h-10 rounded-md overflow-hidden bg-gray-100 flex-shrink-0">
                                     @if($product->image)
-                                        <img src="{{ $product->image }}" alt="{{ $product->name }}" 
+                                        <img src="{{ \App\Helpers\ImageHelper::getProductImageUrl($product->image) }}" alt="{{ $product->name }}" 
                                              class="w-full h-full object-cover">
                                     @else
                                         <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">
