@@ -107,12 +107,13 @@
                         <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             <input type="checkbox" id="select-all" class="rounded-md border-gray-300 text-pink-600 shadow-sm focus:border-pink-300 focus:ring focus:ring-pink-200 focus:ring-opacity-50">
                         </th>
+                        <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">Image</th>
                         <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
-                        <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">Category</th>
+                        <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">Category</th>
                         <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">Brand</th>
                         <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                        <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">Stock</th>
-                        <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Flags</th>
+                        <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">Stock</th>
+                        <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">Flags</th>
                         <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                     </tr>
                 </thead>
@@ -122,6 +123,18 @@
                             <td class="px-2 sm:px-3 lg:px-6 py-3 sm:py-4 hidden sm:table-cell">
                                 <input type="checkbox" name="selected_products[]" value="{{ $product->id }}" 
                                        class="product-checkbox rounded-md border-gray-300 text-pink-600 shadow-sm focus:border-pink-300 focus:ring focus:ring-pink-200 focus:ring-opacity-50">
+                            </td>
+                            <td class="px-2 sm:px-3 lg:px-6 py-3 sm:py-4 hidden md:table-cell">
+                                <div class="w-10 h-10 rounded-md overflow-hidden bg-gray-100 flex-shrink-0">
+                                    @if($product->image)
+                                        <img src="{{ $product->image }}" alt="{{ $product->name }}" 
+                                             class="w-full h-full object-cover">
+                                    @else
+                                        <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">
+                                            No Img
+                                        </div>
+                                    @endif
+                                </div>
                             </td>
                             <td class="px-3 lg:px-6 py-3 sm:py-4">
                                 <div class="space-y-1">
@@ -167,13 +180,13 @@
                                         </label>
                                     </div>
                                     <div class="text-xs text-gray-500 sm:hidden">
-                                        Stock: {{ $product->stock }}
+                                        Stock: {{ $product->stock_quantity }}
                                     </div>
                                     <div class="text-sm text-gray-500 hidden sm:block md:hidden">{{ Str::limit($product->description, 40) }}</div>
                                     <div class="text-sm text-gray-500 hidden md:block">{{ Str::limit($product->description, 50) }}</div>
                                 </div>
                             </td>
-                            <td class="px-3 lg:px-6 py-4 whitespace-nowrap hidden md:table-cell">
+                            <td class="px-3 lg:px-6 py-4 whitespace-nowrap hidden sm:table-cell">
                                 <span class="text-sm text-gray-900">{{ $product->category->name ?? 'No Category' }}</span>
                             </td>
                             <td class="px-3 lg:px-6 py-4 whitespace-nowrap hidden lg:table-cell">
@@ -182,10 +195,10 @@
                             <td class="px-3 lg:px-6 py-4 whitespace-nowrap hidden sm:table-cell">
                                 <span class="text-sm font-medium text-gray-900">KSh {{ number_format($product->price) }}</span>
                             </td>
-                            <td class="px-3 lg:px-6 py-4 whitespace-nowrap hidden sm:table-cell">
-                                <span class="text-sm text-gray-900">{{ $product->stock }}</span>
+                            <td class="px-3 lg:px-6 py-4 whitespace-nowrap hidden lg:table-cell">
+                                <span class="text-sm text-gray-900">{{ $product->stock_quantity }}</span>
                             </td>
-                            <td class="px-3 lg:px-6 py-4 hidden sm:table-cell">
+                            <td class="px-3 lg:px-6 py-4 hidden md:table-cell">
                                 <div class="flex flex-col gap-1.5">
                                     <label class="flex items-center gap-1.5 cursor-pointer group">
                                         <input type="checkbox" class="flag-toggle rounded border-gray-300 text-green-600 focus:ring-green-500"
@@ -228,7 +241,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="px-6 py-4 text-center text-gray-500">
+                            <td colspan="9" class="px-6 py-4 text-center text-gray-500">
                                 No products found. <a href="{{ route('admin.products.create') }}" class="text-pink-600 hover:text-pink-700">Add your first product</a>
                             </td>
                         </tr>
