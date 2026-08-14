@@ -14,18 +14,25 @@ jobs:
     steps:
       - name: Deploy to zaynsbeauty.co.ke
         uses: appleboy/ssh-action@v1.0.3
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          envs: GH_TOKEN
           script: |
             set -e
 
             cd /var/www/zaynsbeauty.co.ke
 
             echo "── git pull (Laravel)"
+            # Temporarily use token-authenticated URL so git fetch works without prompting
+            git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/kimutaiRop/zeynsbeauty.git"
             git fetch origin
             git reset --hard origin/main
+            # Restore plain HTTPS URL (no credentials stored)
+            git remote set-url origin "https://github.com/kimutaiRop/zeynsbeauty.git"
 
             echo "── composer install"
             composer install --no-dev --optimize-autoloader --no-interaction
@@ -38,7 +45,7 @@ jobs:
             if [ -s "$HOME/.nvm/nvm.sh" ]; then
               . "$HOME/.nvm/nvm.sh"
             fi
-            
+
             # Zayns Beauty uses Vite/Tailwind
             CI=true pnpm install
             pnpm run build
