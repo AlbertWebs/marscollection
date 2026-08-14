@@ -1,6 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'Book Appointment - Zayn\'s Beauty')
+@section('title', 'Book a Makeup Session in Nairobi | Zayn\'s Beauty Studio')
+
+@section('description', 'Book a professional makeup session at Zayn\'s Beauty Studio, Nairobi. Bridal makeup, glam looks, editorial & event makeup. Easy online booking — pick your date and time.')
+
+@section('keywords', 'book makeup session Nairobi, makeup artist Nairobi, bridal makeup Nairobi, professional makeup booking, makeup appointment Nairobi, Zayn Beauty studio')
+
+@section('canonical', url('/appointments/create'))
 
 @section('content')
 <div class="bg-gray-50 min-h-screen">
@@ -8,9 +14,9 @@
     {{-- Page header --}}
     <div class="bg-white border-b border-gray-100 py-10">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
-            <p class="text-xs uppercase tracking-widest text-pink-600 font-medium mb-2">Zayn's Beauty Studio</p>
-            <h1 class="text-3xl font-bold text-gray-900">Book an Appointment</h1>
-            <p class="mt-2 text-gray-500 text-sm">Professional makeup services in Nairobi — pick a time that works for you.</p>
+            <p class="text-xs uppercase tracking-widest text-pink-600 font-medium mb-2">Zayn's Beauty Studio · Nairobi</p>
+            <h1 class="text-3xl font-bold text-gray-900">Book a Makeup Session</h1>
+            <p class="mt-2 text-gray-500 text-sm">Professional makeup services — bridal, glam, editorial &amp; events. Pick a service, choose your date, and we'll take care of the rest.</p>
         </div>
     </div>
 

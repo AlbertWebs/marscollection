@@ -43,7 +43,7 @@
                 </a>
                 <a href="{{ route('appointments.create') }}"
                    class="inline-block border border-white/60 hover:border-white text-white text-sm font-semibold tracking-wide uppercase px-8 py-4 rounded-md transition-colors duration-200 hover:bg-white/10">
-                    Book Appointment
+                    Book Makeup Session
                 </a>
             </div>
 

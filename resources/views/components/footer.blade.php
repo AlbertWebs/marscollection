@@ -99,7 +99,7 @@
                 <div>
                     <h4 class="text-white text-sm font-semibold uppercase tracking-wider mb-4">Services</h4>
                     <ul class="space-y-2.5 text-sm">
-                        <li><a href="{{ route('appointments.create') }}" class="hover:text-white transition-colors">Book Appointment</a></li>
+                        <li><a href="{{ route('appointments.create') }}" class="hover:text-white transition-colors">Book Makeup Session</a></li>
                         <li><a href="{{ route('about') }}" class="hover:text-white transition-colors">About Us</a></li>
                         <li><a href="{{ route('contact') }}" class="hover:text-white transition-colors">Contact</a></li>
                     </ul>

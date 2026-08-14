@@ -20,7 +20,7 @@
                 <a href="{{ route('products.index') }}" class="{{ request()->routeIs('products.*') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $navLinkClass }}">Products</a>
                 <a href="{{ route('categories.index') }}" class="{{ request()->routeIs('categories.*') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $navLinkClass }}">Categories</a>
                 <a href="{{ route('brands.index') }}" class="{{ request()->routeIs('brands.*') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $navLinkClass }}">Brands</a>
-                <a href="{{ route('appointments.create') }}" class="{{ request()->routeIs('appointments.*') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $navLinkClass }}">Book Appointment</a>
+                <a href="{{ route('appointments.create') }}" class="{{ request()->routeIs('appointments.*') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $navLinkClass }}">Book Makeup Session</a>
                 <a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $navLinkClass }}">About</a>
                 <a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') || request()->routeIs('contact.submit') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $navLinkClass }}">Contact</a>
             </nav>
@@ -149,7 +149,7 @@
                 <a href="{{ route('products.index') }}" class="{{ request()->routeIs('products.*') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $mobileNavLinkClass }}">Products</a>
                 <a href="{{ route('categories.index') }}" class="{{ request()->routeIs('categories.*') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $mobileNavLinkClass }}">Categories</a>
                 <a href="{{ route('brands.index') }}" class="{{ request()->routeIs('brands.*') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $mobileNavLinkClass }}">Brands</a>
-                <a href="{{ route('appointments.create') }}" class="{{ request()->routeIs('appointments.*') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $mobileNavLinkClass }}">Book Appointment</a>
+                <a href="{{ route('appointments.create') }}" class="{{ request()->routeIs('appointments.*') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $mobileNavLinkClass }}">Book Makeup Session</a>
                 <a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $mobileNavLinkClass }}">About</a>
                 <a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') || request()->routeIs('contact.submit') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $mobileNavLinkClass }}">Contact</a>
             </div>
