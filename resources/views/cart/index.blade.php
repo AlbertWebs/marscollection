@@ -30,12 +30,16 @@
                                                     <p class="text-xs text-gray-500">Bundle</p>
                                                 </div>
                                             @else
-                                                <img src="{{ \App\Helpers\ImageHelper::getProductImageUrl($item->product->image) }}"
-                                                     alt="{{ $item->product->name }}"
-                                                     class="w-16 h-16 object-cover rounded-md flex-shrink-0">
+                                                <a href="{{ route('products.show', $item->product) }}" class="flex-shrink-0">
+                                                    <img src="{{ \App\Helpers\ImageHelper::getProductImageUrl($item->product->image) }}"
+                                                         alt="{{ $item->product->name }}"
+                                                         class="w-16 h-16 object-cover rounded-md hover:opacity-90 transition-opacity">
+                                                </a>
                                                 
                                                 <div class="flex-1 min-w-0">
-                                                    <h3 class="text-sm font-semibold text-gray-900 line-clamp-2">{{ $item->product->name }}</h3>
+                                                    <a href="{{ route('products.show', $item->product) }}" class="hover:text-pink-600 transition-colors">
+                                                        <h3 class="text-sm font-semibold text-gray-900 line-clamp-2">{{ $item->product->name }}</h3>
+                                                    </a>
                                                     @if($item->product->category)
                                                         <p class="text-xs text-gray-600">{{ $item->product->category->name }}</p>
                                                     @endif
@@ -89,12 +93,16 @@
                                             <p class="text-xs text-gray-500">Bundle</p>
                                         </div>
                                     @else
-                                        <img src="{{ \App\Helpers\ImageHelper::getProductImageUrl($item->product->image) }}"
-                                             alt="{{ $item->product->name }}"
-                                             class="w-20 h-20 object-cover rounded-md">
+                                        <a href="{{ route('products.show', $item->product) }}" class="flex-shrink-0">
+                                            <img src="{{ \App\Helpers\ImageHelper::getProductImageUrl($item->product->image) }}"
+                                                 alt="{{ $item->product->name }}"
+                                                 class="w-20 h-20 object-cover rounded-md hover:opacity-90 transition-opacity">
+                                        </a>
                                         
                                         <div class="ml-4 flex-1">
-                                            <h3 class="text-base font-semibold text-gray-900">{{ $item->product->name }}</h3>
+                                            <a href="{{ route('products.show', $item->product) }}" class="hover:text-pink-600 transition-colors">
+                                                <h3 class="text-base font-semibold text-gray-900">{{ $item->product->name }}</h3>
+                                            </a>
                                             @if($item->product->category)
                                                 <p class="text-sm text-gray-600">{{ $item->product->category->name }}</p>
                                             @endif
