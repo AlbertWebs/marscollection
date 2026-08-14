@@ -148,15 +148,6 @@
         @include('components.banner')
         @include('components.header')
 
-        <!-- Breadcrumbs -->
-        @if(View::hasSection('breadcrumbs'))
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
-                <nav class="breadcrumb" aria-label="Breadcrumb">
-                    @yield('breadcrumbs')
-                </nav>
-            </div>
-        @endif
-
         <!-- Page Content -->
         <main>
             @yield('content')
