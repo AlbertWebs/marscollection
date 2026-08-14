@@ -8,11 +8,11 @@
                      class="absolute inset-0 w-full h-full object-cover opacity-40">
                 <div class="relative z-10 p-8">
                     <p class="text-pink-300 text-xs uppercase tracking-widest font-medium mb-3">Professional Services</p>
-                    <h2 class="text-2xl font-bold mb-3">Professional Makeup Sessions</h2>
-                    <p class="text-gray-300 text-sm mb-6 max-w-xs">From bridal glam to editorial looks, book a session with our makeup artists in Nairobi.</p>
+                    <h2 class="text-2xl font-bold mb-3">Salon & Beauty Services</h2>
+                    <p class="text-gray-300 text-sm mb-6 max-w-xs">From facials to full glam, book a session with our certified beauty experts in Nairobi.</p>
                     <a href="{{ route('appointments.create') }}"
                        class="inline-block bg-white text-gray-900 text-sm font-semibold px-6 py-3 rounded-md hover:bg-pink-50 transition-colors">
-                        Book Makeup Session
+                        Book Appointment
                     </a>
                 </div>
             </div>

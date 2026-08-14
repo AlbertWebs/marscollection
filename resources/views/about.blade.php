@@ -13,7 +13,7 @@
                         A beauty store built around what people actually want to buy and use.
                     </h1>
                     <p class="mt-6 max-w-2xl text-base leading-7 text-stone-600 sm:text-lg">
-                        Zayn's Beauty brings together beauty products, professional makeup services, and practical guidance in one place.
+                        Zayn's Beauty brings together beauty products, salon services, and practical guidance in one place.
                         The aim is simple: make it easier to shop well, book well, and come back because the experience is clear and reliable.
                     </p>
                 </div>
@@ -21,7 +21,7 @@
                     <dl class="space-y-5">
                         <div>
                             <dt class="text-xs font-semibold uppercase tracking-[0.24em] text-stone-500">Focus</dt>
-                            <dd class="mt-1 text-lg text-stone-900">Beauty retail and makeup services</dd>
+                            <dd class="mt-1 text-lg text-stone-900">Beauty retail and services</dd>
                         </div>
                         <div>
                             <dt class="text-xs font-semibold uppercase tracking-[0.24em] text-stone-500">Based In</dt>
@@ -49,7 +49,7 @@
                     That means keeping the product mix focused, making service booking straightforward, and speaking in a way that feels clear instead of inflated.
                 </p>
                 <p>
-                    We sell products people come back for, not just products that photograph well. We also treat makeup appointments and beauty services as part of the same customer experience, not as a separate business bolted on at the side.
+                    We sell products people come back for, not just products that photograph well. We also treat salon and appointment services as part of the same customer experience, not as a separate business bolted on at the side.
                 </p>
                 <p>
                     The result is a store that aims to feel edited, practical, and easy to trust.

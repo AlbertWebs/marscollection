@@ -1,7 +1,7 @@
 @php
     $heroEnabled = \App\Models\Setting::get('hero_enabled', '1');
     $heroTitle = \App\Models\Setting::get('hero_title', 'Beauty, Curated For You');
-    $heroSubtitle = \App\Models\Setting::get('hero_subtitle', 'Skincare, makeup & beauty sessions, all in one place. Real products, real results.');
+    $heroSubtitle = \App\Models\Setting::get('hero_subtitle', 'Skincare, makeup & salon services, all in one place. Real products, real results.');
     $heroImage = \App\Models\Setting::get('hero_image', 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=1600&q=85');
     $heroStatsCustomers = \App\Models\Setting::get('hero_stats_customers', '500+');
     $heroStatsProducts = \App\Models\Setting::get('hero_stats_products', '100+');
