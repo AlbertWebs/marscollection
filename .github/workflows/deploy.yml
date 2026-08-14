@@ -7,12 +7,30 @@ on:
 
 jobs:
   deploy:
-    name: SSH Deploy
+    name: Build & Deploy
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
     steps:
-      - name: Deploy to zaynsbeauty.co.ke
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: Build frontend assets (Vite / Tailwind)
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm run build
+
+      - name: Deploy app & pull code on server
         uses: appleboy/ssh-action@v1.0.3
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
@@ -26,12 +44,10 @@ jobs:
 
             cd /var/www/zaynsbeauty.co.ke
 
-            echo "── git pull (Laravel)"
-            # Temporarily use token-authenticated URL so git fetch works without prompting
+            echo "── git pull"
             git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/kimutaiRop/zeynsbeauty.git"
             git fetch origin
             git reset --hard origin/main
-            # Restore plain HTTPS URL (no credentials stored)
             git remote set-url origin "https://github.com/kimutaiRop/zeynsbeauty.git"
 
             echo "── composer install"
@@ -40,16 +56,25 @@ jobs:
             echo "── migrate"
             php artisan migrate --force
 
-            echo "── pnpm build"
-            # Load NVM if it exists
-            if [ -s "$HOME/.nvm/nvm.sh" ]; then
-              . "$HOME/.nvm/nvm.sh"
-            fi
+      - name: Copy built assets to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "public/build"
+          target: "/var/www/zaynsbeauty.co.ke/public"
+          strip_components: 1
 
-            # Zayns Beauty uses Vite/Tailwind
-            CI=true pnpm install
-            pnpm run build
-
+      - name: Finalize cache & reload PHP
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            set -e
+            cd /var/www/zaynsbeauty.co.ke
             echo "── optimize"
             php artisan optimize:clear
             php artisan view:clear
