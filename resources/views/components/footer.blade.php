@@ -17,7 +17,7 @@
                     <img src="{{ asset('logo.svg') }}" alt="Zayn's Beauty" class="h-9 w-auto brightness-0 invert">
                 </a>
                 <p class="mt-3 text-sm leading-relaxed text-gray-500 max-w-xs">
-                    Premium beauty products and salon services, based in Nairobi, serving all of Kenya.
+                    Premium beauty products and professional makeup services, based in Nairobi, serving all of Kenya.
                 </p>
 
                 <!-- Contact details -->
