@@ -35,6 +35,10 @@
                                                      class="w-16 h-16 object-cover rounded-md flex-shrink-0">
                                                 
                                                 <div class="flex-1 min-w-0">
+                                                    <h3 class="text-sm font-semibold text-gray-900 line-clamp-2">{{ $item->product->name }}</h3>
+                                                    @if($item->product->category)
+                                                        <p class="text-xs text-gray-600">{{ $item->product->category->name }}</p>
+                                                    @endif
                                                     <p class="text-sm font-bold text-pink-600">{{ $item->product->formatted_price }}</p>
                                                     @if($item->selected_color)
                                                         <p class="text-[10px] mt-0.5 font-medium text-pink-600">Color: {{ $item->selected_color }}</p>
@@ -90,7 +94,10 @@
                                              class="w-20 h-20 object-cover rounded-md">
                                         
                                         <div class="ml-4 flex-1">
-                                            <p class="text-sm text-gray-600">{{ $item->product->category->name }}</p>
+                                            <h3 class="text-base font-semibold text-gray-900">{{ $item->product->name }}</h3>
+                                            @if($item->product->category)
+                                                <p class="text-sm text-gray-600">{{ $item->product->category->name }}</p>
+                                            @endif
                                             <p class="text-lg font-bold text-pink-600">{{ $item->product->formatted_price }}</p>
                                             @if($item->selected_color)
                                                 <p class="text-xs mt-1 font-medium text-pink-600">Color: {{ $item->selected_color }}</p>
