@@ -288,22 +288,56 @@
                     @endif
                 </div>
 
-                <!-- Add to Cart Button -->
+                <!-- Action Buttons (Add to Cart & WhatsApp Inquiry) -->
+                @php
+                    $rawPhone = \App\Models\Setting::get('contact_phone_primary', '254707614446');
+                    $cleanPhone = preg_replace('/\D/', '', $rawPhone);
+                    $inquiryMsg = "Hi, I would like to inquire about: " . $product->name . " (" . $product->formatted_price . ") - " . route('products.show', $product);
+                    $waUrl = "https://wa.me/" . $cleanPhone . "?text=" . urlencode($inquiryMsg);
+                @endphp
+
                 <div class="space-y-4">
                     @if($product->stock_quantity > 0)
-                        <button onclick="handleAddWithColor({{ $product->id }})" 
-                                class="w-full bg-pink-600 text-white py-4 px-6 rounded-md font-semibold hover:bg-pink-700 transition-all duration-300 flex items-center justify-center space-x-2 shadow-lg hover:shadow-pink-200"
-                                aria-label="Add {{ $product->name }} to cart">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                            </svg>
-                            <span>Add to Cart</span>
-                        </button>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <button onclick="handleAddWithColor({{ $product->id }})" 
+                                    class="w-full bg-pink-600 text-white py-3.5 px-5 rounded-lg font-semibold hover:bg-pink-700 active:scale-[0.98] transition-all duration-200 flex items-center justify-center space-x-2 shadow-md hover:shadow-pink-200"
+                                    aria-label="Add {{ $product->name }} to cart">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                </svg>
+                                <span>Add to Cart</span>
+                            </button>
+
+                            <a href="{{ $waUrl }}" 
+                               target="_blank" 
+                               rel="noopener noreferrer" 
+                               class="w-full bg-emerald-600 text-white py-3.5 px-5 rounded-lg font-semibold hover:bg-emerald-700 active:scale-[0.98] transition-all duration-200 flex items-center justify-center space-x-2 shadow-md hover:shadow-emerald-200"
+                               aria-label="Inquire about {{ $product->name }} on WhatsApp">
+                                <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.698c.97.54 1.891.83 2.796.83h.005c3.181 0 5.767-2.586 5.767-5.766.001-3.181-2.585-5.767-5.767-5.767zm0-2.172c4.379 0 7.938 3.559 7.938 7.938 0 4.379-3.559 7.938-7.938 7.938a7.89 7.89 0 01-3.791-.971l-5.24 1.371 1.395-5.105a7.92 7.92 0 01-1.202-4.233c0-4.379 3.559-7.938 7.938-7.938z"/>
+                                    <path d="M15.42 14.333c-.198-.099-1.171-.577-1.353-.643-.182-.066-.314-.099-.446.099-.132.198-.512.643-.628.775-.116.132-.231.148-.429.05-.198-.099-.838-.309-1.596-.985-.59-.526-.988-1.176-1.104-1.374-.116-.198-.012-.305.087-.403.089-.089.198-.231.297-.347.099-.116.132-.198.198-.33.066-.132.033-.248-.017-.347-.05-.099-.446-1.074-.611-1.47-.161-.387-.325-.334-.446-.34l-.38-.007c-.132 0-.347.05-.528.248-.182.198-.694.677-.694 1.651 0 .974.71 1.916.81 2.048.099.132 1.396 2.131 3.382 2.986 1.986.855 1.986.57 2.349.537.363-.033 1.171-.479 1.336-.941.165-.462.165-.858.116-.941-.05-.083-.182-.132-.38-.231z"/>
+                                </svg>
+                                <span>Inquire</span>
+                            </a>
+                        </div>
                     @else
-                        <button disabled 
-                                class="w-full bg-gray-300 text-gray-500 py-4 px-6 rounded-md font-semibold cursor-not-allowed">
-                            Out of Stock
-                        </button>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <button disabled 
+                                    class="w-full bg-gray-300 text-gray-500 py-3.5 px-5 rounded-lg font-semibold cursor-not-allowed">
+                                Out of Stock
+                            </button>
+                            <a href="{{ $waUrl }}" 
+                               target="_blank" 
+                               rel="noopener noreferrer" 
+                               class="w-full bg-emerald-600 text-white py-3.5 px-5 rounded-lg font-semibold hover:bg-emerald-700 active:scale-[0.98] transition-all duration-200 flex items-center justify-center space-x-2 shadow-md hover:shadow-emerald-200"
+                               aria-label="Inquire about restock on WhatsApp">
+                                <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.698c.97.54 1.891.83 2.796.83h.005c3.181 0 5.767-2.586 5.767-5.766.001-3.181-2.585-5.767-5.767-5.767zm0-2.172c4.379 0 7.938 3.559 7.938 7.938 0 4.379-3.559 7.938-7.938 7.938a7.89 7.89 0 01-3.791-.971l-5.24 1.371 1.395-5.105a7.92 7.92 0 01-1.202-4.233c0-4.379 3.559-7.938 7.938-7.938z"/>
+                                    <path d="M15.42 14.333c-.198-.099-1.171-.577-1.353-.643-.182-.066-.314-.099-.446.099-.132.198-.512.643-.628.775-.116.132-.231.148-.429.05-.198-.099-.838-.309-1.596-.985-.59-.526-.988-1.176-1.104-1.374-.116-.198-.012-.305.087-.403.089-.089.198-.231.297-.347.099-.116.132-.198.198-.33.066-.132.033-.248-.017-.347-.05-.099-.446-1.074-.611-1.47-.161-.387-.325-.334-.446-.34l-.38-.007c-.132 0-.347.05-.528.248-.182.198-.694.677-.694 1.651 0 .974.71 1.916.81 2.048.099.132 1.396 2.131 3.382 2.986 1.986.855 1.986.57 2.349.537.363-.033 1.171-.479 1.336-.941.165-.462.165-.858.116-.941-.05-.083-.182-.132-.38-.231z"/>
+                                </svg>
+                                <span>Inquire Restock</span>
+                            </a>
+                        </div>
                     @endif
                 </div>
             </div>

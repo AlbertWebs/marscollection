@@ -165,8 +165,11 @@
         @include('components.footer')
     </div>
 
+    <!-- WhatsApp Floating Inquiry Chat -->
+    @include('components.whatsapp-floating')
+
     <!-- Toast Container -->
-    <div id="toast-container" class="fixed bottom-4 right-4 z-50 space-y-2 max-w-sm"></div>
+    <div id="toast-container" class="fixed bottom-4 left-4 z-50 space-y-2 max-w-sm"></div>
 
     <!-- Structured Data for Current Page -->
     @yield('structured_data')
