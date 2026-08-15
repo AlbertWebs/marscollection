@@ -187,6 +187,24 @@
                 @enderror
             </div>
 
+            <!-- Extra Images Upload -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Extra Images <span class="text-gray-400 font-normal">(optional, up to 8)</span></label>
+                <div class="mt-1">
+                    <input type="file" id="extra_images" name="extra_images[]" accept="image/*" multiple
+                           class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100 @error('extra_images') border-red-500 @enderror">
+                </div>
+                <!-- Preview -->
+                <div id="extra-images-preview" class="mt-3 flex flex-wrap gap-2"></div>
+                <p class="mt-1 text-sm text-gray-500">Select multiple images. These will appear as a thumbnail gallery on the product page.</p>
+                @error('extra_images')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+                @error('extra_images.*')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
             <!-- Description -->
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
@@ -282,5 +300,23 @@
     // Expose remove globally so inline onclick works
     window.removeColor_create = removeColor;
 })();
+</script>
+
+<script>
+// Extra images preview
+document.getElementById('extra_images').addEventListener('change', function () {
+    const preview = document.getElementById('extra-images-preview');
+    preview.innerHTML = '';
+    Array.from(this.files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = e => {
+            const div = document.createElement('div');
+            div.className = 'relative w-20 h-20 rounded-md overflow-hidden border border-gray-200';
+            div.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover">`;
+            preview.appendChild(div);
+        };
+        reader.readAsDataURL(file);
+    });
+});
 </script>
 @endsection

@@ -145,9 +145,15 @@
             <!-- Product Image -->
             <div class="space-y-4">
                 @if($product->image)
-                @php $productImgUrl = \App\Helpers\ImageHelper::getProductImageUrl($product->image); @endphp
+                @php
+                    $productImgUrl = \App\Helpers\ImageHelper::getProductImageUrl($product->image);
+                    $allImages = array_merge(
+                        [$product->image],
+                        $product->extra_images ?? []
+                    );
+                @endphp
                 <div class="relative">
-                    <!-- Image container -->
+                    <!-- Main image container -->
                     <div id="zoom-container"
                          class="bg-gray-50 rounded-md overflow-hidden flex items-center justify-center cursor-zoom-in select-none"
                          style="height: 380px; position: relative;">
@@ -172,6 +178,25 @@
                         Click to zoom
                     </div>
                 </div>
+
+                @if(count($allImages) > 1)
+                <!-- Thumbnail strip -->
+                <div class="flex gap-2 overflow-x-auto pb-1">
+                    @foreach($allImages as $i => $imgPath)
+                    @php $thumbUrl = \App\Helpers\ImageHelper::getProductImageUrl($imgPath); @endphp
+                    <button type="button"
+                            onclick="switchMainImage('{{ $thumbUrl }}', this)"
+                            class="thumb-btn flex-shrink-0 w-16 h-16 rounded-md overflow-hidden border-2 transition-all duration-150 focus:outline-none {{ $i === 0 ? 'border-pink-500' : 'border-gray-200 hover:border-pink-300' }}"
+                            aria-label="View image {{ $i + 1 }}">
+                        <img src="{{ $thumbUrl }}"
+                             alt="{{ $product->name }} image {{ $i + 1 }}"
+                             class="w-full h-full object-cover"
+                             loading="lazy">
+                    </button>
+                    @endforeach
+                </div>
+                @endif
+
                 @else
                 <div class="bg-gray-50 rounded-md overflow-hidden flex items-center justify-center" style="height: 380px;">
                     <div class="flex items-center justify-center">
@@ -636,6 +661,31 @@ function handleAddWithColor(productId) {
     }
     
     addToCart(productId, 1, color);
+}
+
+// ---------- Extra image thumbnail switcher ----------
+function switchMainImage(url, thumbBtn) {
+    const mainImg = document.getElementById('zoom-img');
+    const panel   = document.getElementById('zoom-panel');
+    const lbImg   = document.getElementById('lightbox-img');
+
+    if (mainImg) {
+        mainImg.src = url;
+        // Update zoom panel background source
+        if (panel) {
+            panel.style.backgroundImage = `url('${url}')`;
+        }
+        // Keep lightbox in sync
+        if (lbImg) lbImg.src = url;
+    }
+
+    // Update active thumbnail border
+    document.querySelectorAll('.thumb-btn').forEach(btn => {
+        btn.classList.remove('border-pink-500');
+        btn.classList.add('border-gray-200');
+    });
+    thumbBtn.classList.remove('border-gray-200');
+    thumbBtn.classList.add('border-pink-500');
 }
 </script>
 @endsection

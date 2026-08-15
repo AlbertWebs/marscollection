@@ -203,6 +203,46 @@
                 @enderror
             </div>
 
+            <!-- Extra Images -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Extra Images <span class="text-gray-400 font-normal">(up to 8 total)</span></label>
+
+                @if($product->extra_images && count($product->extra_images) > 0)
+                    <p class="text-sm text-gray-600 mt-2 mb-2">Existing extra images:</p>
+                    <div class="flex flex-wrap gap-3 mb-4">
+                        @foreach($product->extra_images as $extraImg)
+                        <div class="relative group w-24 h-24">
+                            <img src="{{ \App\Helpers\ImageHelper::getProductImageUrl($extraImg) }}"
+                                 alt="Extra image"
+                                 class="w-24 h-24 object-cover rounded-md border border-gray-200">
+                            <label class="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 rounded-md cursor-pointer transition-opacity">
+                                <input type="checkbox" name="delete_extra_images[]" value="{{ $extraImg }}"
+                                       class="delete-extra-checkbox sr-only" onchange="toggleDeleteOverlay(this)">
+                                <span class="delete-overlay-text text-white text-xs font-semibold px-2 text-center">Click to delete</span>
+                            </label>
+                            <div class="deleted-badge hidden absolute inset-0 flex items-center justify-center bg-red-600/70 rounded-md pointer-events-none">
+                                <span class="text-white text-xs font-bold">Will delete</span>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                    <p class="text-xs text-gray-400 mb-3">Hover over an image and click to mark it for deletion. Changes apply on save.</p>
+                @endif
+
+                <div class="mt-1">
+                    <input type="file" id="extra_images" name="extra_images[]" accept="image/*" multiple
+                           class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100">
+                </div>
+                <div id="extra-images-preview" class="mt-3 flex flex-wrap gap-2"></div>
+                <p class="mt-1 text-sm text-gray-500">Select images to add. Existing images not marked for deletion will be kept.</p>
+                @error('extra_images')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+                @error('extra_images.*')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
             <!-- Description -->
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
@@ -301,5 +341,39 @@
 
     window.removeColor_edit = removeColor;
 })();
+</script>
+
+<script>
+// Extra images new file preview
+document.getElementById('extra_images').addEventListener('change', function () {
+    const preview = document.getElementById('extra-images-preview');
+    preview.innerHTML = '';
+    Array.from(this.files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = e => {
+            const div = document.createElement('div');
+            div.className = 'relative w-20 h-20 rounded-md overflow-hidden border border-gray-200';
+            div.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover">`;
+            preview.appendChild(div);
+        };
+        reader.readAsDataURL(file);
+    });
+});
+
+// Toggle delete overlay on existing extra images
+function toggleDeleteOverlay(checkbox) {
+    const wrapper = checkbox.closest('.relative.group');
+    const badge = wrapper.querySelector('.deleted-badge');
+    const labelText = wrapper.querySelector('.delete-overlay-text');
+    if (checkbox.checked) {
+        badge.classList.remove('hidden');
+        labelText.textContent = 'Marked for deletion';
+        wrapper.querySelector('img').classList.add('opacity-40');
+    } else {
+        badge.classList.add('hidden');
+        labelText.textContent = 'Click to delete';
+        wrapper.querySelector('img').classList.remove('opacity-40');
+    }
+}
 </script>
 @endsection

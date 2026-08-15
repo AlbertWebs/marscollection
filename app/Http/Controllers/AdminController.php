@@ -118,11 +118,14 @@ class AdminController extends Controller
             'is_trending'    => 'boolean',
             'image'          => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'colors'         => 'nullable|string',
+            'extra_images'   => 'nullable|array|max:8',
+            'extra_images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
         $validated['is_active'] = $request->boolean('is_active');
         $validated['is_featured'] = $request->boolean('is_featured');
         $validated['is_trending'] = $request->boolean('is_trending');
         unset($validated['image']); // never trust validated image — only set from actual file upload
+        unset($validated['extra_images']); // handle separately below
 
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('products', 's3');
@@ -130,6 +133,15 @@ class AdminController extends Controller
 
         if ($request->filled('colors')) {
             $validated['colors'] = array_map('trim', explode(',', $request->colors));
+        }
+
+        // Handle extra images upload
+        if ($request->hasFile('extra_images')) {
+            $extraPaths = [];
+            foreach ($request->file('extra_images') as $file) {
+                $extraPaths[] = $file->store('products', 's3');
+            }
+            $validated['extra_images'] = $extraPaths;
         }
 
         Product::create($validated);
@@ -162,12 +174,16 @@ class AdminController extends Controller
             'is_trending'    => 'boolean',
             'image'          => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'colors'         => 'nullable|string',
+            'extra_images'   => 'nullable|array|max:8',
+            'extra_images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'delete_extra_images' => 'nullable|array',
+            'delete_extra_images.*' => 'string',
         ]);
         $validated['is_active'] = $request->boolean('is_active');
         $validated['is_featured'] = $request->boolean('is_featured');
         $validated['is_trending'] = $request->boolean('is_trending');
 
-        // Handle image upload
+        // Handle main image upload
         if ($request->hasFile('image')) {
             // Delete old image from S3 if it exists and is a path (not external URL)
             if ($product->image && !str_starts_with($product->image, 'http')) {
@@ -183,6 +199,29 @@ class AdminController extends Controller
         } else {
             $validated['colors'] = null;
         }
+
+        // Handle extra images: delete removed ones, keep existing, append new uploads
+        $existingExtras = $product->extra_images ?? [];
+
+        // Delete individually removed extra images
+        if ($request->has('delete_extra_images')) {
+            foreach ($request->delete_extra_images as $path) {
+                if (!str_starts_with($path, 'http')) {
+                    \Storage::disk('s3')->delete($path);
+                }
+                $existingExtras = array_values(array_filter($existingExtras, fn($e) => $e !== $path));
+            }
+        }
+
+        // Upload new extra images and append
+        if ($request->hasFile('extra_images')) {
+            foreach ($request->file('extra_images') as $file) {
+                $existingExtras[] = $file->store('products', 's3');
+            }
+        }
+
+        $validated['extra_images'] = !empty($existingExtras) ? array_values($existingExtras) : null;
+        unset($validated['delete_extra_images']);
 
         $product->update($validated);
 
