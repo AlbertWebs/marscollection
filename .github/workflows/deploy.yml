@@ -53,6 +53,7 @@ jobs:
             echo "── update .env secrets"
             sed -i "s|^GEMINI_API_KEY=.*|GEMINI_API_KEY=${GEMINI_API_KEY}|" .env
             sed -i "s|^DB_PASSWORD=.*|DB_PASSWORD=${DB_PASSWORD}|" .env
+            sed -i 's|^CACHE_STORE=.*|CACHE_STORE=redis|' .env
 
             echo "── composer install"
             composer install --no-dev --optimize-autoloader --no-interaction
