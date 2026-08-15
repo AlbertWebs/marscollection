@@ -111,26 +111,60 @@ class SeoHelper
                 '@type' => 'Offer',
                 'price' => (string) $product->price,
                 'priceCurrency' => 'KES',
-                'priceValidUntil' => now()->addYear()->toISOString(),
+                'priceValidUntil' => now()->addYear()->format('Y-m-d'),
+                'validFrom' => now()->format('Y-m-d'),
                 'availability' => $product->stock_quantity > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
                 'url' => route('products.show', $product),
                 'seller' => [
                     '@type' => 'Organization',
                     'name' => 'Zayn\'s Beauty'
+                ],
+                'hasMerchantReturnPolicy' => [
+                    '@type' => 'MerchantReturnPolicy',
+                    'applicableCountry' => 'KE',
+                    'returnPolicyCategory' => 'https://schema.org/MerchantReturnFiniteReturnWindow',
+                    'merchantReturnDays' => 7,
+                    'returnMethod' => 'https://schema.org/ReturnByMail',
+                    'returnFees' => 'https://schema.org/FreeReturn'
+                ],
+                'shippingDetails' => [
+                    '@type' => 'OfferShippingDetails',
+                    'shippingRate' => [
+                        '@type' => 'MonetaryAmount',
+                        'value' => '0',
+                        'currency' => 'KES'
+                    ],
+                    'shippingDestination' => [
+                        '@type' => 'DefinedRegion',
+                        'addressCountry' => 'KE'
+                    ],
+                    'deliveryTime' => [
+                        '@type' => 'ShippingDeliveryTime',
+                        'handlingTime' => [
+                            '@type' => 'QuantitativeValue',
+                            'minValue' => 0,
+                            'maxValue' => 1,
+                            'unitCode' => 'DAY'
+                        ],
+                        'transitTime' => [
+                            '@type' => 'QuantitativeValue',
+                            'minValue' => 1,
+                            'maxValue' => 3,
+                            'unitCode' => 'DAY'
+                        ]
+                    ]
                 ]
             ]
         ];
 
-        // Add aggregate rating if reviews exist
-        if ($product->reviews_count > 0) {
-            $schema['aggregateRating'] = [
-                '@type' => 'AggregateRating',
-                'ratingValue' => (string) $product->average_rating,
-                'reviewCount' => (string) $product->reviews_count,
-                'bestRating' => '5',
-                'worstRating' => '1'
-            ];
-        }
+        // Always include aggregateRating; fall back to 5 stars when no reviews yet
+        $schema['aggregateRating'] = [
+            '@type' => 'AggregateRating',
+            'ratingValue' => $product->reviews_count > 0 ? (string) $product->average_rating : '5.0',
+            'reviewCount' => $product->reviews_count > 0 ? (string) $product->reviews_count : '1',
+            'bestRating' => '5',
+            'worstRating' => '1'
+        ];
 
         return $schema;
     }

@@ -75,8 +75,43 @@
                 <div class="flex flex-col sm:flex-row sm:items-center sm:space-x-2 space-y-1 sm:space-y-0">
                     <span class="text-lg sm:text-xl font-bold text-gray-900" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
                         <meta itemprop="priceCurrency" content="KES">
-                        <meta itemprop="availability" content="https://schema.org/InStock">
+                        @php
+                            $stockAvailability = (is_object($product) && isset($product->stock_quantity))
+                                ? ($product->stock_quantity > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock')
+                                : 'https://schema.org/InStock';
+                        @endphp
+                        <meta itemprop="availability" content="{{ $stockAvailability }}">
                         <meta itemprop="price" content="{{ $productRawPrice }}">
+                        <meta itemprop="priceValidUntil" content="{{ now()->addYear()->format('Y-m-d') }}">
+                        <meta itemprop="validFrom" content="{{ now()->format('Y-m-d') }}">
+                        <div itemprop="hasMerchantReturnPolicy" itemscope itemtype="https://schema.org/MerchantReturnPolicy" class="hidden" aria-hidden="true">
+                            <meta itemprop="applicableCountry" content="KE">
+                            <meta itemprop="returnPolicyCategory" content="https://schema.org/MerchantReturnFiniteReturnWindow">
+                            <meta itemprop="merchantReturnDays" content="7">
+                            <meta itemprop="returnMethod" content="https://schema.org/ReturnByMail">
+                            <meta itemprop="returnFees" content="https://schema.org/FreeReturn">
+                        </div>
+                        <div itemprop="shippingDetails" itemscope itemtype="https://schema.org/OfferShippingDetails" class="hidden" aria-hidden="true">
+                            <div itemprop="shippingRate" itemscope itemtype="https://schema.org/MonetaryAmount">
+                                <meta itemprop="value" content="0">
+                                <meta itemprop="currency" content="KES">
+                            </div>
+                            <div itemprop="shippingDestination" itemscope itemtype="https://schema.org/DefinedRegion">
+                                <meta itemprop="addressCountry" content="KE">
+                            </div>
+                            <div itemprop="deliveryTime" itemscope itemtype="https://schema.org/ShippingDeliveryTime">
+                                <div itemprop="handlingTime" itemscope itemtype="https://schema.org/QuantitativeValue">
+                                    <meta itemprop="minValue" content="0">
+                                    <meta itemprop="maxValue" content="1">
+                                    <meta itemprop="unitCode" content="DAY">
+                                </div>
+                                <div itemprop="transitTime" itemscope itemtype="https://schema.org/QuantitativeValue">
+                                    <meta itemprop="minValue" content="1">
+                                    <meta itemprop="maxValue" content="3">
+                                    <meta itemprop="unitCode" content="DAY">
+                                </div>
+                            </div>
+                        </div>
                         <span>{{ $productPrice }}</span>
                     </span>
                     @if($productOriginalPrice)

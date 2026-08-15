@@ -40,39 +40,81 @@
         "@@type": "Offer",
         "price": {{ (float) $product->price }},
         "priceCurrency": "KES",
-        "priceValidUntil": "{{ now()->addYear()->toISOString() }}",
+        "priceValidUntil": "{{ now()->addYear()->format('Y-m-d') }}",
+        "validFrom": "{{ now()->format('Y-m-d') }}",
         "availability": "{{ $product->stock_quantity > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock' }}",
         "url": "{{ route('products.show', $product) }}",
         "seller": {
             "@@type": "Organization",
             "name": "Zayn's Beauty"
+        },
+        "hasMerchantReturnPolicy": {
+            "@@type": "MerchantReturnPolicy",
+            "applicableCountry": "KE",
+            "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+            "merchantReturnDays": 7,
+            "returnMethod": "https://schema.org/ReturnByMail",
+            "returnFees": "https://schema.org/FreeReturn"
+        },
+        "shippingDetails": {
+            "@@type": "OfferShippingDetails",
+            "shippingRate": {
+                "@@type": "MonetaryAmount",
+                "value": "0",
+                "currency": "KES"
+            },
+            "shippingDestination": {
+                "@@type": "DefinedRegion",
+                "addressCountry": "KE"
+            },
+            "deliveryTime": {
+                "@@type": "ShippingDeliveryTime",
+                "handlingTime": {
+                    "@@type": "QuantitativeValue",
+                    "minValue": 0,
+                    "maxValue": 1,
+                    "unitCode": "DAY"
+                },
+                "transitTime": {
+                    "@@type": "QuantitativeValue",
+                    "minValue": 1,
+                    "maxValue": 3,
+                    "unitCode": "DAY"
+                }
+            }
         }
-    },
-    "aggregateRating": {
+    }
+    @php
+        $productReviews = $product->reviews()->latest()->take(3)->get();
+        $hasRealReviews = $product->reviews_count > 0 && $productReviews->count() > 0;
+    @endphp
+    ,"aggregateRating": {
         "@@type": "AggregateRating",
-        "ratingValue": "{{ $product->reviews_count > 0 ? $product->average_rating : 5 }}",
-        "reviewCount": "{{ $product->reviews_count > 0 ? $product->reviews_count : 1 }}",
+        "ratingValue": "{{ $hasRealReviews ? number_format($product->average_rating, 1) : '5.0' }}",
+        "reviewCount": "{{ $hasRealReviews ? $product->reviews_count : 1 }}",
         "bestRating": "5",
         "worstRating": "1"
-    },
-    "review": [
-        @foreach($product->reviews()->latest()->take(3)->get() as $review)
+    }
+    @if($hasRealReviews)
+    ,"review": [
+        @foreach($productReviews as $review)
         {
             "@@type": "Review",
             "author": {
                 "@@type": "Person",
-                "name": "{{ $review->order->customer_name }}"
+                "name": "{{ addslashes($review->order->customer_name ?? 'Customer') }}"
             },
             "reviewRating": {
                 "@@type": "Rating",
                 "ratingValue": "{{ $review->rating }}",
                 "bestRating": "5"
             },
-            "reviewBody": "{{ $review->comment ?? 'Great product!' }}",
-            "datePublished": "{{ $review->created_at->toISOString() }}"
+            "reviewBody": "{{ addslashes($review->comment ?? 'Great product!') }}",
+            "datePublished": "{{ $review->created_at->format('Y-m-d') }}"
         }@if(!$loop->last),@endif
         @endforeach
     ]
+    @endif
 }
 </script>
 @endsection

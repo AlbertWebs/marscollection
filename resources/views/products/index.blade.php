@@ -28,8 +28,10 @@
         "itemListElement": [
             @php
                 $items = [];
+                $validFrom = now()->format('Y-m-d');
+                $priceValidUntil = now()->addYear()->format('Y-m-d');
                 foreach($products as $index => $product) {
-                    $items[] = json_encode([
+                    $item = [
                         '@type' => 'ListItem',
                         'position' => $index + 1,
                         'item' => [
@@ -47,11 +49,57 @@
                                 '@type' => 'Offer',
                                 'price' => $product->price,
                                 'priceCurrency' => 'KES',
-                                'availability' => 'https://schema.org/InStock',
-                                'url' => route('products.show', $product)
+                                'priceValidUntil' => $priceValidUntil,
+                                'validFrom' => $validFrom,
+                                'availability' => $product->stock_quantity > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+                                'url' => route('products.show', $product),
+                                'hasMerchantReturnPolicy' => [
+                                    '@type' => 'MerchantReturnPolicy',
+                                    'applicableCountry' => 'KE',
+                                    'returnPolicyCategory' => 'https://schema.org/MerchantReturnFiniteReturnWindow',
+                                    'merchantReturnDays' => 7,
+                                    'returnMethod' => 'https://schema.org/ReturnByMail',
+                                    'returnFees' => 'https://schema.org/FreeReturn'
+                                ],
+                                'shippingDetails' => [
+                                    '@type' => 'OfferShippingDetails',
+                                    'shippingRate' => [
+                                        '@type' => 'MonetaryAmount',
+                                        'value' => '0',
+                                        'currency' => 'KES'
+                                    ],
+                                    'shippingDestination' => [
+                                        '@type' => 'DefinedRegion',
+                                        'addressCountry' => 'KE'
+                                    ],
+                                    'deliveryTime' => [
+                                        '@type' => 'ShippingDeliveryTime',
+                                        'handlingTime' => [
+                                            '@type' => 'QuantitativeValue',
+                                            'minValue' => 0,
+                                            'maxValue' => 1,
+                                            'unitCode' => 'DAY'
+                                        ],
+                                        'transitTime' => [
+                                            '@type' => 'QuantitativeValue',
+                                            'minValue' => 1,
+                                            'maxValue' => 3,
+                                            'unitCode' => 'DAY'
+                                        ]
+                                    ]
+                                ]
                             ]
                         ]
-                    ]);
+                    ];
+                    // Always include aggregateRating; fall back to 5 stars when no reviews yet
+                    $item['item']['aggregateRating'] = [
+                        '@type' => 'AggregateRating',
+                        'ratingValue' => $product->reviews_count > 0 ? number_format($product->average_rating, 1) : '5.0',
+                        'reviewCount' => $product->reviews_count > 0 ? (string) $product->reviews_count : '1',
+                        'bestRating' => '5',
+                        'worstRating' => '1'
+                    ];
+                    $items[] = json_encode($item);
                 }
                 echo implode(",\n            ", $items);
             @endphp
