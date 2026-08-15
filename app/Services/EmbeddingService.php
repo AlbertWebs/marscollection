@@ -143,7 +143,7 @@ class EmbeddingService
      * @param array $viewedProductIds  Most recent first (index 0 = latest)
      * @param int   $limit
      */
-    public function getPickedForYou(array $viewedProductIds, int $limit = 10): \Illuminate\Support\Collection
+    public function getPickedForYou(array $viewedProductIds, int $limit = 10, array $additionalExcludeIds = []): \Illuminate\Support\Collection
     {
         if (empty($viewedProductIds)) return collect();
 
@@ -182,6 +182,6 @@ class EmbeddingService
             }
         }
 
-        return $this->findSimilar($avgVec, $limit, $viewedProductIds);
+        return $this->findSimilar($avgVec, $limit, array_merge($viewedProductIds, $additionalExcludeIds));
     }
 }

@@ -18,11 +18,16 @@ class HomeController extends Controller
         $trendingProducts = Product::where('is_active', true)->where('is_trending', true)->latest()->limit(5)->get();
         $featuredProducts = Product::where('is_active', true)->where('is_featured', true)->latest()->limit(10)->get();
 
-        // Picked for you — based on session browse history
+        // Picked for you — based on session browse history, excluding already-carted products
         $pickedProducts = collect();
         $viewedIds = session('viewed_products', []);
         if (!empty($viewedIds)) {
-            $pickedProducts = app(EmbeddingService::class)->getPickedForYou($viewedIds, 10);
+            $cartProductIds = \App\Models\Cart::where('session_id', session()->getId())
+                ->whereNotNull('product_id')
+                ->pluck('product_id')
+                ->toArray();
+
+            $pickedProducts = app(EmbeddingService::class)->getPickedForYou($viewedIds, 10, $cartProductIds);
         }
 
         return view('home', compact('trendingProducts', 'featuredProducts', 'pickedProducts'));
