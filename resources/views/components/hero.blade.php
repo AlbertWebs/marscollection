@@ -11,10 +11,10 @@
 @if($heroEnabled)
 <section class="relative w-full overflow-hidden" style="min-height: 90vh;">
     <!-- Background image with dark overlay -->
-    <div class="absolute inset-0">
+    <div class="absolute inset-0 overflow-hidden">
         <img src="{{ $heroImage }}"
              alt="Zayn's Beauty"
-             class="w-full h-full object-cover object-center">
+             class="w-full h-full object-cover object-center hero-bg-zoom">
         <div class="absolute inset-0 bg-black/35"></div>
     </div>
 
@@ -76,3 +76,19 @@
     </div>
 </section>
 @endif
+
+<style>
+/* Spring zoom: starts at 1.12, eases in fast, overshoots slightly to 1.07, settles at 1.06 */
+@keyframes hero-spring-zoom {
+    0%   { transform: scale(1.15); }
+    55%  { transform: scale(1.04); }
+    75%  { transform: scale(1.07); }
+    90%  { transform: scale(1.055); }
+    100% { transform: scale(1.06); }
+}
+
+.hero-bg-zoom {
+    animation: hero-spring-zoom 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    transform-origin: center center;
+}
+</style>
