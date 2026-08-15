@@ -53,14 +53,12 @@ jobs:
             echo "── update .env secrets"
             sed -i "s|^GEMINI_API_KEY=.*|GEMINI_API_KEY=${GEMINI_API_KEY}|" .env
             sed -i "s|^DB_PASSWORD=.*|DB_PASSWORD=${DB_PASSWORD}|" .env
-            sed -i 's|^DB_CONNECTION=.*|DB_CONNECTION=pgsql|' .env
-            sed -i 's|^DB_PORT=.*|DB_PORT=5432|' .env
 
             echo "── composer install"
-            sudo -u app_zayns composer install --no-dev --optimize-autoloader --no-interaction
+            composer install --no-dev --optimize-autoloader --no-interaction
 
             echo "── migrate"
-            sudo -u app_zayns php artisan migrate --force
+            php artisan migrate --force
 
       - name: Copy built assets to server
         uses: appleboy/scp-action@v0.1.7
@@ -72,7 +70,7 @@ jobs:
           target: "/var/www/zaynsbeauty.co.ke/public"
           strip_components: 1
 
-      - name: Finalize cache & reload PHP
+      - name: Finalize
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_IP }}
@@ -82,14 +80,11 @@ jobs:
             set -e
             cd /var/www/zaynsbeauty.co.ke
 
-            echo "── optimize"
-            sudo -u app_zayns php artisan optimize:clear
-            sudo -u app_zayns php artisan view:clear
+            echo "── clear caches"
+            php artisan optimize:clear
+            php artisan view:clear
 
             echo "── generate missing embeddings"
-            sudo -u app_zayns php artisan embeddings:generate --missing || true
-
-            echo "── reload php"
-            sudo systemctl reload php8.4-fpm
+            php artisan embeddings:generate --missing || true
 
             echo "✓ Deploy complete"
