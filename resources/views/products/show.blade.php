@@ -208,12 +208,57 @@
                 @endif
             </div>
 
-            <!-- Lightbox Modal -->
-            <div id="lightbox" class="fixed inset-0 z-[999] hidden items-center justify-center bg-black/90" role="dialog" aria-modal="true" aria-label="Product image zoom">
-                <button id="lightbox-close" class="absolute top-4 right-4 text-white hover:text-pink-400 transition-colors" aria-label="Close zoom">
+            <!-- Gallery Lightbox Modal -->
+            @php
+                $galleryImages = array_merge(
+                    $product->image ? [$product->image] : [],
+                    $product->extra_images ?? []
+                );
+            @endphp
+            <div id="lightbox" class="fixed inset-0 z-[999] hidden items-center justify-center bg-black/95" role="dialog" aria-modal="true" aria-label="Product image gallery">
+                <!-- Close -->
+                <button id="lightbox-close" class="absolute top-4 right-4 text-white hover:text-pink-400 transition-colors z-10" aria-label="Close gallery">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
-                <img id="lightbox-img" src="" alt="{{ $product->name }}" class="max-w-[90vw] max-h-[90vh] object-contain rounded-md shadow-2xl">
+
+                <!-- Counter -->
+                <div class="absolute top-4 left-4 text-white text-sm font-medium z-10">
+                    <span id="lb-counter-current">1</span> / <span id="lb-counter-total">{{ count($galleryImages) }}</span>
+                </div>
+
+                <!-- Prev arrow -->
+                @if(count($galleryImages) > 1)
+                <button id="lb-prev" class="absolute left-3 top-1/2 -translate-y-1/2 z-10 bg-black/40 hover:bg-pink-600 text-white rounded-full p-2 transition-colors" aria-label="Previous image">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                </button>
+                @endif
+
+                <!-- Main lightbox image -->
+                <img id="lightbox-img" src="" alt="{{ $product->name }}"
+                     class="max-w-[80vw] max-h-[75vh] object-contain rounded-md shadow-2xl select-none transition-opacity duration-200">
+
+                <!-- Next arrow -->
+                @if(count($galleryImages) > 1)
+                <button id="lb-next" class="absolute right-3 top-1/2 -translate-y-1/2 z-10 bg-black/40 hover:bg-pink-600 text-white rounded-full p-2 transition-colors" aria-label="Next image">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </button>
+                @endif
+
+                @if(count($galleryImages) > 1)
+                <!-- Thumbnail strip -->
+                <div class="absolute bottom-4 left-0 right-0 flex justify-center gap-2 px-4 overflow-x-auto">
+                    @foreach($galleryImages as $i => $imgPath)
+                    @php $tUrl = \App\Helpers\ImageHelper::getProductImageUrl($imgPath); @endphp
+                    <button type="button"
+                            onclick="lbGoTo({{ $i }})"
+                            data-lb-index="{{ $i }}"
+                            class="lb-thumb flex-shrink-0 w-12 h-12 rounded-md overflow-hidden border-2 transition-all {{ $i === 0 ? 'border-pink-500' : 'border-white/30 hover:border-white/70' }}"
+                            aria-label="Go to image {{ $i + 1 }}">
+                        <img src="{{ $tUrl }}" alt="" class="w-full h-full object-cover">
+                    </button>
+                    @endforeach
+                </div>
+                @endif
             </div>
 
             <!-- Product Details -->
@@ -602,10 +647,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // ---------- Click to lightbox ----------
     container.addEventListener('click', function () {
-        lbImg.src = imgSrc;
-        lightbox.classList.remove('hidden');
-        lightbox.classList.add('flex');
-        document.body.style.overflow = 'hidden';
+        // Open at the currently active thumbnail index
+        const activeThumb = document.querySelector('.thumb-btn.border-pink-500');
+        const idx = activeThumb ? parseInt(activeThumb.dataset.thumbIndex ?? 0) : 0;
+        lbOpen(idx);
     });
 
     function closeLightbox() {
@@ -620,7 +665,15 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowRight') lbNext();
+        if (e.key === 'ArrowLeft')  lbPrev();
     });
+
+    // Prev/Next buttons
+    const lbPrevBtn = document.getElementById('lb-prev');
+    const lbNextBtn = document.getElementById('lb-next');
+    lbPrevBtn && lbPrevBtn.addEventListener('click', function(e) { e.stopPropagation(); lbPrev(); });
+    lbNextBtn && lbNextBtn.addEventListener('click', function(e) { e.stopPropagation(); lbNext(); });
 });
 
 // ---------- Color Selection Helpers ----------
@@ -663,29 +716,72 @@ function handleAddWithColor(productId) {
     addToCart(productId, 1, color);
 }
 
+// ---------- Gallery lightbox state ----------
+const lbImages = @json(array_map(fn($p) => \App\Helpers\ImageHelper::getProductImageUrl($p), $galleryImages));
+let lbIndex = 0;
+
+function lbOpen(index) {
+    lbIndex = index;
+    lbRender();
+    const lightbox = document.getElementById('lightbox');
+    lightbox.classList.remove('hidden');
+    lightbox.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+}
+
+function lbGoTo(index) {
+    lbIndex = index;
+    lbRender();
+}
+
+function lbNext() {
+    lbIndex = (lbIndex + 1) % lbImages.length;
+    lbRender();
+}
+
+function lbPrev() {
+    lbIndex = (lbIndex - 1 + lbImages.length) % lbImages.length;
+    lbRender();
+}
+
+function lbRender() {
+    const img  = document.getElementById('lightbox-img');
+    const curr = document.getElementById('lb-counter-current');
+
+    if (img) {
+        img.style.opacity = '0';
+        setTimeout(() => {
+            img.src = lbImages[lbIndex];
+            img.style.opacity = '1';
+        }, 150);
+    }
+    if (curr) curr.textContent = lbIndex + 1;
+
+    // Update thumbnail active state
+    document.querySelectorAll('.lb-thumb').forEach(btn => {
+        const i = parseInt(btn.dataset.lbIndex);
+        btn.classList.toggle('border-pink-500', i === lbIndex);
+        btn.classList.toggle('border-white/30', i !== lbIndex);
+    });
+}
+
 // ---------- Extra image thumbnail switcher ----------
 function switchMainImage(url, thumbBtn) {
     const mainImg = document.getElementById('zoom-img');
     const panel   = document.getElementById('zoom-panel');
-    const lbImg   = document.getElementById('lightbox-img');
 
     if (mainImg) {
         mainImg.src = url;
-        // Update zoom panel background source
-        if (panel) {
-            panel.style.backgroundImage = `url('${url}')`;
-        }
-        // Keep lightbox in sync
-        if (lbImg) lbImg.src = url;
+        if (panel) panel.style.backgroundImage = `url('${url}')`;
     }
 
-    // Update active thumbnail border
-    document.querySelectorAll('.thumb-btn').forEach(btn => {
-        btn.classList.remove('border-pink-500');
-        btn.classList.add('border-gray-200');
+    // Update active thumbnail border + track index for lightbox
+    document.querySelectorAll('.thumb-btn').forEach((btn, i) => {
+        const isActive = btn === thumbBtn;
+        btn.classList.toggle('border-pink-500', isActive);
+        btn.classList.toggle('border-gray-200', !isActive);
+        if (isActive) lbIndex = i;
     });
-    thumbBtn.classList.remove('border-gray-200');
-    thumbBtn.classList.add('border-pink-500');
 }
 </script>
 @endsection
