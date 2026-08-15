@@ -51,10 +51,10 @@ jobs:
             git remote set-url origin "https://github.com/kimutaiRop/zeynsbeauty.git"
 
             echo "── update .env secrets"
-            sudo -u app_zayns sed -i "s|^GEMINI_API_KEY=.*|GEMINI_API_KEY=${GEMINI_API_KEY}|" .env
-            sudo -u app_zayns sed -i "s|^DB_PASSWORD=.*|DB_PASSWORD=${DB_PASSWORD}|" .env
-            sudo -u app_zayns sed -i 's|^DB_CONNECTION=.*|DB_CONNECTION=pgsql|' .env
-            sudo -u app_zayns sed -i 's|^DB_PORT=.*|DB_PORT=5432|' .env
+            sed -i "s|^GEMINI_API_KEY=.*|GEMINI_API_KEY=${GEMINI_API_KEY}|" .env
+            sed -i "s|^DB_PASSWORD=.*|DB_PASSWORD=${DB_PASSWORD}|" .env
+            sed -i 's|^DB_CONNECTION=.*|DB_CONNECTION=pgsql|' .env
+            sed -i 's|^DB_PORT=.*|DB_PORT=5432|' .env
 
             echo "── composer install"
             sudo -u app_zayns composer install --no-dev --optimize-autoloader --no-interaction
