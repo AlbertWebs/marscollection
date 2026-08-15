@@ -1,5 +1,7 @@
 @php
     $brands = \App\Models\Brand::whereNotNull('logo')->where('logo', '!=', '')->get();
+    $row1 = $brands->filter(fn($b, $k) => $k % 2 === 0)->values();
+    $row2 = $brands->filter(fn($b, $k) => $k % 2 === 1)->values();
 @endphp
 
 @if($brands->isNotEmpty())
@@ -13,47 +15,56 @@
         <div class="pointer-events-none absolute right-0 top-0 h-full w-24 z-10"
              style="background: linear-gradient(to left, white, transparent);"></div>
 
-        <!-- Marquee track -->
-        <div class="marquee-track flex items-stretch gap-3" style="width: max-content;">
-            @foreach([1,2] as $_)
-                @foreach($brands as $brand)
-                @php
-                    $logoUrl = str_starts_with($brand->logo, 'http')
-                        ? $brand->logo
-                        : \Storage::disk('s3')->url($brand->logo);
-                @endphp
+        <!-- Both rows scroll together in one track -->
+        <div id="brands-track" class="flex flex-col gap-3" style="width: max-content; animation: brands-scroll 40s linear infinite;">
+
+            @foreach([1, 2] as $_)
+            <!-- Row 1 -->
+            <div class="flex gap-3">
+                @foreach($row1 as $brand)
+                @php $logoUrl = str_starts_with($brand->logo, 'http') ? $brand->logo : \Storage::disk('s3')->url($brand->logo); @endphp
                 <a href="{{ route('products.index', ['brand' => $brand->slug]) }}"
                    class="flex-shrink-0 relative rounded-md overflow-hidden group"
-                   style="width: 140px; height: 100px;"
-                   title="{{ $brand->name }}">
-                    <!-- Brand image fills card -->
-                    <img src="{{ $logoUrl }}"
-                         alt="{{ $brand->name }}"
-                         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                         loading="lazy">
-                    <!-- Dark gradient overlay -->
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
-                    <!-- Brand name bottom-left -->
-                    <span class="absolute bottom-2 left-2.5 text-white text-xs font-semibold drop-shadow leading-tight">
-                        {{ $brand->name }}
-                    </span>
+                   style="width: 140px; height: 96px;">
+                    <img src="{{ $logoUrl }}" alt="{{ $brand->name }}"
+                         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy">
+                    <div class="absolute inset-0 bg-black/40 group-hover:bg-black/55 transition-colors duration-200 flex items-center justify-center">
+                        <span class="text-white text-xs font-bold text-center px-2 drop-shadow leading-tight">{{ $brand->name }}</span>
+                    </div>
                 </a>
                 @endforeach
+            </div>
+
+            @if($row2->count() > 0)
+            <!-- Row 2 (offset for stagger) -->
+            <div class="flex gap-3" style="margin-left: 76px;">
+                @foreach($row2 as $brand)
+                @php $logoUrl = str_starts_with($brand->logo, 'http') ? $brand->logo : \Storage::disk('s3')->url($brand->logo); @endphp
+                <a href="{{ route('products.index', ['brand' => $brand->slug]) }}"
+                   class="flex-shrink-0 relative rounded-md overflow-hidden group"
+                   style="width: 140px; height: 96px;">
+                    <img src="{{ $logoUrl }}" alt="{{ $brand->name }}"
+                         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy">
+                    <div class="absolute inset-0 bg-black/40 group-hover:bg-black/55 transition-colors duration-200 flex items-center justify-center">
+                        <span class="text-white text-xs font-bold text-center px-2 drop-shadow leading-tight">{{ $brand->name }}</span>
+                    </div>
+                </a>
+                @endforeach
+            </div>
+            @endif
             @endforeach
+
         </div>
     </div>
 </section>
 
 <style>
-.marquee-track {
-    animation: marquee-scroll 35s linear infinite;
-}
-.marquee-track:hover {
-    animation-play-state: paused;
-}
-@keyframes marquee-scroll {
+@keyframes brands-scroll {
     0%   { transform: translateX(0); }
     100% { transform: translateX(-50%); }
+}
+#brands-track:hover {
+    animation-play-state: paused;
 }
 </style>
 @endif
