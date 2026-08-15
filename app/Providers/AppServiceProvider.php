@@ -2,27 +2,24 @@
 
 namespace App\Providers;
 
+use App\Models\Product;
+use App\Observers\ProductObserver;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
         //
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
         Paginator::useTailwind();
 
-        // Settings helper removed to avoid function redeclaration conflicts
+        // Register product observer for auto-embedding
+        Product::observe(ProductObserver::class);
 
         // Share contact information and categories with all views
         \Illuminate\Support\Facades\View::composer('*', function ($view) {
@@ -32,7 +29,6 @@ class AppServiceProvider extends ServiceProvider
             ]);
         });
 
-        // Register blade directive for contact info
         \Illuminate\Support\Facades\Blade::directive('contact', function ($expression) {
             return "<?php echo \App\Helpers\SettingsHelper::getContactInfo(){$expression}; ?>";
         });

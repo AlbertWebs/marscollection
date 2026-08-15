@@ -59,6 +59,23 @@
         </section>
     @endif
 
+    @if(isset($pickedProducts) && $pickedProducts->count() > 0)
+        <section class="py-16 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12 fade-in">
+                    <p class="text-xs uppercase tracking-widest text-pink-500 font-medium mb-2">Personalised For You</p>
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Picked For You</h2>
+                    <p class="text-lg text-gray-600 max-w-2xl mx-auto">Based on what you've been browsing</p>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                    @foreach($pickedProducts as $product)
+                        @include('components.product-card', ['product' => $product])
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
+
     @include('components.brand-logos')
     @include('components.video-section')
     @include('components.faq-section')

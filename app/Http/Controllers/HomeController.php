@@ -7,6 +7,7 @@ use App\Models\Contact;
 use App\Models\Brand;
 use App\Models\Bundle;
 use App\Models\NewsletterSubscriber;
+use App\Services\EmbeddingService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -17,7 +18,14 @@ class HomeController extends Controller
         $trendingProducts = Product::where('is_active', true)->where('is_trending', true)->latest()->limit(5)->get();
         $featuredProducts = Product::where('is_active', true)->where('is_featured', true)->latest()->limit(10)->get();
 
-        return view('home', compact('trendingProducts', 'featuredProducts'));
+        // Picked for you — based on session browse history
+        $pickedProducts = collect();
+        $viewedIds = session('viewed_products', []);
+        if (!empty($viewedIds)) {
+            $pickedProducts = app(EmbeddingService::class)->getPickedForYou($viewedIds, 10);
+        }
+
+        return view('home', compact('trendingProducts', 'featuredProducts', 'pickedProducts'));
     }
 
     public function about()

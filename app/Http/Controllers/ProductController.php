@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Brand;
+use App\Services\EmbeddingService;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -13,65 +14,59 @@ class ProductController extends Controller
     {
         $query = Product::where('is_active', true)->with(['category', 'brand']);
 
-        // Filter by category slug
         if ($request->filled('category')) {
             $query->whereHas('category', fn($q) => $q->where('slug', $request->category));
         }
-
-        // Filter by brand slug
         if ($request->filled('brand')) {
             $query->whereHas('brand', fn($q) => $q->where('slug', $request->brand));
         }
-
-        // Filter by price range
-        if ($request->has('min_price') && $request->min_price !== '' && $request->min_price !== null) {
+        if ($request->has('min_price') && $request->min_price !== '') {
             $query->where('price', '>=', $request->min_price);
         }
-        if ($request->has('max_price') && $request->max_price !== '' && $request->max_price !== null) {
+        if ($request->has('max_price') && $request->max_price !== '') {
             $query->where('price', '<=', $request->max_price);
         }
-
-        // Filter by tag (featured, trending, etc.)
-        if ($request->has('tag') && $request->tag !== '' && $request->tag !== null) {
-            if ($request->tag === 'featured') {
-                $query->where('is_featured', true);
-            } elseif ($request->tag === 'trending') {
-                $query->where('is_trending', true);
-            }
+        if ($request->filled('tag')) {
+            if ($request->tag === 'featured')  $query->where('is_featured', true);
+            if ($request->tag === 'trending')  $query->where('is_trending', true);
+        }
+        if ($request->filled('search')) {
+            $query->where(fn($q) => $q->where('name', 'like', '%'.$request->search.'%')
+                                      ->orWhere('description', 'like', '%'.$request->search.'%'));
         }
 
-        // Search functionality
-        if ($request->has('search') && $request->search !== '') {
-            $query->where(function($q) use ($request) {
-                $q->where('name', 'like', '%' . $request->search . '%')
-                  ->orWhere('description', 'like', '%' . $request->search . '%');
-            });
-        }
-
-        $products = $query->paginate(50);
+        $products   = $query->paginate(50);
         $categories = Category::where('is_active', true)->get();
-        $brands = Brand::where('is_active', true)->get();
+        $brands     = Brand::where('is_active', true)->get();
 
         return view('products.index', compact('products', 'categories', 'brands'));
     }
 
-    public function show(Product $product)
+    public function show(Request $request, Product $product)
     {
-        // Check if product is active
-        if (!$product->is_active) {
-            abort(404);
-        }
+        if (!$product->is_active) abort(404);
 
         $product->load(['category', 'brand', 'reviews.order']);
-        
-        $relatedProducts = Product::where('category_id', $product->category_id)
-            ->where('id', '!=', $product->id)
-            ->where('is_active', true)
-            ->with(['category', 'brand'])
-            ->limit(4)
-            ->get();
 
-        return view('products.show', compact('product', 'relatedProducts'));
+        // Track this product view in session (keep last 10)
+        $viewed = $request->session()->get('viewed_products', []);
+        if (!in_array($product->id, $viewed)) {
+            array_unshift($viewed, $product->id);
+            $viewed = array_slice($viewed, 0, 10);
+            $request->session()->put('viewed_products', $viewed);
+        }
+
+        // "You may also like" — embedding-based if available, else same-category fallback
+        $similarProducts = app(EmbeddingService::class)->getSimilarProducts($product, 6);
+        if ($similarProducts->isEmpty()) {
+            $similarProducts = Product::where('category_id', $product->category_id)
+                ->where('id', '!=', $product->id)
+                ->where('is_active', true)
+                ->with(['category', 'brand'])
+                ->limit(6)->get();
+        }
+
+        return view('products.show', compact('product', 'similarProducts'));
     }
 
     public function trending()
@@ -83,4 +78,4 @@ class ProductController extends Controller
     {
         return redirect()->route('products.index', ['tag' => 'featured']);
     }
-} 
+}

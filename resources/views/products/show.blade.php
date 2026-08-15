@@ -491,13 +491,13 @@
             </div>
         </div>
 
-        <!-- Related Products -->
-        @if($relatedProducts->count() > 0)
+        <!-- You May Also Like -->
+        @if($similarProducts->count() > 0)
             <div class="mt-16">
-                <h2 class="text-2xl font-bold text-gray-900 mb-8">Related Products</h2>
-                <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    @foreach($relatedProducts as $relatedProduct)
-                        @include('components.product-card', ['product' => $relatedProduct])
+                <h2 class="text-2xl font-bold text-gray-900 mb-8">You May Also Like</h2>
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+                    @foreach($similarProducts as $similarProduct)
+                        @include('components.product-card', ['product' => $similarProduct])
                     @endforeach
                 </div>
             </div>
