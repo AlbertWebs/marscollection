@@ -9,21 +9,21 @@
     <p class="text-center text-xs uppercase tracking-widest text-gray-400 font-medium mb-8">Brands We Carry</p>
 
     <div class="flex flex-col gap-3 overflow-hidden"
-         onmouseenter="brandsStop()" onmouseleave="brandsStart()">
+         onmouseenter="brandsRunning=false" onmouseleave="brandsRunning=true">
 
-        <!-- Row 1 — scrolls left -->
+        <!-- Row 1 -->
         <div class="overflow-hidden">
             <div id="brands-r1" class="flex gap-3" style="width: max-content; will-change: transform;">
-                @foreach([1,2] as $_)
+                @foreach([1,2,3] as $_)
                     @foreach($row1 as $brand)
                     @php $logoUrl = str_starts_with($brand->logo, 'http') ? $brand->logo : \Storage::disk('s3')->url($brand->logo); @endphp
                     <a href="{{ route('products.index', ['brand' => $brand->slug]) }}"
-                       class="flex-shrink-0 relative rounded-md overflow-hidden group"
+                       class="brand-card flex-shrink-0 relative rounded-md overflow-hidden group"
                        style="width: 150px; height: 100px;">
                         <img src="{{ $logoUrl }}" alt="{{ $brand->name }}"
                              class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy">
                         <div class="absolute inset-0 bg-black/45 group-hover:bg-black/60 transition-colors duration-200 flex items-center justify-center p-2">
-                            <span class="text-white text-sm font-bold text-center leading-tight drop-shadow-md">{{ $brand->name }}</span>
+                            <span class="text-white text-base font-bold text-center leading-tight drop-shadow-md">{{ $brand->name }}</span>
                         </div>
                     </a>
                     @endforeach
@@ -31,20 +31,20 @@
             </div>
         </div>
 
-        <!-- Row 2 — scrolls right -->
+        <!-- Row 2 -->
         @if($row2->count() > 0)
         <div class="overflow-hidden">
             <div id="brands-r2" class="flex gap-3" style="width: max-content; will-change: transform;">
-                @foreach([1,2] as $_)
+                @foreach([1,2,3] as $_)
                     @foreach($row2 as $brand)
                     @php $logoUrl = str_starts_with($brand->logo, 'http') ? $brand->logo : \Storage::disk('s3')->url($brand->logo); @endphp
                     <a href="{{ route('products.index', ['brand' => $brand->slug]) }}"
-                       class="flex-shrink-0 relative rounded-md overflow-hidden group"
+                       class="brand-card flex-shrink-0 relative rounded-md overflow-hidden group"
                        style="width: 150px; height: 100px;">
                         <img src="{{ $logoUrl }}" alt="{{ $brand->name }}"
                              class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy">
                         <div class="absolute inset-0 bg-black/45 group-hover:bg-black/60 transition-colors duration-200 flex items-center justify-center p-2">
-                            <span class="text-white text-sm font-bold text-center leading-tight drop-shadow-md">{{ $brand->name }}</span>
+                            <span class="text-white text-base font-bold text-center leading-tight drop-shadow-md">{{ $brand->name }}</span>
                         </div>
                     </a>
                     @endforeach
@@ -58,36 +58,49 @@
 
 <script>
 (function () {
-    const r1 = document.getElementById('brands-r1');
-    const r2 = document.getElementById('brands-r2');
+    var r1 = document.getElementById('brands-r1');
+    var r2 = document.getElementById('brands-r2');
     if (!r1) return;
 
-    let p1 = 0, p2 = 0;
-    const SPEED1 = 0.5;
-    const SPEED2 = 0.38;
-    let running = true;
+    var p1 = 0, p2 = 0;
+    var unit1, unit2; // width of ONE set of brands
+    window.brandsRunning = true;
 
-    function half(el) { return el.scrollWidth / 2; }
+    function measure() {
+        // Each row has 3 copies — one copy = scrollWidth / 3
+        unit1 = r1.scrollWidth / 3;
+        if (r2) unit2 = r2.scrollWidth / 3;
+    }
 
     function tick() {
-        if (running) {
-            p1 += SPEED1;
-            if (p1 >= half(r1)) p1 = 0;
-            r1.style.transform = `translateX(-${p1}px)`;
+        if (window.brandsRunning) {
+            p1 += 0.5;
+            if (unit1 && p1 >= unit1) p1 -= unit1;
+            r1.style.transform = 'translateX(-' + p1 + 'px)';
 
             if (r2) {
-                p2 += SPEED2;
-                if (p2 >= half(r2)) p2 = 0;
-                r2.style.transform = `translateX(-${p2}px)`;
+                p2 += 0.38;
+                if (unit2 && p2 >= unit2) p2 -= unit2;
+                r2.style.transform = 'translateX(-' + p2 + 'px)';
             }
         }
         requestAnimationFrame(tick);
     }
 
-    requestAnimationFrame(tick);
+    // Measure after all images in section have loaded (or after 1s fallback)
+    var images = document.querySelectorAll('.brand-card img');
+    var loaded = 0;
+    function onLoad() {
+        loaded++;
+        if (loaded >= images.length) measure();
+    }
+    images.forEach(function(img) {
+        if (img.complete) { onLoad(); }
+        else { img.addEventListener('load', onLoad); img.addEventListener('error', onLoad); }
+    });
+    setTimeout(measure, 800); // fallback
 
-    window.brandsStop  = () => { running = false; };
-    window.brandsStart = () => { running = true; };
+    requestAnimationFrame(tick);
 })();
 </script>
 @endif
