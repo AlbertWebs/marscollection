@@ -56,15 +56,18 @@ class ProductController extends Controller
         $viewed = array_slice($viewed, 0, 20);
         $request->session()->put('viewed_products', $viewed);
 
-        // "You may also like" — embedding-based if available, else same-category fallback
-        $similarProducts = app(EmbeddingService::class)->getSimilarProducts($product, 6);
-        if ($similarProducts->isEmpty()) {
-            $similarProducts = Product::where('category_id', $product->category_id)
-                ->where('id', '!=', $product->id)
-                ->where('is_active', true)
-                ->with(['category', 'brand'])
-                ->limit(6)->get();
-        }
+        // "You may also like" — cached per product for 30 min, embedding-based with category fallback
+        $similarProducts = cache()->remember('similar_products_' . $product->id, now()->addMinutes(30), function () use ($product) {
+            $results = app(EmbeddingService::class)->getSimilarProducts($product, 6);
+            if ($results->isEmpty()) {
+                $results = Product::where('category_id', $product->category_id)
+                    ->where('id', '!=', $product->id)
+                    ->where('is_active', true)
+                    ->with(['category', 'brand'])
+                    ->limit(6)->get();
+            }
+            return $results;
+        });
 
         return view('products.show', compact('product', 'similarProducts'));
     }

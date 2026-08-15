@@ -18,7 +18,8 @@ class HomeController extends Controller
         $trendingProducts = Product::where('is_active', true)->where('is_trending', true)->latest()->limit(5)->get();
         $featuredProducts = Product::where('is_active', true)->where('is_featured', true)->latest()->limit(10)->get();
 
-        // Picked for you — based on session browse history, excluding already-carted products
+        // Picked for you — based on session browse history, excluding already-carted products.
+        // Cached per unique browse fingerprint so repeated home visits don't re-query pgvector.
         $pickedProducts = collect();
         $viewedIds = session('viewed_products', []);
         if (!empty($viewedIds)) {
@@ -27,7 +28,12 @@ class HomeController extends Controller
                 ->pluck('product_id')
                 ->toArray();
 
-            $pickedProducts = app(EmbeddingService::class)->getPickedForYou($viewedIds, 10, $cartProductIds);
+            // Cache key changes whenever viewed list or cart changes
+            $cacheKey = 'picked_for_you_' . md5(implode(',', $viewedIds) . '|' . implode(',', $cartProductIds));
+
+            $pickedProducts = cache()->remember($cacheKey, now()->addMinutes(10), function () use ($viewedIds, $cartProductIds) {
+                return app(EmbeddingService::class)->getPickedForYou($viewedIds, 10, $cartProductIds);
+            });
         }
 
         return view('home', compact('trendingProducts', 'featuredProducts', 'pickedProducts'));
