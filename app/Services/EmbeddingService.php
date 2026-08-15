@@ -16,7 +16,7 @@ class EmbeddingService
     public function __construct()
     {
         $this->apiKey = config('services.gemini.api_key');
-        $this->model  = config('services.gemini.embedding_model', 'gemini-embedding-004');
+        $this->model  = config('services.gemini.embedding_model', 'gemini-embedding-2');
         $this->apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/{$this->model}:embedContent";
     }
 
@@ -63,7 +63,10 @@ class EmbeddingService
                 ]);
 
             if (!$response->successful()) {
-                Log::error('EmbeddingService: API error', ['status' => $response->status(), 'body' => $response->body()]);
+                Log::error('EmbeddingService: API error', [
+                    'status' => $response->status(),
+                    'body'   => $response->body(),
+                ]);
                 return null;
             }
 
@@ -76,6 +79,7 @@ class EmbeddingService
 
     /**
      * Generate and persist the embedding for a product.
+     * Stores as a pgvector-compatible string "[v1,v2,...]".
      */
     public function generateForProduct(Product $product): bool
     {
@@ -84,6 +88,7 @@ class EmbeddingService
 
         if (!$embedding) return false;
 
+        // Store as JSON array — the vector column accepts "[v1,v2,...]" format
         ProductEmbedding::updateOrCreate(
             ['product_id' => $product->id],
             ['embedding'  => $embedding, 'model' => $this->model]
@@ -93,49 +98,27 @@ class EmbeddingService
     }
 
     /**
-     * Cosine similarity between two float vectors.
-     */
-    public function cosineSimilarity(array $a, array $b): float
-    {
-        $dot = 0.0;
-        $magA = 0.0;
-        $magB = 0.0;
-        $len = min(count($a), count($b));
-
-        for ($i = 0; $i < $len; $i++) {
-            $dot  += $a[$i] * $b[$i];
-            $magA += $a[$i] * $a[$i];
-            $magB += $b[$i] * $b[$i];
-        }
-
-        $denom = sqrt($magA) * sqrt($magB);
-        return $denom > 0 ? $dot / $denom : 0.0;
-    }
-
-    /**
-     * Find N most similar products to a given embedding vector.
-     * Excludes the product IDs in $excludeIds.
+     * Find N most similar products to a given vector using pgvector's
+     * native cosine distance operator (<=>) — runs entirely in the DB.
+     * Much faster than PHP-side cosine loops, and uses the HNSW index.
+     *
+     * @param array $queryVector  float[] from Gemini
+     * @param int   $limit
+     * @param array $excludeIds   product IDs to exclude
      */
     public function findSimilar(array $queryVector, int $limit = 6, array $excludeIds = []): \Illuminate\Support\Collection
     {
-        $embeddings = ProductEmbedding::with(['product.brand', 'product.category'])
+        return ProductEmbedding::with(['product.brand', 'product.category'])
             ->whereHas('product', fn($q) => $q->where('is_active', true))
             ->when(!empty($excludeIds), fn($q) => $q->whereNotIn('product_id', $excludeIds))
-            ->get();
-
-        return $embeddings
-            ->map(fn($e) => [
-                'product'    => $e->product,
-                'similarity' => $this->cosineSimilarity($queryVector, $e->embedding),
-            ])
-            ->sortByDesc('similarity')
-            ->take($limit)
+            ->nearestTo($queryVector, $limit)
+            ->get()
             ->pluck('product')
             ->filter();
     }
 
     /**
-     * Get similar products for a given product.
+     * Get similar products for a given product using pgvector.
      */
     public function getSimilarProducts(Product $product, int $limit = 6): \Illuminate\Support\Collection
     {
@@ -146,8 +129,8 @@ class EmbeddingService
     }
 
     /**
-     * Get "Picked for you" products based on an array of viewed product IDs.
-     * Averages the embeddings of viewed products then finds similar ones.
+     * Get "Picked for you" products based on viewed product IDs.
+     * Averages their embeddings into one query vector, then uses pgvector.
      */
     public function getPickedForYou(array $viewedProductIds, int $limit = 10): \Illuminate\Support\Collection
     {

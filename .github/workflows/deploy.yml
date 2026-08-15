@@ -33,11 +33,12 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          envs: GH_TOKEN,GEMINI_API_KEY
+          envs: GH_TOKEN,GEMINI_API_KEY,DB_PASSWORD
           script: |
             set -e
 
@@ -49,18 +50,19 @@ jobs:
             git reset --hard origin/main
             git remote set-url origin "https://github.com/kimutaiRop/zeynsbeauty.git"
 
-            echo "── set GEMINI_API_KEY in .env"
-            if grep -q "^GEMINI_API_KEY=" .env; then
-              sed -i "s|^GEMINI_API_KEY=.*|GEMINI_API_KEY=${GEMINI_API_KEY}|" .env
-            else
-              echo "GEMINI_API_KEY=${GEMINI_API_KEY}" >> .env
-            fi
+            echo "── update .env secrets"
+            sudo sed -i "s|^GEMINI_API_KEY=.*|GEMINI_API_KEY=${GEMINI_API_KEY}|" .env
+            sudo sed -i "s|^DB_PASSWORD=.*|DB_PASSWORD=${DB_PASSWORD}|" .env
+
+            echo "── ensure pgsql env vars are set"
+            grep -q '^DB_CONNECTION=pgsql' .env || sudo sed -i 's|^DB_CONNECTION=.*|DB_CONNECTION=pgsql|' .env
+            grep -q '^DB_PORT=5432' .env     || sudo sed -i 's|^DB_PORT=.*|DB_PORT=5432|' .env
 
             echo "── composer install"
             composer install --no-dev --optimize-autoloader --no-interaction
 
             echo "── migrate"
-            php artisan migrate --force
+            sudo -u app_zayns php artisan migrate --force
 
       - name: Copy built assets to server
         uses: appleboy/scp-action@v0.1.7
@@ -81,12 +83,13 @@ jobs:
           script: |
             set -e
             cd /var/www/zaynsbeauty.co.ke
+
             echo "── optimize"
-            php artisan optimize:clear
-            php artisan view:clear
+            sudo -u app_zayns php artisan optimize:clear
+            sudo -u app_zayns php artisan view:clear
 
             echo "── generate missing embeddings"
-            php artisan embeddings:generate --missing || true
+            sudo -u app_zayns php artisan embeddings:generate --missing || true
 
             echo "── reload php"
             sudo systemctl reload php8.4-fpm
