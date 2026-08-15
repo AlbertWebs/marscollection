@@ -10,61 +10,76 @@
 
     <div class="relative">
         <!-- Fade edges -->
-        <div class="pointer-events-none absolute left-0 top-0 h-full w-24 z-10"
+        <div class="pointer-events-none absolute left-0 top-0 h-full w-20 z-10"
              style="background: linear-gradient(to right, white, transparent);"></div>
-        <div class="pointer-events-none absolute right-0 top-0 h-full w-24 z-10"
+        <div class="pointer-events-none absolute right-0 top-0 h-full w-20 z-10"
              style="background: linear-gradient(to left, white, transparent);"></div>
 
-        <!-- Both rows scroll together in one track -->
-        <div id="brands-track" class="flex flex-col gap-3" style="width: max-content; animation: brands-scroll 40s linear infinite;">
+        <div class="flex flex-col gap-3"
+             id="brands-outer"
+             onmouseenter="document.getElementById('brands-r1').style.animationPlayState='paused'; document.getElementById('brands-r2').style.animationPlayState='paused';"
+             onmouseleave="document.getElementById('brands-r1').style.animationPlayState='running'; document.getElementById('brands-r2').style.animationPlayState='running';">
 
-            @foreach([1, 2] as $_)
             <!-- Row 1 -->
-            <div class="flex gap-3">
-                @foreach($row1 as $brand)
-                @php $logoUrl = str_starts_with($brand->logo, 'http') ? $brand->logo : \Storage::disk('s3')->url($brand->logo); @endphp
-                <a href="{{ route('products.index', ['brand' => $brand->slug]) }}"
-                   class="flex-shrink-0 relative rounded-md overflow-hidden group"
-                   style="width: 140px; height: 96px;">
-                    <img src="{{ $logoUrl }}" alt="{{ $brand->name }}"
-                         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy">
-                    <div class="absolute inset-0 bg-black/40 group-hover:bg-black/55 transition-colors duration-200 flex items-center justify-center">
-                        <span class="text-white text-xs font-bold text-center px-2 drop-shadow leading-tight">{{ $brand->name }}</span>
-                    </div>
-                </a>
-                @endforeach
+            <div class="overflow-hidden">
+                <div id="brands-r1" class="brands-row flex gap-3" style="width: max-content;">
+                    @foreach([1,2] as $_)
+                        @foreach($row1 as $brand)
+                        @php $logoUrl = str_starts_with($brand->logo, 'http') ? $brand->logo : \Storage::disk('s3')->url($brand->logo); @endphp
+                        <a href="{{ route('products.index', ['brand' => $brand->slug]) }}"
+                           class="flex-shrink-0 relative rounded-md overflow-hidden group"
+                           style="width: 150px; height: 100px;">
+                            <img src="{{ $logoUrl }}" alt="{{ $brand->name }}"
+                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy">
+                            <div class="absolute inset-0 bg-black/45 group-hover:bg-black/60 transition-colors duration-200 flex items-center justify-center p-2">
+                                <span class="text-white text-sm font-bold text-center leading-tight drop-shadow-md">{{ $brand->name }}</span>
+                            </div>
+                        </a>
+                        @endforeach
+                    @endforeach
+                </div>
             </div>
 
+            <!-- Row 2 -->
             @if($row2->count() > 0)
-            <!-- Row 2 (offset for stagger) -->
-            <div class="flex gap-3" style="margin-left: 76px;">
-                @foreach($row2 as $brand)
-                @php $logoUrl = str_starts_with($brand->logo, 'http') ? $brand->logo : \Storage::disk('s3')->url($brand->logo); @endphp
-                <a href="{{ route('products.index', ['brand' => $brand->slug]) }}"
-                   class="flex-shrink-0 relative rounded-md overflow-hidden group"
-                   style="width: 140px; height: 96px;">
-                    <img src="{{ $logoUrl }}" alt="{{ $brand->name }}"
-                         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy">
-                    <div class="absolute inset-0 bg-black/40 group-hover:bg-black/55 transition-colors duration-200 flex items-center justify-center">
-                        <span class="text-white text-xs font-bold text-center px-2 drop-shadow leading-tight">{{ $brand->name }}</span>
-                    </div>
-                </a>
-                @endforeach
+            <div class="overflow-hidden">
+                <div id="brands-r2" class="brands-row-reverse flex gap-3" style="width: max-content;">
+                    @foreach([1,2] as $_)
+                        @foreach($row2 as $brand)
+                        @php $logoUrl = str_starts_with($brand->logo, 'http') ? $brand->logo : \Storage::disk('s3')->url($brand->logo); @endphp
+                        <a href="{{ route('products.index', ['brand' => $brand->slug]) }}"
+                           class="flex-shrink-0 relative rounded-md overflow-hidden group"
+                           style="width: 150px; height: 100px;">
+                            <img src="{{ $logoUrl }}" alt="{{ $brand->name }}"
+                                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy">
+                            <div class="absolute inset-0 bg-black/45 group-hover:bg-black/60 transition-colors duration-200 flex items-center justify-center p-2">
+                                <span class="text-white text-sm font-bold text-center leading-tight drop-shadow-md">{{ $brand->name }}</span>
+                            </div>
+                        </a>
+                        @endforeach
+                    @endforeach
+                </div>
             </div>
             @endif
-            @endforeach
 
         </div>
     </div>
 </section>
 
 <style>
-@keyframes brands-scroll {
+.brands-row {
+    animation: brands-ltr 35s linear infinite;
+}
+.brands-row-reverse {
+    animation: brands-rtl 38s linear infinite;
+}
+@keyframes brands-ltr {
     0%   { transform: translateX(0); }
     100% { transform: translateX(-50%); }
 }
-#brands-track:hover {
-    animation-play-state: paused;
+@keyframes brands-rtl {
+    0%   { transform: translateX(-50%); }
+    100% { transform: translateX(0); }
 }
 </style>
 @endif
