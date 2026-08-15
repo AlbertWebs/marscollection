@@ -48,13 +48,13 @@ class ProductController extends Controller
 
         $product->load(['category', 'brand', 'reviews.order']);
 
-        // Track this product view in session (keep last 10)
+        // Track this product view in session (keep last 20, most recent first).
+        // Re-visiting a product bumps it to the front so recency weighting works correctly.
         $viewed = $request->session()->get('viewed_products', []);
-        if (!in_array($product->id, $viewed)) {
-            array_unshift($viewed, $product->id);
-            $viewed = array_slice($viewed, 0, 10);
-            $request->session()->put('viewed_products', $viewed);
-        }
+        $viewed = array_values(array_filter($viewed, fn($id) => $id !== $product->id));
+        array_unshift($viewed, $product->id);
+        $viewed = array_slice($viewed, 0, 20);
+        $request->session()->put('viewed_products', $viewed);
 
         // "You may also like" — embedding-based if available, else same-category fallback
         $similarProducts = app(EmbeddingService::class)->getSimilarProducts($product, 6);

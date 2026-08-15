@@ -130,32 +130,56 @@ class EmbeddingService
 
     /**
      * Get "Picked for you" products based on viewed product IDs.
-     * Averages their embeddings into one query vector, then uses pgvector.
+     *
+     * Uses exponential decay weighting so recently viewed products
+     * influence the recommendation vector more than older ones.
+     * decay = 0.85^position  (position 0 = most recent = weight 1.0,
+     *                          position 1 = 0.85, position 2 = 0.72, ...)
+     *
+     * This means: browse 8 makeup + 1 old hair product → recommendations
+     * lean heavily toward makeup, but shift toward hair if user recently
+     * switched to browsing hair products.
+     *
+     * @param array $viewedProductIds  Most recent first (index 0 = latest)
+     * @param int   $limit
      */
     public function getPickedForYou(array $viewedProductIds, int $limit = 10): \Illuminate\Support\Collection
     {
         if (empty($viewedProductIds)) return collect();
 
-        $embeddings = ProductEmbedding::whereIn('product_id', $viewedProductIds)->get();
+        $embeddings = ProductEmbedding::whereIn('product_id', $viewedProductIds)
+            ->get()
+            ->keyBy('product_id');
+
         if ($embeddings->isEmpty()) return collect();
 
-        // Average the viewed embeddings into one query vector
-        $count  = $embeddings->count();
-        $avgVec = null;
+        // Build position map: product_id => position (0 = most recent)
+        $positionMap = array_flip($viewedProductIds);
 
-        foreach ($embeddings as $e) {
+        $decay  = 0.85;
+        $avgVec = null;
+        $totalWeight = 0.0;
+
+        foreach ($embeddings as $productId => $e) {
+            $position = $positionMap[$productId] ?? 99;
+            $weight   = pow($decay, $position); // 1.0, 0.85, 0.72, 0.61 ...
+
             $vec = $e->embedding;
             if ($avgVec === null) {
-                $avgVec = $vec;
+                $avgVec = array_map(fn($v) => $v * $weight, $vec);
             } else {
                 for ($i = 0; $i < count($avgVec); $i++) {
-                    $avgVec[$i] += $vec[$i] ?? 0;
+                    $avgVec[$i] += ($vec[$i] ?? 0) * $weight;
                 }
             }
+            $totalWeight += $weight;
         }
 
-        for ($i = 0; $i < count($avgVec); $i++) {
-            $avgVec[$i] /= $count;
+        // Normalise by total weight
+        if ($totalWeight > 0) {
+            for ($i = 0; $i < count($avgVec); $i++) {
+                $avgVec[$i] /= $totalWeight;
+            }
         }
 
         return $this->findSimilar($avgVec, $limit, $viewedProductIds);
