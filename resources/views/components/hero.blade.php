@@ -78,17 +78,29 @@
 @endif
 
 <style>
-/* Spring zoom: starts at 1.12, eases in fast, overshoots slightly to 1.07, settles at 1.06 */
-@keyframes hero-spring-zoom {
-    0%   { transform: scale(1.15); }
-    55%  { transform: scale(1.04); }
-    75%  { transform: scale(1.07); }
-    90%  { transform: scale(1.055); }
-    100% { transform: scale(1.06); }
-}
-
 .hero-bg-zoom {
-    animation: hero-spring-zoom 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     transform-origin: center center;
+    will-change: transform;
 }
 </style>
+
+<script>
+(function () {
+    const img = document.querySelector('.hero-bg-zoom');
+    const section = img ? img.closest('section') : null;
+    if (!img || !section) return;
+
+    function onScroll() {
+        const rect = section.getBoundingClientRect();
+        const sectionH = section.offsetHeight;
+        // progress: 0 when top of section hits top of viewport, 1 when bottom leaves
+        const progress = Math.max(0, Math.min(1, -rect.top / sectionH));
+        // Scale from 1.0 to 1.12 as you scroll through
+        const scale = 1 + progress * 0.12;
+        img.style.transform = `scale(${scale})`;
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll(); // init
+})();
+</script>
