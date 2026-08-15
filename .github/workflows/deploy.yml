@@ -42,7 +42,7 @@ jobs:
           script: |
             set -e
 
-            cd /var/www/zaynsbeauty.co.ke
+            cd /home/app_zayns/www
 
             echo "── git pull"
             git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/kimutaiRop/zeynsbeauty.git"
@@ -78,7 +78,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             set -e
-            cd /var/www/zaynsbeauty.co.ke
+            cd /home/app_zayns/www
 
             echo "── clear caches"
             php artisan optimize:clear
