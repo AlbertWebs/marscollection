@@ -352,23 +352,24 @@
                         @if($product->variants && count($product->variants) > 0)
                         <!-- Variant Selector -->
                         <div class="border-t border-gray-100 pt-4 space-y-2">
-                            <label for="variant-select" class="block text-sm font-semibold text-gray-900 uppercase tracking-widest">
-                                Select Option
-                            </label>
-                            <select id="variant-select"
-                                    class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
-                                    onchange="handleVariantChange(this)">
-                                <option value="">— Choose an option —</option>
-                                @foreach($product->variants as $variant)
-                                <option value="{{ $variant['label'] }}"
-                                        data-price="{{ $variant['price'] ?? '' }}">
+                            <div class="flex items-center justify-between">
+                                <label class="block text-sm font-semibold text-gray-900 uppercase tracking-widest">Select Option</label>
+                                <span id="variant-label" class="text-sm font-bold text-pink-600"></span>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                @foreach($product->variants as $i => $variant)
+                                <button type="button"
+                                        onclick="handleVariantChange(this)"
+                                        data-label="{{ $variant['label'] }}"
+                                        data-price="{{ $variant['price'] ?? '' }}"
+                                        class="variant-btn px-4 py-2 rounded-md border-2 border-gray-200 text-sm font-medium text-gray-700 hover:border-pink-400 hover:text-pink-600 transition-all duration-150 whitespace-nowrap">
                                     {{ $variant['label'] }}
                                     @if(!empty($variant['price']))
-                                        — KES {{ number_format($variant['price'], 0) }}
+                                        <span class="text-xs text-gray-400 ml-1">KES&nbsp;{{ number_format($variant['price'], 0) }}</span>
                                     @endif
-                                </option>
+                                </button>
                                 @endforeach
-                            </select>
+                            </div>
                         </div>
                         @endif
 
@@ -744,12 +745,23 @@ function handleAddWithColor(productId) {
 const basePrice = {{ (float) $product->price }};
 const basePriceFormatted = 'KES {{ number_format($product->price, 0) }}';
 
-function handleVariantChange(select) {
-    const option = select.options[select.selectedIndex];
-    const rawPrice = option.dataset.price;
-    const priceEl  = document.querySelector('.text-3xl.font-bold.text-gray-900');
-    if (!priceEl) return;
+function handleVariantChange(btn) {
+    // Update active state
+    document.querySelectorAll('.variant-btn').forEach(b => {
+        b.classList.remove('border-pink-500', 'text-pink-600', 'bg-pink-50');
+        b.classList.add('border-gray-200', 'text-gray-700');
+    });
+    btn.classList.add('border-pink-500', 'text-pink-600', 'bg-pink-50');
+    btn.classList.remove('border-gray-200', 'text-gray-700');
 
+    // Update label
+    const labelEl = document.getElementById('variant-label');
+    if (labelEl) labelEl.textContent = btn.dataset.label;
+
+    // Update price
+    const priceEl = document.querySelector('.text-3xl.font-bold.text-gray-900');
+    if (!priceEl) return;
+    const rawPrice = btn.dataset.price;
     if (rawPrice && rawPrice !== '') {
         const num = parseFloat(rawPrice);
         priceEl.textContent = 'KES ' + num.toLocaleString('en-KE', { maximumFractionDigits: 0 });
