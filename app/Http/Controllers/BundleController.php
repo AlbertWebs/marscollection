@@ -11,7 +11,7 @@ class BundleController extends Controller
     {
         $bundles = Bundle::where('is_active', true)
             ->with('products')
-            ->paginate(24);
+            ->paginate(50);
 
         return view('bundles.index', compact('bundles'));
     }
