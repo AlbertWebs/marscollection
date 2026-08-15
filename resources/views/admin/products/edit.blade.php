@@ -154,6 +154,32 @@
                     @error('colors')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
                 </div>
 
+                <!-- Variants (Size / Type) Builder -->
+                <div class="lg:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Variants <span class="text-gray-400 font-normal">— Size, Type, Scent, etc. (optional). Each can have its own price or inherit the base price.</span>
+                    </label>
+                    @php
+                        $existingVariants = old('variants', $product->variants ? json_encode($product->variants) : '');
+                    @endphp
+                    <input type="hidden" id="edit-variants" name="variants" value="{{ $existingVariants }}">
+                    <div id="edit-variant-tags" class="flex flex-wrap gap-2 mb-3 min-h-[36px]"></div>
+                    <div class="flex items-center gap-2">
+                        <input type="text" id="edit-variant-label-input" placeholder="Label (e.g. Small, Coconut, 50ml)"
+                               class="flex-1 border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
+                               onkeydown="if(event.key==='Enter'){event.preventDefault();editAddVariant();}">
+                        <input type="number" id="edit-variant-price-input" placeholder="Price (optional)"
+                               min="0" step="1"
+                               class="w-36 border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm">
+                        <button type="button" onclick="editAddVariant()"
+                                class="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap">
+                            + Add
+                        </button>
+                    </div>
+                    <p class="mt-1 text-xs text-gray-400">Leave price blank to use the product's base price for that variant.</p>
+                    @error('variants')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+                </div>
+
                 <!-- Flags -->
                 <div class="space-y-2">
                     <label class="flex items-center">
@@ -174,73 +200,74 @@
                 </div>
             </div>
 
-            <!-- Image Upload -->
+            <!-- Main Image Drop Zone -->
             <div>
-                <label for="image" class="block text-sm font-medium text-gray-700">Product Image</label>
-                
-                <!-- Current Image Preview -->
-                @if($product->image)
-                    <div class="mt-2 mb-4">
-                        <p class="text-sm text-gray-600 mb-2">Current Image:</p>
-                        <div class="flex items-center space-x-4">
-                            <img src="{{ \App\Helpers\ImageHelper::getProductImageUrl($product->image) }}" alt="{{ $product->name }}"
-                                 class="w-24 h-24 object-cover rounded-md border border-gray-200">
-                            <div>
-                                <p class="text-sm text-gray-500">{{ basename($product->image) }}</p>
-                                <p class="text-xs text-gray-400">Click "Choose File" to replace this image</p>
-                            </div>
-                        </div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Product Image</label>
+                <input type="file" id="image" name="image" accept="image/*" class="sr-only">
+                <div id="main-drop-zone"
+                     class="relative border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-pink-400 transition-colors bg-gray-50"
+                     style="min-height: 160px;"
+                     onclick="document.getElementById('image').click()"
+                     ondragover="event.preventDefault(); this.classList.add('border-pink-500','bg-pink-50')"
+                     ondragleave="this.classList.remove('border-pink-500','bg-pink-50')"
+                     ondrop="handleMainDrop(event)">
+                    <div id="main-drop-placeholder" class="{{ $product->image ? 'hidden' : '' }} flex flex-col items-center gap-2 py-8 pointer-events-none">
+                        <svg class="w-10 h-10 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        <p class="text-sm text-gray-500">Drop image here or <span class="text-pink-600 font-medium">click to browse</span></p>
+                        <p class="text-xs text-gray-400">JPG, PNG, WebP — max 2MB</p>
                     </div>
-                @endif
-                
-                <div class="mt-1 flex items-center">
-                    <input type="file" id="image" name="image" accept="image/*"
-                           class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100 @error('image') border-red-500 @enderror">
+                    <div id="main-drop-preview" class="{{ $product->image ? '' : 'hidden' }} w-full relative">
+                        <img id="main-preview-img"
+                             src="{{ $product->image ? \App\Helpers\ImageHelper::getProductImageUrl($product->image) : '' }}"
+                             alt="Preview" class="w-full rounded-lg object-cover" style="max-height:240px;">
+                        <button type="button" id="main-preview-clear"
+                                onclick="event.stopPropagation(); clearMainImage()"
+                                class="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white rounded-full w-7 h-7 flex items-center justify-center shadow-md">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                        </button>
+                        <p id="main-existing-note" class="{{ $product->image ? '' : 'hidden' }} absolute bottom-2 left-2 bg-black/50 text-white text-xs px-2 py-1 rounded pointer-events-none">Current image — drop/click to replace</p>
+                    </div>
                 </div>
-                <p class="mt-1 text-sm text-gray-500">Upload a new product image (JPG, PNG, GIF). Max size: 2MB. Leave empty to keep current image.</p>
-                @error('image')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                @enderror
+                {{-- Hidden flag to clear image server-side if user removes it --}}
+                <input type="hidden" name="clear_image" id="clear-image-flag" value="0">
+                @error('image')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
             </div>
 
-            <!-- Extra Images -->
+            <!-- Extra Images Drop Zone -->
             <div>
-                <label class="block text-sm font-medium text-gray-700">Extra Images <span class="text-gray-400 font-normal">(up to 8 total)</span></label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Extra Images <span class="text-gray-400 font-normal">(up to 8 total)</span></label>
+                <input type="file" id="extra_images" name="extra_images[]" accept="image/*" multiple class="sr-only">
 
+                {{-- Existing saved extra images --}}
                 @if($product->extra_images && count($product->extra_images) > 0)
-                    <p class="text-sm text-gray-600 mt-2 mb-2">Existing extra images:</p>
-                    <div class="flex flex-wrap gap-3 mb-4">
-                        @foreach($product->extra_images as $extraImg)
-                        <div class="relative group w-24 h-24">
-                            <img src="{{ \App\Helpers\ImageHelper::getProductImageUrl($extraImg) }}"
-                                 alt="Extra image"
-                                 class="w-24 h-24 object-cover rounded-md border border-gray-200">
-                            <label class="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 rounded-md cursor-pointer transition-opacity">
-                                <input type="checkbox" name="delete_extra_images[]" value="{{ $extraImg }}"
-                                       class="delete-extra-checkbox sr-only" onchange="toggleDeleteOverlay(this)">
-                                <span class="delete-overlay-text text-white text-xs font-semibold px-2 text-center">Click to delete</span>
-                            </label>
-                            <div class="deleted-badge hidden absolute inset-0 flex items-center justify-center bg-red-600/70 rounded-md pointer-events-none">
-                                <span class="text-white text-xs font-bold">Will delete</span>
-                            </div>
-                        </div>
-                        @endforeach
+                <div id="existing-extras" class="flex flex-wrap gap-2 mb-3">
+                    @foreach($product->extra_images as $extraImg)
+                    <div class="relative group w-20 h-20 flex-shrink-0" id="existing-{{ md5($extraImg) }}">
+                        <img src="{{ \App\Helpers\ImageHelper::getProductImageUrl($extraImg) }}"
+                             alt="Extra image" class="w-full h-full object-cover rounded-md border border-gray-200">
+                        <button type="button"
+                                onclick="deleteExistingExtra('{{ $extraImg }}', '{{ md5($extraImg) }}')"
+                                class="absolute -top-1.5 -right-1.5 bg-red-600 hover:bg-red-700 text-white rounded-full w-5 h-5 hidden group-hover:flex items-center justify-center shadow text-xs leading-none">×</button>
+                        <input type="hidden" name="keep_extra_images[]" value="{{ $extraImg }}" id="keep-{{ md5($extraImg) }}">
                     </div>
-                    <p class="text-xs text-gray-400 mb-3">Hover over an image and click to mark it for deletion. Changes apply on save.</p>
+                    @endforeach
+                </div>
                 @endif
 
-                <div class="mt-1">
-                    <input type="file" id="extra_images" name="extra_images[]" accept="image/*" multiple
-                           class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100">
+                <div id="extra-drop-zone"
+                     class="border-2 border-dashed border-gray-300 rounded-lg p-4 cursor-pointer hover:border-pink-400 transition-colors bg-gray-50"
+                     onclick="document.getElementById('extra_images').click()"
+                     ondragover="event.preventDefault(); this.classList.add('border-pink-500','bg-pink-50')"
+                     ondragleave="this.classList.remove('border-pink-500','bg-pink-50')"
+                     ondrop="handleExtraDrop(event)">
+                    <div id="extra-drop-placeholder" class="flex flex-col items-center gap-2 py-3 pointer-events-none">
+                        <svg class="w-7 h-7 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"/></svg>
+                        <p class="text-sm text-gray-500">Drop new images or <span class="text-pink-600 font-medium">click to browse</span></p>
+                    </div>
+                    <div id="extra-images-preview" class="flex flex-wrap gap-2"></div>
                 </div>
-                <div id="extra-images-preview" class="mt-3 flex flex-wrap gap-2"></div>
-                <p class="mt-1 text-sm text-gray-500">Select images to add. Existing images not marked for deletion will be kept.</p>
-                @error('extra_images')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                @enderror
-                @error('extra_images.*')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                @enderror
+                @error('extra_images')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+                @error('extra_images.*')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
             </div>
 
             <!-- Description -->
@@ -344,36 +371,102 @@
 </script>
 
 <script>
-// Extra images new file preview
-document.getElementById('extra_images').addEventListener('change', function () {
-    const preview = document.getElementById('extra-images-preview');
-    preview.innerHTML = '';
-    Array.from(this.files).forEach(file => {
+// ---- Main image drop zone (edit) ----
+const mainInput = document.getElementById('image');
+mainInput.addEventListener('change', () => showMainPreview(mainInput.files[0]));
+
+function handleMainDrop(e) {
+    e.preventDefault();
+    document.getElementById('main-drop-zone').classList.remove('border-pink-500','bg-pink-50');
+    const file = e.dataTransfer.files[0];
+    if (!file || !file.type.startsWith('image/')) return;
+    const dt = new DataTransfer(); dt.items.add(file); mainInput.files = dt.files;
+    showMainPreview(file);
+}
+
+function showMainPreview(file) {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+        document.getElementById('main-preview-img').src = ev.target.result;
+        document.getElementById('main-drop-placeholder').classList.add('hidden');
+        document.getElementById('main-drop-preview').classList.remove('hidden');
+        document.getElementById('main-existing-note').classList.add('hidden');
+        document.getElementById('clear-image-flag').value = '0';
+    };
+    reader.readAsDataURL(file);
+}
+
+function clearMainImage() {
+    mainInput.value = '';
+    document.getElementById('clear-image-flag').value = '1';
+    document.getElementById('main-drop-placeholder').classList.remove('hidden');
+    document.getElementById('main-drop-preview').classList.add('hidden');
+}
+
+// ---- Extra images drop zone (edit) ----
+let extraFiles = [];
+const extraInput = document.getElementById('extra_images');
+extraInput.addEventListener('change', () => addExtraFiles(extraInput.files));
+
+function handleExtraDrop(e) {
+    e.preventDefault();
+    document.getElementById('extra-drop-zone').classList.remove('border-pink-500','bg-pink-50');
+    addExtraFiles(e.dataTransfer.files);
+}
+
+function addExtraFiles(fileList) {
+    Array.from(fileList).forEach(file => {
+        if (!file.type.startsWith('image/')) return;
+        if (extraFiles.length >= 8) return;
+        extraFiles.push(file);
+    });
+    syncExtraInput();
+    renderExtraPreviews();
+}
+
+function removeExtraFile(idx) {
+    extraFiles.splice(idx, 1);
+    syncExtraInput();
+    renderExtraPreviews();
+}
+
+function syncExtraInput() {
+    const dt = new DataTransfer();
+    extraFiles.forEach(f => dt.items.add(f));
+    extraInput.files = dt.files;
+}
+
+function renderExtraPreviews() {
+    const container = document.getElementById('extra-images-preview');
+    const placeholder = document.getElementById('extra-drop-placeholder');
+    container.innerHTML = '';
+    if (extraFiles.length === 0) {
+        placeholder.classList.remove('hidden');
+        return;
+    }
+    placeholder.classList.add('hidden');
+    extraFiles.forEach((file, idx) => {
         const reader = new FileReader();
-        reader.onload = e => {
+        reader.onload = ev => {
             const div = document.createElement('div');
-            div.className = 'relative w-20 h-20 rounded-md overflow-hidden border border-gray-200';
-            div.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover">`;
-            preview.appendChild(div);
+            div.className = 'relative w-20 h-20 flex-shrink-0';
+            div.innerHTML = `
+                <img src="${ev.target.result}" class="w-full h-full object-cover rounded-md border border-gray-200">
+                <button type="button" onclick="removeExtraFile(${idx})"
+                        class="absolute -top-1.5 -right-1.5 bg-red-600 hover:bg-red-700 text-white rounded-full w-5 h-5 flex items-center justify-center shadow text-xs leading-none">×</button>`;
+            container.appendChild(div);
         };
         reader.readAsDataURL(file);
     });
-});
+}
 
-// Toggle delete overlay on existing extra images
-function toggleDeleteOverlay(checkbox) {
-    const wrapper = checkbox.closest('.relative.group');
-    const badge = wrapper.querySelector('.deleted-badge');
-    const labelText = wrapper.querySelector('.delete-overlay-text');
-    if (checkbox.checked) {
-        badge.classList.remove('hidden');
-        labelText.textContent = 'Marked for deletion';
-        wrapper.querySelector('img').classList.add('opacity-40');
-    } else {
-        badge.classList.add('hidden');
-        labelText.textContent = 'Click to delete';
-        wrapper.querySelector('img').classList.remove('opacity-40');
-    }
+// ---- Delete an existing saved extra image ----
+function deleteExistingExtra(path, hash) {
+    const wrapper = document.getElementById('existing-' + hash);
+    const keepInput = document.getElementById('keep-' + hash);
+    if (wrapper) wrapper.remove();
+    if (keepInput) keepInput.remove();
 }
 </script>
 @endsection

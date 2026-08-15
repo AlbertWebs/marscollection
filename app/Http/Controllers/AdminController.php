@@ -192,6 +192,12 @@ class AdminController extends Controller
 
             $imagePath = $request->file('image')->store('products', 's3');
             $validated['image'] = $imagePath;
+        } elseif ($request->input('clear_image') === '1') {
+            // User explicitly removed the main image
+            if ($product->image && !str_starts_with($product->image, 'http')) {
+                \Storage::disk('s3')->delete($product->image);
+            }
+            $validated['image'] = null;
         }
 
         if ($request->filled('colors')) {
@@ -200,27 +206,28 @@ class AdminController extends Controller
             $validated['colors'] = null;
         }
 
-        // Handle extra images: delete removed ones, keep existing, append new uploads
-        $existingExtras = $product->extra_images ?? [];
+        // Extra images: keep only the ones the form sent back, plus any new uploads
+        $keepPaths = $request->input('keep_extra_images', []);
 
-        // Delete individually removed extra images
-        if ($request->has('delete_extra_images')) {
-            foreach ($request->delete_extra_images as $path) {
-                if (!str_starts_with($path, 'http')) {
-                    \Storage::disk('s3')->delete($path);
+        // Delete any existing extras that were NOT in keep list
+        foreach ($product->extra_images ?? [] as $existing) {
+            if (!in_array($existing, $keepPaths)) {
+                if (!str_starts_with($existing, 'http')) {
+                    \Storage::disk('s3')->delete($existing);
                 }
-                $existingExtras = array_values(array_filter($existingExtras, fn($e) => $e !== $path));
             }
         }
 
-        // Upload new extra images and append
+        // Upload new extra images and append to kept ones
+        $newExtras = [];
         if ($request->hasFile('extra_images')) {
             foreach ($request->file('extra_images') as $file) {
-                $existingExtras[] = $file->store('products', 's3');
+                $newExtras[] = $file->store('products', 's3');
             }
         }
 
-        $validated['extra_images'] = !empty($existingExtras) ? array_values($existingExtras) : null;
+        $allExtras = array_values(array_merge($keepPaths, $newExtras));
+        $validated['extra_images'] = !empty($allExtras) ? $allExtras : null;
         unset($validated['delete_extra_images']);
 
         $product->update($validated);
