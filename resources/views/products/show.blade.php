@@ -350,6 +350,12 @@
                     @if($product->stock_quantity > 0)
 
                         @if($product->variants && count($product->variants) > 0)
+                        @php
+                            // Sort variants: those with a price first (ascending), then base-price ones
+                            $sortedVariants = collect($product->variants)->sortBy(function($v) {
+                                return isset($v['price']) && $v['price'] !== null ? (float)$v['price'] : PHP_INT_MAX;
+                            })->values()->all();
+                        @endphp
                         <!-- Variant Selector -->
                         <div class="border-t border-gray-100 pt-4 space-y-2">
                             <div class="flex items-center justify-between">
@@ -357,15 +363,16 @@
                                 <span id="variant-label" class="text-sm font-bold text-pink-600"></span>
                             </div>
                             <div class="flex flex-wrap gap-2">
-                                @foreach($product->variants as $i => $variant)
+                                @foreach($sortedVariants as $i => $variant)
                                 <button type="button"
                                         onclick="handleVariantChange(this)"
                                         data-label="{{ $variant['label'] }}"
                                         data-price="{{ $variant['price'] ?? '' }}"
-                                        class="variant-btn px-4 py-2 rounded-md border-2 border-gray-200 text-sm font-medium text-gray-700 hover:border-pink-400 hover:text-pink-600 transition-all duration-150 whitespace-nowrap">
+                                        class="variant-btn px-4 py-2 rounded-md border-2 text-sm font-medium transition-all duration-150 whitespace-nowrap
+                                               {{ $i === 0 ? 'border-pink-500 text-pink-600 bg-pink-50' : 'border-gray-200 text-gray-700 hover:border-pink-400 hover:text-pink-600' }}">
                                     {{ $variant['label'] }}
                                     @if(!empty($variant['price']))
-                                        <span class="text-xs text-gray-400 ml-1">KES&nbsp;{{ number_format($variant['price'], 0) }}</span>
+                                        <span class="text-xs {{ $i === 0 ? 'text-pink-400' : 'text-gray-400' }} ml-1">KES&nbsp;{{ number_format($variant['price'], 0) }}</span>
                                     @endif
                                 </button>
                                 @endforeach
@@ -750,9 +757,13 @@ function handleVariantChange(btn) {
     document.querySelectorAll('.variant-btn').forEach(b => {
         b.classList.remove('border-pink-500', 'text-pink-600', 'bg-pink-50');
         b.classList.add('border-gray-200', 'text-gray-700');
+        const sub = b.querySelector('span');
+        if (sub) sub.classList.replace('text-pink-400', 'text-gray-400');
     });
     btn.classList.add('border-pink-500', 'text-pink-600', 'bg-pink-50');
     btn.classList.remove('border-gray-200', 'text-gray-700');
+    const sub = btn.querySelector('span');
+    if (sub) sub.classList.replace('text-gray-400', 'text-pink-400');
 
     // Update label
     const labelEl = document.getElementById('variant-label');
@@ -769,6 +780,12 @@ function handleVariantChange(btn) {
         priceEl.textContent = basePriceFormatted;
     }
 }
+
+// Auto-select first (cheapest) variant on load
+document.addEventListener('DOMContentLoaded', function () {
+    const firstVariant = document.querySelector('.variant-btn');
+    if (firstVariant) handleVariantChange(firstVariant);
+});
 
 // ---------- Gallery lightbox state ----------
 const lbImages = @json(array_map(fn($p) => \App\Helpers\ImageHelper::getProductImageUrl($p), $galleryImages));
