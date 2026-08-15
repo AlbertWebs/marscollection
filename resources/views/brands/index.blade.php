@@ -16,32 +16,28 @@
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
 
         @if($brands->count() > 0)
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
             @foreach($brands as $brand)
-                <a href="{{ route('products.index', ['brand' => $brand->slug]) }}" class="group">
-                    <div class="bg-white border border-gray-100 rounded-sm shadow-sm hover:shadow-md transition-shadow overflow-hidden">
-                        <div class="h-40 bg-gray-50 flex items-center justify-center p-5 border-b border-gray-100">
-                            @if($brand->logo)
-                                <img src="{{ str_starts_with($brand->logo, 'http') ? $brand->logo : Storage::disk('s3')->url($brand->logo) }}" alt="{{ $brand->name }}"
-                                     class="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300">
-                            @else
-                                <span class="text-lg font-bold text-gray-300 uppercase tracking-wide">{{ Str::limit($brand->name, 12) }}</span>
-                            @endif
-                        </div>
-                        <div class="p-4">
-                            <h3 class="text-sm font-semibold text-gray-900 group-hover:text-pink-600 transition-colors">
-                                {{ $brand->name }}
-                            </h3>
-                            @if($brand->description)
-                                <p class="text-xs text-gray-500 mt-1 line-clamp-2">{{ $brand->description }}</p>
-                            @endif
-                            <div class="mt-3 flex items-center justify-between">
-                                <span class="text-xs text-gray-400">{{ $brand->products->count() }} products</span>
-                                <span class="text-xs text-pink-600 font-medium group-hover:underline">Browse →</span>
-                            </div>
-                        </div>
+            @php
+                $logoUrl = $brand->logo
+                    ? (str_starts_with($brand->logo, 'http') ? $brand->logo : Storage::disk('s3')->url($brand->logo))
+                    : null;
+            @endphp
+            <a href="{{ route('products.index', ['brand' => $brand->slug]) }}"
+               class="group relative rounded-lg overflow-hidden block"
+               style="height: 120px;">
+                @if($logoUrl)
+                    <img src="{{ $logoUrl }}" alt="{{ $brand->name }}"
+                         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                @else
+                    <div class="w-full h-full bg-gray-200 flex items-center justify-center">
+                        <span class="text-gray-400 font-bold text-lg uppercase">{{ Str::limit($brand->name, 2) }}</span>
                     </div>
-                </a>
+                @endif
+                <div class="absolute inset-0 bg-black/45 group-hover:bg-black/60 transition-colors duration-200 flex items-center justify-center p-3">
+                    <span class="text-white text-base font-bold text-center leading-tight drop-shadow-md">{{ $brand->name }}</span>
+                </div>
+            </a>
             @endforeach
         </div>
         @else
