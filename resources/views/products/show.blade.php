@@ -495,7 +495,7 @@
         @if($similarProducts->count() > 0)
             <div class="mt-16">
                 <h2 class="text-2xl font-bold text-gray-900 mb-8">You May Also Like</h2>
-                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+                <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 xl:gap-4">
                     @foreach($similarProducts as $similarProduct)
                         @include('components.product-card', ['product' => $similarProduct])
                     @endforeach
