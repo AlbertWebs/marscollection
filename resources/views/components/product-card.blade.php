@@ -68,12 +68,17 @@
                 </div>
             @endif
         </div>
-        <div class="p-4">
-            <div class="text-xs text-gray-400 uppercase tracking-wide mb-1" itemprop="category">{{ $productCategory }}</div>
-            <h3 class="text-md font-semibold text-gray-900 mb-2" itemprop="name">{{ $productName }}</h3>
-            <div class="flex flex-col mb-4">
-                <div class="flex flex-col sm:flex-row sm:items-center sm:space-x-2 space-y-1 sm:space-y-0">
-                    <span class="text-lg sm:text-xl font-bold text-gray-900" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+        <div class="p-3">
+            {{-- Category: very muted, purely contextual --}}
+            <div class="text-[10px] font-medium text-gray-400 uppercase tracking-wider mb-0.5" itemprop="category">{{ $productCategory }}</div>
+
+            {{-- Name: readable but not dominant — price is the hero --}}
+            <h3 class="text-sm font-medium text-gray-600 leading-snug mb-2 line-clamp-2" itemprop="name">{{ $productName }}</h3>
+
+            <div class="flex flex-col gap-1 mb-3">
+                {{-- Price row: price dominant, original muted, discount badge accent --}}
+                <div class="flex items-center gap-1.5 flex-wrap">
+                    <span class="text-base font-bold text-gray-900" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
                         <meta itemprop="priceCurrency" content="KES">
                         @php
                             $stockAvailability = (is_object($product) && isset($product->stock_quantity))
@@ -112,49 +117,53 @@
                                 </div>
                             </div>
                         </div>
-                        <span>{{ $productPrice }}</span>
+                        {{ $productPrice }}
                     </span>
+
                     @if($productOriginalPrice)
-                        <span class="text-sm sm:text-base text-gray-400 line-through">{{ $productOriginalPrice }}</span>
+                        @php
+                            $rawOrig = is_object($product) ? (float)($product->original_price ?? 0) : 0;
+                            $discountPct = $rawOrig > $productRawPrice ? round((($rawOrig - $productRawPrice) / $rawOrig) * 100) : 0;
+                        @endphp
+                        <span class="text-xs text-gray-400 line-through">{{ $productOriginalPrice }}</span>
+                        @if($discountPct > 0)
+                            <span class="text-[10px] font-semibold bg-red-100 text-red-600 px-1.5 py-0.5 rounded-sm">-{{ $discountPct }}%</span>
+                        @endif
                     @endif
                 </div>
-                <div class="flex items-center text-xs sm:text-sm text-gray-500">
-                    <div class="flex text-pink-400 mr-2" aria-label="Rating: {{ $displayRating }} out of 5 stars">
+
+                {{-- Stars: compact, low visual weight --}}
+                <div class="flex items-center gap-1">
+                    <div class="flex text-pink-400" aria-label="Rating: {{ $displayRating }} out of 5 stars">
                         @for($i = 1; $i <= 5; $i++)
-                            @if($i <= $displayRating)
-                                <svg class="w-3 h-3 sm:w-4 sm:h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                </svg>
-                            @else
-                                <svg class="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                </svg>
-                            @endif
+                            <svg class="w-2.5 h-2.5" fill="{{ $i <= $displayRating ? 'currentColor' : 'none' }}" stroke="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                            </svg>
                         @endfor
                     </div>
-                    <span itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
+                    <span class="text-[10px] text-gray-400" itemprop="aggregateRating" itemscope itemtype="https://schema.org/AggregateRating">
                         <meta itemprop="ratingValue" content="{{ $displayRating }}">
                         <meta itemprop="bestRating" content="5">
                         <meta itemprop="ratingCount" content="1">
-                        <span>({{ $displayRating }}/5)</span>
+                        {{ $displayRating }}/5
                     </span>
                 </div>
-                
+
                 @if($productColors && count($productColors) > 0)
-                    <div class="flex flex-wrap gap-1.5 mt-3 color-swatches-container">
+                    <div class="flex flex-wrap gap-1 mt-1 color-swatches-container">
                         @foreach($productColors as $colorOption)
                             @php
                                 $parts = explode(':', $colorOption);
                                 $cName = trim($parts[0]);
                                 $cVal  = isset($parts[1]) ? trim($parts[1]) : $cName;
                             @endphp
-                            <div class="w-3.5 h-3.5 rounded-full border border-gray-200 shadow-sm swatch-dot transition-all cursor-pointer hover:scale-110"
+                            <div class="w-3 h-3 rounded-full border border-gray-200 shadow-sm swatch-dot transition-all cursor-pointer hover:scale-110"
                                  style="background-color: {{ $cVal }};"
                                  title="{{ $cName }}"
                                  onclick="event.preventDefault(); selectCardColor(this, '{{ $cName }}')">
                             </div>
                         @endforeach
-                        <span class="text-[10px] text-gray-400 ml-1 italic selected-color-text"></span>
+                        <span class="text-[10px] text-gray-400 ml-0.5 italic selected-color-text"></span>
                     </div>
                 @endif
             </div>
