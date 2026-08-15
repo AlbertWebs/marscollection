@@ -63,27 +63,28 @@
     if (!r1) return;
 
     let p1 = 0, p2 = 0;
-    const SPEED = 0.5;
-    let raf, running = true;
+    const SPEED1 = 0.5;
+    const SPEED2 = 0.38;
+    let running = true;
 
     function half(el) { return el.scrollWidth / 2; }
 
     function tick() {
         if (running) {
-            // Row 1: scroll left, reset at halfway point
-            p1 += SPEED;
+            p1 += SPEED1;
             if (p1 >= half(r1)) p1 = 0;
             r1.style.transform = `translateX(-${p1}px)`;
 
-            // Row 2: scroll right, reset at 0
-            p2 -= SPEED;
-            if (p2 <= -half(r2)) p2 = 0;
-            r2.style.transform = `translateX(${Math.abs(p2)}px)`;
+            if (r2) {
+                p2 += SPEED2;
+                if (p2 >= half(r2)) p2 = 0;
+                r2.style.transform = `translateX(-${p2}px)`;
+            }
         }
-        raf = requestAnimationFrame(tick);
+        requestAnimationFrame(tick);
     }
 
-    raf = requestAnimationFrame(tick);
+    requestAnimationFrame(tick);
 
     window.brandsStop  = () => { running = false; };
     window.brandsStart = () => { running = true; };
