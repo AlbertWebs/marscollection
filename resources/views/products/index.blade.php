@@ -139,10 +139,10 @@
             </button>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
             <!-- Sidebar Filters -->
             <div class="lg:col-span-1">
-                <div id="mobile-filters" class="hidden lg:block">
+                <div id="mobile-filters" class="hidden lg:block sticky top-4 self-start max-h-[calc(100vh-2rem)] overflow-y-auto">
                     @include('components.product-filters')
                 </div>
             </div>
