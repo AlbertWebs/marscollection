@@ -206,7 +206,7 @@
                 <input type="file" id="image" name="image" accept="image/*" class="sr-only">
                 <div id="main-drop-zone"
                      class="relative border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-pink-400 transition-colors bg-gray-50"
-                     style="min-height: 160px;"
+                     style="width: 200px; height: 200px;"
                      onclick="document.getElementById('image').click()"
                      ondragover="event.preventDefault(); this.classList.add('border-pink-500','bg-pink-50')"
                      ondragleave="this.classList.remove('border-pink-500','bg-pink-50')"
@@ -219,7 +219,7 @@
                     <div id="main-drop-preview" class="{{ $product->image ? '' : 'hidden' }} w-full relative">
                         <img id="main-preview-img"
                              src="{{ $product->image ? \App\Helpers\ImageHelper::getProductImageUrl($product->image) : '' }}"
-                             alt="Preview" class="w-full rounded-lg object-cover" style="max-height:240px;">
+                             alt="Preview" class="w-full h-full object-cover rounded-lg">
                         <button type="button" id="main-preview-clear"
                                 onclick="event.stopPropagation(); clearMainImage()"
                                 class="absolute top-2 right-2 bg-red-600 hover:bg-red-700 text-white rounded-full w-7 h-7 flex items-center justify-center shadow-md">
