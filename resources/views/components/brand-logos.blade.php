@@ -23,7 +23,7 @@
                        class="flex-shrink-0">
                         <img src="{{ str_starts_with($brand->logo, 'http') ? $brand->logo : \Storage::disk('s3')->url($brand->logo) }}"
                              alt="{{ $brand->name }}"
-                             class="h-12 w-auto object-contain grayscale hover:grayscale-0 opacity-50 hover:opacity-100 transition-all duration-300"
+                             class="h-12 w-auto object-contain opacity-80 hover:opacity-100 transition-opacity duration-300"
                              loading="lazy">
                     </a>
                 @endforeach
