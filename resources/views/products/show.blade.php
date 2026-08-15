@@ -302,13 +302,13 @@
                 <!-- Price -->
                 <div class="space-y-2">
                     <div class="flex items-center space-x-3">
-                        <span class="text-3xl font-bold text-gray-900">{{ $product->formatted_price }}</span>
-                        @if($product->original_price && $product->original_price > $product->price)
-                            <span class="text-lg text-gray-500 line-through">{{ $product->formatted_original_price }}</span>
-                            <span class="px-2 py-1 text-xs font-semibold bg-red-100 text-red-600 rounded-md">
-                                {{ round((($product->original_price - $product->price) / $product->original_price) * 100) }}% OFF
-                            </span>
-                        @endif
+                        <span id="product-price" class="text-3xl font-bold text-gray-900">{{ $product->formatted_price }}</span>
+                        <span id="product-original-price" class="text-lg text-gray-500 line-through {{ ($product->original_price && $product->original_price > $product->price) ? '' : 'hidden' }}">
+                            {{ $product->formatted_original_price }}
+                        </span>
+                        <span id="product-discount-badge" class="px-2 py-1 text-xs font-semibold bg-red-100 text-red-600 rounded-md {{ ($product->original_price && $product->original_price > $product->price) ? '' : 'hidden' }}">
+                            {{ ($product->original_price && $product->original_price > $product->price) ? round((($product->original_price - $product->price) / $product->original_price) * 100) . '% OFF' : '' }}
+                        </span>
                     </div>
                 </div>
 
@@ -368,6 +368,7 @@
                                         onclick="handleVariantChange(this)"
                                         data-label="{{ $variant['label'] }}"
                                         data-price="{{ $variant['price'] ?? '' }}"
+                                        data-original-price="{{ $variant['original_price'] ?? '' }}"
                                         class="variant-btn px-4 py-2 rounded-md border-2 text-sm font-medium transition-all duration-150 whitespace-nowrap
                                                {{ $i === 0 ? 'border-pink-500 text-pink-600 bg-pink-50' : 'border-gray-200 text-gray-700 hover:border-pink-400 hover:text-pink-600' }}">
                                     {{ $variant['label'] }}
@@ -749,11 +750,12 @@ function handleAddWithColor(productId) {
 }
 
 // ---------- Variant selector ----------
-const basePrice = {{ (float) $product->price }};
+const basePrice         = {{ (float) $product->price }};
 const basePriceFormatted = 'KES {{ number_format($product->price, 0) }}';
+const baseOriginalPrice  = {{ $product->original_price ? (float)$product->original_price : 'null' }};
 
 function handleVariantChange(btn) {
-    // Update active state
+    // Active pill state
     document.querySelectorAll('.variant-btn').forEach(b => {
         b.classList.remove('border-pink-500', 'text-pink-600', 'bg-pink-50');
         b.classList.add('border-gray-200', 'text-gray-700');
@@ -765,19 +767,30 @@ function handleVariantChange(btn) {
     const sub = btn.querySelector('span');
     if (sub) sub.classList.replace('text-gray-400', 'text-pink-400');
 
-    // Update label
+    // Label
     const labelEl = document.getElementById('variant-label');
     if (labelEl) labelEl.textContent = btn.dataset.label;
 
-    // Update price
-    const priceEl = document.querySelector('.text-3xl.font-bold.text-gray-900');
-    if (!priceEl) return;
-    const rawPrice = btn.dataset.price;
-    if (rawPrice && rawPrice !== '') {
-        const num = parseFloat(rawPrice);
-        priceEl.textContent = 'KES ' + num.toLocaleString('en-KE', { maximumFractionDigits: 0 });
+    // Resolve prices
+    const rawPrice    = btn.dataset.price;
+    const rawOriginal = btn.dataset.originalPrice;
+    const price    = rawPrice    && rawPrice    !== '' ? parseFloat(rawPrice)    : basePrice;
+    const original = rawOriginal && rawOriginal !== '' ? parseFloat(rawOriginal) : null;
+
+    // Update main price
+    const priceEl = document.getElementById('product-price');
+    if (priceEl) priceEl.textContent = 'KES ' + price.toLocaleString('en-KE', { maximumFractionDigits: 0 });
+
+    // Update strikethrough + badge
+    const origEl  = document.getElementById('product-original-price');
+    const badgeEl = document.getElementById('product-discount-badge');
+
+    if (original && original > price) {
+        if (origEl)  { origEl.textContent  = 'KES ' + original.toLocaleString('en-KE', { maximumFractionDigits: 0 }); origEl.classList.remove('hidden'); }
+        if (badgeEl) { badgeEl.textContent = Math.round(((original - price) / original) * 100) + '% OFF'; badgeEl.classList.remove('hidden'); }
     } else {
-        priceEl.textContent = basePriceFormatted;
+        if (origEl)  origEl.classList.add('hidden');
+        if (badgeEl) badgeEl.classList.add('hidden');
     }
 }
 

@@ -164,19 +164,24 @@
                     @endphp
                     <input type="hidden" id="edit-variants" name="variants" value="{{ $existingVariants }}">
                     <div id="edit-variant-tags" class="flex flex-wrap gap-2 mb-3 min-h-[36px]"></div>
-                    <div class="flex items-center gap-2">
-                        <input type="text" id="edit-variant-label-input" placeholder="Label (e.g. Small, Coconut, 50ml)"
-                               class="flex-1 border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
+                    <div class="grid grid-cols-1 sm:grid-cols-4 gap-2">
+                        <input type="text" id="edit-variant-label-input" placeholder="Label (e.g. Small, XL, Coconut)"
+                               class="sm:col-span-2 border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
                                onkeydown="if(event.key==='Enter'){event.preventDefault();editAddVariant();}">
                         <input type="number" id="edit-variant-price-input" placeholder="Price (optional)"
                                min="0" step="1"
-                               class="w-36 border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm">
+                               class="border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm">
+                        <input type="number" id="edit-variant-original-price-input" placeholder="Was / Original price"
+                               min="0" step="1"
+                               class="border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm">
+                    </div>
+                    <div class="mt-2">
                         <button type="button" onclick="editAddVariant()"
-                                class="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap">
-                            + Add
+                                class="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-md text-sm font-medium">
+                            + Add Variant
                         </button>
                     </div>
-                    <p class="mt-1 text-xs text-gray-400">Leave price blank to use the product's base price for that variant.</p>
+                    <p class="mt-1 text-xs text-gray-400">Leave price blank to use the product's base price. Set "Was" price to show a strikethrough discount on the product page.</p>
                     @error('variants')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
                 </div>
 
@@ -246,7 +251,7 @@
                         <img src="{{ \App\Helpers\ImageHelper::getProductImageUrl($extraImg) }}"
                              alt="Extra image" class="w-full h-full object-cover rounded-md border border-gray-200">
                         <button type="button"
-                                onclick="deleteExistingExtra('{{ $extraImg }}', '{{ md5($extraImg) }}')"
+                                onclick="event.stopPropagation(); deleteExistingExtra('{{ $extraImg }}', '{{ md5($extraImg) }}')"
                                 class="absolute -top-1.5 -right-1.5 bg-red-600 hover:bg-red-700 text-white rounded-full w-5 h-5 hidden group-hover:flex items-center justify-center shadow text-xs leading-none">×</button>
                         <input type="hidden" name="keep_extra_images[]" value="{{ $extraImg }}" id="keep-{{ md5($extraImg) }}">
                     </div>
@@ -373,10 +378,11 @@
 <script>
 // ---- Variant Builder (Edit Form) ----
 (function () {
-    const tagsContainer = document.getElementById('edit-variant-tags');
-    const hiddenInput   = document.getElementById('edit-variants');
-    const labelInput    = document.getElementById('edit-variant-label-input');
-    const priceInput    = document.getElementById('edit-variant-price-input');
+    const tagsContainer  = document.getElementById('edit-variant-tags');
+    const hiddenInput    = document.getElementById('edit-variants');
+    const labelInput     = document.getElementById('edit-variant-label-input');
+    const priceInput     = document.getElementById('edit-variant-price-input');
+    const origPriceInput = document.getElementById('edit-variant-original-price-input');
 
     if (!tagsContainer || !hiddenInput) return;
 
@@ -392,9 +398,11 @@
         const label = labelInput.value.trim();
         if (!label) { labelInput.focus(); return; }
         const price = priceInput.value.trim() !== '' ? parseFloat(priceInput.value) : null;
-        variants.push({ label, price });
+        const originalPrice = origPriceInput.value.trim() !== '' ? parseFloat(origPriceInput.value) : null;
+        variants.push({ label, price, original_price: originalPrice });
         labelInput.value = '';
         priceInput.value = '';
+        origPriceInput.value = '';
         renderTags();
         sync();
     };
@@ -410,8 +418,9 @@
         variants.forEach((v, i) => {
             const chip = document.createElement('span');
             chip.className = 'inline-flex items-center gap-1.5 bg-pink-50 border border-pink-200 rounded-full px-3 py-1 text-sm font-medium text-gray-800';
-            const priceText = v.price != null ? ` — KES ${Number(v.price).toLocaleString()}` : ' — base price';
-            chip.innerHTML = `${escV(v.label)}<span class="text-gray-400 text-xs">${priceText}</span><button type="button" onclick="removeVariant_edit(${i})" class="ml-1 text-gray-400 hover:text-red-500 leading-none">&times;</button>`;
+            let priceText = v.price != null ? `KES ${Number(v.price).toLocaleString()}` : 'base price';
+            if (v.original_price != null) priceText += ` <span class="line-through text-gray-400">KES ${Number(v.original_price).toLocaleString()}</span>`;
+            chip.innerHTML = `${escV(v.label)} <span class="text-gray-400 text-xs">${priceText}</span><button type="button" onclick="removeVariant_edit(${i})" class="ml-1 text-gray-400 hover:text-red-500 leading-none">&times;</button>`;
             tagsContainer.appendChild(chip);
         });
     }
@@ -507,7 +516,7 @@ function renderExtraPreviews() {
             div.className = 'relative w-20 h-20 flex-shrink-0';
             div.innerHTML = `
                 <img src="${ev.target.result}" class="w-full h-full object-cover rounded-md border border-gray-200">
-                <button type="button" onclick="removeExtraFile(${idx})"
+                <button type="button" onclick="event.stopPropagation(); removeExtraFile(${idx})"
                         class="absolute -top-1.5 -right-1.5 bg-red-600 hover:bg-red-700 text-white rounded-full w-5 h-5 flex items-center justify-center shadow text-xs leading-none">×</button>`;
             container.appendChild(div);
         };
