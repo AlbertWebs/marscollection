@@ -100,32 +100,54 @@ class EmbeddingService
     /**
      * Find N most similar products to a given vector using pgvector's
      * native cosine distance operator (<=>) — runs entirely in the DB.
-     * Much faster than PHP-side cosine loops, and uses the HNSW index.
      *
-     * @param array $queryVector  float[] from Gemini
+     * Falls back gracefully when exclusions would leave fewer than $limit results:
+     * - First try: exclude all viewed + cart items (fully fresh results)
+     * - If not enough: allow viewed products back, still exclude cart items
+     * - Cart items are ALWAYS excluded — no point recommending what they already intend to buy
+     *
+     * @param array $queryVector    float[] from Gemini
      * @param int   $limit
-     * @param array $excludeIds   product IDs to exclude
+     * @param array $excludeIds     product IDs to exclude (viewed + cart combined)
+     * @param array $hardExcludeIds product IDs to ALWAYS exclude regardless (cart items)
      */
-    public function findSimilar(array $queryVector, int $limit = 6, array $excludeIds = []): \Illuminate\Support\Collection
+    public function findSimilar(array $queryVector, int $limit = 6, array $excludeIds = [], array $hardExcludeIds = []): \Illuminate\Support\Collection
     {
-        return ProductEmbedding::with(['product.brand', 'product.category'])
+        $base = ProductEmbedding::with(['product.brand', 'product.category'])
             ->whereHas('product', fn($q) => $q->where('is_active', true))
+            ->when(!empty($hardExcludeIds), fn($q) => $q->whereNotIn('product_id', $hardExcludeIds));
+
+        // First try: exclude everything (viewed + cart)
+        $results = (clone $base)
             ->when(!empty($excludeIds), fn($q) => $q->whereNotIn('product_id', $excludeIds))
             ->nearestTo($queryVector, $limit)
             ->get()
             ->pluck('product')
             ->filter();
+
+        // Not enough fresh results — allow viewed products back in (cart still excluded)
+        if ($results->count() < $limit) {
+            $results = $base
+                ->nearestTo($queryVector, $limit)
+                ->get()
+                ->pluck('product')
+                ->filter();
+        }
+
+        return $results;
     }
 
     /**
-     * Get similar products for a given product using pgvector.
+     * Get similar products for a given product.
+     * The current product is a hard exclude — never recommend the same product.
      */
     public function getSimilarProducts(Product $product, int $limit = 6): \Illuminate\Support\Collection
     {
         $embedding = ProductEmbedding::where('product_id', $product->id)->first();
         if (!$embedding) return collect();
 
-        return $this->findSimilar($embedding->embedding, $limit, [$product->id]);
+        // Hard exclude only the product itself — allow all others including viewed ones
+        return $this->findSimilar($embedding->embedding, $limit, [], [$product->id]);
     }
 
     /**
@@ -182,6 +204,8 @@ class EmbeddingService
             }
         }
 
-        return $this->findSimilar($avgVec, $limit, array_merge($viewedProductIds, $additionalExcludeIds));
+        // Viewed products = soft exclude (allowed back if not enough fresh results)
+        // Cart items = hard exclude (never show what they already intend to buy)
+        return $this->findSimilar($avgVec, $limit, $viewedProductIds, $additionalExcludeIds);
     }
 }
