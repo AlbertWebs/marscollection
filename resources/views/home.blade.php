@@ -13,8 +13,26 @@
 @section('content')
     @include('components.hero')
 
-    @if(isset($pickedProducts) && $pickedProducts->count() > 0)
+    @if($trendingProducts->count() > 0)
         <section class="py-16 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12 fade-in">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Trending Products</h2>
+                    <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                        Our most popular makeup and beauty products in Nairobi
+                    </p>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                    @foreach($trendingProducts as $product)
+                        @include('components.product-card', ['product' => $product])
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
+
+    @if(isset($pickedProducts) && $pickedProducts->count() > 0)
+        <section class="py-16 bg-gray-50">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-12 fade-in">
                     <p class="text-xs uppercase tracking-widest text-pink-500 font-medium mb-2">Personalised For You</p>
@@ -30,27 +48,8 @@
         </section>
     @endif
 
-    @if($trendingProducts->count() > 0)
-        <section class="py-16 {{ isset($pickedProducts) && $pickedProducts->count() > 0 ? 'bg-gray-50' : 'bg-white' }}">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-12 fade-in">
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Trending Products</h2>
-                    <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                        Our most popular makeup and beauty products in Nairobi
-                    </p>
-                </div>
-                
-                <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-4">
-                    @foreach($trendingProducts as $product)
-                        @include('components.product-card', ['product' => $product])
-                    @endforeach
-                </div>
-            </div>
-        </section>
-    @endif
-
     @include('components.bundle')
-    
+
     @if($featuredProducts->count() > 0)
         <section class="py-16 bg-gray-50">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -60,13 +59,11 @@
                         Hand-picked beauty products available in Nairobi — delivered to your door
                     </p>
                 </div>
-                
                 <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-4">
                     @foreach($featuredProducts as $product)
                         @include('components.product-card', ['product' => $product])
                     @endforeach
                 </div>
-                
                 <div class="text-center mt-12">
                     <a href="{{ route('products.index', ['tag' => 'featured']) }}" class="bg-white border-2 border-pink-600 text-pink-600 px-8 py-4 rounded-full font-semibold hover:bg-pink-600 hover:text-white transition-all duration-300">
                         View All Featured Products
