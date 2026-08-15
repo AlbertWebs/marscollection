@@ -51,15 +51,13 @@ jobs:
             git remote set-url origin "https://github.com/kimutaiRop/zeynsbeauty.git"
 
             echo "── update .env secrets"
-            sudo sed -i "s|^GEMINI_API_KEY=.*|GEMINI_API_KEY=${GEMINI_API_KEY}|" .env
-            sudo sed -i "s|^DB_PASSWORD=.*|DB_PASSWORD=${DB_PASSWORD}|" .env
-
-            echo "── ensure pgsql env vars are set"
-            grep -q '^DB_CONNECTION=pgsql' .env || sudo sed -i 's|^DB_CONNECTION=.*|DB_CONNECTION=pgsql|' .env
-            grep -q '^DB_PORT=5432' .env     || sudo sed -i 's|^DB_PORT=.*|DB_PORT=5432|' .env
+            sudo -u app_zayns sed -i "s|^GEMINI_API_KEY=.*|GEMINI_API_KEY=${GEMINI_API_KEY}|" .env
+            sudo -u app_zayns sed -i "s|^DB_PASSWORD=.*|DB_PASSWORD=${DB_PASSWORD}|" .env
+            sudo -u app_zayns sed -i 's|^DB_CONNECTION=.*|DB_CONNECTION=pgsql|' .env
+            sudo -u app_zayns sed -i 's|^DB_PORT=.*|DB_PORT=5432|' .env
 
             echo "── composer install"
-            composer install --no-dev --optimize-autoloader --no-interaction
+            sudo -u app_zayns composer install --no-dev --optimize-autoloader --no-interaction
 
             echo "── migrate"
             sudo -u app_zayns php artisan migrate --force
