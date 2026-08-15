@@ -67,7 +67,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "public/build"
-          target: "/var/www/zaynsbeauty.co.ke/public"
+          target: "/home/app_zayns/www/public"
           strip_components: 1
 
       - name: Finalize
