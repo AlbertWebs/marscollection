@@ -30,7 +30,21 @@
     $altText = $productName . ' - ' . $productBrand . ' ' . $productCategory . ' | Zayn\'s Beauty';
 @endphp
 
-<article class="bg-white rounded-md overflow-hidden group cursor-pointer fade-in" itemscope itemtype="https://schema.org/Product">
+<article class="relative bg-white rounded-md overflow-hidden group cursor-pointer fade-in" itemscope itemtype="https://schema.org/Product">
+
+    {{-- Wishlist button sits OUTSIDE the <a> so it never triggers navigation --}}
+    @if($showWishlist)
+        <div class="absolute top-2 right-2 z-20">
+            <button onclick="event.stopPropagation()"
+                    class="bg-white p-1.5 rounded-full shadow-md hover:bg-pink-50 transition-colors"
+                    aria-label="Add {{ $productName }} to wishlist">
+                <svg class="w-4 h-4 text-gray-500 hover:text-pink-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                </svg>
+            </button>
+        </div>
+    @endif
+
     <a href="{{ route('products.show', $product) }}" class="block" aria-label="View details for {{ $productName }}">
         <div class="relative overflow-hidden">
             <img src="{{ $imageUrl }}" 
@@ -55,16 +69,6 @@
             @if($productBadge)
                 <div class="absolute top-2 left-2 z-10">
                     <span class="bg-{{ $productBadgeColor ?? 'pink' }}-500 text-white px-3 py-0.5 rounded-full text-sm font-semibold" aria-label="Product badge: {{ $productBadge }}">{{ $productBadge }}</span>
-                </div>
-            @endif
-            
-            @if($showWishlist)
-                <div class="absolute top-4 right-4 z-10">
-                    <button class="bg-white p-2 rounded-full shadow-md hover:bg-pink-50 transition-colors" aria-label="Add {{ $productName }} to wishlist">
-                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                        </svg>
-                    </button>
                 </div>
             @endif
         </div>
@@ -160,7 +164,7 @@
                             <div class="w-3 h-3 rounded-full border border-gray-200 shadow-sm swatch-dot transition-all cursor-pointer hover:scale-110"
                                  style="background-color: {{ $cVal }};"
                                  title="{{ $cName }}"
-                                 onclick="event.preventDefault(); selectCardColor(this, '{{ $cName }}')">
+                                 onclick="event.preventDefault(); event.stopPropagation(); selectCardColor(this, '{{ $cName }}')">
                             </div>
                         @endforeach
                         <span class="text-[10px] text-gray-400 ml-0.5 italic selected-color-text"></span>
