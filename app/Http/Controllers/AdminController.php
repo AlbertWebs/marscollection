@@ -135,6 +135,12 @@ class AdminController extends Controller
             $validated['colors'] = array_map('trim', explode(',', $request->colors));
         }
 
+        // Handle variants JSON
+        if ($request->filled('variants')) {
+            $decoded = json_decode($request->variants, true);
+            $validated['variants'] = is_array($decoded) ? $decoded : null;
+        }
+
         // Handle extra images upload
         if ($request->hasFile('extra_images')) {
             $extraPaths = [];
@@ -204,6 +210,14 @@ class AdminController extends Controller
             $validated['colors'] = array_map('trim', explode(',', $request->colors));
         } else {
             $validated['colors'] = null;
+        }
+
+        // Handle variants JSON
+        if ($request->filled('variants')) {
+            $decoded = json_decode($request->variants, true);
+            $validated['variants'] = is_array($decoded) ? $decoded : null;
+        } else {
+            $validated['variants'] = null;
         }
 
         // Extra images: keep only the ones the form sent back, plus any new uploads

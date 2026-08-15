@@ -348,6 +348,30 @@
                 <!-- Stock Status -->
                 <div class="space-y-4">
                     @if($product->stock_quantity > 0)
+
+                        @if($product->variants && count($product->variants) > 0)
+                        <!-- Variant Selector -->
+                        <div class="border-t border-gray-100 pt-4 space-y-2">
+                            <label for="variant-select" class="block text-sm font-semibold text-gray-900 uppercase tracking-widest">
+                                Select Option
+                            </label>
+                            <select id="variant-select"
+                                    class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 sm:text-sm"
+                                    onchange="handleVariantChange(this)">
+                                <option value="">— Choose an option —</option>
+                                @foreach($product->variants as $variant)
+                                <option value="{{ $variant['label'] }}"
+                                        data-price="{{ $variant['price'] ?? '' }}">
+                                    {{ $variant['label'] }}
+                                    @if(!empty($variant['price']))
+                                        — KES {{ number_format($variant['price'], 0) }}
+                                    @endif
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        @endif
+
                         <div class="flex items-center space-x-2 text-green-600">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
@@ -714,6 +738,24 @@ function handleAddWithColor(productId) {
     }
     
     addToCart(productId, 1, color);
+}
+
+// ---------- Variant selector ----------
+const basePrice = {{ (float) $product->price }};
+const basePriceFormatted = 'KES {{ number_format($product->price, 0) }}';
+
+function handleVariantChange(select) {
+    const option = select.options[select.selectedIndex];
+    const rawPrice = option.dataset.price;
+    const priceEl  = document.querySelector('.text-3xl.font-bold.text-gray-900');
+    if (!priceEl) return;
+
+    if (rawPrice && rawPrice !== '') {
+        const num = parseFloat(rawPrice);
+        priceEl.textContent = 'KES ' + num.toLocaleString('en-KE', { maximumFractionDigits: 0 });
+    } else {
+        priceEl.textContent = basePriceFormatted;
+    }
 }
 
 // ---------- Gallery lightbox state ----------

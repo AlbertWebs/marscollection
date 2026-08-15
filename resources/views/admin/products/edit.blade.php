@@ -371,6 +371,60 @@
 </script>
 
 <script>
+// ---- Variant Builder (Edit Form) ----
+(function () {
+    const tagsContainer = document.getElementById('edit-variant-tags');
+    const hiddenInput   = document.getElementById('edit-variants');
+    const labelInput    = document.getElementById('edit-variant-label-input');
+    const priceInput    = document.getElementById('edit-variant-price-input');
+
+    if (!tagsContainer || !hiddenInput) return;
+
+    let variants = [];
+
+    const initial = hiddenInput.value.trim();
+    if (initial) {
+        try { variants = JSON.parse(initial); } catch(e) {}
+        renderTags();
+    }
+
+    window.editAddVariant = function () {
+        const label = labelInput.value.trim();
+        if (!label) { labelInput.focus(); return; }
+        const price = priceInput.value.trim() !== '' ? parseFloat(priceInput.value) : null;
+        variants.push({ label, price });
+        labelInput.value = '';
+        priceInput.value = '';
+        renderTags();
+        sync();
+    };
+
+    function removeVariant(idx) {
+        variants.splice(idx, 1);
+        renderTags();
+        sync();
+    }
+
+    function renderTags() {
+        tagsContainer.innerHTML = '';
+        variants.forEach((v, i) => {
+            const chip = document.createElement('span');
+            chip.className = 'inline-flex items-center gap-1.5 bg-pink-50 border border-pink-200 rounded-full px-3 py-1 text-sm font-medium text-gray-800';
+            const priceText = v.price != null ? ` — KES ${Number(v.price).toLocaleString()}` : ' — base price';
+            chip.innerHTML = `${escV(v.label)}<span class="text-gray-400 text-xs">${priceText}</span><button type="button" onclick="removeVariant_edit(${i})" class="ml-1 text-gray-400 hover:text-red-500 leading-none">&times;</button>`;
+            tagsContainer.appendChild(chip);
+        });
+    }
+
+    function sync() { hiddenInput.value = JSON.stringify(variants); }
+
+    function escV(str) {
+        return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    window.removeVariant_edit = removeVariant;
+})();
+
 // ---- Main image drop zone (edit) ----
 const mainInput = document.getElementById('image');
 mainInput.addEventListener('change', () => showMainPreview(mainInput.files[0]));
