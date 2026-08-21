@@ -293,7 +293,11 @@
                                 @endif
                             @endfor
                         </div>
-                        <span class="text-sm text-gray-600 ml-2">{{ $product->rating > 0 ? $product->rating : 5 }}/5</span>
+                        <span class="text-sm text-gray-600 ml-2">@php
+                            $rVal = (float)($product->rating > 0 ? $product->rating : 5);
+                            $rDisplay = ($rVal == (int)$rVal) ? (int)$rVal : rtrim(rtrim(number_format($rVal, 1), '0'), '.');
+                        @endphp
+                        {{ $rDisplay }}/5</span>
                     </div>
                     
 
@@ -520,7 +524,11 @@
                                 </svg>
                             @endif
                         @endfor
-                        <span class="text-sm text-gray-600 ml-2">{{ $product->reviews_count > 0 ? number_format($product->average_rating, 1) : '5' }}/5</span>
+                        <span class="text-sm text-gray-600 ml-2">@php
+                            $avgVal = (float)($product->reviews_count > 0 ? $product->average_rating : 5);
+                            $avgDisplay = ($avgVal == (int)$avgVal) ? (int)$avgVal : rtrim(rtrim(number_format($avgVal, 1), '0'), '.');
+                        @endphp
+                        {{ $avgDisplay }}/5</span>
                     </div>
                     @if($product->reviews_count > 0)
                         <span class="text-sm text-gray-500">({{ $product->reviews_count }} reviews)</span>

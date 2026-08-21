@@ -11,8 +11,9 @@
     $productRating = is_object($product) ? $product->rating : $product['rating'];
     $productDescription = is_object($product) ? $product->description : ($product['description'] ?? null);
     
-    // Show 5/5 stars when no reviews
-    $displayRating = $productRating > 0 ? $productRating : 5;
+    // Show 5/5 stars when no reviews, formatting whole numbers without decimal points
+    $numericRating = (float)($productRating > 0 ? $productRating : 5);
+    $displayRating = ($numericRating == (int)$numericRating) ? (int)$numericRating : rtrim(rtrim(number_format($numericRating, 1), '0'), '.');
     $productBadge = is_object($product) ? $product->badge : ($product['badge'] ?? null);
     $productBadgeColor = is_object($product) ? $product->badge_color : ($product['badge_color'] ?? null);
     $showWishlist = is_object($product) ? true : ($product['show_wishlist'] ?? false);

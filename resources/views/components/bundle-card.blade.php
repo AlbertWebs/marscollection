@@ -12,8 +12,9 @@
     $bundleReviewCount = is_object($bundle) ? $bundle->review_count : ($bundle['review_count'] ?? 0);
     $bundleId = is_object($bundle) ? $bundle->id : ($bundle['id'] ?? null);
     
-    // Show 5/5 stars when no reviews
-    $displayRating = $bundleRating > 0 ? $bundleRating : 5;
+    // Show 5/5 stars when no reviews, formatting whole numbers without decimal points
+    $numericRating = (float)($bundleRating > 0 ? $bundleRating : 5);
+    $displayRating = ($numericRating == (int)$numericRating) ? (int)$numericRating : rtrim(rtrim(number_format($numericRating, 1), '0'), '.');
 @endphp
 
 <div class="bg-white rounded-md overflow-hidden group shadow-sm hover:shadow-lg transition-shadow duration-300">
