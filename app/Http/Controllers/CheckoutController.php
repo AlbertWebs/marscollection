@@ -20,7 +20,7 @@ class CheckoutController extends Controller
             'customer_phone' => 'required|string|max:20',
             'customer_city' => 'required|string|max:255',
             'delivery_address' => 'required|string|max:1000',
-            'payment_method' => 'required|in:cash_on_delivery,credit_card,bank_transfer',
+            'payment_method' => 'required|in:mpesa,cash_on_delivery,credit_card,bank_transfer',
             'notes' => 'nullable|string|max:1000',
         ]);
 
@@ -43,7 +43,7 @@ class CheckoutController extends Controller
         });
 
         $tax = $subtotal * 0.15; // 15% tax
-        $shipping = $this->calculateShipping($request->customer_city);
+        $shipping = $this->calculateShipping($request->customer_city, $subtotal);
         $total = $subtotal + $tax + $shipping;
 
         // Create order
@@ -141,8 +141,13 @@ class CheckoutController extends Controller
         return view('checkout.success');
     }
 
-    private function calculateShipping($city)
+    private function calculateShipping($city, $subtotal = 0)
     {
+        // Free delivery on all orders above KES 5,000
+        if ($subtotal >= 5000) {
+            return 0.00;
+        }
+
         // Convert city to lowercase for comparison
         $city = strtolower(trim($city));
         

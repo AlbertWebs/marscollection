@@ -4,6 +4,29 @@
 @endphp
 
 <header class="bg-white border-b-2 border-gray-100 sticky top-0 z-50">
+    {{-- Top Announcement Bar --}}
+    <div class="bg-gray-950 text-white text-[11px] sm:text-xs py-2 px-4 border-b border-gray-800">
+        <div class="container mx-auto flex items-center justify-between gap-4">
+            <div class="flex items-center gap-2 overflow-hidden whitespace-nowrap mx-auto md:mx-0">
+                <span class="inline-flex items-center gap-1.5 font-medium text-pink-300">
+                    <span>🚚</span> <strong>FREE Nairobi Delivery</strong> on orders above KES 5,000
+                </span>
+                <span class="hidden md:inline text-gray-600">·</span>
+                <span class="hidden md:inline text-gray-300">⚡ Same-Day Dispatch in CBD</span>
+                <span class="hidden md:inline text-gray-600">·</span>
+                <span class="hidden lg:inline text-emerald-400 font-semibold">📱 Lipa Na M-Pesa (Till / STK)</span>
+            </div>
+            <div class="hidden md:flex items-center gap-4 text-gray-300 text-[11px]">
+                <a href="https://wa.me/254707641446" target="_blank" rel="noopener noreferrer" class="hover:text-pink-300 transition-colors flex items-center gap-1">
+                    <span class="text-emerald-400">●</span> WhatsApp Consultation
+                </a>
+                <a href="{{ route('appointments.create') }}" class="hover:text-pink-300 transition-colors font-bold text-pink-400">
+                    Book Makeup →
+                </a>
+            </div>
+        </div>
+    </div>
+
     <!-- Main Header -->
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">

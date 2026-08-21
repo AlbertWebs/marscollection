@@ -146,20 +146,45 @@
                 <div class="xl:col-span-1">
                     <div class="bg-white rounded-md shadow-sm border border-gray-200 p-4 md:p-6">
                         <h2 class="text-lg font-semibold text-gray-900 mb-4">Order Summary</h2>
+
+                        {{-- Free Delivery Progress Meter --}}
+                        @php
+                            $freeDeliveryGoal = 5000;
+                            $amountRemaining = max(0, $freeDeliveryGoal - $total);
+                            $progressPct = min(100, round(($total / $freeDeliveryGoal) * 100));
+                        @endphp
+                        <div class="mb-5 p-3.5 bg-gradient-to-r {{ $amountRemaining > 0 ? 'from-pink-50 to-rose-50 border-pink-200' : 'from-emerald-50 to-teal-50 border-emerald-200' }} border rounded-lg">
+                            <div class="flex items-center justify-between text-xs font-semibold mb-1.5">
+                                @if($amountRemaining > 0)
+                                    <span class="text-pink-900 flex items-center gap-1.5">
+                                        <span>🚚</span> Add <strong class="text-pink-600">KES {{ number_format($amountRemaining) }}</strong> for <strong class="text-gray-900">FREE Nairobi Delivery</strong>
+                                    </span>
+                                    <span class="text-pink-600 font-bold">{{ $progressPct }}%</span>
+                                @else
+                                    <span class="text-emerald-900 font-bold flex items-center gap-1.5">
+                                        <span>🎉</span> You've unlocked <strong class="text-emerald-700">FREE Delivery</strong> across Nairobi!
+                                    </span>
+                                    <span class="text-emerald-700 font-bold">100%</span>
+                                @endif
+                            </div>
+                            <div class="w-full bg-gray-200/80 rounded-full h-2 overflow-hidden">
+                                <div class="h-2 rounded-full transition-all duration-500 {{ $amountRemaining > 0 ? 'bg-pink-600' : 'bg-emerald-500' }}" style="width: {{ $progressPct }}%"></div>
+                            </div>
+                        </div>
                         
                         <div class="space-y-3 mb-6">
                             <div class="flex justify-between">
                                 <span class="text-gray-600">Subtotal</span>
-                                <span class="font-semibold">KES {{ number_format($total, 2) }}</span>
+                                <span class="font-semibold">KES {{ number_format($total) }}</span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-gray-600">Shipping</span>
-                                <span class="font-semibold" id="shipping-cost">KES 0.00</span>
+                                <span class="font-semibold text-emerald-600" id="shipping-cost">{{ $total >= 5000 ? 'FREE (KES 0)' : 'KES 0' }}</span>
                             </div>
                             <div class="border-t border-gray-200 pt-3">
                                 <div class="flex justify-between">
                                     <span class="text-lg font-semibold">Total</span>
-                                    <span class="text-lg font-bold text-pink-600" id="total-cost">KES {{ number_format($total, 2) }}</span>
+                                    <span class="text-lg font-bold text-pink-600" id="total-cost">KES {{ number_format($total) }}</span>
                                 </div>
                             </div>
                         </div>
@@ -184,33 +209,36 @@
                                     </div>
                                     
                                     <div>
-                                        <label for="customer_phone" class="block text-sm font-medium text-gray-700 mb-1">Phone *</label>
+                                        <label for="customer_phone" class="block text-sm font-medium text-gray-700 mb-1">Phone Number (M-Pesa) *</label>
                                         <input type="tel" id="customer_phone" name="customer_phone" required
+                                               placeholder="0712 345 678"
                                                class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm">
                                     </div>
                                     
                                     <div>
-                                        <label for="customer_city" class="block text-sm font-medium text-gray-700 mb-1">City *</label>
+                                        <label for="customer_city" class="block text-sm font-medium text-gray-700 mb-1">City / Town *</label>
                                         <input type="text" id="customer_city" name="customer_city" required
+                                               placeholder="e.g. Nairobi, Westlands, Kilimani, Mombasa..."
                                                class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm"
                                                oninput="calculateShipping()">
-                                        <p class="text-xs text-gray-500 mt-1">Enter your city to see shipping cost</p>
+                                        <p class="text-xs text-gray-500 mt-1">Free delivery in Nairobi & local towns on orders over KES 5,000</p>
                                     </div>
                                     
                                     <div>
                                         <label for="delivery_address" class="block text-sm font-medium text-gray-700 mb-1">Delivery Address *</label>
-                                        <textarea id="delivery_address" name="delivery_address" rows="3" required
-                                                  placeholder="Enter your complete delivery address"
+                                        <textarea id="delivery_address" name="delivery_address" rows="2" required
+                                                  placeholder="Building, street, apartment or estate name"
                                                   class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm"></textarea>
                                     </div>
                                     
                                     <div>
                                         <label for="payment_method" class="block text-sm font-medium text-gray-700 mb-1">Payment Method *</label>
                                         <select id="payment_method" name="payment_method" required
-                                                class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm">
-                                            <option value="cash_on_delivery">Cash on Delivery</option>
-                                            <option value="credit_card">Credit Card</option>
-                                            <option value="bank_transfer">Bank Transfer</option>
+                                                class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm bg-white">
+                                            <option value="mpesa" selected>🟢 Lipa Na M-Pesa (Till / STK Push / Paybill)</option>
+                                            <option value="cash_on_delivery">💵 Cash / Card on Delivery (Nairobi)</option>
+                                            <option value="credit_card">💳 Credit / Debit Card (Visa / Mastercard)</option>
+                                            <option value="bank_transfer">🏦 Bank Transfer / Airtel Money</option>
                                         </select>
                                     </div>
                                     
@@ -319,23 +347,28 @@ function calculateShipping() {
     const city = document.getElementById('customer_city').value.toLowerCase().trim();
     let shippingCost = 2500; // Default shipping cost in KES
     
-    // Local cities (free shipping)
-    const localCities = ['nairobi', 'mombasa', 'kisumu', 'nakuru', 'eldoret', 'thika', 'kakamega', 'kericho'];
-    
-    // Nearby cities (low shipping cost)
-    const nearbyCities = ['naivasha', 'kerugoya', 'nyeri', 'muranga', 'kiambu', 'machakos', 'kitui', 'embu', 'meru'];
-    
-    if (localCities.includes(city)) {
+    // Free shipping threshold
+    if (subtotal >= 5000) {
         shippingCost = 0;
-    } else if (nearbyCities.includes(city)) {
-        shippingCost = 1500;
+    } else {
+        // Local cities (free shipping)
+        const localCities = ['nairobi', 'mombasa', 'kisumu', 'nakuru', 'eldoret', 'thika', 'kakamega', 'kericho', ''];
+        
+        // Nearby cities (low shipping cost)
+        const nearbyCities = ['naivasha', 'kerugoya', 'nyeri', 'muranga', 'kiambu', 'machakos', 'kitui', 'embu', 'meru'];
+        
+        if (localCities.includes(city) || city.includes('nairobi') || city.includes('westlands') || city.includes('kilimani') || city.includes('cbd')) {
+            shippingCost = 0;
+        } else if (nearbyCities.includes(city)) {
+            shippingCost = 1500;
+        }
     }
     
     // Update shipping cost display
-    document.getElementById('shipping-cost').textContent = `KES ${shippingCost.toLocaleString()}`;
+    document.getElementById('shipping-cost').textContent = shippingCost === 0 ? 'FREE (KES 0)' : `KES ${shippingCost.toLocaleString()}`;
     
     // Calculate and update total
-    const total = subtotal + tax + shippingCost;
+    const total = subtotal + shippingCost;
     document.getElementById('total-cost').textContent = `KES ${total.toLocaleString()}`;
 }
 

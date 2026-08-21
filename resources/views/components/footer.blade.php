@@ -8,7 +8,68 @@
 @endphp
 
 <footer class="bg-gray-950 text-gray-400">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-8">
+    {{-- Reassurance / Trust Highlights Strip --}}
+    <div class="border-b border-gray-800/80 bg-gray-900/60">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center md:text-left">
+                
+                {{-- Free Delivery --}}
+                <div class="flex flex-col md:flex-row items-center md:items-start gap-3">
+                    <div class="w-10 h-10 rounded-full bg-pink-500/10 border border-pink-500/20 flex items-center justify-center text-pink-500 flex-shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h5 class="text-xs sm:text-sm font-bold text-white uppercase tracking-wider">Free Nairobi Delivery</h5>
+                        <p class="text-[11px] sm:text-xs text-gray-400 mt-0.5">On all orders above KES 5,000</p>
+                    </div>
+                </div>
+
+                {{-- M-Pesa Support --}}
+                <div class="flex flex-col md:flex-row items-center md:items-start gap-3">
+                    <div class="w-10 h-10 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 flex-shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h5 class="text-xs sm:text-sm font-bold text-white uppercase tracking-wider">Lipa Na M-Pesa</h5>
+                        <p class="text-[11px] sm:text-xs text-gray-400 mt-0.5">Till, STK Push & Paybill accepted</p>
+                    </div>
+                </div>
+
+                {{-- 100% Authentic --}}
+                <div class="flex flex-col md:flex-row items-center md:items-start gap-3">
+                    <div class="w-10 h-10 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 flex-shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h5 class="text-xs sm:text-sm font-bold text-white uppercase tracking-wider">100% Authentic</h5>
+                        <p class="text-[11px] sm:text-xs text-gray-400 mt-0.5">Original batch-verified products</p>
+                    </div>
+                </div>
+
+                {{-- Same-Day Dispatch --}}
+                <div class="flex flex-col md:flex-row items-center md:items-start gap-3">
+                    <div class="w-10 h-10 rounded-full bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 flex-shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h5 class="text-xs sm:text-sm font-bold text-white uppercase tracking-wider">Same-Day Delivery</h5>
+                        <p class="text-[11px] sm:text-xs text-gray-400 mt-0.5">Nairobi CBD & countrywide dispatch</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-8">
         <div class="grid grid-cols-1 md:grid-cols-12 gap-8 mb-12">
 
             <!-- Brand column -->
@@ -16,8 +77,8 @@
                 <a href="{{ route('home') }}" aria-label="Zayn's Beauty">
                     <img src="{{ asset('logo.svg') }}" alt="Zayn's Beauty" class="h-9 w-auto brightness-0 invert">
                 </a>
-                <p class="mt-3 text-sm leading-relaxed text-gray-500 max-w-xs">
-                    Premium beauty products and salon services, based in Nairobi, serving all of Kenya.
+                <p class="mt-3 text-sm leading-relaxed text-gray-400 max-w-xs">
+                    Premium authentic beauty products and luxury studio makeup services, based in Nairobi, serving all of Kenya.
                 </p>
 
                 <!-- Contact details -->
@@ -107,7 +168,7 @@
 
                 <!-- Help -->
                 <div>
-                    <h4 class="text-white text-sm font-semibold uppercase tracking-wider mb-4">Help</h4>
+                    <h4 class="text-white text-sm font-semibold uppercase tracking-wider mb-4">Help & Policy</h4>
                     <ul class="space-y-2.5 text-sm">
                         <li><a href="{{ route('shipping-info') }}" class="hover:text-white transition-colors">Shipping Info</a></li>
                         <li><a href="{{ route('returns-policy') }}" class="hover:text-white transition-colors">Returns Policy</a></li>
@@ -119,7 +180,7 @@
                 <!-- Newsletter -->
                 <div class="col-span-2 md:col-span-1">
                     <h4 class="text-white text-sm font-semibold uppercase tracking-wider mb-4">Stay Updated</h4>
-                    <p class="text-sm mb-4">New arrivals and offers, straight to your inbox.</p>
+                    <p class="text-sm mb-4 text-gray-400">New arrivals and exclusive offers, straight to your inbox.</p>
                     <form action="{{ route('contact.submit') }}" method="POST" class="space-y-2">
                         @csrf
                         <input type="hidden" name="subject" value="Newsletter Signup">
@@ -127,9 +188,9 @@
                         <input type="hidden" name="last_name" value="Subscriber">
                         <input type="hidden" name="message" value="Newsletter signup">
                         <input type="email" name="email" required placeholder="your@email.com"
-                               class="w-full px-3 py-2.5 bg-gray-800 border border-gray-700 rounded-md text-white text-sm placeholder-gray-500 focus:outline-none focus:border-pink-500 transition-colors">
+                               class="w-full px-3 py-2.5 bg-gray-900 border border-gray-800 rounded-md text-white text-sm placeholder-gray-500 focus:outline-none focus:border-pink-500 transition-colors">
                         <button type="submit"
-                                class="w-full bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold py-2.5 rounded-md transition-colors">
+                                class="w-full bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold py-2.5 rounded-md transition-colors shadow-sm">
                             Subscribe
                         </button>
                     </form>
@@ -138,9 +199,56 @@
             </div>
         </div>
 
+        <!-- Payment methods & reassurance bar -->
+        <div class="border-t border-gray-800/80 pt-6 pb-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-2 text-xs text-gray-400">
+                <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                </svg>
+                <span>Guaranteed Safe & Secure Checkout</span>
+            </div>
+
+            {{-- Payment Badges: M-Pesa, Visa, Mastercard, Cash on Delivery --}}
+            <div class="flex flex-wrap items-center justify-center gap-2">
+                {{-- M-Pesa Badge --}}
+                <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-white border border-gray-200 shadow-2xs">
+                    <span class="w-2.5 h-2.5 rounded-full bg-[#00A34F]"></span>
+                    <span class="text-xs font-black tracking-tight text-[#00A34F]">M-PESA</span>
+                    <span class="text-[9px] font-semibold text-gray-500 uppercase tracking-tighter">Till / STK</span>
+                </div>
+
+                {{-- Visa Badge --}}
+                <div class="inline-flex items-center px-2.5 py-1.5 rounded bg-white border border-gray-200 shadow-2xs">
+                    <span class="text-xs font-black italic tracking-tighter text-[#1434CB]">VISA</span>
+                </div>
+
+                {{-- Mastercard Badge --}}
+                <div class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded bg-white border border-gray-200 shadow-2xs">
+                    <div class="flex -space-x-1">
+                        <span class="w-3 h-3 rounded-full bg-[#EB001B] inline-block opacity-90"></span>
+                        <span class="w-3 h-3 rounded-full bg-[#F79E1B] inline-block opacity-90"></span>
+                    </div>
+                    <span class="text-[10px] font-bold text-gray-800">Mastercard</span>
+                </div>
+
+                {{-- Airtel Money Badge --}}
+                <div class="inline-flex items-center px-2.5 py-1.5 rounded bg-white border border-gray-200 shadow-2xs">
+                    <span class="text-xs font-bold text-[#E40000]">airtel <span class="font-normal text-[10px]">money</span></span>
+                </div>
+
+                {{-- Cash on Delivery Badge --}}
+                <div class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded bg-gray-900 border border-gray-800 text-gray-300 shadow-2xs">
+                    <svg class="w-3 h-3 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                    <span class="text-[10px] font-semibold">Cash / Card on Delivery</span>
+                </div>
+            </div>
+        </div>
+
         <!-- Bottom bar -->
-        <div class="border-t border-gray-800 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-gray-600">
-            <span>© {{ date('Y') }} Zayn's Beauty. All rights reserved.</span>
+        <div class="border-t border-gray-900 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-gray-600">
+            <span>© {{ date('Y') }} Zayn's Beauty. All rights reserved. Nairobi, Kenya.</span>
             <span>Designed by <a href="https://velinexlabs.com" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">Velinex Labs</a></span>
         </div>
     </div>
