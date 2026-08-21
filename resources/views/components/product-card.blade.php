@@ -4,8 +4,10 @@
     $productImage = is_object($product) ? $product->image : $product['image'];
     $productCategory = is_object($product) ? $product->category->name : $product['category'];
     $productPrice = is_object($product) ? $product->formatted_price : $product['price'];
-    $productRawPrice = is_object($product) ? (float) $product->price : $product['price'];
+    $productRawPrice = is_object($product) ? (float) $product->price : (float)($product['price'] ?? 0);
     $productOriginalPrice = is_object($product) ? $product->formatted_original_price : ($product['original_price'] ?? null);
+    $rawOrig = is_object($product) ? (float)($product->original_price ?? 0) : (float)($product['original_price'] ?? 0);
+    $discountPct = ($rawOrig > $productRawPrice && $rawOrig > 0) ? round((($rawOrig - $productRawPrice) / $rawOrig) * 100) : 0;
     $productRating = is_object($product) ? $product->rating : $product['rating'];
     $productDescription = is_object($product) ? $product->description : ($product['description'] ?? null);
     
@@ -66,11 +68,17 @@
                 </button>
             </div>
             
-            @if($productBadge)
-                <div class="absolute top-2 left-2 z-10">
-                    <span class="bg-{{ $productBadgeColor ?? 'pink' }}-500 text-white px-3 py-0.5 rounded-full text-sm font-semibold" aria-label="Product badge: {{ $productBadge }}">{{ $productBadge }}</span>
-                </div>
-            @endif
+            {{-- Badges & Percentage Offer overlay on top of image (top-left, opposite heart button) --}}
+            <div class="absolute top-2 left-2 z-10 flex flex-col gap-1 items-start pointer-events-none">
+                @if($discountPct > 0)
+                    <span class="bg-red-600 text-white text-[11px] font-bold px-2 py-0.5 rounded shadow-sm">
+                        -{{ $discountPct }}%
+                    </span>
+                @endif
+                @if($productBadge)
+                    <span class="bg-{{ $productBadgeColor ?? 'pink' }}-500 text-white px-2.5 py-0.5 rounded-full text-xs font-semibold shadow-sm" aria-label="Product badge: {{ $productBadge }}">{{ $productBadge }}</span>
+                @endif
+            </div>
         </div>
         <div class="p-3">
             {{-- Category: very muted, purely contextual --}}
@@ -79,9 +87,10 @@
             {{-- Name: readable but not dominant — price is the hero --}}
             <h3 class="text-sm font-medium text-gray-600 leading-snug mb-2 line-clamp-2" itemprop="name">{{ $productName }}</h3>
 
-            <div class="flex flex-col gap-1 mb-3">
-                {{-- Price row: price dominant, original muted, discount badge accent --}}
-                <div class="flex items-center gap-1.5 flex-wrap">
+            {{-- Price and Review in one line --}}
+            <div class="flex items-center justify-between gap-1.5 mb-2">
+                {{-- Price & Original Price --}}
+                <div class="flex items-baseline gap-1.5 flex-wrap min-w-0">
                     <span class="text-base font-bold text-gray-900" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
                         <meta itemprop="priceCurrency" content="KES">
                         @php
@@ -125,19 +134,12 @@
                     </span>
 
                     @if($productOriginalPrice)
-                        @php
-                            $rawOrig = is_object($product) ? (float)($product->original_price ?? 0) : 0;
-                            $discountPct = $rawOrig > $productRawPrice ? round((($rawOrig - $productRawPrice) / $rawOrig) * 100) : 0;
-                        @endphp
                         <span class="text-xs text-gray-400 line-through">{{ $productOriginalPrice }}</span>
-                        @if($discountPct > 0)
-                            <span class="text-[10px] font-semibold bg-red-100 text-red-600 px-1.5 py-0.5 rounded-sm">-{{ $discountPct }}%</span>
-                        @endif
                     @endif
                 </div>
 
-                {{-- Stars: compact, low visual weight --}}
-                <div class="flex items-center gap-1">
+                {{-- Stars & Rating in the same row --}}
+                <div class="flex items-center gap-1 shrink-0">
                     <div class="flex text-pink-400" aria-label="Rating: {{ $displayRating }} out of 5 stars">
                         @for($i = 1; $i <= 5; $i++)
                             <svg class="w-2.5 h-2.5" fill="{{ $i <= $displayRating ? 'currentColor' : 'none' }}" stroke="currentColor" viewBox="0 0 20 20" aria-hidden="true">
@@ -152,25 +154,25 @@
                         {{ $displayRating }}/5
                     </span>
                 </div>
-
-                @if($productColors && count($productColors) > 0)
-                    <div class="flex flex-wrap gap-1 mt-1 color-swatches-container">
-                        @foreach($productColors as $colorOption)
-                            @php
-                                $parts = explode(':', $colorOption);
-                                $cName = trim($parts[0]);
-                                $cVal  = isset($parts[1]) ? trim($parts[1]) : $cName;
-                            @endphp
-                            <div class="w-3 h-3 rounded-full border border-gray-200 shadow-sm swatch-dot transition-all cursor-pointer hover:scale-110"
-                                 style="background-color: {{ $cVal }};"
-                                 title="{{ $cName }}"
-                                 onclick="event.preventDefault(); event.stopPropagation(); selectCardColor(this, '{{ $cName }}')">
-                            </div>
-                        @endforeach
-                        <span class="text-[10px] text-gray-400 ml-0.5 italic selected-color-text"></span>
-                    </div>
-                @endif
             </div>
+
+            @if($productColors && count($productColors) > 0)
+                <div class="flex flex-wrap gap-1 mb-1 color-swatches-container">
+                    @foreach($productColors as $colorOption)
+                        @php
+                            $parts = explode(':', $colorOption);
+                            $cName = trim($parts[0]);
+                            $cVal  = isset($parts[1]) ? trim($parts[1]) : $cName;
+                        @endphp
+                        <div class="w-3 h-3 rounded-full border border-gray-200 shadow-sm swatch-dot transition-all cursor-pointer hover:scale-110"
+                             style="background-color: {{ $cVal }};"
+                             title="{{ $cName }}"
+                             onclick="event.preventDefault(); event.stopPropagation(); selectCardColor(this, '{{ $cName }}')">
+                        </div>
+                    @endforeach
+                    <span class="text-[10px] text-gray-400 ml-0.5 italic selected-color-text"></span>
+                </div>
+            @endif
         </div>
     </a>
     
