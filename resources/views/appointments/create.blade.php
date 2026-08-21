@@ -109,11 +109,11 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="services-container">
                             @php
                                 $serviceBadges = [
-                                    'bridal-makeup' => ['label' => 'Signature Luxury', 'color' => 'bg-amber-100 text-amber-800 border-amber-200'],
-                                    'party-makeup' => ['label' => 'Most Requested', 'color' => 'bg-pink-100 text-pink-800 border-pink-200'],
-                                    'photoshoot-makeup' => ['label' => 'HD Camera-Ready', 'color' => 'bg-purple-100 text-purple-800 border-purple-200'],
-                                    'everyday-makeup' => ['label' => 'Clean & Natural', 'color' => 'bg-emerald-100 text-emerald-800 border-emerald-200'],
-                                    'special-occasion' => ['label' => 'Custom Glam', 'color' => 'bg-rose-100 text-rose-800 border-rose-200'],
+                                    'bridal-makeup' => ['label' => '👑 Signature Bridal', 'color' => 'bg-rose-50 text-rose-700 border-rose-200'],
+                                    'party-makeup' => ['label' => '✨ Trending Glam', 'color' => 'bg-pink-50 text-pink-700 border-pink-200'],
+                                    'photoshoot-makeup' => ['label' => '📸 Editorial HD', 'color' => 'bg-purple-50 text-purple-700 border-purple-200'],
+                                    'everyday-makeup' => ['label' => '🌿 Natural Glow', 'color' => 'bg-emerald-50 text-emerald-700 border-emerald-200'],
+                                    'special-occasion' => ['label' => '💎 Custom Luxe', 'color' => 'bg-amber-50 text-amber-700 border-amber-200'],
                                 ];
 
                                 $serviceFeatureMap = [
@@ -127,7 +127,7 @@
 
                             @foreach($services as $service)
                                 @php
-                                    $badge = $serviceBadges[$service->slug] ?? ['label' => 'Professional', 'color' => 'bg-gray-100 text-gray-800 border-gray-200'];
+                                    $badge = $serviceBadges[$service->slug] ?? ['label' => '✨ Professional', 'color' => 'bg-gray-100 text-gray-800 border-gray-200'];
                                     $features = $serviceFeatureMap[$service->slug] ?? ['Skin prep & base application', 'Eyes & brows styling', 'Setting spray lock'];
                                 @endphp
                                 <div class="service-card relative border-2 border-gray-200 rounded-xl p-5 cursor-pointer hover:border-pink-300 hover:shadow-md transition-all group"
@@ -138,32 +138,32 @@
                                      data-service-duration="{{ $service->formatted_duration }}"
                                      onclick="selectServiceCard('{{ $service->slug }}')">
 
-                                    {{-- Radio Input & Header --}}
-                                    <div class="flex items-start justify-between gap-3 mb-3">
-                                        <div class="flex items-center gap-2.5">
-                                            <div class="service-radio w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center transition-all group-hover:border-pink-500">
-                                                <div class="service-radio-inner w-2.5 h-2.5 rounded-full bg-pink-600 hidden"></div>
-                                            </div>
-                                            <h3 class="text-base font-bold text-gray-900 group-hover:text-pink-600 transition-colors">
-                                                {{ $service->name }}
-                                            </h3>
-                                        </div>
-                                        <span class="text-[11px] font-semibold px-2 py-0.5 rounded-full border {{ $badge['color'] }}">
+                                    {{-- Top Category Badge & Duration --}}
+                                    <div class="flex items-center justify-between gap-2 mb-2.5">
+                                        <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border whitespace-nowrap flex-shrink-0 {{ $badge['color'] }}">
                                             {{ $badge['label'] }}
                                         </span>
-                                    </div>
-
-                                    {{-- Price & Duration Row --}}
-                                    <div class="flex items-baseline justify-between mb-3 bg-gray-50/80 px-3 py-2 rounded-lg">
-                                        <div class="text-lg font-extrabold text-gray-900">
-                                            {{ $service->formatted_price }}
-                                        </div>
-                                        <div class="text-xs font-medium text-gray-500 flex items-center gap-1">
+                                        <span class="text-xs font-medium text-gray-500 flex items-center gap-1 whitespace-nowrap flex-shrink-0">
                                             <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                             </svg>
                                             {{ $service->formatted_duration }}
+                                        </span>
+                                    </div>
+
+                                    {{-- Title Row (Single line, no wrap) --}}
+                                    <div class="flex items-center gap-2.5 mb-2">
+                                        <div class="service-radio w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center transition-all group-hover:border-pink-500 flex-shrink-0">
+                                            <div class="service-radio-inner w-2.5 h-2.5 rounded-full bg-pink-600 hidden"></div>
                                         </div>
+                                        <h3 class="text-base font-bold text-gray-900 group-hover:text-pink-600 transition-colors whitespace-nowrap truncate">
+                                            {{ $service->name }}
+                                        </h3>
+                                    </div>
+
+                                    {{-- Price Tag --}}
+                                    <div class="text-lg font-extrabold text-gray-900 mb-2.5">
+                                        {{ $service->formatted_price }}
                                     </div>
 
                                     {{-- Description snippet --}}
@@ -172,7 +172,7 @@
                                     </p>
 
                                     {{-- What's Included bullets --}}
-                                    <ul class="space-y-1.5 pt-2 border-t border-gray-100 text-xs text-gray-600">
+                                    <ul class="space-y-1.5 pt-2.5 border-t border-gray-100 text-xs text-gray-600">
                                         @foreach(array_slice($features, 0, 3) as $feat)
                                             <li class="flex items-center gap-2">
                                                 <svg class="w-3.5 h-3.5 text-pink-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">

@@ -38,7 +38,8 @@ class Service extends Model
 
     public function getFormattedPriceAttribute()
     {
-        return 'KES ' . number_format($this->price, 2);
+        $price = (float)$this->price;
+        return 'KES ' . ($price == (int)$price ? number_format($price) : number_format($price, 2));
     }
 
     public function getFormattedDurationAttribute()
@@ -46,11 +47,14 @@ class Service extends Model
         $hours = floor($this->duration / 60);
         $minutes = $this->duration % 60;
         
+        if ($hours > 0 && $minutes > 0) {
+            return $hours . ' hr ' . $minutes . ' mins';
+        }
         if ($hours > 0) {
-            return $hours . 'h ' . $minutes . 'm';
+            return $hours . ($hours > 1 ? ' hrs' : ' hr');
         }
         
-        return $minutes . ' minutes';
+        return $minutes . ' mins';
     }
 
     public function scopeActive($query)
