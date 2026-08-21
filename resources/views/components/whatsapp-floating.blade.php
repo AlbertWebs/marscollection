@@ -39,7 +39,7 @@
         <!-- Chat Body -->
         <div style="background-color: #f0fdf4;" class="p-4 space-y-3">
             <div style="background-color: #ffffff; border: 1px solid #f3f4f6;" class="p-3 rounded-2xl rounded-tl-sm shadow-xs max-w-[85%] text-xs text-gray-700 leading-relaxed">
-                👋 Hello! Welcome to Zayn's Beauty. How can we help you with our beauty products or makeup bookings today?
+                Hello! Welcome to Zayn's Beauty. How can we help you with our beauty products or makeup bookings today?
             </div>
         </div>
 

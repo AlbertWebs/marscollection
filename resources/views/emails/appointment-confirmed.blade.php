@@ -128,11 +128,11 @@ END:VCALENDAR";
                 @endphp
                 
                 <a href="data:text/calendar;charset=utf8,{{ urlencode($icsContent) }}" class="button" download="appointment.ics">
-                    📅 Download Calendar File (Works with all calendars)
+                    Download Calendar File (Works with all calendars)
                 </a>
                 
                 <p style="font-size: 12px; color: #6b7280; margin-top: 10px;">
-                    💡 Tip: Download the calendar file above and open it with your preferred calendar app (Google Calendar, Outlook, Apple Calendar, etc.)
+                    Tip: Download the calendar file above and open it with your preferred calendar app (Google Calendar, Outlook, Apple Calendar, etc.)
                 </p>
             </div>
             

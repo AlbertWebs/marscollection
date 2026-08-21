@@ -109,11 +109,11 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="services-container">
                             @php
                                 $serviceBadges = [
-                                    'bridal-makeup' => ['label' => '👑 Signature Bridal', 'color' => 'bg-rose-50 text-rose-700 border-rose-200'],
-                                    'party-makeup' => ['label' => '✨ Trending Glam', 'color' => 'bg-pink-50 text-pink-700 border-pink-200'],
-                                    'photoshoot-makeup' => ['label' => '📸 Editorial HD', 'color' => 'bg-purple-50 text-purple-700 border-purple-200'],
-                                    'everyday-makeup' => ['label' => '🌿 Natural Glow', 'color' => 'bg-emerald-50 text-emerald-700 border-emerald-200'],
-                                    'special-occasion' => ['label' => '💎 Custom Luxe', 'color' => 'bg-amber-50 text-amber-700 border-amber-200'],
+                                    'bridal-makeup' => ['label' => 'Signature Bridal', 'color' => 'bg-rose-50 text-rose-700 border-rose-200'],
+                                    'party-makeup' => ['label' => 'Trending Glam', 'color' => 'bg-pink-50 text-pink-700 border-pink-200'],
+                                    'photoshoot-makeup' => ['label' => 'Editorial HD', 'color' => 'bg-purple-50 text-purple-700 border-purple-200'],
+                                    'everyday-makeup' => ['label' => 'Natural Glow', 'color' => 'bg-emerald-50 text-emerald-700 border-emerald-200'],
+                                    'special-occasion' => ['label' => 'Custom Luxe', 'color' => 'bg-amber-50 text-amber-700 border-amber-200'],
                                 ];
 
                                 $serviceFeatureMap = [
@@ -127,7 +127,7 @@
 
                             @foreach($services as $service)
                                 @php
-                                    $badge = $serviceBadges[$service->slug] ?? ['label' => '✨ Professional', 'color' => 'bg-gray-100 text-gray-800 border-gray-200'];
+                                    $badge = $serviceBadges[$service->slug] ?? ['label' => 'Professional', 'color' => 'bg-gray-100 text-gray-800 border-gray-200'];
                                     $features = $serviceFeatureMap[$service->slug] ?? ['Skin prep & base application', 'Eyes & brows styling', 'Setting spray lock'];
                                 @endphp
                                 <div class="service-card relative border-2 border-gray-200 rounded-xl p-5 cursor-pointer hover:border-pink-300 hover:shadow-md transition-all group"
@@ -196,7 +196,10 @@
                             <div class="flex items-center justify-between mb-4">
                                 <div>
                                     <h3 class="text-sm font-bold uppercase tracking-wider text-gray-900 flex items-center gap-2">
-                                        <span>✨ Enhance Your Glam (Optional Add-ons)</span>
+                                        <svg class="w-4 h-4 text-pink-600" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"/>
+                                        </svg>
+                                        <span>Enhance Your Glam (Optional Add-ons)</span>
                                     </h3>
                                     <p class="text-xs text-gray-500 mt-0.5">Customize your appointment with extra treatments and perks.</p>
                                 </div>
@@ -400,13 +403,13 @@
                             <div>
                                 <label for="occasion_type" class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">Event / Occasion</label>
                                 <select id="occasion_type" class="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white">
-                                    <option value="Bridal / Wedding">💍 Wedding / Bridal Event</option>
-                                    <option value="Birthday Celebration">🎂 Birthday / Anniversary</option>
-                                    <option value="Dinner / Gala / Red Carpet">✨ Evening Gala / Dinner Party</option>
-                                    <option value="Studio / Commercial Photoshoot">📸 Studio / Brand Photoshoot</option>
-                                    <option value="Graduation Ceremony">🎓 Graduation / Prom</option>
-                                    <option value="Everyday / Corporate Glam">💼 Corporate / Interview / Everyday</option>
-                                    <option value="Other Special Event">🎉 Other Special Occasion</option>
+                                    <option value="Bridal / Wedding">Wedding / Bridal Event</option>
+                                    <option value="Birthday Celebration">Birthday / Anniversary</option>
+                                    <option value="Dinner / Gala / Red Carpet">Evening Gala / Dinner Party</option>
+                                    <option value="Studio / Commercial Photoshoot">Studio / Brand Photoshoot</option>
+                                    <option value="Graduation Ceremony">Graduation / Prom</option>
+                                    <option value="Everyday / Corporate Glam">Corporate / Interview / Everyday</option>
+                                    <option value="Other Special Event">Other Special Occasion</option>
                                 </select>
                             </div>
 
@@ -571,8 +574,11 @@
                     <h2 class="text-2xl font-bold text-gray-900 mt-1">Real Transformations & Looks</h2>
                     <p class="text-xs sm:text-sm text-gray-500 mt-1">Explore our signature beauty looks created for our Nairobi clients.</p>
                 </div>
-                <div class="flex items-center gap-2 text-xs font-semibold text-pink-600">
-                    <span>✨ 100% Client Satisfaction</span>
+                <div class="flex items-center gap-1.5 text-xs font-semibold text-pink-600">
+                    <svg class="w-4 h-4 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span>100% Client Satisfaction</span>
                 </div>
             </div>
 
@@ -580,14 +586,21 @@
                 <div class="group relative rounded-xl overflow-hidden shadow-2xs border border-gray-100 bg-gray-50">
                     <div class="h-44 bg-gradient-to-tr from-rose-200 via-pink-100 to-amber-100 flex items-center justify-center p-4 text-center">
                         <div>
-                            <span class="text-2xl mb-1 block">👑</span>
+                            <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-white/80 flex items-center justify-center text-rose-700 shadow-2xs">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
+                                </svg>
+                            </div>
                             <h4 class="text-sm font-bold text-gray-900">Royal Bridal Glam</h4>
                             <p class="text-[11px] text-gray-600 mt-0.5">Classic glow & defined eyes</p>
                         </div>
                     </div>
                     <div class="p-3 bg-white text-center">
-                        <button type="button" onclick="selectServiceCard('bridal-makeup')" class="text-xs font-bold text-pink-600 hover:text-pink-700">
-                            Book Bridal Glam →
+                        <button type="button" onclick="selectServiceCard('bridal-makeup')" class="text-xs font-bold text-pink-600 hover:text-pink-700 flex items-center justify-center gap-1 mx-auto">
+                            <span>Book Bridal Glam</span>
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
                         </button>
                     </div>
                 </div>
@@ -595,14 +608,21 @@
                 <div class="group relative rounded-xl overflow-hidden shadow-2xs border border-gray-100 bg-gray-50">
                     <div class="h-44 bg-gradient-to-tr from-pink-200 via-purple-100 to-indigo-100 flex items-center justify-center p-4 text-center">
                         <div>
-                            <span class="text-2xl mb-1 block">✨</span>
+                            <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-white/80 flex items-center justify-center text-purple-700 shadow-2xs">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+                                </svg>
+                            </div>
                             <h4 class="text-sm font-bold text-gray-900">Soft Smokey Evening</h4>
                             <p class="text-[11px] text-gray-600 mt-0.5">Shimmer lids & nude lip</p>
                         </div>
                     </div>
                     <div class="p-3 bg-white text-center">
-                        <button type="button" onclick="selectServiceCard('party-makeup')" class="text-xs font-bold text-pink-600 hover:text-pink-700">
-                            Book Evening Look →
+                        <button type="button" onclick="selectServiceCard('party-makeup')" class="text-xs font-bold text-pink-600 hover:text-pink-700 flex items-center justify-center gap-1 mx-auto">
+                            <span>Book Evening Look</span>
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
                         </button>
                     </div>
                 </div>
@@ -610,14 +630,22 @@
                 <div class="group relative rounded-xl overflow-hidden shadow-2xs border border-gray-100 bg-gray-50">
                     <div class="h-44 bg-gradient-to-tr from-amber-100 via-orange-100 to-pink-100 flex items-center justify-center p-4 text-center">
                         <div>
-                            <span class="text-2xl mb-1 block">📸</span>
+                            <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-white/80 flex items-center justify-center text-amber-700 shadow-2xs">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                </svg>
+                            </div>
                             <h4 class="text-sm font-bold text-gray-900">HD Studio Editorial</h4>
                             <p class="text-[11px] text-gray-600 mt-0.5">Sculpted matte perfection</p>
                         </div>
                     </div>
                     <div class="p-3 bg-white text-center">
-                        <button type="button" onclick="selectServiceCard('photoshoot-makeup')" class="text-xs font-bold text-pink-600 hover:text-pink-700">
-                            Book Editorial HD →
+                        <button type="button" onclick="selectServiceCard('photoshoot-makeup')" class="text-xs font-bold text-pink-600 hover:text-pink-700 flex items-center justify-center gap-1 mx-auto">
+                            <span>Book Editorial HD</span>
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
                         </button>
                     </div>
                 </div>
@@ -625,14 +653,21 @@
                 <div class="group relative rounded-xl overflow-hidden shadow-2xs border border-gray-100 bg-gray-50">
                     <div class="h-44 bg-gradient-to-tr from-emerald-100 via-teal-50 to-pink-100 flex items-center justify-center p-4 text-center">
                         <div>
-                            <span class="text-2xl mb-1 block">🌿</span>
+                            <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-white/80 flex items-center justify-center text-emerald-700 shadow-2xs">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                                </svg>
+                            </div>
                             <h4 class="text-sm font-bold text-gray-900">Sun-Kissed Natural</h4>
                             <p class="text-[11px] text-gray-600 mt-0.5">Dewy glass skin finish</p>
                         </div>
                     </div>
                     <div class="p-3 bg-white text-center">
-                        <button type="button" onclick="selectServiceCard('everyday-makeup')" class="text-xs font-bold text-pink-600 hover:text-pink-700">
-                            Book Natural Look →
+                        <button type="button" onclick="selectServiceCard('everyday-makeup')" class="text-xs font-bold text-pink-600 hover:text-pink-700 flex items-center justify-center gap-1 mx-auto">
+                            <span>Book Natural Look</span>
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
                         </button>
                     </div>
                 </div>

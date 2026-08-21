@@ -9,19 +9,36 @@
         <div class="container mx-auto flex items-center justify-between gap-4">
             <div class="flex items-center gap-2 overflow-hidden whitespace-nowrap mx-auto md:mx-0">
                 <span class="inline-flex items-center gap-1.5 font-medium text-pink-300">
-                    <span>🚚</span> <strong>FREE Nairobi Delivery</strong> on orders above KES 5,000
+                    <svg class="w-3.5 h-3.5 text-pink-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/>
+                    </svg>
+                    <span><strong>FREE Nairobi Delivery</strong> on orders above KES 5,000</span>
                 </span>
                 <span class="hidden md:inline text-gray-600">·</span>
-                <span class="hidden md:inline text-gray-300">⚡ Same-Day Dispatch in CBD</span>
+                <span class="hidden md:inline-flex items-center gap-1 text-gray-300">
+                    <svg class="w-3.5 h-3.5 text-yellow-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"/>
+                    </svg>
+                    <span>Same-Day Dispatch in CBD</span>
+                </span>
                 <span class="hidden md:inline text-gray-600">·</span>
-                <span class="hidden lg:inline text-emerald-400 font-semibold">📱 Lipa Na M-Pesa (Till / STK)</span>
+                <span class="hidden lg:inline-flex items-center gap-1 text-emerald-400 font-semibold">
+                    <svg class="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                    </svg>
+                    <span>Lipa Na M-Pesa (Till / STK)</span>
+                </span>
             </div>
             <div class="hidden md:flex items-center gap-4 text-gray-300 text-[11px]">
                 <a href="https://wa.me/254707641446" target="_blank" rel="noopener noreferrer" class="hover:text-pink-300 transition-colors flex items-center gap-1">
-                    <span class="text-emerald-400">●</span> WhatsApp Consultation
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span>WhatsApp Consultation</span>
                 </a>
-                <a href="{{ route('appointments.create') }}" class="hover:text-pink-300 transition-colors font-bold text-pink-400">
-                    Book Makeup →
+                <a href="{{ route('appointments.create') }}" class="hover:text-pink-300 transition-colors font-bold text-pink-400 flex items-center gap-1">
+                    <span>Book Makeup</span>
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
                 </a>
             </div>
         </div>

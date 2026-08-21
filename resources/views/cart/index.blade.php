@@ -157,12 +157,18 @@
                             <div class="flex items-center justify-between text-xs font-semibold mb-1.5">
                                 @if($amountRemaining > 0)
                                     <span class="text-pink-900 flex items-center gap-1.5">
-                                        <span>🚚</span> Add <strong class="text-pink-600">KES {{ number_format($amountRemaining) }}</strong> for <strong class="text-gray-900">FREE Nairobi Delivery</strong>
+                                        <svg class="w-4 h-4 text-pink-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/>
+                                        </svg>
+                                        <span>Add <strong class="text-pink-600">KES {{ number_format($amountRemaining) }}</strong> for <strong class="text-gray-900">FREE Nairobi Delivery</strong></span>
                                     </span>
                                     <span class="text-pink-600 font-bold">{{ $progressPct }}%</span>
                                 @else
                                     <span class="text-emerald-900 font-bold flex items-center gap-1.5">
-                                        <span>🎉</span> You've unlocked <strong class="text-emerald-700">FREE Delivery</strong> across Nairobi!
+                                        <svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                        </svg>
+                                        <span>You've unlocked <strong class="text-emerald-700">FREE Delivery</strong> across Nairobi!</span>
                                     </span>
                                     <span class="text-emerald-700 font-bold">100%</span>
                                 @endif
@@ -235,10 +241,10 @@
                                         <label for="payment_method" class="block text-sm font-medium text-gray-700 mb-1">Payment Method *</label>
                                         <select id="payment_method" name="payment_method" required
                                                 class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 text-sm bg-white">
-                                            <option value="mpesa" selected>🟢 Lipa Na M-Pesa (Till / STK Push / Paybill)</option>
-                                            <option value="cash_on_delivery">💵 Cash / Card on Delivery (Nairobi)</option>
-                                            <option value="credit_card">💳 Credit / Debit Card (Visa / Mastercard)</option>
-                                            <option value="bank_transfer">🏦 Bank Transfer / Airtel Money</option>
+                                            <option value="mpesa" selected>Lipa Na M-Pesa (Till / STK Push / Paybill)</option>
+                                            <option value="cash_on_delivery">Cash / Card on Delivery (Nairobi)</option>
+                                            <option value="credit_card">Credit / Debit Card (Visa / Mastercard)</option>
+                                            <option value="bank_transfer">Bank Transfer / Airtel Money</option>
                                         </select>
                                     </div>
                                     

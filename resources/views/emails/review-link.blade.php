@@ -52,7 +52,7 @@
 </head>
 <body>
     <div class="header">
-        <h1>🌟 Review Your Order</h1>
+        <h1>Review Your Order</h1>
         <p>We'd love to hear about your experience!</p>
     </div>
     
