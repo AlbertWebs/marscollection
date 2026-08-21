@@ -9,14 +9,14 @@ use Illuminate\Support\Facades\Log;
 
 class EmbeddingService
 {
-    private string $apiKey;
+    private ?string $apiKey;
     private string $model;
     private string $apiUrl;
 
     public function __construct()
     {
         $this->apiKey = config('services.gemini.api_key');
-        $this->model  = config('services.gemini.embedding_model', 'gemini-embedding-2');
+        $this->model  = config('services.gemini.embedding_model', 'gemini-embedding-2') ?? 'gemini-embedding-2';
         $this->apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/{$this->model}:embedContent";
     }
 

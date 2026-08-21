@@ -6,10 +6,12 @@ use App\Models\Product;
 use App\Models\Contact;
 use App\Models\Brand;
 use App\Models\Bundle;
+use App\Models\Category;
 use App\Models\NewsletterSubscriber;
 use App\Services\EmbeddingService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Str;
 
 class HomeController extends Controller
 {
@@ -128,71 +130,144 @@ class HomeController extends Controller
 
     public function sitemap()
     {
-        $content = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
-        $content .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+        $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" '
+              . 'xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" '
+              . 'xmlns:xhtml="http://www.w3.org/1999/xhtml">' . "\n";
 
-        // Static pages
+        // Helper to format XML url entry
+        $formatUrl = function($loc, $lastmod = null, $changefreq = 'weekly', $priority = '0.8', $images = []) {
+            $entry = "  <url>\n";
+            $entry .= "    <loc>" . htmlspecialchars($loc, ENT_XML1, 'UTF-8') . "</loc>\n";
+            $entry .= "    <lastmod>" . ($lastmod ? $lastmod->toW3cString() : now()->toW3cString()) . "</lastmod>\n";
+            $entry .= "    <changefreq>{$changefreq}</changefreq>\n";
+            $entry .= "    <priority>{$priority}</priority>\n";
+            
+            foreach ($images as $img) {
+                if (!empty($img['loc'])) {
+                    $entry .= "    <image:image>\n";
+                    $entry .= "      <image:loc>" . htmlspecialchars($img['loc'], ENT_XML1, 'UTF-8') . "</image:loc>\n";
+                    if (!empty($img['title'])) {
+                        $entry .= "      <image:title>" . htmlspecialchars($img['title'], ENT_XML1, 'UTF-8') . "</image:title>\n";
+                    }
+                    if (!empty($img['caption'])) {
+                        $entry .= "      <image:caption>" . htmlspecialchars($img['caption'], ENT_XML1, 'UTF-8') . "</image:caption>\n";
+                    }
+                    $entry .= "    </image:image>\n";
+                }
+            }
+            $entry .= "  </url>\n";
+            return $entry;
+        };
+
+        // 1. High-Priority Static & Core Pages
         $staticPages = [
             ['url' => route('home'), 'priority' => '1.0', 'changefreq' => 'daily'],
-            ['url' => route('about'), 'priority' => '0.8', 'changefreq' => 'monthly'],
-            ['url' => route('contact'), 'priority' => '0.8', 'changefreq' => 'monthly'],
             ['url' => route('products.index'), 'priority' => '0.9', 'changefreq' => 'daily'],
-            ['url' => route('categories.index'), 'priority' => '0.8', 'changefreq' => 'weekly'],
+            ['url' => route('appointments.create'), 'priority' => '0.9', 'changefreq' => 'weekly'],
+            ['url' => route('categories.index'), 'priority' => '0.85', 'changefreq' => 'daily'],
             ['url' => route('brands.index'), 'priority' => '0.8', 'changefreq' => 'weekly'],
-            ['url' => route('bundles.index'), 'priority' => '0.8', 'changefreq' => 'weekly'],
-            ['url' => route('appointments.create'), 'priority' => '0.7', 'changefreq' => 'monthly'],
+            ['url' => route('bundles.index'), 'priority' => '0.85', 'changefreq' => 'weekly'],
+            ['url' => route('products.trending'), 'priority' => '0.85', 'changefreq' => 'daily'],
+            ['url' => route('products.featured'), 'priority' => '0.85', 'changefreq' => 'daily'],
+            ['url' => route('about'), 'priority' => '0.7', 'changefreq' => 'monthly'],
+            ['url' => route('contact'), 'priority' => '0.7', 'changefreq' => 'monthly'],
+            ['url' => route('shipping-info'), 'priority' => '0.6', 'changefreq' => 'monthly'],
+            ['url' => route('returns-policy'), 'priority' => '0.6', 'changefreq' => 'monthly'],
             ['url' => route('privacy-policy'), 'priority' => '0.3', 'changefreq' => 'yearly'],
             ['url' => route('terms-of-service'), 'priority' => '0.3', 'changefreq' => 'yearly'],
-            ['url' => route('shipping-info'), 'priority' => '0.5', 'changefreq' => 'monthly'],
-            ['url' => route('returns-policy'), 'priority' => '0.5', 'changefreq' => 'monthly'],
         ];
 
         foreach ($staticPages as $page) {
-            $content .= '  <url>' . "\n";
-            $content .= '    <loc>' . $page['url'] . '</loc>' . "\n";
-            $content .= '    <lastmod>' . now()->toISOString() . '</lastmod>' . "\n";
-            $content .= '    <changefreq>' . $page['changefreq'] . '</changefreq>' . "\n";
-            $content .= '    <priority>' . $page['priority'] . '</priority>' . "\n";
-            $content .= '  </url>' . "\n";
+            $xml .= $formatUrl($page['url'], null, $page['changefreq'], $page['priority']);
         }
 
-        // Products
-        $products = Product::where('is_active', true)->get();
+        // 2. Active Categories
+        $categories = Category::where('is_active', true)->get();
+        foreach ($categories as $category) {
+            $catImages = [];
+            if ($category->image) {
+                $catImages[] = [
+                    'loc'   => \App\Helpers\ImageHelper::getProductImageUrl($category->image),
+                    'title' => $category->name . ' - Zayn\'s Beauty Nairobi',
+                ];
+            }
+            $xml .= $formatUrl(
+                route('categories.show', $category),
+                $category->updated_at,
+                'weekly',
+                '0.85',
+                $catImages
+            );
+        }
+
+        // 3. Active Products with Google Images Schema
+        $products = Product::where('is_active', true)->with(['category', 'brand'])->get();
         foreach ($products as $product) {
-            $content .= '  <url>' . "\n";
-            $content .= '    <loc>' . route('products.show', $product) . '</loc>' . "\n";
-            $content .= '    <lastmod>' . $product->updated_at->toISOString() . '</lastmod>' . "\n";
-            $content .= '    <changefreq>weekly</changefreq>' . "\n";
-            $content .= '    <priority>0.8</priority>' . "\n";
-            $content .= '  </url>' . "\n";
+            $images = [];
+            $imgUrl = \App\Helpers\ImageHelper::getProductImageUrl($product->image);
+            if ($imgUrl) {
+                $images[] = [
+                    'loc'     => $imgUrl,
+                    'title'   => $product->name . ' - Zayn\'s Beauty Kenya',
+                    'caption' => Str::limit($product->description ?? $product->name, 120),
+                ];
+            }
+
+            $priority = ($product->is_featured || $product->is_trending) ? '0.9' : '0.8';
+            $xml .= $formatUrl(
+                route('products.show', $product),
+                $product->updated_at,
+                'daily',
+                $priority,
+                $images
+            );
         }
 
-        // Brands
+        // 4. Active Brands
         $brands = Brand::where('is_active', true)->get();
         foreach ($brands as $brand) {
-            $content .= '  <url>' . "\n";
-            $content .= '    <loc>' . route('brands.show', $brand) . '</loc>' . "\n";
-            $content .= '    <lastmod>' . $brand->updated_at->toISOString() . '</lastmod>' . "\n";
-            $content .= '    <changefreq>weekly</changefreq>' . "\n";
-            $content .= '    <priority>0.7</priority>' . "\n";
-            $content .= '  </url>' . "\n";
+            $brandImages = [];
+            if ($brand->logo) {
+                $brandImages[] = [
+                    'loc'   => \App\Helpers\ImageHelper::getProductImageUrl($brand->logo),
+                    'title' => $brand->name . ' at Zayn\'s Beauty',
+                ];
+            }
+            $xml .= $formatUrl(
+                route('brands.show', $brand),
+                $brand->updated_at,
+                'weekly',
+                '0.8',
+                $brandImages
+            );
         }
 
-        // Bundles
+        // 5. Active Bundles
         $bundles = Bundle::where('is_active', true)->get();
         foreach ($bundles as $bundle) {
-            $content .= '  <url>' . "\n";
-            $content .= '    <loc>' . route('bundles.show', $bundle) . '</loc>' . "\n";
-            $content .= '    <lastmod>' . $bundle->updated_at->toISOString() . '</lastmod>' . "\n";
-            $content .= '    <changefreq>weekly</changefreq>' . "\n";
-            $content .= '    <priority>0.8</priority>' . "\n";
-            $content .= '  </url>' . "\n";
+            $bundleImages = [];
+            $imgUrl = \App\Helpers\ImageHelper::getProductImageUrl($bundle->image);
+            if ($imgUrl) {
+                $bundleImages[] = [
+                    'loc'     => $imgUrl,
+                    'title'   => $bundle->name . ' - Zayn\'s Beauty Bundle',
+                    'caption' => $bundle->name,
+                ];
+            }
+            $xml .= $formatUrl(
+                route('bundles.show', $bundle),
+                $bundle->updated_at,
+                'weekly',
+                '0.85',
+                $bundleImages
+            );
         }
 
-        $content .= '</urlset>';
+        $xml .= '</urlset>';
 
-        return response($content, 200, [
-            'Content-Type' => 'application/xml',
+        return response($xml, 200, [
+            'Content-Type'  => 'application/xml; charset=utf-8',
             'Cache-Control' => 'public, max-age=3600'
         ]);
     }
