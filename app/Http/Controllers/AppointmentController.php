@@ -29,7 +29,7 @@ class AppointmentController extends Controller
             $formattedDurations[$service->slug] = $service->formatted_duration;
         }
 
-        return view('appointments.create', compact('serviceTypes', 'serviceDescriptions', 'prices', 'formattedPrices', 'formattedDurations'));
+        return view('appointments.create', compact('services', 'serviceTypes', 'serviceDescriptions', 'prices', 'formattedPrices', 'formattedDurations'));
     }
 
     public function store(Request $request)
