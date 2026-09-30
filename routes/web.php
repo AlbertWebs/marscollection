@@ -9,8 +9,8 @@ use App\Http\Controllers\BundleController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\TrafficController;
 
 // Home and general pages
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -18,6 +18,7 @@ Route::get('/about', [HomeController::class, 'about'])->name('about');
 Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
 Route::post('/contact', [HomeController::class, 'submitContact'])->name('contact.submit');
 Route::post('/newsletter/subscribe', [HomeController::class, 'subscribeNewsletter'])->name('newsletter.subscribe');
+Route::post('/traffic/heartbeat', [TrafficController::class, 'heartbeat'])->middleware('throttle:60,1')->name('traffic.heartbeat');
 Route::get('/search', [HomeController::class, 'search'])->name('search');
 
 // Sitemap
@@ -62,13 +63,13 @@ Route::get('/cart/dropdown', [CartController::class, 'dropdown'])->name('cart.dr
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 Route::get('/checkout/success/{order}', [CheckoutController::class, 'success'])->name('checkout.success');
 
-// Appointments
-Route::get('/appointments/book', [AppointmentController::class, 'create'])->name('appointments.create');
-Route::post('/appointments', [AppointmentController::class, 'store'])->name('appointments.store');
-Route::get('/appointments/success', [AppointmentController::class, 'success'])->name('appointments.success');
-Route::get('/appointments/calendar', [AppointmentController::class, 'calendar'])->name('appointments.calendar');
-Route::post('/appointments/check-availability', [AppointmentController::class, 'checkAvailability'])->name('appointments.check-availability');
-Route::get('/appointments/available-slots', [AppointmentController::class, 'getAvailableSlots'])->name('appointments.available-slots');
+// Appointment booking belonged to the previous service business. Direct users to shoe support.
+Route::redirect('/appointments/book', '/contact')->name('appointments.create');
+Route::post('/appointments', fn () => redirect()->route('contact'))->name('appointments.store');
+Route::redirect('/appointments/success', '/contact')->name('appointments.success');
+Route::redirect('/appointments/calendar', '/contact')->name('appointments.calendar');
+Route::post('/appointments/check-availability', fn () => redirect()->route('contact'))->name('appointments.check-availability');
+Route::redirect('/appointments/available-slots', '/contact')->name('appointments.available-slots');
 
 // Reviews
 Route::get('/reviews/{token}', [ReviewController::class, 'show'])->name('reviews.show');
@@ -77,6 +78,7 @@ Route::get('/reviews/{token}/complete', [ReviewController::class, 'complete'])->
 
 // Admin Routes
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard/analytics', [AdminController::class, 'dashboardAnalytics'])->name('dashboard.analytics');
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
     
     // Products Management

@@ -100,6 +100,7 @@ class CheckoutController extends Controller
                     'quantity' => $cartItem->quantity,
                     'subtotal' => $cartItem->product->price * $cartItem->quantity,
                     'selected_color' => $cartItem->selected_color,
+                    'selected_size' => $cartItem->selected_size,
                 ]);
                 
                 // Increment product sold count
@@ -122,10 +123,10 @@ class CheckoutController extends Controller
 
         // Send WhatsApp notification to admin
         try {
-            $adminPhone = \App\Models\Setting::get('contact_phone_primary', '254723343392');
+            $adminPhone = \App\Models\Setting::get('contact_phone_primary', '0726243706');
             $total = number_format($order->total);
             
-            $message = "Hello zayns, a new order *#{$order->order_number}* just happened by *{$order->customer_name}* for *KES {$total}*. Please check the admin panel to process.";
+            $message = "Hello Mars Collection, a new order *#{$order->order_number}* just happened by *{$order->customer_name}* for *KES {$total}*. Please check the admin panel to process.";
             
             \App\Services\WhatsAppService::sendMessage($adminPhone, $message);
         } catch (\Exception $e) {

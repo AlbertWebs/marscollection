@@ -15,6 +15,7 @@ use App\Models\Setting;
 use App\Models\Review;
 use App\Models\Contact;
 use App\Models\NewsletterSubscriber;
+use App\Models\TrafficVisit;
 use App\Mail\AppointmentConfirmed;
 use App\Mail\ReviewLinkEmail;
 use Illuminate\Http\Request;
@@ -30,13 +31,61 @@ class AdminController extends Controller
         $this->middleware('admin');
     }
 
+    private function productImageDisk(): string
+    {
+        return config('filesystems.default') === 's3' ? 's3' : 'public';
+    }
+
+    private function updateVariantImages(Request $request, ?Product $product = null): ?array
+    {
+        $disk = $this->productImageDisk();
+        $images = $product?->variant_images ?? [];
+
+        foreach ($request->input('remove_variant_images', []) as $rawKey) {
+            $key = $this->normalizeVariantImageKey((string) $rawKey);
+            if ($key && isset($images[$key])) {
+                if (!str_starts_with($images[$key], 'http') && !str_starts_with($images[$key], '/')) {
+                    \Storage::disk($disk)->delete($images[$key]);
+                }
+                unset($images[$key]);
+            }
+        }
+
+        foreach ($request->file('variant_images', []) as $rawKey => $file) {
+            $key = $this->normalizeVariantImageKey((string) $rawKey);
+            if (!$key || !$file || !$file->isValid()) {
+                continue;
+            }
+            if (isset($images[$key]) && !str_starts_with($images[$key], 'http') && !str_starts_with($images[$key], '/')) {
+                \Storage::disk($disk)->delete($images[$key]);
+            }
+            $images[$key] = $file->store('products/options', $disk);
+        }
+
+        return $images ?: null;
+    }
+
+    private function normalizeVariantImageKey(string $key): ?string
+    {
+        [$type, $value] = array_pad(explode(':', $key, 2), 2, '');
+        $type = strtolower(trim($type));
+        $value = trim($value);
+
+        if (!in_array($type, ['color', 'size', 'option', 'color_size'], true) || $value === '' || mb_strlen($value) > 100) {
+            return null;
+        }
+
+        return $type . ':' . mb_strtolower($value);
+    }
+
     public function dashboard()
     {
+        $analytics = $this->dashboardAnalyticsData();
         $stats = [
             'total_orders' => Order::count(),
             'total_products' => Product::count(),
             'total_users' => User::count(),
-            'total_revenue' => Order::where('status', 'completed')->sum('total'),
+            'total_revenue' => Order::whereIn('status', ['delivered', 'completed'])->sum('total'),
             'recent_orders' => Order::with('user')->latest()->take(5)->get(),
             'top_products' => Product::withCount('orderItems')->orderBy('order_items_count', 'desc')->take(5)->get(),
             'pending_orders' => Order::where('status', 'pending')->count(),
@@ -44,12 +93,81 @@ class AdminController extends Controller
             'total_categories' => Category::count(),
             'total_brands' => Brand::count(),
             'total_bundles' => Bundle::count(),
-            'monthly_revenue' => Order::where('status', 'completed')
+            'monthly_revenue' => Order::whereIn('status', ['delivered', 'completed'])
                 ->whereMonth('created_at', now()->month)
+                ->whereYear('created_at', now()->year)
                 ->sum('total'),
         ];
 
-        return view('admin.dashboard', compact('stats'));
+        return view('admin.dashboard', compact('stats', 'analytics'));
+    }
+
+    public function dashboardAnalytics()
+    {
+        return response()->json($this->dashboardAnalyticsData());
+    }
+
+    private function dashboardAnalyticsData(): array
+    {
+        $now = now();
+        $start = $now->copy()->startOfDay()->subDays(6);
+        $end = $now->copy()->endOfDay();
+
+        $ordersByDay = Order::whereBetween('created_at', [$start, $end])
+            ->selectRaw("DATE(created_at) as day, COUNT(*) as orders_count, COALESCE(SUM(CASE WHEN status IN ('delivered', 'completed') THEN total ELSE 0 END), 0) as revenue")
+            ->groupBy('day')
+            ->get()
+            ->keyBy('day');
+
+        $trafficByDay = TrafficVisit::whereBetween('visited_at', [$start, $end])
+            ->selectRaw('DATE(visited_at) as day, COUNT(*) as page_views, COUNT(DISTINCT visitor_key) as visitors')
+            ->groupBy('day')
+            ->get()
+            ->keyBy('day');
+
+        $daily = [];
+        for ($offset = 0; $offset < 7; $offset++) {
+            $date = $start->copy()->addDays($offset);
+            $key = $date->toDateString();
+            $orderRow = $ordersByDay->get($key);
+            $trafficRow = $trafficByDay->get($key);
+            $daily[] = [
+                'date' => $key,
+                'label' => $date->format('D'),
+                'orders' => (int) ($orderRow->orders_count ?? 0),
+                'revenue' => (float) ($orderRow->revenue ?? 0),
+                'visitors' => (int) ($trafficRow->visitors ?? 0),
+                'page_views' => (int) ($trafficRow->page_views ?? 0),
+            ];
+        }
+
+        $todayStart = $now->copy()->startOfDay();
+        $todayEnd = $now->copy()->endOfDay();
+        $trafficToday = TrafficVisit::whereBetween('visited_at', [$todayStart, $todayEnd]);
+        $ordersToday = Order::whereBetween('created_at', [$todayStart, $todayEnd]);
+        $confirmedStatuses = ['delivered', 'completed'];
+
+        return [
+            'updated_at' => $now->toIso8601String(),
+            'metrics' => [
+                'orders_today' => (clone $ordersToday)->count(),
+                'pending_orders' => Order::where('status', 'pending')->count(),
+                'revenue_today' => (clone $ordersToday)->whereIn('status', $confirmedStatuses)->sum('total'),
+                'revenue_total' => Order::whereIn('status', $confirmedStatuses)->sum('total'),
+                'visitors_today' => (clone $trafficToday)->distinct('visitor_key')->count('visitor_key'),
+                'page_views_today' => (clone $trafficToday)->count(),
+                'active_visitors' => TrafficVisit::where('visited_at', '>=', $now->copy()->subMinutes(5))
+                    ->distinct('visitor_key')->count('visitor_key'),
+                'total_users' => User::count(),
+                'products' => Product::where('is_active', true)->count(),
+            ],
+            'daily' => $daily,
+            'order_status' => Order::selectRaw('status, COUNT(*) as total')->groupBy('status')->get()
+                ->map(fn ($row) => ['status' => ucfirst($row->status), 'count' => (int) $row->total])->values(),
+            'top_pages' => TrafficVisit::whereBetween('visited_at', [$start, $end])
+                ->selectRaw('path, COUNT(*) as views')->groupBy('path')->orderByDesc('views')->limit(5)->get()
+                ->map(fn ($row) => ['path' => $row->path, 'views' => (int) $row->views])->values(),
+        ];
     }
 
     public function products(Request $request)
@@ -105,6 +223,7 @@ class AdminController extends Controller
         $validated = $request->validate([
             'name'           => 'required|string|max:255',
             'description'    => 'required|string',
+            'meta_description' => 'nullable|string|max:320',
             'price'          => 'required|numeric|min:0',
             'original_price' => 'nullable|numeric|min:0',
             'category_id'    => 'required|exists:categories,id',
@@ -120,15 +239,18 @@ class AdminController extends Controller
             'colors'         => 'nullable|string',
             'extra_images'   => 'nullable|array|max:8',
             'extra_images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'variant_images' => 'nullable|array|max:30',
+            'variant_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
         ]);
         $validated['is_active'] = $request->boolean('is_active');
         $validated['is_featured'] = $request->boolean('is_featured');
         $validated['is_trending'] = $request->boolean('is_trending');
-        unset($validated['image']); // never trust validated image — only set from actual file upload
+        unset($validated['image']); // Never trust validated image. Only set from actual file upload.
         unset($validated['extra_images']); // handle separately below
+        unset($validated['variant_images']);
 
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('products', 's3');
+            $validated['image'] = $request->file('image')->store('products', $this->productImageDisk());
         }
 
         if ($request->filled('colors')) {
@@ -145,10 +267,12 @@ class AdminController extends Controller
         if ($request->hasFile('extra_images')) {
             $extraPaths = [];
             foreach ($request->file('extra_images') as $file) {
-                $extraPaths[] = $file->store('products', 's3');
+                $extraPaths[] = $file->store('products', $this->productImageDisk());
             }
             $validated['extra_images'] = $extraPaths;
         }
+
+        $validated['variant_images'] = $this->updateVariantImages($request);
 
         Product::create($validated);
 
@@ -167,6 +291,7 @@ class AdminController extends Controller
         $validated = $request->validate([
             'name'           => 'required|string|max:255',
             'description'    => 'required|string',
+            'meta_description' => 'nullable|string|max:320',
             'price'          => 'required|numeric|min:0',
             'original_price' => 'nullable|numeric|min:0',
             'category_id'    => 'required|exists:categories,id',
@@ -184,6 +309,10 @@ class AdminController extends Controller
             'extra_images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'delete_extra_images' => 'nullable|array',
             'delete_extra_images.*' => 'string',
+            'variant_images' => 'nullable|array|max:30',
+            'variant_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
+            'remove_variant_images' => 'nullable|array',
+            'remove_variant_images.*' => 'string',
         ]);
         $validated['is_active'] = $request->boolean('is_active');
         $validated['is_featured'] = $request->boolean('is_featured');
@@ -192,16 +321,16 @@ class AdminController extends Controller
         // Handle main image upload
         if ($request->hasFile('image')) {
             // Delete old image from S3 if it exists and is a path (not external URL)
-            if ($product->image && !str_starts_with($product->image, 'http')) {
-                \Storage::disk('s3')->delete($product->image);
+            if ($product->image && !str_starts_with($product->image, 'http') && !str_starts_with($product->image, '/')) {
+                \Storage::disk($this->productImageDisk())->delete($product->image);
             }
 
-            $imagePath = $request->file('image')->store('products', 's3');
+            $imagePath = $request->file('image')->store('products', $this->productImageDisk());
             $validated['image'] = $imagePath;
         } elseif ($request->input('clear_image') === '1') {
             // User explicitly removed the main image
-            if ($product->image && !str_starts_with($product->image, 'http')) {
-                \Storage::disk('s3')->delete($product->image);
+            if ($product->image && !str_starts_with($product->image, 'http') && !str_starts_with($product->image, '/')) {
+                \Storage::disk($this->productImageDisk())->delete($product->image);
             }
             $validated['image'] = null;
         }
@@ -226,8 +355,8 @@ class AdminController extends Controller
         // Delete any existing extras that were NOT in keep list
         foreach ($product->extra_images ?? [] as $existing) {
             if (!in_array($existing, $keepPaths)) {
-                if (!str_starts_with($existing, 'http')) {
-                    \Storage::disk('s3')->delete($existing);
+                if (!str_starts_with($existing, 'http') && !str_starts_with($existing, '/')) {
+                    \Storage::disk($this->productImageDisk())->delete($existing);
                 }
             }
         }
@@ -236,13 +365,15 @@ class AdminController extends Controller
         $newExtras = [];
         if ($request->hasFile('extra_images')) {
             foreach ($request->file('extra_images') as $file) {
-                $newExtras[] = $file->store('products', 's3');
+                $newExtras[] = $file->store('products', $this->productImageDisk());
             }
         }
 
         $allExtras = array_values(array_merge($keepPaths, $newExtras));
         $validated['extra_images'] = !empty($allExtras) ? $allExtras : null;
         unset($validated['delete_extra_images']);
+        unset($validated['variant_images'], $validated['remove_variant_images']);
+        $validated['variant_images'] = $this->updateVariantImages($request, $product);
 
         $product->update($validated);
 
@@ -414,24 +545,53 @@ class AdminController extends Controller
         return redirect()->route('admin.users.index')->with('success', $message);
     }
 
-    public function categories()
+    public function categories(Request $request)
     {
+        $status = in_array($request->query('status'), ['active', 'inactive'], true) ? $request->query('status') : 'active';
         $categories = Category::query()
-            ->withCount('products')
+            ->withCount(['products as products_count' => fn ($query) => $query->where('is_active', true)])
+            ->when($status === 'active', fn ($query) => $query->where('is_active', true))
+            ->when($status === 'inactive', fn ($query) => $query->where('is_active', false))
+            ->orderBy('sort_order')->orderBy('name')
             ->paginate(50);
-        return view('admin.categories.index', compact('categories'));
+        $catalogCounts = [
+            'active' => Category::where('is_active', true)->count(),
+            'inactive' => Category::where('is_active', false)->count(),
+            'products' => Product::where('is_active', true)->count(),
+        ];
+        return view('admin.categories.index', compact('categories', 'catalogCounts', 'status'));
     }
 
-    public function brands()
+    public function brands(Request $request)
     {
-        $brands = Brand::withCount('products')->paginate(50);
-        return view('admin.brands.index', compact('brands'));
+        $status = in_array($request->query('status'), ['active', 'inactive'], true) ? $request->query('status') : 'active';
+        $brands = Brand::query()
+            ->withCount(['products as products_count' => fn ($query) => $query->where('is_active', true)])
+            ->when($status === 'active', fn ($query) => $query->where('is_active', true))
+            ->when($status === 'inactive', fn ($query) => $query->where('is_active', false))
+            ->orderBy('name')
+            ->paginate(50);
+        $catalogCounts = [
+            'active' => Brand::where('is_active', true)->count(),
+            'inactive' => Brand::where('is_active', false)->count(),
+            'products' => Product::where('is_active', true)->count(),
+        ];
+        return view('admin.brands.index', compact('brands', 'catalogCounts', 'status'));
     }
 
-    public function bundles()
+    public function bundles(Request $request)
     {
-        $bundles = Bundle::withCount('bundleItems')->paginate(50);
-        return view('admin.bundles.index', compact('bundles'));
+        $status = $request->query('status') === 'inactive' ? 'inactive' : 'active';
+        $bundles = Bundle::query()
+            ->withCount('bundleItems')
+            ->where('is_active', $status === 'active')
+            ->latest()
+            ->paginate(50);
+        $pairingCounts = [
+            'active' => Bundle::where('is_active', true)->count(),
+            'inactive' => Bundle::where('is_active', false)->count(),
+        ];
+        return view('admin.bundles.index', compact('bundles', 'pairingCounts', 'status'));
     }
 
     // Categories CRUD
@@ -445,7 +605,10 @@ class AdminController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:categories',
             'description' => 'nullable|string',
+            'sort_order' => 'nullable|integer|min:0',
         ]);
+        $validated['is_active'] = $request->boolean('is_active', true);
+        $validated['sort_order'] = $validated['sort_order'] ?? ((int) Category::max('sort_order') + 1);
 
         Category::create($validated);
 
@@ -462,7 +625,10 @@ class AdminController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:categories,name,' . $category->id,
             'description' => 'nullable|string',
+            'sort_order' => 'nullable|integer|min:0',
         ]);
+        $validated['sort_order'] = $validated['sort_order'] ?? $category->sort_order;
+        $validated['is_active'] = $request->boolean('is_active');
 
         $category->update($validated);
 
@@ -492,9 +658,10 @@ class AdminController extends Controller
             'description' => 'nullable|string',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,svg|max:2048',
         ]);
+        $validated['is_active'] = $request->boolean('is_active', true);
 
         if ($request->hasFile('logo')) {
-            $validated['logo'] = $request->file('logo')->store('brands', 's3');
+            $validated['logo'] = $request->file('logo')->store('brands', $this->productImageDisk());
         }
 
         Brand::create($validated);
@@ -514,12 +681,14 @@ class AdminController extends Controller
             'description' => 'nullable|string',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,svg|max:2048',
         ]);
+        $validated['is_active'] = $request->boolean('is_active');
 
         if ($request->hasFile('logo')) {
-            if ($brand->logo && !str_starts_with($brand->logo, 'http')) {
-                \Storage::disk('s3')->delete($brand->logo);
+            $disk = $this->productImageDisk();
+            if ($brand->logo && !str_starts_with($brand->logo, 'http') && !str_starts_with($brand->logo, '/')) {
+                \Storage::disk($disk)->delete($brand->logo);
             }
-            $validated['logo'] = $request->file('logo')->store('brands', 's3');
+            $validated['logo'] = $request->file('logo')->store('brands', $disk);
         }
 
         $brand->update($validated);
@@ -773,7 +942,7 @@ class AdminController extends Controller
                 Mail::to($appointment->customer_email)->send(new AppointmentConfirmed($appointment));
                 
                 // Send notification to admin
-                Mail::to(\App\Models\Setting::get('email_admin', 'admin@zaynsbeauty.com'))->send(new AppointmentConfirmed($appointment));
+                Mail::to(\App\Models\Setting::get('email_admin', 'admin@marscollection.co.ke'))->send(new AppointmentConfirmed($appointment));
                 
             } catch (\Exception $e) {
                 // Log error but don't fail the status update

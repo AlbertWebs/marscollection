@@ -102,7 +102,7 @@
 VERSION:2.0
 PRODID:-//" . \App\Models\Setting::get('business_name') . "//Appointment//EN
 BEGIN:VEVENT
-UID:" . uniqid() . "@zaynsbeauty.com
+UID:" . uniqid() . "@marscollection.co.ke
 DTSTAMP:" . now()->format('Ymd\THis\Z') . "
 DTSTART:" . $appointment->appointment_date->format('Ymd') . 'T' . $appointment->appointment_time->format('His') . "
 DTEND:" . $appointment->appointment_date->format('Ymd') . 'T' . $appointment->appointment_time->addMinutes($appointment->duration)->format('His') . "
@@ -148,7 +148,7 @@ END:VCALENDAR";
         </div>
         
         <div class="footer">
-            <p>Thank you for choosing Zayn's Beauty!</p>
+            <p>Thank you for choosing Mars Collection!</p>
             <p>If you have any questions, please contact us at {{ \App\Models\Setting::get('contact_email_primary') }}</p>
         </div>
     </div>

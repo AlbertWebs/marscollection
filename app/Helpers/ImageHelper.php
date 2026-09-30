@@ -21,7 +21,14 @@ class ImageHelper
             return $imagePath;
         }
 
-        // Otherwise, treat as S3 storage path
-        return \Storage::disk('s3')->url($imagePath);
+        // Paths beginning with a slash refer to files in the public directory.
+        if (Str::startsWith($imagePath, '/')) {
+            return asset(ltrim($imagePath, '/'));
+        }
+
+        // Use the configured cloud disk in production and the public disk locally.
+        $disk = config('filesystems.default') === 's3' ? 's3' : 'public';
+
+        return \Storage::disk($disk)->url($imagePath);
     }
-} 
+}

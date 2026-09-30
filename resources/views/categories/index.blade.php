@@ -1,61 +1,61 @@
 @extends('layouts.app')
 
-@section('title', 'Categories - Zayn\'s Beauty')
+@section('title', $homeContent->get('home.categories.page.title', 'Shop Shoe Categories | Mars Collection'))
+@section('description', $homeContent->get('home.categories.page.description', 'Explore sneakers, formal shoes, loafers, flats, sandals and boots at Mars Collection.'))
+@section('keywords', 'shoe categories Kenya, sneakers, formal shoes, loafers, flats, sandals, boots')
 
 @section('content')
-
-<div class="bg-white border-b border-gray-100 py-10">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <p class="text-xs uppercase tracking-widest text-pink-600 font-medium mb-2">Shop By</p>
-        <h1 class="text-3xl font-bold text-gray-900">All Categories</h1>
-        <p class="mt-2 text-gray-500 text-sm">Browse our full range of beauty products by category.</p>
-    </div>
-</div>
-
-<div class="bg-gray-50 min-h-screen py-10">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-
-        @if($activeCategories->count() > 0)
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-            @foreach($activeCategories as $category)
-                <a href="{{ route('products.index', ['category' => $category->slug]) }}" class="group">
-                    <div class="bg-white border border-gray-100 rounded-sm shadow-sm hover:shadow-md transition-shadow overflow-hidden">
-                        @if($category->image)
-                            <img src="{{ $category->image }}" alt="{{ $category->name }}"
-                                 class="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-300">
-                        @else
-                            <div class="w-full h-44 bg-gray-100 flex items-center justify-center">
-                                <svg class="w-10 h-10 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
-                                </svg>
-                            </div>
-                        @endif
-                        <div class="p-4">
-                            <h3 class="text-sm font-semibold text-gray-900 group-hover:text-pink-600 transition-colors">
-                                {{ $category->name }}
-                            </h3>
-                            @if($category->description)
-                                <p class="text-xs text-gray-500 mt-1 line-clamp-2">{{ $category->description }}</p>
-                            @endif
-                            <div class="mt-3 flex items-center justify-between">
-                                <span class="text-xs text-gray-400">{{ $category->products->count() }} products</span>
-                                <span class="text-xs text-pink-600 font-medium group-hover:underline">Browse →</span>
-                            </div>
-                        </div>
-                    </div>
+<main class="min-h-screen bg-[#f7f6f3]">
+    <section class="border-b border-stone-200 bg-white">
+        <div class="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
+            <p class="text-xs font-semibold uppercase tracking-[0.28em] text-amber-700">{{ $homeContent->get('home.categories.page.eyebrow', 'Find your pair') }}</p>
+            <div class="mt-4 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+                <div>
+                    <h1 class="max-w-2xl text-4xl font-bold tracking-tight text-stone-950 sm:text-5xl">{{ $homeContent->get('home.categories.page.title', 'Shop by category') }}</h1>
+                    <p class="mt-4 max-w-xl text-base leading-7 text-stone-600">{{ $homeContent->get('home.categories.page.description', 'Explore shoes by style at Mars Collection.') }}</p>
+                </div>
+                <a href="{{ route('products.index') }}" class="inline-flex w-fit items-center rounded-full border border-stone-300 px-5 py-3 text-sm font-semibold text-stone-900 transition hover:border-amber-500 hover:text-amber-700">
+                    {{ $homeContent->get('home.categories.page.button', 'View all footwear') }} <span aria-hidden="true" class="ml-2">→</span>
                 </a>
-            @endforeach
+            </div>
         </div>
+    </section>
+
+    <section class="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
+        @if($categories->isNotEmpty())
+            <div class="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
+                @foreach($categories as $category)
+                    <a href="{{ route('products.index', ['category' => $category->slug]) }}" class="group">
+                        <article class="overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-black/5 transition duration-300 group-hover:-translate-y-1 group-hover:shadow-lg">
+                            <div class="relative aspect-[4/5] overflow-hidden bg-stone-200">
+                                @if($category->image)
+                                    <img src="{{ $category->image }}" alt="{{ $category->name }} footwear" class="h-full w-full object-cover transition duration-500 group-hover:scale-105" loading="lazy">
+                                @else
+                                    <div class="flex h-full items-center justify-center bg-gradient-to-br from-stone-200 to-stone-400">
+                                        <span class="text-5xl font-black text-white/70">{{ strtoupper(substr($category->name, 0, 1)) }}</span>
+                                    </div>
+                                @endif
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/5 to-transparent"></div>
+                                <div class="absolute inset-x-0 bottom-0 p-4 sm:p-5">
+                                    <h2 class="text-lg font-bold text-white sm:text-xl">{{ $category->name }}</h2>
+                                    <p class="mt-1 text-xs font-medium text-white/80">{{ $category->products_count }} {{ \Illuminate\Support\Str::plural('style', $category->products_count) }}</p>
+                                </div>
+                            </div>
+                            <div class="flex min-h-16 items-center justify-between gap-2 px-4 py-3 sm:px-5">
+                                <p class="line-clamp-2 text-xs leading-5 text-stone-600 sm:text-sm">{{ $category->description }}</p>
+                                <span aria-hidden="true" class="shrink-0 text-lg text-amber-700 transition-transform group-hover:translate-x-1">→</span>
+                            </div>
+                        </article>
+                    </a>
+                @endforeach
+            </div>
         @else
-            <div class="text-center py-16 text-gray-400">
-                <svg class="mx-auto h-10 w-10 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
-                </svg>
-                <p class="text-sm">No categories available at the moment.</p>
+            <div class="rounded-2xl bg-white px-6 py-16 text-center shadow-sm ring-1 ring-black/5">
+                <h2 class="text-xl font-semibold text-stone-900">New styles are on the way</h2>
+                <p class="mt-2 text-sm text-stone-600">Browse all available footwear while we update our categories.</p>
+                <a href="{{ route('products.index') }}" class="mt-6 inline-flex rounded-full bg-stone-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-amber-600">Shop footwear</a>
             </div>
         @endif
-
-    </div>
-</div>
-
+    </section>
+</main>
 @endsection

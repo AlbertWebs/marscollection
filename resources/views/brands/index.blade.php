@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'Brands - Zayn\'s Beauty')
+@section('title', 'Brands - Mars Collection')
 
 @section('content')
 
 <div class="bg-white border-b border-gray-100 py-10">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <p class="text-xs uppercase tracking-widest text-pink-600 font-medium mb-2">Shop By</p>
+        <p class="text-xs uppercase tracking-widest text-amber-600 font-medium mb-2">Shop By</p>
         <h1 class="text-3xl font-bold text-gray-900">All Brands</h1>
         <p class="mt-2 text-gray-500 text-sm">Explore products from the brands we carry.</p>
     </div>
@@ -19,9 +19,7 @@
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
             @foreach($brands as $brand)
             @php
-                $logoUrl = $brand->logo
-                    ? (str_starts_with($brand->logo, 'http') ? $brand->logo : Storage::disk('s3')->url($brand->logo))
-                    : null;
+                $logoUrl = $brand->logo ? \App\Helpers\ImageHelper::getProductImageUrl($brand->logo) : null;
             @endphp
             <a href="{{ route('products.index', ['brand' => $brand->slug]) }}"
                class="group relative rounded-lg overflow-hidden block"

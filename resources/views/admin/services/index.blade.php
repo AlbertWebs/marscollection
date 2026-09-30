@@ -8,7 +8,7 @@
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h1 class="text-xl lg:text-2xl font-bold text-gray-900">Services Management</h1>
         <a href="{{ route('admin.services.create') }}"
-           class="bg-pink-600 text-white px-4 py-2 rounded-md hover:bg-pink-700 transition-colors w-full sm:w-auto text-center">
+           class="bg-amber-600 text-white px-4 py-2 rounded-md hover:bg-amber-700 transition-colors w-full sm:w-auto text-center">
             Add New Service
         </a>
     </div>
@@ -20,12 +20,12 @@
                 <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Search</label>
                 <input type="text" id="search" name="search" value="{{ request('search') }}"
                        placeholder="Search services..."
-                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500">
             </div>
             <div>
                 <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
                 <select id="status" name="status"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500">
                     <option value="">All Status</option>
                     <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Active</option>
                     <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
@@ -73,7 +73,7 @@
                                         <div class="text-xs sm:text-sm text-gray-500 line-clamp-2 whitespace-pre-line">{{ $service->description }}</div>
                                         <button type="button"
                                                 onclick="openServiceDrawer({{ $service->id }})"
-                                                class="text-xs text-pink-500 hover:text-pink-700 flex items-center gap-0.5 font-medium mt-0.5">
+                                                class="text-xs text-amber-500 hover:text-amber-700 flex items-center gap-0.5 font-medium mt-0.5">
                                             Read more
                                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -101,7 +101,7 @@
                             <td class="px-3 lg:px-6 py-3 sm:py-4 whitespace-nowrap text-sm font-medium">
                                 <div class="flex items-center gap-2">
                                     <a href="{{ route('admin.services.edit', $service) }}"
-                                       class="text-pink-600 hover:text-pink-900 whitespace-nowrap">Edit</a>
+                                       class="text-amber-600 hover:text-amber-900 whitespace-nowrap">Edit</a>
                                     <form method="POST" action="{{ route('admin.services.destroy', $service) }}"
                                           class="inline" onsubmit="return confirm('Are you sure you want to delete this service?')">
                                         @csrf
@@ -144,7 +144,7 @@
         <!-- Header -->
         <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
             <div>
-                <p class="text-xs uppercase tracking-widest text-pink-500 font-medium mb-0.5">Service Details</p>
+                <p class="text-xs uppercase tracking-widest text-amber-500 font-medium mb-0.5">Service Details</p>
                 <h2 id="drawer-title" class="text-lg font-semibold text-gray-900"></h2>
             </div>
             <button onclick="closeServiceDrawer()"
@@ -167,7 +167,7 @@
         <!-- Footer -->
         <div class="px-6 py-4 border-t border-gray-100">
             <a id="drawer-edit-link" href="#"
-               class="block w-full text-center bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+               class="block w-full text-center bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
                 Edit Service
             </a>
         </div>
@@ -194,7 +194,7 @@ function openServiceDrawer(id) {
     if (!service) return;
 
     document.getElementById('drawer-title').textContent = service.name;
-    document.getElementById('drawer-description').textContent = service.description || '—';
+    document.getElementById('drawer-description').textContent = service.description || 'Not provided';
     document.getElementById('drawer-edit-link').href = service.edit_url;
     document.getElementById('drawer-meta').innerHTML =
         `<span class="font-medium text-gray-900">${service.price}</span>

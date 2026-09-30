@@ -44,11 +44,11 @@
             <p>We are currently processing your order and will update you once it ships.</p>
             @endif
             
-            <p>If you have any questions, please contact us at info@zaynsbeauty.co.ke</p>
+            <p>If you have any questions, please contact us at info@marscollection.co.ke</p>
         </div>
         
         <div class="footer">
-            <p>&copy; {{ date('Y') }} Zayn's Beauty Studio. All rights reserved.</p>
+            <p>&copy; {{ date('Y') }} Mars Collection. All rights reserved.</p>
         </div>
     </div>
 </body>

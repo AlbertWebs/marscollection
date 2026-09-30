@@ -88,7 +88,7 @@ class EmbeddingService
 
         if (!$embedding) return false;
 
-        // Store as JSON array — the vector column accepts "[v1,v2,...]" format
+        // Store as JSON array. The vector column accepts "[v1,v2,...]" format.
         ProductEmbedding::updateOrCreate(
             ['product_id' => $product->id],
             ['embedding'  => $embedding, 'model' => $this->model]
@@ -99,12 +99,12 @@ class EmbeddingService
 
     /**
      * Find N most similar products to a given vector using pgvector's
-     * native cosine distance operator (<=>) — runs entirely in the DB.
+     * native cosine distance operator (<=>), which runs entirely in the DB.
      *
      * Falls back gracefully when exclusions would leave fewer than $limit results:
      * - First try: exclude all viewed + cart items (fully fresh results)
      * - If not enough: allow viewed products back, still exclude cart items
-     * - Cart items are ALWAYS excluded — no point recommending what they already intend to buy
+     * - Cart items are ALWAYS excluded, because there is no point recommending what they already intend to buy
      *
      * @param array $queryVector    float[] from Gemini
      * @param int   $limit
@@ -125,7 +125,7 @@ class EmbeddingService
             ->pluck('product')
             ->filter();
 
-        // Not enough fresh results — allow viewed products back in (cart still excluded)
+        // Not enough fresh results, so allow viewed products back in (cart still excluded)
         if ($results->count() < $limit) {
             $results = $base
                 ->nearestTo($queryVector, $limit)
@@ -139,14 +139,14 @@ class EmbeddingService
 
     /**
      * Get similar products for a given product.
-     * The current product is a hard exclude — never recommend the same product.
+     * The current product is a hard exclude. Never recommend the same product.
      */
     public function getSimilarProducts(Product $product, int $limit = 6): \Illuminate\Support\Collection
     {
         $embedding = ProductEmbedding::where('product_id', $product->id)->first();
         if (!$embedding) return collect();
 
-        // Hard exclude only the product itself — allow all others including viewed ones
+        // Hard exclude only the product itself. Allow all others including viewed ones.
         return $this->findSimilar($embedding->embedding, $limit, [], [$product->id]);
     }
 

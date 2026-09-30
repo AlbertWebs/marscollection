@@ -1,8 +1,49 @@
 @extends('layouts.app')
 
-@section('title', $product->name . ' | ' . ($product->brand->name ?? 'Zayn\'s Beauty') . ' - Nairobi, Kenya')
-@section('description', ($product->description ? Str::limit($product->description, 140) : $product->name . ' available at Zayn\'s Beauty in Nairobi, Kenya. Authentic product, fast delivery. Order online today.'))
-@section('keywords', $product->name . ' Nairobi, buy ' . $product->name . ' Kenya, ' . ($product->category->name ?? 'beauty products') . ' Nairobi, ' . ($product->brand->name ?? 'Zayn\'s Beauty') . ', makeup products Nairobi, beauty shop Kenya')
+@php
+    $plainProductDescription = trim(preg_replace('/\s+/', ' ', html_entity_decode(strip_tags($product->description ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8')));
+    $seoDescription = $product->meta_description ?: \Illuminate\Support\Str::limit($plainProductDescription ?: ($product->name . ' from Mars Collection. Choose your size and color, then order online in Kenya.'), 155);
+    $productReviews = $product->reviews()->latest()->take(3)->get();
+    $hasRealReviews = $product->reviews_count > 0 && $productReviews->count() > 0;
+    $productSchema = [
+        '@context' => 'https://schema.org',
+        '@type' => 'Product',
+        'name' => $product->name,
+        'description' => $seoDescription,
+        'image' => \App\Helpers\ImageHelper::getProductImageUrl($product->image),
+        'url' => route('products.show', $product),
+        'sku' => (string) ($product->sku ?: $product->id),
+        'brand' => ['@type' => 'Brand', 'name' => $product->brand->name ?? 'Mars Collection'],
+        'category' => $product->category->name ?? 'Footwear',
+        'offers' => [
+            '@type' => 'Offer',
+            'price' => (float) $product->price,
+            'priceCurrency' => 'KES',
+            'availability' => $product->stock_quantity > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+            'url' => route('products.show', $product),
+            'seller' => ['@type' => 'Organization', 'name' => 'Mars Collection'],
+        ],
+    ];
+    if (!empty($product->colors)) {
+        $productSchema['color'] = array_map(fn ($color) => trim(explode(':', $color, 2)[0]), $product->colors);
+    }
+    if (!empty($product->variants)) {
+        $productSchema['size'] = collect($product->variants)->pluck('label')->filter()->values()->all();
+    }
+    if ($hasRealReviews) {
+        $productSchema['aggregateRating'] = [
+            '@type' => 'AggregateRating',
+            'ratingValue' => (string) $product->average_rating,
+            'reviewCount' => (string) $product->reviews_count,
+            'bestRating' => '5',
+            'worstRating' => '1',
+        ];
+    }
+@endphp
+
+@section('title', $product->name . ' | Mars Collection Kenya')
+@section('description', $seoDescription)
+@section('keywords', $product->name . ' Kenya, buy shoes online, ' . ($product->category->name ?? 'footwear') . ' Nairobi, Mars Collection shoes')
 @section('canonical', route('products.show', $product))
 
 @section('og_type', 'product')
@@ -21,102 +62,7 @@
 @endsection
 
 @section('structured_data')
-<script type="application/ld+json">
-{
-    "@@context": "https://schema.org",
-    "@@type": "Product",
-    "name": "{{ $product->name }}",
-    "description": "{{ $product->description ?? $product->name . ' - Premium beauty product' }}",
-    "image": "{{ \App\Helpers\ImageHelper::getProductImageUrl($product->image) }}",
-    "url": "{{ route('products.show', $product) }}",
-    "sku": "{{ $product->id }}",
-    "mpn": "{{ $product->id }}",
-    "brand": {
-        "@@type": "Brand",
-        "name": "{{ $product->brand->name ?? 'Zayn\'s Beauty' }}"
-    },
-    "category": "{{ $product->category->name ?? 'Beauty Products' }}",
-    "offers": {
-        "@@type": "Offer",
-        "price": {{ (float) $product->price }},
-        "priceCurrency": "KES",
-        "priceValidUntil": "{{ now()->addYear()->format('Y-m-d') }}",
-        "validFrom": "{{ now()->format('Y-m-d') }}",
-        "availability": "{{ $product->stock_quantity > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock' }}",
-        "url": "{{ route('products.show', $product) }}",
-        "seller": {
-            "@@type": "Organization",
-            "name": "Zayn's Beauty"
-        },
-        "hasMerchantReturnPolicy": {
-            "@@type": "MerchantReturnPolicy",
-            "applicableCountry": "KE",
-            "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
-            "merchantReturnDays": 7,
-            "returnMethod": "https://schema.org/ReturnByMail",
-            "returnFees": "https://schema.org/FreeReturn"
-        },
-        "shippingDetails": {
-            "@@type": "OfferShippingDetails",
-            "shippingRate": {
-                "@@type": "MonetaryAmount",
-                "value": "0",
-                "currency": "KES"
-            },
-            "shippingDestination": {
-                "@@type": "DefinedRegion",
-                "addressCountry": "KE"
-            },
-            "deliveryTime": {
-                "@@type": "ShippingDeliveryTime",
-                "handlingTime": {
-                    "@@type": "QuantitativeValue",
-                    "minValue": 0,
-                    "maxValue": 1,
-                    "unitCode": "DAY"
-                },
-                "transitTime": {
-                    "@@type": "QuantitativeValue",
-                    "minValue": 1,
-                    "maxValue": 3,
-                    "unitCode": "DAY"
-                }
-            }
-        }
-    }
-    @php
-        $productReviews = $product->reviews()->latest()->take(3)->get();
-        $hasRealReviews = $product->reviews_count > 0 && $productReviews->count() > 0;
-    @endphp
-    ,"aggregateRating": {
-        "@@type": "AggregateRating",
-        "ratingValue": "{{ $hasRealReviews ? number_format($product->average_rating, 1) : '5.0' }}",
-        "reviewCount": "{{ $hasRealReviews ? $product->reviews_count : 1 }}",
-        "bestRating": "5",
-        "worstRating": "1"
-    }
-    @if($hasRealReviews)
-    ,"review": [
-        @foreach($productReviews as $review)
-        {
-            "@@type": "Review",
-            "author": {
-                "@@type": "Person",
-                "name": "{{ addslashes($review->order->customer_name ?? 'Customer') }}"
-            },
-            "reviewRating": {
-                "@@type": "Rating",
-                "ratingValue": "{{ $review->rating }}",
-                "bestRating": "5"
-            },
-            "reviewBody": "{{ addslashes($review->comment ?? 'Great product!') }}",
-            "datePublished": "{{ $review->created_at->format('Y-m-d') }}"
-        }@if(!$loop->last),@endif
-        @endforeach
-    ]
-    @endif
-}
-</script>
+<script type="application/ld+json">@json($productSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)</script>
 @endsection
 
 @section('content')
@@ -125,12 +71,12 @@
         <!-- Breadcrumb -->
         <nav class="mb-8">
             <ol class="flex items-center space-x-2 text-sm text-gray-600">
-                <li><a href="{{ route('home') }}" class="hover:text-pink-600 transition-colors">Home</a></li>
+                <li><a href="{{ route('home') }}" class="hover:text-amber-600 transition-colors">Home</a></li>
                 <li class="flex items-center">
                     <svg class="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                         <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
                     </svg>
-                    <a href="{{ route('products.index') }}" class="hover:text-pink-600 transition-colors">Products</a>
+                    <a href="{{ route('products.index') }}" class="hover:text-amber-600 transition-colors">Products</a>
                 </li>
                 <li class="flex items-center">
                     <svg class="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
@@ -159,13 +105,13 @@
                          style="height: 380px; position: relative;">
                         <img id="zoom-img"
                              src="{{ $productImgUrl }}"
-                             alt="{{ $product->name }} - {{ $product->brand->name ?? 'Zayn\'s Beauty' }} {{ $product->category->name ?? 'Beauty Product' }}"
+                             alt="{{ $product->name }} - {{ $product->brand->name ?? 'Mars Collection' }} {{ $product->category->name ?? 'Shoes' }}"
                              class="max-w-full max-h-full object-contain p-3"
                              loading="eager"
                              draggable="false">
                         <!-- Lens overlay -->
                         <div id="zoom-lens"
-                             class="hidden absolute border-2 border-pink-400 bg-pink-50/20 rounded pointer-events-none"
+                             class="hidden absolute border-2 border-amber-400 bg-amber-50/20 rounded pointer-events-none"
                              style="width: 120px; height: 120px; z-index: 10;"></div>
                     </div>
                     <!-- Zoomed panel (desktop only, positioned by JS) -->
@@ -186,7 +132,7 @@
                     @php $thumbUrl = \App\Helpers\ImageHelper::getProductImageUrl($imgPath); @endphp
                     <button type="button"
                             onclick="switchMainImage('{{ $thumbUrl }}', this)"
-                            class="thumb-btn flex-shrink-0 w-16 h-16 rounded-md overflow-hidden border-2 transition-all duration-150 focus:outline-none {{ $i === 0 ? 'border-pink-500' : 'border-gray-200 hover:border-pink-300' }}"
+                            class="thumb-btn flex-shrink-0 w-16 h-16 rounded-md overflow-hidden border-2 transition-all duration-150 focus:outline-none {{ $i === 0 ? 'border-amber-500' : 'border-gray-200 hover:border-amber-300' }}"
                             aria-label="View image {{ $i + 1 }}">
                         <img src="{{ $thumbUrl }}"
                              alt="{{ $product->name }} image {{ $i + 1 }}"
@@ -217,7 +163,7 @@
             @endphp
             <div id="lightbox" class="fixed inset-0 z-[999] hidden items-center justify-center bg-black/95" role="dialog" aria-modal="true" aria-label="Product image gallery">
                 <!-- Close -->
-                <button id="lightbox-close" class="absolute top-4 right-4 text-white hover:text-pink-400 transition-colors z-10" aria-label="Close gallery">
+                <button id="lightbox-close" class="absolute top-4 right-4 text-white hover:text-amber-400 transition-colors z-10" aria-label="Close gallery">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
 
@@ -228,7 +174,7 @@
 
                 <!-- Prev arrow -->
                 @if(count($galleryImages) > 1)
-                <button id="lb-prev" class="absolute left-3 top-1/2 -translate-y-1/2 z-10 bg-black/40 hover:bg-pink-600 text-white rounded-full p-2 transition-colors" aria-label="Previous image">
+                <button id="lb-prev" class="absolute left-3 top-1/2 -translate-y-1/2 z-10 bg-black/40 hover:bg-amber-600 text-white rounded-full p-2 transition-colors" aria-label="Previous image">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
                 </button>
                 @endif
@@ -239,7 +185,7 @@
 
                 <!-- Next arrow -->
                 @if(count($galleryImages) > 1)
-                <button id="lb-next" class="absolute right-3 top-1/2 -translate-y-1/2 z-10 bg-black/40 hover:bg-pink-600 text-white rounded-full p-2 transition-colors" aria-label="Next image">
+                <button id="lb-next" class="absolute right-3 top-1/2 -translate-y-1/2 z-10 bg-black/40 hover:bg-amber-600 text-white rounded-full p-2 transition-colors" aria-label="Next image">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                 </button>
                 @endif
@@ -252,7 +198,7 @@
                     <button type="button"
                             onclick="lbGoTo({{ $i }})"
                             data-lb-index="{{ $i }}"
-                            class="lb-thumb flex-shrink-0 w-12 h-12 rounded-md overflow-hidden border-2 transition-all {{ $i === 0 ? 'border-pink-500' : 'border-white/30 hover:border-white/70' }}"
+                            class="lb-thumb flex-shrink-0 w-12 h-12 rounded-md overflow-hidden border-2 transition-all {{ $i === 0 ? 'border-amber-500' : 'border-white/30 hover:border-white/70' }}"
                             aria-label="Go to image {{ $i + 1 }}">
                         <img src="{{ $tUrl }}" alt="" class="w-full h-full object-cover">
                     </button>
@@ -322,7 +268,7 @@
                         <div class="flex items-center space-x-1">
                             <span class="text-gray-500">Category:</span>
                             <a href="{{ route('products.index', ['category' => $product->category->slug]) }}" 
-                               class="text-pink-600 hover:text-pink-700 font-medium">
+                               class="text-amber-600 hover:text-amber-700 font-medium">
                                 {{ $product->category->name }}
                             </a>
                         </div>
@@ -332,22 +278,12 @@
                         <div class="flex items-center space-x-1">
                             <span class="text-gray-500">Brand:</span>
                             <a href="{{ route('brands.show', $product->brand) }}" 
-                               class="text-pink-600 hover:text-pink-700 font-medium">
+                               class="text-amber-600 hover:text-amber-700 font-medium">
                                 {{ $product->brand->name }}
                             </a>
                         </div>
                     @endif
                 </div>
-
-                <!-- Description -->
-                @if($product->description)
-                    <div class="border-t border-gray-100 pt-5">
-                        <h3 class="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-3">Description</h3>
-                        <div class="prose max-w-none">
-                            {!! $product->description !!}
-                        </div>
-                    </div>
-                @endif
 
                 <!-- Stock Status -->
                 <div class="space-y-4">
@@ -363,8 +299,8 @@
                         <!-- Variant Selector -->
                         <div class="border-t border-gray-100 pt-4 space-y-2">
                             <div class="flex items-center justify-between">
-                                <label class="block text-sm font-semibold text-gray-900 uppercase tracking-widest">Select Option</label>
-                                <span id="variant-label" class="text-sm font-bold text-pink-600"></span>
+                                <label class="block text-sm font-semibold text-gray-900 uppercase tracking-widest">Select Size</label>
+                                <span id="variant-label" class="text-sm font-bold text-amber-600"></span>
                             </div>
                             <div class="flex flex-wrap gap-2">
                                 @foreach($sortedVariants as $i => $variant)
@@ -374,10 +310,10 @@
                                         data-price="{{ $variant['price'] ?? '' }}"
                                         data-original-price="{{ $variant['original_price'] ?? '' }}"
                                         class="variant-btn px-4 py-2 rounded-md border-2 text-sm font-medium transition-all duration-150 whitespace-nowrap
-                                               {{ $i === 0 ? 'border-pink-500 text-pink-600 bg-pink-50' : 'border-gray-200 text-gray-700 hover:border-pink-400 hover:text-pink-600' }}">
+                                               {{ $i === 0 ? 'border-amber-500 text-amber-600 bg-amber-50' : 'border-gray-200 text-gray-700 hover:border-amber-400 hover:text-amber-600' }}">
                                     {{ $variant['label'] }}
                                     @if(!empty($variant['price']))
-                                        <span class="text-xs {{ $i === 0 ? 'text-pink-400' : 'text-gray-400' }} ml-1">KES&nbsp;{{ number_format($variant['price'], 0) }}</span>
+                                        <span class="text-xs {{ $i === 0 ? 'text-amber-400' : 'text-gray-400' }} ml-1">KES&nbsp;{{ number_format($variant['price'], 0) }}</span>
                                     @endif
                                 </button>
                                 @endforeach
@@ -397,7 +333,7 @@
                             <div class="pt-4 border-t border-gray-100 space-y-3">
                                 <div class="flex justify-between items-center">
                                     <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-widest">Select Color</h3>
-                                    <span id="color-label" class="text-sm font-bold text-pink-600"></span>
+                                    <span id="color-label" class="text-sm font-bold text-amber-600"></span>
                                 </div>
                                 <div class="flex flex-wrap gap-4">
                                     @foreach($product->colors as $index => $colorOption)
@@ -439,8 +375,9 @@
 
                 <!-- Action Buttons (Add to Cart & WhatsApp Inquiry) -->
                 @php
-                    $rawPhone = \App\Models\Setting::get('contact_phone_primary', '254707614446');
+                    $rawPhone = \App\Models\Setting::get('contact_phone_primary', '0726243706');
                     $cleanPhone = preg_replace('/\D/', '', $rawPhone);
+                    if (str_starts_with($cleanPhone, '0')) $cleanPhone = '254' . substr($cleanPhone, 1);
                     $inquiryMsg = "Hi, I would like to inquire about: " . $product->name . " (" . $product->formatted_price . ") - " . route('products.show', $product);
                     $waUrl = "https://wa.me/" . $cleanPhone . "?text=" . urlencode($inquiryMsg);
                 @endphp
@@ -495,6 +432,16 @@
             </div>
         </div>
 
+        @if($product->description)
+            <section class="mt-14 border-t border-stone-200 pt-10" aria-labelledby="product-description-heading">
+                <p class="text-xs font-semibold uppercase tracking-[0.24em] text-amber-700">Product details</p>
+                <h2 id="product-description-heading" class="mt-2 text-2xl font-bold tracking-tight text-stone-950">About {{ $product->name }}</h2>
+                <div class="prose prose-stone mt-5 max-w-3xl leading-7" itemprop="description">
+                    {!! $product->description !!}
+                </div>
+            </section>
+        @endif
+
         <!-- You May Also Like -->
         @if($similarProducts->count() > 0)
             <div class="mt-16">
@@ -544,8 +491,8 @@
                         <div class="border border-gray-200 rounded-md p-6">
                             <div class="flex items-start justify-between mb-4">
                                 <div class="flex items-center space-x-3">
-                                    <div class="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center">
-                                        <span class="text-pink-600 font-semibold">
+                                    <div class="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center">
+                                        <span class="text-amber-600 font-semibold">
                                             {{ strtoupper(substr($review->order->customer_name, 0, 1)) }}
                                         </span>
                                     </div>
@@ -689,7 +636,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // ---------- Click to lightbox ----------
     container.addEventListener('click', function () {
         // Open at the currently active thumbnail index
-        const activeThumb = document.querySelector('.thumb-btn.border-pink-500');
+        const activeThumb = document.querySelector('.thumb-btn.border-amber-500');
         const idx = activeThumb ? parseInt(activeThumb.dataset.thumbIndex ?? 0) : 0;
         lbOpen(idx);
     });
@@ -717,6 +664,27 @@ document.addEventListener('DOMContentLoaded', function () {
     lbNextBtn && lbNextBtn.addEventListener('click', function(e) { e.stopPropagation(); lbNext(); });
 });
 
+const optionImages = @json(collect($product->variant_images ?? [])->mapWithKeys(fn ($path, $key) => [$key => \App\Helpers\ImageHelper::getProductImageUrl($path)])->all());
+const primaryProductImage = @json(\App\Helpers\ImageHelper::getProductImageUrl($product->image));
+
+function updateOptionImage() {
+    const color = document.getElementById('selected-color-input')?.value?.trim().toLowerCase();
+    const size = document.querySelector('.variant-btn.border-amber-500')?.dataset.label?.trim().toLowerCase();
+    const selectedImage = (color && size ? optionImages[`color_size:${color}|${size}`] : null)
+        || (color ? optionImages[`color:${color}`] : null)
+        || (size ? optionImages[`size:${size}`] || optionImages[`option:${size}`] : null)
+        || primaryProductImage;
+    if (!selectedImage) return;
+
+    const mainImage = document.getElementById('zoom-img');
+    if (mainImage) mainImage.src = selectedImage;
+    const firstThumbnail = document.querySelector('.thumb-btn img');
+    if (firstThumbnail) firstThumbnail.src = selectedImage;
+    if (Array.isArray(lbImages) && lbImages.length) lbImages[0] = selectedImage;
+    const zoomPanel = document.getElementById('zoom-panel');
+    if (zoomPanel) zoomPanel.style.backgroundImage = `url('${selectedImage}')`;
+}
+
 // ---------- Color Selection Helpers ----------
 function handleColorSelect(name, btn) {
     // Update hidden input
@@ -727,7 +695,7 @@ function handleColorSelect(name, btn) {
     
     // Reset all buttons
     document.querySelectorAll('.color-option-btn .rounded-full').forEach(el => {
-        el.classList.remove('border-pink-600', 'ring-2', 'ring-pink-200');
+        el.classList.remove('border-amber-600', 'ring-2', 'ring-amber-200');
         el.classList.add('border-gray-200');
         el.querySelector('.selected-check').classList.add('hidden');
     });
@@ -735,8 +703,9 @@ function handleColorSelect(name, btn) {
     // Highlight selected
     const circle = btn.querySelector('.rounded-full');
     circle.classList.remove('border-gray-200');
-    circle.classList.add('border-pink-600', 'ring-2', 'ring-pink-200');
+    circle.classList.add('border-amber-600', 'ring-2', 'ring-amber-200');
     circle.querySelector('.selected-check').classList.remove('hidden');
+    updateOptionImage();
 }
 
 function handleAddWithColor(productId) {
@@ -754,7 +723,15 @@ function handleAddWithColor(productId) {
         return;
     }
     
-    addToCart(productId, 1, color);
+    const selectedVariant = document.querySelector('.variant-btn.border-amber-500');
+    const hasSizeOptions = document.querySelector('.variant-btn') !== null;
+    const size = selectedVariant ? selectedVariant.dataset.label : null;
+    if (hasSizeOptions && !size) {
+        showToast('Please select a shoe size first', 'error');
+        return;
+    }
+
+    addToCart(productId, 1, color, size);
 }
 
 // ---------- Variant selector ----------
@@ -765,15 +742,15 @@ const baseOriginalPrice  = {{ $product->original_price ? (float)$product->origin
 function handleVariantChange(btn) {
     // Active pill state
     document.querySelectorAll('.variant-btn').forEach(b => {
-        b.classList.remove('border-pink-500', 'text-pink-600', 'bg-pink-50');
+        b.classList.remove('border-amber-500', 'text-amber-600', 'bg-amber-50');
         b.classList.add('border-gray-200', 'text-gray-700');
         const sub = b.querySelector('span');
-        if (sub) sub.classList.replace('text-pink-400', 'text-gray-400');
+        if (sub) sub.classList.replace('text-amber-400', 'text-gray-400');
     });
-    btn.classList.add('border-pink-500', 'text-pink-600', 'bg-pink-50');
+    btn.classList.add('border-amber-500', 'text-amber-600', 'bg-amber-50');
     btn.classList.remove('border-gray-200', 'text-gray-700');
     const sub = btn.querySelector('span');
-    if (sub) sub.classList.replace('text-gray-400', 'text-pink-400');
+    if (sub) sub.classList.replace('text-gray-400', 'text-amber-400');
 
     // Label
     const labelEl = document.getElementById('variant-label');
@@ -800,6 +777,8 @@ function handleVariantChange(btn) {
         if (origEl)  origEl.classList.add('hidden');
         if (badgeEl) badgeEl.classList.add('hidden');
     }
+
+    updateOptionImage();
 }
 
 // Auto-select first (cheapest) variant on load
@@ -852,7 +831,7 @@ function lbRender() {
     // Update thumbnail active state
     document.querySelectorAll('.lb-thumb').forEach(btn => {
         const i = parseInt(btn.dataset.lbIndex);
-        btn.classList.toggle('border-pink-500', i === lbIndex);
+        btn.classList.toggle('border-amber-500', i === lbIndex);
         btn.classList.toggle('border-white/30', i !== lbIndex);
     });
 }
@@ -870,7 +849,7 @@ function switchMainImage(url, thumbBtn) {
     // Update active thumbnail border + track index for lightbox
     document.querySelectorAll('.thumb-btn').forEach((btn, i) => {
         const isActive = btn === thumbBtn;
-        btn.classList.toggle('border-pink-500', isActive);
+        btn.classList.toggle('border-amber-500', isActive);
         btn.classList.toggle('border-gray-200', !isActive);
         if (isActive) lbIndex = i;
     });

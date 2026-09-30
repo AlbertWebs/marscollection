@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class AdminUserSeeder extends Seeder
 {
@@ -13,16 +12,16 @@ class AdminUserSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create admin user
-        User::create([
-            'name' => 'Admin User',
-            'email' => 'admin@zaynsbeauty.co.ke',
-            'password' => Hash::make('@z4y4n5B34u7y.'),
-            'is_admin' => true,
-        ]);
+        // Keep the setup account usable when the seeder is run more than once.
+        User::updateOrCreate(
+            ['email' => 'admin@marscollection.co.ke'],
+            [
+                'name' => 'Admin User',
+                'password' => '@z4y4n5B34u7y.',
+                'is_admin' => true,
+            ]
+        );
 
-
-        $this->command->info('Admin users created successfully!');
-        $this->command->info('Admin credentials: admin@zaynsbeauty.co.ke / @z4y4n5B34u7y.');
+        $this->command->info('Admin account is ready: admin@marscollection.co.ke');
     }
-} 
+}

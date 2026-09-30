@@ -7,7 +7,7 @@
         <div class="text-center mb-12">
             <h1 class="text-4xl font-bold text-gray-900 mb-4">Product Bundles</h1>
             <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-                Complete beauty solutions with multiple products at amazing value
+                Discover footwear styles selected by Mars Collection
             </p>
         </div>
 
@@ -51,4 +51,4 @@
         @endif
     </div>
 </div>
-@endsection 
+@endsection

@@ -19,7 +19,7 @@
                 <div>
                     <label for="password" class="block text-sm font-medium text-gray-700">{{ __('Password') }}</label>
                     <input id="password" type="password" name="password" required autocomplete="current-password"
-                           class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-pink-500 focus:border-pink-500 focus:z-10 sm:text-sm @error('password') border-red-500 @enderror"
+                           class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-amber-500 focus:border-amber-500 focus:z-10 sm:text-sm @error('password') border-red-500 @enderror"
                            placeholder="{{ __('Password') }}">
                     @error('password')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -28,13 +28,13 @@
 
                 <div class="flex items-center justify-between">
                     <button type="submit" 
-                            class="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-md">
+                            class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-md">
                         {{ __('Confirm Password') }}
                     </button>
 
                     @if (Route::has('password.request'))
                         <a href="{{ route('password.request') }}" 
-                           class="text-pink-600 hover:text-pink-700 text-sm">
+                           class="text-amber-600 hover:text-amber-700 text-sm">
                             {{ __('Forgot Your Password?') }}
                         </a>
                     @endif

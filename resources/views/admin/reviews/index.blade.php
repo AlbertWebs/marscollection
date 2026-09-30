@@ -15,12 +15,12 @@
                 <label for="search" class="block text-sm font-medium text-gray-700 mb-2">Search</label>
                 <input type="text" name="search" id="search" value="{{ request('search') }}" 
                        placeholder="Search by customer, product, or comment..."
-                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500">
             </div>
             
             <div>
                 <label for="status" class="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                <select name="status" id="status" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                <select name="status" id="status" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500">
                     <option value="">All Reviews</option>
                     <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending Approval</option>
                     <option value="approved" {{ request('status') === 'approved' ? 'selected' : '' }}>Approved</option>
@@ -28,7 +28,7 @@
             </div>
             
             <div class="flex items-end">
-                <button type="submit" class="bg-pink-600 text-white px-4 py-2 rounded-md hover:bg-pink-700 transition-colors">
+                <button type="submit" class="bg-amber-600 text-white px-4 py-2 rounded-md hover:bg-amber-700 transition-colors">
                     Filter
                 </button>
             </div>

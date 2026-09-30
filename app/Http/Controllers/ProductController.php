@@ -38,8 +38,11 @@ class ProductController extends Controller
         $products   = $query->paginate(50);
         $categories = Category::where('is_active', true)->get();
         $brands     = Brand::where('is_active', true)->get();
+        $selectedCategory = $request->filled('category')
+            ? $categories->firstWhere('slug', $request->category)
+            : null;
 
-        return view('products.index', compact('products', 'categories', 'brands'));
+        return view('products.index', compact('products', 'categories', 'brands', 'selectedCategory'));
     }
 
     public function show(Request $request, Product $product)
@@ -56,7 +59,7 @@ class ProductController extends Controller
         $viewed = array_slice($viewed, 0, 20);
         $request->session()->put('viewed_products', $viewed);
 
-        // "You may also like" — cached per product for 30 min, embedding-based with category fallback
+        // "You may also like" is cached per product for 30 min, embedding-based with category fallback.
         $similarProducts = cache()->remember('similar_products_' . $product->id, now()->addMinutes(30), function () use ($product) {
             $results = app(EmbeddingService::class)->getSimilarProducts($product, 6);
             if ($results->isEmpty()) {

@@ -6,12 +6,12 @@
 @endphp
 
 @if($bannerEnabled && $bannerText)
-<div class="bg-pink-600 text-white text-sm py-2.5 px-4">
+<div class="bg-amber-600 text-white text-sm py-2.5 px-4">
     <div class="container mx-auto flex items-center justify-center gap-4 text-center">
         <span>{{ $bannerText }}</span>
         @if($bannerCta)
             <a href="{{ $bannerUrl }}"
-               class="underline underline-offset-2 font-semibold hover:text-pink-200 transition-colors whitespace-nowrap">
+               class="underline underline-offset-2 font-semibold hover:text-amber-200 transition-colors whitespace-nowrap">
                 {{ $bannerCta }} →
             </a>
         @endif

@@ -78,7 +78,7 @@ class AppointmentController extends Controller
 
         // Send email notification to admin
         try {
-            Mail::to(\App\Models\Setting::get('email_admin', 'admin@zaynsbeauty.com'))->send(new AppointmentBooked($appointment));
+            Mail::to(\App\Models\Setting::get('email_admin', 'admin@marscollection.co.ke'))->send(new AppointmentBooked($appointment));
         }
         catch (\Exception $e) {
             // Log error but don't fail the booking
@@ -95,12 +95,12 @@ class AppointmentController extends Controller
 
         // Send WhatsApp notification to admin
         try {
-            $adminPhone = \App\Models\Setting::get('contact_phone_primary', '254707641446');
+            $adminPhone = \App\Models\Setting::get('contact_phone_primary', '0726243706');
             $serviceName = \App\Models\Service::where('slug', $appointment->service_type)->first()->name ?? 'Service';
             $date = \Carbon\Carbon::parse($appointment->appointment_date)->format('l, F d, Y');
             $time = \Carbon\Carbon::parse($appointment->appointment_time)->format('g:i A');
 
-            $message = "Hello zayns, a new booking just happened for *{$serviceName}* on *{$date}* at *{$time}* by *{$appointment->customer_name}*. Please check the admin panel for details.";
+            $message = "Hello Mars Collection, a new booking just happened for *{$serviceName}* on *{$date}* at *{$time}* by *{$appointment->customer_name}*. Please check the admin panel for details.";
 
             \App\Services\WhatsAppService::sendMessage($adminPhone, $message);
         }

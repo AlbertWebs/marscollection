@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'My Appointments - Zayn\'s Beauty')
+@section('title', 'My Appointments - Mars Collection')
 
 @section('content')
 
@@ -8,11 +8,11 @@
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
         <div class="flex items-end justify-between">
             <div>
-                <p class="text-xs uppercase tracking-widest text-pink-600 font-medium mb-2">Zayn's Beauty Studio</p>
+                <p class="text-xs uppercase tracking-widest text-amber-600 font-medium mb-2">Mars Collection</p>
                 <h1 class="text-3xl font-bold text-gray-900">My Appointments</h1>
             </div>
             <a href="{{ route('appointments.create') }}"
-               class="inline-flex items-center gap-2 px-5 py-2.5 bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold rounded-sm transition-colors">
+               class="inline-flex items-center gap-2 px-5 py-2.5 bg-amber-600 hover:bg-amber-700 text-white text-sm font-semibold rounded-sm transition-colors">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
                 </svg>
@@ -66,7 +66,7 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm">
                                         <a href="{{ route('appointments.show', $appointment) }}"
-                                           class="text-pink-600 hover:text-pink-800 font-medium">View</a>
+                                           class="text-amber-600 hover:text-amber-800 font-medium">View</a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -81,7 +81,7 @@
                     <p class="text-sm font-medium text-gray-900 mb-1">No appointments yet</p>
                     <p class="text-xs text-gray-400 mb-6">Book your first makeup appointment with us.</p>
                     <a href="{{ route('appointments.create') }}"
-                       class="inline-flex items-center gap-2 px-5 py-2.5 bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold rounded-sm transition-colors">
+                       class="inline-flex items-center gap-2 px-5 py-2.5 bg-amber-600 hover:bg-amber-700 text-white text-sm font-semibold rounded-sm transition-colors">
                         Book Appointment
                     </a>
                 </div>

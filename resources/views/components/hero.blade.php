@@ -1,106 +1,19 @@
-@php
-    $heroEnabled = \App\Models\Setting::get('hero_enabled', '1');
-    $heroTitle = \App\Models\Setting::get('hero_title', 'Beauty, Curated For You');
-    $heroSubtitle = \App\Models\Setting::get('hero_subtitle', 'Skincare, makeup & salon services, all in one place. Real products, real results.');
-    $heroImage = \App\Models\Setting::get('hero_image', 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=1600&q=85');
-    $heroStatsCustomers = \App\Models\Setting::get('hero_stats_customers', '500+');
-    $heroStatsProducts = \App\Models\Setting::get('hero_stats_products', '100+');
-    $heroStatsRating = \App\Models\Setting::get('hero_stats_rating', '4.9');
-@endphp
-
-@if($heroEnabled)
-<section class="relative w-full overflow-hidden" style="min-height: 90vh;">
-    <!-- Background image with dark overlay -->
-    <div class="absolute inset-0 overflow-hidden">
-        <img src="{{ $heroImage }}"
-             alt="Zayn's Beauty"
-             class="w-full h-full object-cover object-center hero-bg-zoom">
-        <div class="absolute inset-0 bg-black/35"></div>
-    </div>
-
-    <!-- Content -->
-    <div class="relative h-full container mx-auto px-6 lg:px-12 flex items-center" style="min-height: 90vh;">
-        <div class="max-w-2xl py-24">
-
-            <!-- Tag line -->
-            <p class="text-pink-300 uppercase tracking-[0.25em] text-xs font-medium mb-6 hero-item" style="--delay:0ms">Nairobi's Beauty Destination</p>
-
-            <!-- Headline -->
-            <h1 class="text-white font-bold leading-tight mb-6 hero-item" style="font-size: clamp(2.5rem, 6vw, 4.5rem); line-height: 1.1; --delay:120ms">
-                {{ $heroTitle }}
-            </h1>
-
-            <!-- Subtitle -->
-            <p class="text-gray-300 text-lg mb-10 leading-relaxed max-w-lg hero-item" style="--delay:260ms">
-                {{ $heroSubtitle }}
-            </p>
-
-            <!-- CTAs -->
-            <div class="flex flex-col sm:flex-row gap-4 hero-item" style="--delay:380ms">
-                <a href="{{ route('products.index') }}"
-                   class="inline-block bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold tracking-wide uppercase px-8 py-4 rounded-md transition-colors duration-200">
-                    Shop Now
-                </a>
-                <a href="{{ route('appointments.create') }}"
-                   class="inline-block border border-white/60 hover:border-white text-white text-sm font-semibold tracking-wide uppercase px-8 py-4 rounded-md transition-colors duration-200 hover:bg-white/10">
-                    Book Makeup Session
-                </a>
+@php($heroImage = ltrim($homeContent->get('home.hero.image', '/images/mars-footwear-hero.png'), '/'))
+<section class="relative isolate flex min-h-[620px] items-center overflow-hidden bg-[#080808] sm:min-h-[680px]">
+    <img src="{{ asset($heroImage) }}" alt="{{ $homeContent->get('home.hero.image_alt', 'Mars Collection footwear') }}" class="absolute inset-0 -z-20 h-full w-full object-cover object-center">
+    <div class="absolute inset-0 -z-10 bg-gradient-to-r from-black via-black/80 to-black/10"></div>
+    <div class="mx-auto w-full max-w-7xl px-5 py-20 sm:px-8 lg:px-12">
+        <div class="max-w-2xl">
+            <p class="mb-5 text-xs font-semibold uppercase tracking-[0.32em] text-amber-300">{{ $homeContent->get('home.hero.eyebrow', 'Footwear for every move') }}</p>
+            <h1 class="max-w-xl text-5xl font-black leading-[0.98] tracking-tight text-white sm:text-6xl lg:text-7xl">{{ $homeContent->get('home.hero.title_start', 'Step out in') }} <span class="text-amber-300">{{ $homeContent->get('home.hero.title_end', 'your style.') }}</span></h1>
+            <p class="mt-6 max-w-lg text-base leading-7 text-gray-300 sm:text-lg">{{ $homeContent->get('home.hero.description', 'Fresh kicks, timeless classics and everyday comfort. Find your next favourite pair at Mars Collection.') }}</p>
+            <div class="mt-9 flex flex-wrap gap-3">
+                <a href="{{ route('products.index') }}" class="inline-flex items-center rounded-full bg-amber-400 px-7 py-3.5 text-sm font-bold uppercase tracking-wide text-gray-950 transition hover:bg-amber-300">{{ $homeContent->get('home.hero.primary_button', 'Shop footwear') }} <span aria-hidden="true" class="ml-3">→</span></a>
+                <a href="{{ route('categories.index') }}" class="inline-flex items-center rounded-full border border-white/40 px-7 py-3.5 text-sm font-semibold text-white transition hover:border-amber-300 hover:text-amber-300">{{ $homeContent->get('home.hero.secondary_button', 'Browse categories') }}</a>
             </div>
-
-            <!-- Stats -->
-            <div class="mt-16 flex gap-10 hero-item" style="--delay:500ms">
-                <div>
-                    <div class="text-white text-2xl font-bold">{{ $heroStatsCustomers }}</div>
-                    <div class="text-gray-400 text-xs uppercase tracking-wider mt-1">Happy Clients</div>
-                </div>
-                <div class="border-l border-white/20 pl-10">
-                    <div class="text-white text-2xl font-bold">{{ $heroStatsProducts }}</div>
-                    <div class="text-gray-400 text-xs uppercase tracking-wider mt-1">Products</div>
-                </div>
-                <div class="border-l border-white/20 pl-10">
-                    <div class="flex items-center gap-2 text-white text-2xl font-bold">
-                        <span>{{ $heroStatsRating }}</span>
-                        <span class="flex items-center gap-1" aria-hidden="true">
-                            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.539 1.118l-2.8-2.034a1 1 0 00-1.176 0l-2.8 2.034c-.783.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81H7.03a1 1 0 00.95-.69l1.07-3.292z"></path>
-                            </svg>
-                            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.539 1.118l-2.8-2.034a1 1 0 00-1.176 0l-2.8 2.034c-.783.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81H7.03a1 1 0 00.95-.69l1.07-3.292z"></path>
-                            </svg>
-                        </span>
-                    </div>
-                    <div class="text-gray-400 text-xs uppercase tracking-wider mt-1">Avg. Rating</div>
-                </div>
+            <div class="mt-12 flex items-center gap-3 text-xs font-medium uppercase tracking-[0.18em] text-gray-400">
+                <span class="h-px w-10 bg-amber-400"></span> {{ $homeContent->get('home.hero.categories', 'Sneakers · Formal · Everyday') }}
             </div>
         </div>
     </div>
 </section>
-@endif
-
-<style>
-.hero-bg-zoom {
-    transform-origin: center center;
-    will-change: transform;
-}
-</style>
-
-<script>
-(function () {
-    const img = document.querySelector('.hero-bg-zoom');
-    const section = img ? img.closest('section') : null;
-    if (!img || !section) return;
-
-    function onScroll() {
-        const rect = section.getBoundingClientRect();
-        const sectionH = section.offsetHeight;
-        // progress: 0 when top of section hits top of viewport, 1 when bottom leaves
-        const progress = Math.max(0, Math.min(1, -rect.top / sectionH));
-        // Scale from 1.0 to 1.12 as you scroll through
-        const scale = 1 + progress * 0.12;
-        img.style.transform = `scale(${scale})`;
-    }
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll(); // init
-})();
-</script>

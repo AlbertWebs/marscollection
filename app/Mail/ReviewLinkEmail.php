@@ -35,7 +35,7 @@ class ReviewLinkEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Review Your Order - Zayn\'s Beauty',
+            subject: 'Review Your Order - Mars Collection',
         );
     }
 

@@ -39,7 +39,7 @@ class Contact extends Model
             'product' => 'Product Information',
             'order' => 'Order Status',
             'return' => 'Returns & Refunds',
-            'beauty-advice' => 'Beauty Advice',
+            'shoe-sizing' => 'Shoe sizing question',
             'feedback' => 'Feedback',
             'other' => 'Other'
         ];

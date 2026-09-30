@@ -19,7 +19,8 @@ class OrderItem extends Model
         'product_price',
         'quantity',
         'subtotal',
-        'selected_color'
+        'selected_color',
+        'selected_size'
     ];
 
     protected $casts = [
@@ -68,4 +69,4 @@ class OrderItem extends Model
     {
         return !is_null($this->product_id);
     }
-} 
+}

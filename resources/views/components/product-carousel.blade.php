@@ -18,7 +18,7 @@
     <!-- Prev / Next buttons -->
     <button type="button"
             onclick="carouselScroll('{{ $carouselId }}', -1)"
-            class="carousel-btn absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white border border-gray-200 shadow-md rounded-full w-9 h-9 flex items-center justify-center hover:bg-pink-50 hover:border-pink-300 transition-colors"
+            class="carousel-btn absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-white border border-gray-200 shadow-md rounded-full w-9 h-9 flex items-center justify-center hover:bg-amber-50 hover:border-amber-300 transition-colors"
             aria-label="Scroll left">
         <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
@@ -26,7 +26,7 @@
     </button>
     <button type="button"
             onclick="carouselScroll('{{ $carouselId }}', 1)"
-            class="carousel-btn absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white border border-gray-200 shadow-md rounded-full w-9 h-9 flex items-center justify-center hover:bg-pink-50 hover:border-pink-300 transition-colors"
+            class="carousel-btn absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-white border border-gray-200 shadow-md rounded-full w-9 h-9 flex items-center justify-center hover:bg-amber-50 hover:border-amber-300 transition-colors"
             aria-label="Scroll right">
         <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>

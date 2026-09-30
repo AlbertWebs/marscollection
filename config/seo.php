@@ -17,13 +17,13 @@ return [
     |--------------------------------------------------------------------------
     */
     'defaults' => [
-        'title' => 'Zayn\'s Beauty - Premium Beauty Products & Professional Services',
-        'description' => 'Discover premium beauty products, professional beauty services, and expert beauty consultations. Shop the latest trends in skincare, makeup, and beauty accessories.',
-        'keywords' => 'beauty products, skincare, makeup, beauty services, beauty salon, beauty consultation, premium beauty, beauty accessories',
-        'author' => 'Zayn\'s Beauty',
+        'title' => 'Mars Collection - Shoes & Footwear in Kenya',
+        'description' => 'Shop sneakers, formal shoes, sandals and more at Mars Collection in Kenya.',
+        'keywords' => 'shoes Kenya, sneakers, formal shoes, sandals, Mars Collection',
+        'author' => 'Mars Collection',
         'robots' => 'index, follow',
         'language' => 'English',
-        'theme_color' => '#ec4899',
+        'theme_color' => '#111111',
     ],
 
     /*
@@ -33,12 +33,12 @@ return [
     */
     'open_graph' => [
         'type' => 'website',
-        'site_name' => 'Zayn\'s Beauty',
+        'site_name' => 'Mars Collection',
         'locale' => 'en_US',
         'image' => [
             'width' => 1200,
             'height' => 630,
-            'alt' => 'Zayn\'s Beauty - Premium Beauty Products',
+            'alt' => 'Mars Collection footwear',
         ],
     ],
 
@@ -49,8 +49,8 @@ return [
     */
     'twitter' => [
         'card' => 'summary_large_image',
-        'site' => '@zaynsbeauty', // Update with your Twitter handle
-        'creator' => '@zaynsbeauty', // Update with your Twitter handle
+        'site' => '@marscollection', // Update with your Twitter handle
+        'creator' => '@marscollection', // Update with your Twitter handle
     ],
 
     /*
@@ -60,11 +60,11 @@ return [
     */
     'schema' => [
         'organization' => [
-            'name' => 'Zayn\'s Beauty',
-            'url' => 'https://zaynsbeauty.com',
-            'logo' => 'https://zaynsbeauty.com/images/logo.png',
-            'description' => 'Premium beauty products and professional beauty services',
-            'email' => 'info@zaynsbeauty.com',
+            'name' => 'Mars Collection',
+            'url' => 'https://marscollection.co.ke',
+            'logo' => 'https://marscollection.co.ke/mars-collections-logo.png',
+            'description' => 'Shoes and footwear from Mars Collection in Kenya.',
+            'email' => 'info@marscollection.co.ke',
             'phone' => '+254-XXX-XXX-XXX',
             'address' => [
                 'street' => '',
@@ -81,9 +81,9 @@ return [
             'price_range' => '$$',
         ],
         'local_business' => [
-            'type' => 'BeautySalon',
-            'name' => 'Zayn\'s Beauty',
-            'description' => 'Premium beauty products and professional beauty services',
+            'type' => 'Store',
+            'name' => 'Mars Collection',
+            'description' => 'Shoes and footwear from Mars Collection in Kenya.',
         ],
     ],
 
@@ -154,7 +154,7 @@ return [
             '/products?brand=',
         ],
         'crawl_delay' => 1,
-        'sitemap' => 'https://zaynsbeauty.com/sitemap.xml',
+        'sitemap' => 'https://marscollection.co.ke/sitemap.xml',
     ],
 
     /*
@@ -181,11 +181,11 @@ return [
     |--------------------------------------------------------------------------
     */
     'social_media' => [
-        'facebook' => 'https://facebook.com/zaynsbeauty',
-        'instagram' => 'https://instagram.com/zaynsbeauty',
-        'twitter' => 'https://twitter.com/zaynsbeauty',
-        'youtube' => 'https://youtube.com/zaynsbeauty',
-        'tiktok' => 'https://tiktok.com/@zaynsbeauty',
+        'facebook' => 'https://facebook.com/marscollection',
+        'instagram' => 'https://instagram.com/marscollection',
+        'twitter' => 'https://twitter.com/marscollection',
+        'youtube' => 'https://youtube.com/marscollection',
+        'tiktok' => 'https://tiktok.com/@marscollection',
     ],
 
     /*
@@ -214,50 +214,10 @@ return [
     |--------------------------------------------------------------------------
     */
     'keywords' => [
-        'skincare' => [
-            'skincare products',
-            'facial care',
-            'anti-aging',
-            'moisturizer',
-            'cleanser',
-            'serum',
-            'sunscreen',
-            'beauty routine',
-        ],
-        'makeup' => [
-            'makeup products',
-            'cosmetics',
-            'foundation',
-            'lipstick',
-            'eyeshadow',
-            'mascara',
-            'beauty makeup',
-            'professional makeup',
-        ],
-        'haircare' => [
-            'hair products',
-            'hair care',
-            'shampoo',
-            'conditioner',
-            'hair treatment',
-            'hair styling',
-            'professional hair care',
-        ],
-        'fragrances' => [
-            'perfumes',
-            'fragrances',
-            'colognes',
-            'body sprays',
-            'luxury fragrances',
-            'beauty scents',
-        ],
-        'tools' => [
-            'beauty tools',
-            'makeup brushes',
-            'skincare tools',
-            'beauty accessories',
-            'professional tools',
-        ],
+        'sneakers' => ['sneakers Kenya', 'casual sneakers', 'everyday trainers'],
+        'formal' => ['formal shoes Kenya', 'dress shoes', 'work shoes'],
+        'sandals' => ['sandals Kenya', 'comfortable sandals'],
+        'boots' => ['boots Kenya', 'ankle boots'],
     ],
 
     /*
@@ -267,34 +227,34 @@ return [
     */
     'page_templates' => [
         'home' => [
-            'title' => 'Zayn\'s Beauty - Premium Beauty Products & Professional Services | Kenya',
-            'description' => 'Discover premium beauty products, professional beauty services, and expert beauty consultations in Kenya. Shop the latest trends in skincare, makeup, and beauty accessories. Book appointments online.',
-            'keywords' => 'beauty products Kenya, skincare Nairobi, makeup Kenya, beauty services, beauty salon Nairobi, beauty consultation, premium beauty products, beauty accessories',
+            'title' => 'Mars Collection - Shoes & Footwear in Kenya',
+            'description' => 'Shop sneakers, formal shoes, sandals and more at Mars Collection in Kenya.',
+            'keywords' => 'shoes Kenya, sneakers, formal shoes, sandals, Mars Collection',
         ],
         'products' => [
-            'title' => 'Beauty Products - Premium Skincare, Makeup & Beauty Accessories | Zayn\'s Beauty',
-            'description' => 'Shop premium beauty products including skincare, makeup, and beauty accessories. Discover trending and featured products from top beauty brands. Free shipping on orders over KES 5,000.',
-            'keywords' => 'beauty products, skincare, makeup, beauty accessories, premium beauty, beauty brands, trending products, featured products',
+            'title' => 'Shop Shoes & Footwear | Mars Collection',
+            'description' => 'Shop sneakers, formal shoes, loafers, flats, sandals and boots from Mars Collection.',
+            'keywords' => 'shoes, sneakers, loafers, flats, sandals, boots, Mars Collection',
         ],
         'categories' => [
-            'title' => 'Beauty Categories - Shop by Category | Zayn\'s Beauty',
-            'description' => 'Browse beauty products by category. Find skincare, makeup, haircare, fragrances, and beauty tools. Shop the best beauty products organized by category.',
-            'keywords' => 'beauty categories, skincare category, makeup category, haircare category, fragrance category, beauty tools category',
+            'title' => 'Shoe Categories | Mars Collection',
+            'description' => 'Browse sneakers, formal shoes, loafers, flats, sandals and boots.',
+            'keywords' => 'shoe categories, sneakers, formal shoes, loafers, flats, sandals, boots',
         ],
         'brands' => [
-            'title' => 'Beauty Brands - Premium Beauty Brands | Zayn\'s Beauty',
-            'description' => 'Discover premium beauty brands at Zayn\'s Beauty. Shop the best beauty products from top international and local brands. Quality guaranteed.',
-            'keywords' => 'beauty brands, premium brands, international brands, local brands, quality beauty products',
+            'title' => 'Footwear | Mars Collection',
+            'description' => 'Explore footwear styles from Mars Collection.',
+            'keywords' => 'Mars Collection footwear, shoes Kenya',
         ],
         'about' => [
-            'title' => 'About Us - Zayn\'s Beauty | Premium Beauty Products & Services',
-            'description' => 'Learn about Zayn\'s Beauty - your trusted source for premium beauty products and professional beauty services in Kenya. Our story, mission, and commitment to beauty excellence.',
-            'keywords' => 'about Zayn\'s Beauty, beauty company Kenya, beauty services Nairobi, premium beauty products, beauty excellence',
+            'title' => 'About Mars Collection | Shoes in Kenya',
+            'description' => 'Discover Mars Collection, a footwear shop serving customers in Kenya.',
+            'keywords' => 'about Mars Collection, shoes Kenya, footwear',
         ],
         'contact' => [
-            'title' => 'Contact Us - Zayn\'s Beauty | Get in Touch',
-            'description' => 'Contact Zayn\'s Beauty for customer support, product inquiries, or beauty consultations. We\'re here to help you with all your beauty needs.',
-            'keywords' => 'contact Zayn\'s Beauty, customer support, beauty consultation, product inquiries, beauty help',
+            'title' => 'Contact Us - Mars Collection | Get in Touch',
+            'description' => 'Contact Mars Collection about footwear, sizing, orders, and customer support.',
+            'keywords' => 'contact Mars Collection, shoe sizing, footwear support, orders',
         ],
     ],
 ];

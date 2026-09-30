@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             AdminUserSeeder::class,
             SettingsSeeder::class,
+            HomePageSeeder::class,
             HeroVideoSettingsSeeder::class,
             CategorySeeder::class,
             BrandSeeder::class,

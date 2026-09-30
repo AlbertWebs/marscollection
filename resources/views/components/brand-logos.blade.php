@@ -16,7 +16,7 @@
             <div id="brands-r1" class="flex gap-3" style="width: max-content; will-change: transform;">
                 @foreach([1,2,3] as $_)
                     @foreach($row1 as $brand)
-                    @php $logoUrl = str_starts_with($brand->logo, 'http') ? $brand->logo : \Storage::disk('s3')->url($brand->logo); @endphp
+                    @php $logoUrl = \App\Helpers\ImageHelper::getProductImageUrl($brand->logo); @endphp
                     <a href="{{ route('products.index', ['brand' => $brand->slug]) }}"
                        class="brand-card flex-shrink-0 relative rounded-md overflow-hidden group"
                        style="width: 150px; height: 100px;">
@@ -37,7 +37,7 @@
             <div id="brands-r2" class="flex gap-3" style="width: max-content; will-change: transform;">
                 @foreach([1,2,3] as $_)
                     @foreach($row2 as $brand)
-                    @php $logoUrl = str_starts_with($brand->logo, 'http') ? $brand->logo : \Storage::disk('s3')->url($brand->logo); @endphp
+                    @php $logoUrl = \App\Helpers\ImageHelper::getProductImageUrl($brand->logo); @endphp
                     <a href="{{ route('products.index', ['brand' => $brand->slug]) }}"
                        class="brand-card flex-shrink-0 relative rounded-md overflow-hidden group"
                        style="width: 150px; height: 100px;">
@@ -67,7 +67,7 @@
     window.brandsRunning = true;
 
     function measure() {
-        // Each row has 3 copies — one copy = scrollWidth / 3
+        // Each row has 3 copies. One copy = scrollWidth / 3
         unit1 = r1.scrollWidth / 3;
         if (r2) unit2 = r2.scrollWidth / 3;
     }

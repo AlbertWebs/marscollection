@@ -25,7 +25,7 @@
         
         <div class="content">
             <p>Hi {{ $appointment->customer_name }},</p>
-            <p>Thank you for submitting an appointment request with Zayn's Beauty! This email confirms we've received your request.</p>
+            <p>Thank you for submitting an appointment request with Mars Collection! This email confirms we've received your request.</p>
             <p><strong>Note:</strong> Your appointment is not yet confirmed. We will reach out shortly to officially confirm your slot.</p>
             
             <div class="details-box">
@@ -49,7 +49,7 @@
         </div>
         
         <div class="footer">
-            <p>&copy; {{ date('Y') }} Zayn's Beauty Studio. All rights reserved.</p>
+            <p>&copy; {{ date('Y') }} Mars Collection. All rights reserved.</p>
         </div>
     </div>
 </body>

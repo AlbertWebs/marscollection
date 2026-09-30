@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Review Your Order - Zayn\'s Beauty')
+@section('title', 'Review Your Order - Mars Collection')
 
 @section('content')
 <div class="bg-white min-h-screen py-8">
@@ -90,14 +90,14 @@
                                         <div>
                                             <label for="comment-{{ $item['type'] }}-{{ $item['id'] }}" class="block text-sm font-medium text-gray-700 mb-2">Comment (Optional)</label>
                                             <textarea id="comment-{{ $item['type'] }}-{{ $item['id'] }}"
-                                                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                                                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                                                       rows="3"
                                                       placeholder="Share your experience with this product..."></textarea>
                                         </div>
 
                                         <!-- Submit Button -->
                                         <button type="button" 
-                                                class="submit-review bg-pink-600 text-white px-6 py-2 rounded-md font-medium hover:bg-pink-700 transition-colors"
+                                                class="submit-review bg-amber-600 text-white px-6 py-2 rounded-md font-medium hover:bg-amber-700 transition-colors"
                                                 data-item-type="{{ $item['type'] }}"
                                                 data-item-id="{{ $item['id'] }}">
                                             Submit Review
@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (data.success) {
                     // Show success message
                     this.textContent = 'Review Submitted!';
-                    this.classList.remove('bg-pink-600', 'hover:bg-pink-700');
+                    this.classList.remove('bg-amber-600', 'hover:bg-amber-700');
                     this.classList.add('bg-green-600');
                     
                     // Disable the entire review form

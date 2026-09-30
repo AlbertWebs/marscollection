@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://www.zaynsbeauty.co.ke/sitemap.xml
+Sitemap: https://marscollection.co.ke/sitemap.xml
 
 # Disallow admin and auth pages
 Disallow: /admin/
@@ -22,7 +22,6 @@ Allow: /products/
 Allow: /categories/
 Allow: /brands/
 Allow: /bundles/
-Allow: /appointments/book
 Allow: /about
 Allow: /contact
 Allow: /privacy-policy

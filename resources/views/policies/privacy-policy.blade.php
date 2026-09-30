@@ -1,15 +1,15 @@
 @extends('layouts.app')
 
-@section('title', 'Privacy Policy - Zayn\'s Beauty')
+@section('title', 'Privacy Policy - Mars Collection')
 
 @section('content')
 <div class="min-h-screen bg-stone-50">
     <section class="border-b border-stone-200 bg-white">
         <div class="mx-auto max-w-5xl px-4 py-14 sm:px-6 lg:px-8">
-            <p class="text-xs font-semibold uppercase tracking-[0.3em] text-pink-600">Privacy</p>
+            <p class="text-xs font-semibold uppercase tracking-[0.3em] text-amber-600">Privacy</p>
             <h1 class="mt-4 max-w-3xl text-4xl font-semibold tracking-tight text-stone-900 sm:text-5xl">Privacy Policy</h1>
             <p class="mt-5 max-w-2xl text-base leading-7 text-stone-600 sm:text-lg">
-                This page explains what information we collect, how we use it, and the choices you have when using Zayn's Beauty.
+                This page explains what information we collect, how we use it, and the choices you have when using Mars Collection.
             </p>
             <div class="mt-6 text-sm text-stone-500">
                 Effective date: January 1, 2024 · Last updated: January 1, 2024
@@ -21,14 +21,14 @@
         <div class="grid gap-10 lg:grid-cols-[220px_minmax(0,1fr)]">
             <aside class="lg:sticky lg:top-24 lg:self-start">
                 <nav class="space-y-3 text-sm text-stone-600">
-                    <a href="#introduction" class="block hover:text-pink-600">Introduction</a>
-                    <a href="#collection" class="block hover:text-pink-600">Information We Collect</a>
-                    <a href="#use" class="block hover:text-pink-600">How We Use Information</a>
-                    <a href="#sharing" class="block hover:text-pink-600">Sharing</a>
-                    <a href="#security" class="block hover:text-pink-600">Security and Retention</a>
-                    <a href="#rights" class="block hover:text-pink-600">Your Choices</a>
-                    <a href="#cookies" class="block hover:text-pink-600">Cookies</a>
-                    <a href="#contact" class="block hover:text-pink-600">Contact</a>
+                    <a href="#introduction" class="block hover:text-amber-600">Introduction</a>
+                    <a href="#collection" class="block hover:text-amber-600">Information We Collect</a>
+                    <a href="#use" class="block hover:text-amber-600">How We Use Information</a>
+                    <a href="#sharing" class="block hover:text-amber-600">Sharing</a>
+                    <a href="#security" class="block hover:text-amber-600">Security and Retention</a>
+                    <a href="#rights" class="block hover:text-amber-600">Your Choices</a>
+                    <a href="#cookies" class="block hover:text-amber-600">Cookies</a>
+                    <a href="#contact" class="block hover:text-amber-600">Contact</a>
                 </nav>
             </aside>
 

@@ -15,7 +15,8 @@ class Cart extends Model
         'product_id',
         'bundle_id',
         'quantity',
-        'selected_color'
+        'selected_color',
+        'selected_size'
     ];
 
     public function product()
@@ -32,4 +33,4 @@ class Cart extends Model
     {
         return $this->belongsTo(Bundle::class);
     }
-} 
+}

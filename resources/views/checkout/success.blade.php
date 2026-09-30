@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Order Placed - Zayn\'s Beauty')
+@section('title', 'Order Placed - Mars Collection')
 
 @section('content')
 <div class="bg-gray-50 min-h-screen py-12">
@@ -24,15 +24,15 @@
             <p class="text-xs uppercase tracking-widest text-gray-400 font-medium mb-5">What Happens Next</p>
             <div class="space-y-4">
                 <div class="flex items-start gap-4">
-                    <span class="w-6 h-6 rounded-sm bg-pink-50 text-pink-600 text-xs font-bold flex items-center justify-center shrink-0">1</span>
+                    <span class="w-6 h-6 rounded-sm bg-amber-50 text-amber-600 text-xs font-bold flex items-center justify-center shrink-0">1</span>
                     <p class="text-sm text-gray-600">You'll receive an email confirmation with your order details</p>
                 </div>
                 <div class="flex items-start gap-4">
-                    <span class="w-6 h-6 rounded-sm bg-pink-50 text-pink-600 text-xs font-bold flex items-center justify-center shrink-0">2</span>
+                    <span class="w-6 h-6 rounded-sm bg-amber-50 text-amber-600 text-xs font-bold flex items-center justify-center shrink-0">2</span>
                     <p class="text-sm text-gray-600">We'll process your order and notify you when it ships</p>
                 </div>
                 <div class="flex items-start gap-4">
-                    <span class="w-6 h-6 rounded-sm bg-pink-50 text-pink-600 text-xs font-bold flex items-center justify-center shrink-0">3</span>
+                    <span class="w-6 h-6 rounded-sm bg-amber-50 text-amber-600 text-xs font-bold flex items-center justify-center shrink-0">3</span>
                     <p class="text-sm text-gray-600">Track your order status in your account dashboard</p>
                 </div>
             </div>
@@ -54,7 +54,7 @@
         {{-- Actions --}}
         <div class="flex gap-3">
             <a href="{{ route('home') }}"
-               class="flex-1 bg-pink-600 hover:bg-pink-700 text-white py-3 rounded-sm text-sm font-semibold transition-colors text-center">
+               class="flex-1 bg-amber-600 hover:bg-amber-700 text-white py-3 rounded-sm text-sm font-semibold transition-colors text-center">
                 Continue Shopping
             </a>
             <a href="{{ route('contact') }}"

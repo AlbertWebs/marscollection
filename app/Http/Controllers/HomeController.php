@@ -7,6 +7,7 @@ use App\Models\Contact;
 use App\Models\Brand;
 use App\Models\Bundle;
 use App\Models\Category;
+use App\Models\Setting;
 use App\Models\NewsletterSubscriber;
 use App\Services\EmbeddingService;
 use Illuminate\Http\Request;
@@ -17,33 +18,29 @@ class HomeController extends Controller
 {
     public function index()
     {
+        $categories = Category::where('is_active', true)->orderBy('sort_order')->orderBy('name')->limit(6)->get();
         $trendingProducts = Product::where('is_active', true)->where('is_trending', true)->latest()->limit(5)->get();
         $featuredProducts = Product::where('is_active', true)->where('is_featured', true)->latest()->limit(10)->get();
-
-        // Picked for you — based on session browse history, excluding already-carted products.
-        // Cached per unique browse fingerprint so repeated home visits don't re-query pgvector.
-        $pickedProducts = collect();
-        $viewedIds = session('viewed_products', []);
-        if (!empty($viewedIds)) {
-            $cartProductIds = \App\Models\Cart::where('session_id', session()->getId())
-                ->whereNotNull('product_id')
-                ->pluck('product_id')
-                ->toArray();
-
-            // Cache key changes whenever viewed list or cart changes
-            $cacheKey = 'picked_for_you_' . md5(implode(',', $viewedIds) . '|' . implode(',', $cartProductIds));
-
-            $pickedProducts = cache()->remember($cacheKey, now()->addMinutes(10), function () use ($viewedIds, $cartProductIds) {
-                return app(EmbeddingService::class)->getPickedForYou($viewedIds, 10, $cartProductIds);
-            });
-        }
-
-        return view('home', compact('trendingProducts', 'featuredProducts', 'pickedProducts'));
+        $homeContent = Setting::where('group', 'homepage')->pluck('value', 'key');
+        return view('home', compact('categories', 'trendingProducts', 'featuredProducts', 'homeContent'));
     }
 
     public function about()
     {
-        return view('about');
+        $categories = Category::where('is_active', true)
+            ->withCount(['products' => fn ($query) => $query->where('is_active', true)])
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->get();
+        $brandDetails = [
+            'phone' => Setting::get('contact_phone_primary', '0726243706'),
+            'email' => Setting::get('contact_email_primary', 'info@marscollection.co.ke'),
+            'facebook' => Setting::get('social_facebook', ''),
+            'instagram' => Setting::get('social_instagram', ''),
+            'twitter' => Setting::get('social_twitter', ''),
+        ];
+
+        return view('about', compact('categories', 'brandDetails'));
     }
 
     public function contact()
@@ -189,7 +186,7 @@ class HomeController extends Controller
             if ($category->image) {
                 $catImages[] = [
                     'loc'   => \App\Helpers\ImageHelper::getProductImageUrl($category->image),
-                    'title' => $category->name . ' - Zayn\'s Beauty Nairobi',
+                    'title' => $category->name . ' - Mars Collection Nairobi',
                 ];
             }
             $xml .= $formatUrl(
@@ -209,7 +206,7 @@ class HomeController extends Controller
             if ($imgUrl) {
                 $images[] = [
                     'loc'     => $imgUrl,
-                    'title'   => $product->name . ' - Zayn\'s Beauty Kenya',
+                    'title'   => $product->name . ' - Mars Collection Kenya',
                     'caption' => Str::limit($product->description ?? $product->name, 120),
                 ];
             }
@@ -231,7 +228,7 @@ class HomeController extends Controller
             if ($brand->logo) {
                 $brandImages[] = [
                     'loc'   => \App\Helpers\ImageHelper::getProductImageUrl($brand->logo),
-                    'title' => $brand->name . ' at Zayn\'s Beauty',
+                    'title' => $brand->name . ' at Mars Collection',
                 ];
             }
             $xml .= $formatUrl(
@@ -251,7 +248,7 @@ class HomeController extends Controller
             if ($imgUrl) {
                 $bundleImages[] = [
                     'loc'     => $imgUrl,
-                    'title'   => $bundle->name . ' - Zayn\'s Beauty Bundle',
+                    'title'   => $bundle->name . ' - Mars Collection Bundle',
                     'caption' => $bundle->name,
                 ];
             }

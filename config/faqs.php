@@ -7,14 +7,14 @@ return [
     ],
     [
         'question' => 'What\'s your return policy?',
-        'answer' => 'We offer a 30-day return policy for unused items in original packaging. Contact our customer service team to initiate a return.',
+        'answer' => 'Please contact Mars Collection before returning an order so we can confirm the available options for your item.',
     ],
     [
         'question' => 'Do you ship internationally?',
-        'answer' => 'Currently, we ship within Kenya. We\'re working on expanding our shipping options to other East African countries.',
+        'answer' => 'Please contact Mars Collection to confirm delivery availability for your location.',
     ],
     [
-        'question' => 'Can I get beauty advice?',
-        'answer' => 'Absolutely! Our beauty consultants are available in-store and online. Book a consultation or reach out to us for personalized beauty advice.',
+        'question' => 'Need help choosing a shoe size?',
+        'answer' => 'Send Mars Collection a message with the style you are interested in and the size you usually wear.',
     ],
 ];

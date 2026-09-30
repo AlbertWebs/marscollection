@@ -15,7 +15,7 @@ class SeoHelper
             $parts[] = $brand;
         }
         
-        $parts[] = 'Zayn\'s Beauty';
+        $parts[] = 'Mars Collection';
         
         return implode(' - ', $parts);
     }
@@ -39,7 +39,7 @@ class SeoHelper
             $parts[] = "from {$brand}";
         }
         
-        $parts[] = 'Premium beauty product';
+        $parts[] = 'Quality footwear from Mars Collection';
         
         if ($category) {
             $parts[] = "in {$category} category";
@@ -73,14 +73,13 @@ class SeoHelper
             $keywordArray[] = $brand;
         }
         
-        // Add default beauty keywords
+        // Add default footwear keywords
         $defaultKeywords = [
-            'beauty products',
-            'premium beauty',
-            'skincare',
-            'makeup',
-            'beauty accessories',
-            'Zayn\'s Beauty'
+            'shoes Kenya',
+            'sneakers',
+            'formal shoes',
+            'sandals',
+            'Mars Collection'
         ];
         
         $keywordArray = array_merge($keywordArray, $defaultKeywords);
@@ -104,9 +103,9 @@ class SeoHelper
             'mpn' => (string) $product->id,
             'brand' => [
                 '@type' => 'Brand',
-                'name' => $product->brand->name ?? 'Zayn\'s Beauty'
+                'name' => $product->brand->name ?? 'Mars Collection'
             ],
-            'category' => $product->category->name ?? 'Beauty Products',
+            'category' => $product->category->name ?? 'Footwear',
             'offers' => [
                 '@type' => 'Offer',
                 'price' => (string) $product->price,
@@ -117,54 +116,20 @@ class SeoHelper
                 'url' => route('products.show', $product),
                 'seller' => [
                     '@type' => 'Organization',
-                    'name' => 'Zayn\'s Beauty'
-                ],
-                'hasMerchantReturnPolicy' => [
-                    '@type' => 'MerchantReturnPolicy',
-                    'applicableCountry' => 'KE',
-                    'returnPolicyCategory' => 'https://schema.org/MerchantReturnFiniteReturnWindow',
-                    'merchantReturnDays' => 7,
-                    'returnMethod' => 'https://schema.org/ReturnByMail',
-                    'returnFees' => 'https://schema.org/FreeReturn'
-                ],
-                'shippingDetails' => [
-                    '@type' => 'OfferShippingDetails',
-                    'shippingRate' => [
-                        '@type' => 'MonetaryAmount',
-                        'value' => '0',
-                        'currency' => 'KES'
-                    ],
-                    'shippingDestination' => [
-                        '@type' => 'DefinedRegion',
-                        'addressCountry' => 'KE'
-                    ],
-                    'deliveryTime' => [
-                        '@type' => 'ShippingDeliveryTime',
-                        'handlingTime' => [
-                            '@type' => 'QuantitativeValue',
-                            'minValue' => 0,
-                            'maxValue' => 1,
-                            'unitCode' => 'DAY'
-                        ],
-                        'transitTime' => [
-                            '@type' => 'QuantitativeValue',
-                            'minValue' => 1,
-                            'maxValue' => 3,
-                            'unitCode' => 'DAY'
-                        ]
-                    ]
+                    'name' => 'Mars Collection'
                 ]
             ]
         ];
 
-        // Always include aggregateRating; fall back to 5 stars when no reviews yet
-        $schema['aggregateRating'] = [
-            '@type' => 'AggregateRating',
-            'ratingValue' => $product->reviews_count > 0 ? (string) $product->average_rating : '5.0',
-            'reviewCount' => $product->reviews_count > 0 ? (string) $product->reviews_count : '1',
-            'bestRating' => '5',
-            'worstRating' => '1'
-        ];
+        if ($product->reviews_count > 0) {
+            $schema['aggregateRating'] = [
+                '@type' => 'AggregateRating',
+                'ratingValue' => (string) $product->average_rating,
+                'reviewCount' => (string) $product->reviews_count,
+                'bestRating' => '5',
+                'worstRating' => '1'
+            ];
+        }
 
         return $schema;
     }
@@ -200,10 +165,10 @@ class SeoHelper
         return [
             '@context' => 'https://schema.org',
             '@type' => 'Organization',
-            'name' => 'Zayn\'s Beauty',
+            'name' => 'Mars Collection',
             'url' => url('/'),
-            'logo' => asset('images/logo.png'),
-            'description' => 'Premium beauty products and professional beauty services',
+            'logo' => asset('mars-collections-logo.png'),
+            'description' => 'Shoes and footwear from Mars Collection in Kenya.',
             'address' => [
                 '@type' => 'PostalAddress',
                 'addressCountry' => 'KE',
@@ -213,13 +178,13 @@ class SeoHelper
             'contactPoint' => [
                 '@type' => 'ContactPoint',
                 'contactType' => 'customer service',
-                'email' => 'info@zaynsbeauty.com'
+                'email' => 'info@marscollection.co.ke'
             ],
             'sameAs' => [
                 // Add your social media URLs here
-                // 'https://facebook.com/zaynsbeauty',
-                // 'https://instagram.com/zaynsbeauty',
-                // 'https://twitter.com/zaynsbeauty'
+                // 'https://facebook.com/marscollection',
+                // 'https://instagram.com/marscollection',
+                // 'https://twitter.com/marscollection'
             ]
         ];
     }
@@ -232,9 +197,9 @@ class SeoHelper
         return [
             '@context' => 'https://schema.org',
             '@type' => 'WebSite',
-            'name' => 'Zayn\'s Beauty',
+            'name' => 'Mars Collection',
             'url' => url('/'),
-            'description' => 'Premium beauty products and professional beauty services in Kenya',
+            'description' => 'Shoes and footwear from Mars Collection in Kenya.',
             'potentialAction' => [
                 '@type' => 'SearchAction',
                 'target' => route('products.index') . '?search={search_term_string}',
@@ -250,14 +215,14 @@ class SeoHelper
     {
         return [
             '@context' => 'https://schema.org',
-            '@type' => 'BeautySalon',
-            'name' => 'Zayn\'s Beauty',
-            'description' => 'Premium beauty products and professional beauty services',
+            '@type' => 'Store',
+            'name' => 'Mars Collection',
+            'description' => 'Shoes and footwear from Mars Collection in Kenya.',
             'url' => url('/'),
-            'logo' => asset('images/logo.png'),
+            'logo' => asset('mars-collections-logo.png'),
             'image' => asset('images/og-image.jpg'),
-            'telephone' => '+254-XXX-XXX-XXX',
-            'email' => 'info@zaynsbeauty.com',
+            'telephone' => \App\Helpers\SettingsHelper::getPhone('primary'),
+            'email' => 'info@marscollection.co.ke',
             'address' => [
                 '@type' => 'PostalAddress',
                 'streetAddress' => '',
@@ -367,7 +332,7 @@ class SeoHelper
             'og:image' => $image ?? asset('images/og-image.jpg'),
             'og:image:width' => '1200',
             'og:image:height' => '630',
-            'og:site_name' => 'Zayn\'s Beauty',
+            'og:site_name' => 'Mars Collection',
             'og:locale' => 'en_US'
         ];
     }

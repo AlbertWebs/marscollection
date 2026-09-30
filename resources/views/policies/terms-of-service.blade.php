@@ -1,15 +1,15 @@
 @extends('layouts.app')
 
-@section('title', 'Terms of Service - Zayn\'s Beauty')
+@section('title', 'Terms of Service - Mars Collection')
 
 @section('content')
 <div class="min-h-screen bg-stone-50">
     <section class="border-b border-stone-200 bg-white">
         <div class="mx-auto max-w-5xl px-4 py-14 sm:px-6 lg:px-8">
-            <p class="text-xs font-semibold uppercase tracking-[0.3em] text-pink-600">Legal</p>
+            <p class="text-xs font-semibold uppercase tracking-[0.3em] text-amber-600">Legal</p>
             <h1 class="mt-4 max-w-3xl text-4xl font-semibold tracking-tight text-stone-900 sm:text-5xl">Terms of Service</h1>
             <p class="mt-5 max-w-2xl text-base leading-7 text-stone-600 sm:text-lg">
-                These terms explain the rules that apply when you browse our website, place an order, book a service, or interact with Zayn's Beauty online.
+                These terms explain the rules that apply when you browse our website, place an order, book a service, or interact with Mars Collection online.
             </p>
             <div class="mt-6 text-sm text-stone-500">
                 Effective date: January 1, 2024 · Last updated: January 1, 2024
@@ -21,14 +21,14 @@
         <div class="grid gap-10 lg:grid-cols-[220px_minmax(0,1fr)]">
             <aside class="lg:sticky lg:top-24 lg:self-start">
                 <nav class="space-y-3 text-sm text-stone-600">
-                    <a href="#acceptance" class="block hover:text-pink-600">Acceptance</a>
-                    <a href="#use" class="block hover:text-pink-600">Use of Site</a>
-                    <a href="#accounts" class="block hover:text-pink-600">Accounts</a>
-                    <a href="#orders" class="block hover:text-pink-600">Orders and Pricing</a>
-                    <a href="#shipping" class="block hover:text-pink-600">Shipping and Returns</a>
-                    <a href="#content" class="block hover:text-pink-600">Content and Reviews</a>
-                    <a href="#liability" class="block hover:text-pink-600">Liability</a>
-                    <a href="#contact" class="block hover:text-pink-600">Contact</a>
+                    <a href="#acceptance" class="block hover:text-amber-600">Acceptance</a>
+                    <a href="#use" class="block hover:text-amber-600">Use of Site</a>
+                    <a href="#accounts" class="block hover:text-amber-600">Accounts</a>
+                    <a href="#orders" class="block hover:text-amber-600">Orders and Pricing</a>
+                    <a href="#shipping" class="block hover:text-amber-600">Shipping and Returns</a>
+                    <a href="#content" class="block hover:text-amber-600">Content and Reviews</a>
+                    <a href="#liability" class="block hover:text-amber-600">Liability</a>
+                    <a href="#contact" class="block hover:text-amber-600">Contact</a>
                 </nav>
             </aside>
 
@@ -92,7 +92,7 @@
                             Delivery windows are estimates and may change due to courier or operational factors outside our control.
                         </p>
                         <p>
-                            Returns and refunds are handled according to our published returns policy. Some beauty and personal-use items may not qualify for return once opened.
+                            Returns and refunds are handled according to our published returns policy. Please review its conditions before ordering.
                         </p>
                     </div>
                 </div>
@@ -116,7 +116,7 @@
                             We aim to keep the website accurate and available, but we do not guarantee uninterrupted access or that every detail will always be error-free.
                         </p>
                         <p>
-                            To the extent allowed by law, Zayn's Beauty is not liable for indirect losses, service interruptions, or delays outside reasonable control.
+                            To the extent allowed by law, Mars Collection is not liable for indirect losses, service interruptions, or delays outside reasonable control.
                         </p>
                         <p>
                             These terms are governed by the laws of Kenya.

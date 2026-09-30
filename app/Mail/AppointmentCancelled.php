@@ -30,7 +30,7 @@ class AppointmentCancelled extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Appointment Cancelled - Zayn\'s Beauty',
+            subject: 'Appointment Cancelled - Mars Collection',
         );
     }
 

@@ -33,19 +33,27 @@ class CartController extends Controller
     {
         try {
             Log::info('Add to cart request', $request->all());
-            
+
             $request->validate([
                 'product_id' => 'required|exists:products,id',
                 'quantity' => 'required|integer|min:1',
-                'selected_color' => 'nullable|string|max:255'
+                'selected_color' => 'nullable|string|max:255',
+                'selected_size' => 'nullable|string|max:50'
             ]);
 
             $product = Product::findOrFail($request->product_id);
+            $availableSizes = collect($product->variants ?? [])->pluck('label')->map(fn ($size) => (string) $size)->all();
+            // Product cards on the landing page support quick-add without choosing a size.
+            // When a size is supplied (e.g. on the product page), still validate it.
+            if ($request->filled('selected_size') && $availableSizes && !in_array((string) $request->input('selected_size'), $availableSizes, true)) {
+                return response()->json(['success' => false, 'message' => 'Please select a valid shoe size.'], 422);
+            }
             Log::info('Product found', ['product_id' => $product->id, 'name' => $product->name]);
 
-            // Check if item already exists in cart with the same color
+            // Keep separate cart lines for each selected size and color.
             $cartItem = Cart::where('product_id', $request->product_id)
                 ->where('selected_color', $request->selected_color)
+                ->where('selected_size', $request->selected_size)
                 ->where(function ($query) {
                     if (Auth::check()) {
                         $query->where('user_id', Auth::id());
@@ -66,7 +74,8 @@ class CartController extends Controller
                     'session_id' => session()->getId(),
                     'product_id' => $request->product_id,
                     'quantity' => $request->quantity,
-                    'selected_color' => $request->selected_color
+                    'selected_color' => $request->selected_color,
+                    'selected_size' => $request->selected_size
                 ]);
                 Log::info('New cart item created', ['cart_id' => $cartItem->id]);
             }
@@ -87,7 +96,7 @@ class CartController extends Controller
                 'error' => $e->getMessage(),
                 'request' => $request->all()
             ]);
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Error adding to cart: ' . $e->getMessage()
@@ -117,7 +126,7 @@ class CartController extends Controller
                 'cart_id' => $cart->id,
                 'request' => $request->all()
             ]);
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Error updating cart: ' . $e->getMessage()
@@ -142,7 +151,7 @@ class CartController extends Controller
                 'error' => $e->getMessage(),
                 'cart_id' => $cart->id
             ]);
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Error removing from cart: ' . $e->getMessage()
@@ -162,7 +171,7 @@ class CartController extends Controller
             Log::error('Error getting cart count', [
                 'error' => $e->getMessage()
             ]);
-            
+
             return response()->json(['count' => 0]);
         }
     }
@@ -195,6 +204,7 @@ class CartController extends Controller
                         'product_image' => \App\Helpers\ImageHelper::getProductImageUrl($item->product->image),
                         'quantity' => $item->quantity,
                         'selected_color' => $item->selected_color,
+                        'selected_size' => $item->selected_size,
                         'price' => $item->product->price * $item->quantity
                     ];
                     $total += $item->product->price * $item->quantity;
@@ -209,7 +219,7 @@ class CartController extends Controller
             Log::error('Error getting cart dropdown data', [
                 'error' => $e->getMessage()
             ]);
-            
+
             return response()->json([
                 'items' => [],
                 'total' => 0
@@ -221,7 +231,7 @@ class CartController extends Controller
     {
         try {
             Log::info('Add bundle to cart request', $request->all());
-            
+
             $request->validate([
                 'bundle_id' => 'required|exists:bundles,id',
                 'quantity' => 'required|integer|min:1'
@@ -272,11 +282,11 @@ class CartController extends Controller
                 'error' => $e->getMessage(),
                 'request' => $request->all()
             ]);
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'Error adding bundle to cart: ' . $e->getMessage()
             ], 500);
         }
     }
-} 
+}

@@ -6,17 +6,17 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Primary Meta Tags -->
-    <title>@yield('title', 'Zayn\'s Beauty | Makeup Products & Beauty Shop in Nairobi, Kenya')</title>
-    <meta name="title" content="@yield('title', 'Zayn\'s Beauty | Makeup Products & Beauty Shop in Nairobi, Kenya')">
-    <meta name="description" content="@yield('description', 'Shop authentic makeup products, skincare & beauty supplies in Nairobi, Kenya. Same-day delivery within CBD. Book professional makeup appointments online.')">
-    <meta name="keywords" content="@yield('keywords', 'makeup products Nairobi, beauty shop Nairobi, makeup Nairobi Kenya, skincare Nairobi, buy makeup online Kenya, beauty products Kenya, makeup store Nairobi, professional makeup Nairobi')">
-    <meta name="author" content="Zayn's Beauty">
+    <title>@yield('title', 'Mars Collection | Shoes & Sneakers in Kenya')</title>
+    <meta name="title" content="@yield('title', 'Mars Collection | Shoes & Sneakers in Kenya')">
+    <meta name="description" content="@yield('description', 'Shop sneakers, everyday shoes and smart footwear at Mars Collection. Find your fit and order online in Kenya.')">
+    <meta name="keywords" content="@yield('keywords', 'shoes Kenya, sneakers Nairobi, footwear Kenya, buy shoes online Kenya, Mars Collection')">
+    <meta name="author" content="Mars Collection">
     <meta name="robots" content="@yield('robots', 'index, follow')">
     <meta name="language" content="English">
     <meta name="revisit-after" content="7 days">
     <meta name="distribution" content="global">
     <meta name="rating" content="general">
-    <meta name="theme-color" content="#ec4899">
+    <meta name="theme-color" content="#0b0b0b">
 
     <!-- Canonical URL -->
     <link rel="canonical" href="@yield('canonical', request()->url())">
@@ -24,19 +24,19 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="@yield('og_type', 'website')">
     <meta property="og:url" content="@yield('canonical', request()->url())">
-    <meta property="og:title" content="@yield('title', 'Zayn\'s Beauty - Premium Beauty Products & Professional Services')">
-    <meta property="og:description" content="@yield('description', 'Discover premium beauty products, professional beauty services, and expert beauty consultations. Shop the latest trends in skincare, makeup, and beauty accessories.')">
+    <meta property="og:title" content="@yield('title', 'Mars Collection - Footwear for Every Move')">
+    <meta property="og:description" content="@yield('description', 'Shop sneakers, smart classics and everyday footwear at Mars Collection.')">
     <meta property="og:image" content="@yield('og_image', asset('images/og-image.jpg'))">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:site_name" content="Zayn's Beauty">
+    <meta property="og:site_name" content="Mars Collection">
     <meta property="og:locale" content="en_US">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="@yield('canonical', request()->url())">
-    <meta property="twitter:title" content="@yield('title', 'Zayn\'s Beauty - Premium Beauty Products & Professional Services')">
-    <meta property="twitter:description" content="@yield('description', 'Discover premium beauty products, professional beauty services, and expert beauty consultations. Shop the latest trends in skincare, makeup, and beauty accessories.')">
+    <meta property="twitter:title" content="@yield('title', 'Mars Collection - Footwear for Every Move')">
+    <meta property="twitter:description" content="@yield('description', 'Shop sneakers, smart classics and everyday footwear at Mars Collection.')">
     <meta property="twitter:image" content="@yield('og_image', asset('images/og-image.jpg'))">
 
     <!-- Additional SEO Meta Tags -->
@@ -44,71 +44,41 @@
     <meta name="geo.placename" content="Kenya">
     <meta name="geo.position" content="@yield('geo_position', '')">
     <meta name="ICBM" content="@yield('icbm', '')">
-    
-    <!-- LocalBusiness Schema -->
+
+    <!-- Store schema -->
     @php
         $s_phone     = \App\Models\Setting::get('contact_phone_primary', '');
         $s_email     = \App\Models\Setting::get('contact_email_primary', '');
-        $s_address   = \App\Models\Setting::get('contact_address_full', '');
-        $s_city      = \App\Models\Setting::get('contact_address_city', 'Nairobi');
         $s_instagram = \App\Models\Setting::get('social_instagram', '');
         $s_facebook  = \App\Models\Setting::get('social_facebook', '');
         $s_twitter   = \App\Models\Setting::get('social_twitter', '');
-        $s_hours_wk  = \App\Models\Setting::get('business_hours_monday_friday', 'Mo-Fr 09:00-18:00');
-        $s_hours_sat = \App\Models\Setting::get('business_hours_saturday', 'Sa 10:00-17:00');
         $s_sameAs    = array_filter([$s_instagram, $s_facebook, $s_twitter]);
+        $storeSchema = [
+            '@context' => 'https://schema.org',
+            '@type' => 'OnlineStore',
+            'name' => 'Mars Collection',
+            'description' => 'Shop sneakers, smart classics and everyday footwear from Mars Collection in Kenya.',
+            'url' => url('/'),
+            'logo' => asset('mars-collections-logo.png'),
+            'image' => asset('images/mars-footwear-hero.png'),
+            'areaServed' => ['@type' => 'Country', 'name' => 'Kenya'],
+        ];
+        $contactPoint = ['@type' => 'ContactPoint', 'contactType' => 'customer service'];
+        if ($s_phone) $contactPoint['telephone'] = $s_phone;
+        if ($s_email) $contactPoint['email'] = $s_email;
+        if (count($contactPoint) > 2) $storeSchema['contactPoint'] = $contactPoint;
+        if (count($s_sameAs)) $storeSchema['sameAs'] = array_values($s_sameAs);
     @endphp
-    <script type="application/ld+json">
-    {
-        "@@context": "https://schema.org",
-        "@@type": ["BeautySalon", "Store"],
-        "name": "Zayn's Beauty",
-        "description": "Authentic makeup products, skincare and beauty supplies in Nairobi, Kenya. Shop online with same-day CBD delivery or book a professional makeup appointment.",
-        "url": "{{ url('/') }}",
-        "logo": "{{ asset('logo.svg') }}",
-        "image": "{{ asset('images/og-image.jpg') }}",
-        @if($s_phone)"telephone": {!! json_encode($s_phone) !!},@endif
-        @if($s_email)"email": {!! json_encode($s_email) !!},@endif
-        "address": {
-            "@@type": "PostalAddress",
-            "streetAddress": {!! json_encode($s_address) !!},
-            "addressLocality": {!! json_encode($s_city) !!},
-            "addressRegion": "Nairobi County",
-            "addressCountry": "KE"
-        },
-        "openingHoursSpecification": [
-            {
-                "@@type": "OpeningHoursSpecification",
-                "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"],
-                "opens": "09:00",
-                "closes": "18:00"
-            },
-            {
-                "@@type": "OpeningHoursSpecification",
-                "dayOfWeek": "Saturday",
-                "opens": "10:00",
-                "closes": "17:00"
-            }
-        ],
-        "areaServed": {
-            "@@type": "City",
-            "name": "Nairobi"
-        },
-        "priceRange": "KES",
-        "currenciesAccepted": "KES",
-        "paymentAccepted": "Cash, Mobile Money",
-        "hasMap": "https://maps.google.com/?q=Nairobi+Kenya",
-        @if(count($s_sameAs))"sameAs": {{ json_encode(array_values($s_sameAs)) }}@endif
-    }
-    </script>
+    <script type="application/ld+json">@json($storeSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)</script>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
-    <link rel="apple-touch-icon" href="{{ asset('favicon.png') }}">
+    <link rel="icon" href="{{ asset('favicon.ico') }}?v=20260930" sizes="any">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('favicon.png') }}?v=20260930">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}?v=20260930">
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -120,23 +90,23 @@
             @apply text-sm text-gray-500 mb-4;
         }
         .breadcrumb a {
-            @apply text-pink-600 hover:text-pink-700 transition-colors;
+            @apply text-amber-600 hover:text-amber-700 transition-colors;
         }
         .breadcrumb span {
             @apply mx-2 text-gray-400;
         }
-        
+
         /* Schema markup for products */
         .product-schema {
             display: none;
         }
-        
+
         /* Hide scrollbar for horizontal scrolling categories */
         .scrollbar-hide {
             -ms-overflow-style: none;  /* Internet Explorer 10+ */
             scrollbar-width: none;  /* Firefox */
         }
-        .scrollbar-hide::-webkit-scrollbar { 
+        .scrollbar-hide::-webkit-scrollbar {
             display: none;  /* Safari and Chrome */
         }
     </style>
@@ -171,40 +141,40 @@
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
-            
+
             // Set background color based on type
             const bgColor = type === 'success' ? 'bg-green-500' : 'bg-red-500';
-            
+
             toast.className = `${bgColor} text-white px-6 py-3 rounded-md shadow-lg transform translate-x-full transition-all duration-300 flex items-center space-x-2 opacity-90 hover:opacity-100`;
             toast.innerHTML = `
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    ${type === 'success' ? 
+                    ${type === 'success' ?
                         '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>' :
                         '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>'
                     }
                 </svg>
                 <span>${message}</span>
             `;
-            
+
             container.appendChild(toast);
-            
+
             // Animate in from right
             setTimeout(() => {
                 toast.classList.remove('translate-x-full');
             }, 100);
-            
+
             // Auto-remove after 4 seconds (unless hovered)
             let autoRemoveTimeout = setTimeout(() => {
                 if (!toast.matches(':hover')) {
                     removeToast(toast);
                 }
             }, 4000);
-            
+
             // Pause auto-remove on hover
             toast.addEventListener('mouseenter', () => {
                 clearTimeout(autoRemoveTimeout);
             });
-            
+
             // Resume auto-remove when mouse leaves
             toast.addEventListener('mouseleave', () => {
                 autoRemoveTimeout = setTimeout(() => {
@@ -212,7 +182,7 @@
                 }, 2000);
             });
         }
-        
+
         function removeToast(toast) {
             toast.classList.add('translate-x-full');
             setTimeout(() => {
@@ -238,24 +208,25 @@
         }
 
         // Add to cart functionality
-        function addToCart(productId, quantity = 1, color = null) {
+        function addToCart(productId, quantity = 1, color = null, size = null) {
             console.log('Adding to cart:', productId, quantity, color);
-            
+
             // Validate productId
             if (!productId || productId === 'null' || productId === 'undefined') {
                 console.error('Invalid product ID:', productId);
                 showToast('Error: Invalid product ID', 'error');
                 return;
             }
-            
+
             const requestData = {
                 product_id: productId,
                 quantity: quantity,
-                selected_color: color
+                selected_color: color,
+                selected_size: size
             };
-            
+
             console.log('Request data:', requestData);
-            
+
             fetch('/cart/add', {
                 method: 'POST',
                 headers: {
@@ -266,18 +237,20 @@
             })
             .then(response => {
                 console.log('Response status:', response.status);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
+                return response.json().then(data => {
+                    if (!response.ok) {
+                        throw new Error(data.message || `Unable to add item (HTTP ${response.status})`);
+                    }
+                    return data;
+                });
             })
             .then(data => {
                 console.log('Response data:', data);
                 updateCartCount();
-                
+
                 // Trigger cart update event
                 window.dispatchEvent(new Event('cartUpdated'));
-                
+
                 // Show toast message
                 if (data.success) {
                     showToast(data.message || 'Product added to cart!', 'success');
@@ -287,28 +260,28 @@
             })
             .catch(error => {
                 console.error('Error adding to cart:', error);
-                showToast('Error adding to cart. Please try again.', 'error');
+                showToast(error.message || 'Error adding to cart. Please try again.', 'error');
             });
         }
 
         // Add bundle to cart functionality
         function addBundleToCart(bundleId, quantity = 1) {
             console.log('Adding bundle to cart:', bundleId, quantity);
-            
+
             // Validate bundleId
             if (!bundleId || bundleId === 'null' || bundleId === 'undefined') {
                 console.error('Invalid bundle ID:', bundleId);
                 showToast('Error: Invalid bundle ID', 'error');
                 return;
             }
-            
+
             const requestData = {
                 bundle_id: bundleId,
                 quantity: quantity
             };
-            
+
             console.log('Request data:', requestData);
-            
+
             fetch('/cart/add-bundle', {
                 method: 'POST',
                 headers: {
@@ -327,10 +300,10 @@
             .then(data => {
                 console.log('Response data:', data);
                 updateCartCount();
-                
+
                 // Trigger cart update event
                 window.dispatchEvent(new Event('cartUpdated'));
-                
+
                 // Show toast message
                 if (data.success) {
                     showToast(data.message || 'Bundle added to cart!', 'success');
@@ -350,33 +323,33 @@
             const card = dot.closest('article');
             const addBtn = card.querySelector('.card-add-btn');
             const label = container.querySelector('.selected-color-text');
-            
+
             // Update button data attribute
             if (addBtn) addBtn.setAttribute('data-selected-color', name);
             if (label) label.textContent = name;
-            
+
             // Reset all dots in this card
             container.querySelectorAll('.swatch-dot').forEach(d => {
-                d.classList.remove('ring-2', 'ring-pink-400', 'ring-offset-1', 'scale-110');
+                d.classList.remove('ring-2', 'ring-amber-400', 'ring-offset-1', 'scale-110');
             });
-            
+
             // Highlight selected dot
-            dot.classList.add('ring-2', 'ring-pink-400', 'ring-offset-1', 'scale-110');
+            dot.classList.add('ring-2', 'ring-amber-400', 'ring-offset-1', 'scale-110');
         }
 
         function handleCardAddToCart(btn, productId) {
             const color = btn.getAttribute('data-selected-color');
             const card = btn.closest('article');
             const swatches = card.querySelector('.color-swatches-container');
-            
+
             // If colors exist on card but none selected
             if (swatches && !color) {
                 showToast('Please select a color first', 'error');
-                swatches.classList.add('animate-pulse', 'bg-pink-50', 'rounded', 'p-1');
-                setTimeout(() => swatches.classList.remove('animate-pulse', 'bg-pink-50'), 1500);
+                swatches.classList.add('animate-pulse', 'bg-amber-50', 'rounded', 'p-1');
+                setTimeout(() => swatches.classList.remove('animate-pulse', 'bg-amber-50'), 1500);
                 return;
             }
-            
+
             addToCart(productId, 1, color);
         }
 
@@ -387,5 +360,25 @@
     </script>
 
     @yield('scripts')
+    <script>
+        (() => {
+            const csrf = document.querySelector('meta[name="csrf-token"]')?.content;
+            if (!csrf) return;
+            const heartbeat = () => fetch('{{ route('traffic.heartbeat') }}', {
+                method: 'POST',
+                credentials: 'same-origin',
+                keepalive: true,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': csrf,
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({ path: window.location.pathname })
+            }).catch(() => {});
+            heartbeat();
+            window.setInterval(heartbeat, 60000);
+        })();
+    </script>
 </body>
-</html> 
+</html>

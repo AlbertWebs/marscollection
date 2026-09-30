@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Review Your Order - Zayn's Beauty</title>
+    <title>Review Your Order - Mars Collection</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -55,27 +55,27 @@
         <h1>Review Your Order</h1>
         <p>We'd love to hear about your experience!</p>
     </div>
-    
+
     <div class="content">
         <h2>Hello {{ $order->customer_name }},</h2>
-        
-        <p>Thank you for your recent order with Zayn's Beauty! We hope you're enjoying your products.</p>
-        
+
+        <p>Thank you for your recent order with Mars Collection! We hope you're enjoying your products.</p>
+
         <p>Your feedback is incredibly valuable to us and helps other customers make informed decisions. We'd love to hear about your experience with the products you purchased.</p>
-        
+
         <div class="order-details">
             <h3>Order Details:</h3>
             <p><strong>Order Number:</strong> {{ $order->order_number }}</p>
             <p><strong>Order Date:</strong> {{ $order->created_at->format('M d, Y') }}</p>
             <p><strong>Total:</strong> {{ $order->formatted_total }}</p>
         </div>
-        
-        <p>Please take a moment to review the products you purchased. Your honest feedback helps us improve and helps other customers find the perfect products for their beauty journey.</p>
-        
+
+        <p>Please take a moment to review your purchase. Your feedback helps other customers choose their next pair.</p>
+
         <div style="text-align: center;">
             <a href="{{ $reviewUrl }}" class="button">Review Your Order</a>
         </div>
-        
+
         <p><strong>Important Notes:</strong></p>
         <ul>
             <li>This review link is unique to your order and will expire in 30 days</li>
@@ -83,18 +83,18 @@
             <li>Once you submit a review for an item, you cannot review it again</li>
             <li>Your reviews will be visible on our product pages to help other customers</li>
         </ul>
-        
+
         <p>If you have any questions or need assistance, please don't hesitate to contact us.</p>
-        
-        <p>Thank you for choosing Zayn's Beauty!</p>
-        
+
+        <p>Thank you for choosing Mars Collection!</p>
+
         <p>Best regards,<br>
-        The Zayn's Beauty Team</p>
+        The Mars Collection Team</p>
     </div>
-    
+
     <div class="footer">
-        <p>© {{ date('Y') }} Zayn's Beauty. All rights reserved.</p>
+        <p>© {{ date('Y') }} Mars Collection. All rights reserved.</p>
         <p>This email was sent to {{ $order->customer_email }}</p>
     </div>
 </body>
-</html> 
+</html>

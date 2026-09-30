@@ -1,94 +1,50 @@
 @extends('layouts.admin')
 
-@section('title', 'Brands Management')
+@section('title', 'Footwear Brands')
 
 @section('content')
 <div class="space-y-6">
-    <!-- Header -->
-    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h1 class="text-xl lg:text-2xl font-bold text-gray-900">Brands</h1>
-        <a href="{{ route('admin.brands.create') }}" 
-           class="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-md flex items-center w-full sm:w-auto justify-center">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-            </svg>
-            Add Brand
-        </a>
-    </div>
+    <section class="flex flex-col justify-between gap-4 rounded-2xl bg-gradient-to-r from-gray-950 to-gray-800 px-5 py-6 text-white sm:flex-row sm:items-center sm:px-7">
+        <div><p class="text-xs font-bold uppercase tracking-[0.18em] text-amber-300">Footwear catalog</p><h1 class="mt-2 text-2xl font-black sm:text-3xl">Shoe brands</h1><p class="mt-1.5 max-w-xl text-sm text-gray-300">Manage the footwear labels connected to your product listings and their storefront identity.</p></div>
+        <a href="{{ route('admin.brands.create') }}" class="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-amber-400 px-5 py-3 text-sm font-bold text-gray-950 transition hover:bg-amber-300"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-width="2" d="M12 5v14m-7-7h14"/></svg>Add footwear brand</a>
+    </section>
 
-    <!-- Brands Table -->
-    <div class="bg-white shadow rounded-md overflow-hidden">
-        <div class="px-4 lg:px-6 py-4 border-b border-gray-200">
-            <h3 class="text-base lg:text-lg font-medium text-gray-900">All Brands</h3>
+    <section class="grid gap-4 sm:grid-cols-3" aria-label="Brand summary">
+        <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm"><p class="text-xs font-semibold uppercase tracking-wider text-gray-400">Active brands</p><p class="mt-2 text-3xl font-black text-gray-950">{{ number_format($catalogCounts['active']) }}</p><p class="mt-1 text-xs text-gray-500">Available for product listings</p></div>
+        <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm"><p class="text-xs font-semibold uppercase tracking-wider text-gray-400">Active shoe listings</p><p class="mt-2 text-3xl font-black text-gray-950">{{ number_format($catalogCounts['products']) }}</p><p class="mt-1 text-xs text-gray-500">Currently visible in your store</p></div>
+        <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm"><p class="text-xs font-semibold uppercase tracking-wider text-gray-400">Archived brands</p><p class="mt-2 text-3xl font-black text-gray-950">{{ number_format($catalogCounts['inactive']) }}</p><p class="mt-1 text-xs text-gray-500">Hidden from current listings</p></div>
+    </section>
+
+    <section class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+        <div class="flex flex-col justify-between gap-4 border-b border-gray-100 px-5 py-4 sm:flex-row sm:items-center sm:px-6">
+            <div><h2 class="font-bold text-gray-950">{{ $status === 'active' ? 'Storefront brands' : 'Archived brands' }}</h2><p class="mt-1 text-xs text-gray-500">{{ $brands->total() }} {{ \Illuminate\Support\Str::plural('brand', $brands->total()) }} in this view</p></div>
+            <nav class="flex w-fit rounded-xl bg-gray-100 p-1" aria-label="Brand status filter"><a href="{{ route('admin.brands.index', ['status' => 'active']) }}" @if($status === 'active') aria-current="page" @endif class="rounded-lg px-3 py-2 text-xs font-bold transition {{ $status === 'active' ? 'bg-white text-gray-950 shadow-sm' : 'text-gray-500 hover:text-gray-900' }}">Active</a><a href="{{ route('admin.brands.index', ['status' => 'inactive']) }}" @if($status === 'inactive') aria-current="page" @endif class="rounded-lg px-3 py-2 text-xs font-bold transition {{ $status === 'inactive' ? 'bg-white text-gray-950 shadow-sm' : 'text-gray-500 hover:text-gray-900' }}">Archived</a></nav>
         </div>
-        
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50 hidden sm:table-header-group">
-                    <tr>
-                        <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Brand</th>
-                        <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">Description</th>
-                        <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Products</th>
-                        <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">Created</th>
-                        <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    @forelse($brands as $brand)
-                        <tr class="hover:bg-gray-50 border-b border-gray-200 sm:border-0">
-                            <td class="px-3 lg:px-6 py-3 sm:py-4">
-                                <div class="space-y-1">
-                                    <div class="flex items-center justify-between gap-2">
-                                        <div class="text-sm font-medium text-gray-900">{{ $brand->name }}</div>
-                                        <div class="sm:hidden">
-                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                                                {{ $brand->products_count }}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="text-xs text-gray-500 md:hidden">{{ Str::limit($brand->description ?? 'No description', 50) }}</div>
-                                </div>
-                            </td>
-                            <td class="px-3 lg:px-6 py-4 hidden md:table-cell">
-                                <div class="text-sm text-gray-900">{{ $brand->description ?? 'No description' }}</div>
-                            </td>
-                            <td class="px-3 lg:px-6 py-4 whitespace-nowrap hidden sm:table-cell">
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                                    {{ $brand->products_count }} products
+        @if($brands->count())
+            <div class="grid gap-4 p-4 sm:grid-cols-2 xl:grid-cols-3 sm:p-6">
+                @foreach($brands as $brand)
+                    <article class="rounded-2xl border border-gray-200 p-5 transition hover:border-amber-200 hover:shadow-md">
+                        <div class="flex items-start justify-between gap-3">
+                            <div class="flex min-w-0 items-center gap-3">
+                                <span class="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-gray-100 bg-gray-50 p-2">
+                                    @if($brand->logo)<img src="{{ \App\Helpers\ImageHelper::getProductImageUrl($brand->logo) }}" alt="{{ $brand->name }} logo" class="max-h-full max-w-full object-contain">@else<span class="text-xl font-black text-amber-700">{{ mb_substr($brand->name, 0, 1) }}</span>@endif
                                 </span>
-                            </td>
-                            <td class="px-3 lg:px-6 py-4 whitespace-nowrap hidden lg:table-cell">
-                                <div class="text-sm text-gray-900">{{ $brand->created_at->format('M d, Y') }}</div>
-                            </td>
-                            <td class="px-3 lg:px-6 py-3 sm:py-4 whitespace-nowrap text-sm font-medium">
-                                <div class="flex items-center gap-2">
-                                    <a href="{{ route('admin.brands.edit', $brand) }}" 
-                                       class="text-pink-600 hover:text-pink-900 whitespace-nowrap">Edit</a>
-                                    <form method="POST" action="{{ route('admin.brands.destroy', $brand) }}" 
-                                          class="inline" onsubmit="return confirm('Are you sure you want to delete this brand?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="text-red-600 hover:text-red-900 whitespace-nowrap">Delete</button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5" class="px-6 py-4 text-center text-gray-500">
-                                No brands found. <a href="{{ route('admin.brands.create') }}" class="text-pink-600 hover:text-pink-700">Add your first brand</a>
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-        
-        @if($brands->hasPages())
-            <div class="px-4 lg:px-6 py-4 border-t border-gray-200">
-                {{ $brands->links() }}
+                                <div class="min-w-0"><h3 class="truncate font-bold text-gray-950">{{ $brand->name }}</h3><p class="mt-1 text-xs text-gray-400">/{{ $brand->slug }}</p></div>
+                            </div>
+                            <span class="shrink-0 rounded-full px-2.5 py-1 text-[10px] font-bold {{ $brand->is_active ? 'bg-emerald-50 text-emerald-700' : 'bg-gray-100 text-gray-500' }}">{{ $brand->is_active ? 'Active' : 'Archived' }}</span>
+                        </div>
+                        <p class="mt-4 min-h-10 text-sm leading-5 text-gray-600">{{ $brand->description ?: 'Add a short description for this footwear brand.' }}</p>
+                        <div class="mt-4 flex items-end justify-between border-t border-gray-100 pt-4">
+                            <div><span class="block text-2xl font-black text-gray-950">{{ number_format($brand->products_count) }}</span><span class="text-[10px] font-bold uppercase tracking-wider text-gray-400">active shoe listings</span></div>
+                            <div class="flex items-center gap-3 text-xs font-bold"><a href="{{ route('admin.brands.edit', $brand) }}" class="text-amber-800 hover:text-amber-950">Edit brand</a><form method="POST" action="{{ route('admin.brands.destroy', $brand) }}" onsubmit="return confirm('Delete this brand? Brands with assigned products cannot be deleted.')">@csrf @method('DELETE')<button class="text-gray-400 transition hover:text-red-600">Delete</button></form></div>
+                        </div>
+                    </article>
+                @endforeach
             </div>
+            @if($brands->hasPages())<div class="border-t border-gray-100 px-5 py-4">{{ $brands->withQueryString()->links() }}</div>@endif
+        @else
+            <div class="px-6 py-14 text-center"><span class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-50 text-amber-800"><svg class="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M4 8h16l-1 12H5L4 8Zm4 0V6a4 4 0 0 1 8 0v2"/></svg></span><h3 class="mt-4 font-bold text-gray-900">{{ $status === 'active' ? 'No active footwear brands yet' : 'No archived brands' }}</h3><p class="mx-auto mt-1 max-w-md text-sm text-gray-500">{{ $status === 'active' ? 'Add a footwear label, then assign products to it from the product editor.' : 'Archived brands will appear here.' }}</p>@if($status === 'active')<a href="{{ route('admin.brands.create') }}" class="mt-5 inline-flex rounded-xl bg-amber-500 px-4 py-2.5 text-sm font-bold text-gray-950 hover:bg-amber-400">Add a footwear brand</a>@endif</div>
         @endif
-    </div>
+    </section>
 </div>
-@endsection 
+@endsection

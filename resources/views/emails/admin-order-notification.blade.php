@@ -103,7 +103,7 @@
         </div>
         
         <div class="footer">
-            <p>This is an automated notification from Zayn's Beauty Studio Engine.</p>
+            <p>This is an automated notification from Mars Collection Engine.</p>
         </div>
     </div>
 </body>

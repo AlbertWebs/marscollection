@@ -7,6 +7,11 @@ return new class extends Migration
 {
     public function up(): void
     {
+        // Keep the JSON column for local databases that do not provide pgvector.
+        if (DB::connection()->getDriverName() !== 'pgsql') {
+            return;
+        }
+
         // Enable pgvector extension (idempotent)
         DB::statement('CREATE EXTENSION IF NOT EXISTS vector');
 
@@ -17,13 +22,17 @@ return new class extends Migration
         // Add an IVFFlat index for approximate nearest-neighbour search (cosine distance).
         // HNSW is limited to 2000 dimensions in pgvector 0.6.x; IVFFlat supports up to 2000 too,
         // but we can use halfvec for the index while keeping the full vector column.
-        // For now we use a plain btree-free exact search — at <1000 products this is fast enough.
+        // For now we use a plain btree-free exact search. At <1000 products this is fast enough.
         // When product count grows past ~10k, add: CREATE INDEX ... USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100)
-        // No index created here — sequential scan is fine at current scale.
+        // No index created here. Sequential scan is fine at current scale.
     }
 
     public function down(): void
     {
+        if (DB::connection()->getDriverName() !== 'pgsql') {
+            return;
+        }
+
         DB::statement('ALTER TABLE product_embeddings ALTER COLUMN embedding TYPE json USING embedding::text::json');
     }
 };

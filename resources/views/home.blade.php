@@ -1,28 +1,48 @@
 @extends('layouts.app')
 
-@section('title', 'Zayn\'s Beauty | Makeup Products & Beauty Shop in Nairobi, Kenya')
-@section('description', 'Shop authentic makeup products, skincare & beauty supplies in Nairobi, Kenya. Same-day delivery within CBD. Book professional makeup appointments online. Genuine products guaranteed.')
-@section('keywords', 'makeup products Nairobi, beauty shop Nairobi, makeup Nairobi Kenya, skincare Nairobi, buy makeup online Kenya, beauty products Kenya, makeup store Nairobi, authentic makeup Kenya, professional makeup Nairobi')
+@section('title', $homeContent->get('home.title', 'Mars Collection | Sneakers & Shoes in Kenya'))
+@section('description', $homeContent->get('home.description', 'Shop sneakers, casual shoes, formal footwear and everyday favourites at Mars Collection. Find your fit and order online in Kenya.'))
+@section('keywords', $homeContent->get('home.keywords', 'shoes Kenya, sneakers Nairobi, buy shoes online Kenya, Mars Collection footwear'))
 @section('canonical', url('/'))
-
 @section('og_type', 'website')
-@section('og_image', asset('images/og-image.jpg'))
-
-
+@section('og_image', asset(ltrim($homeContent->get('home.hero.image', '/images/mars-footwear-hero.png'), '/')))
 
 @section('content')
     @include('components.hero')
 
-    @if($trendingProducts->count() > 0)
-        <section class="py-16 bg-white">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-12 fade-in">
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Trending Products</h2>
-                    <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                        Our most popular makeup and beauty products in Nairobi
-                    </p>
+    @if($categories->isNotEmpty())
+        <section class="bg-white py-16 sm:py-20">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="mb-9 flex items-end justify-between gap-4">
+                    <div>
+                        <p class="text-xs font-semibold uppercase tracking-[0.24em] text-amber-700">{{ $homeContent->get('home.categories.eyebrow', 'Find your pair') }}</p>
+                        <h2 class="mt-2 text-3xl font-bold tracking-tight text-gray-950 sm:text-4xl">{{ $homeContent->get('home.categories.title', 'Shop by category') }}</h2>
+                    </div>
+                    <a href="{{ route('categories.index') }}" class="hidden text-sm font-semibold text-gray-800 hover:text-amber-700 sm:inline-flex">{{ $homeContent->get('home.categories.link', 'All categories') }} <span aria-hidden="true" class="ml-2">→</span></a>
                 </div>
-                <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+                    @foreach($categories as $category)
+                        <a href="{{ route('products.index', ['category' => $category->slug]) }}" class="group relative overflow-hidden rounded-xl bg-gray-100">
+                            <img src="{{ \App\Helpers\ImageHelper::getProductImageUrl($category->image) }}" alt="{{ $category->name }}" class="aspect-[4/5] w-full object-cover transition duration-500 group-hover:scale-105" loading="lazy">
+                            <span class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent px-3 pb-4 pt-10 text-sm font-semibold text-white sm:text-base">{{ $category->name }}</span>
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
+
+    @if($trendingProducts->isNotEmpty())
+        <section class="bg-[#f7f6f3] py-16 sm:py-20">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="mb-9 flex items-end justify-between gap-4">
+                    <div>
+                        <p class="text-xs font-semibold uppercase tracking-[0.24em] text-amber-700">{{ $homeContent->get('home.trending.eyebrow', 'The pairs everyone wants') }}</p>
+                        <h2 class="mt-2 text-3xl font-bold tracking-tight text-gray-950 sm:text-4xl">{{ $homeContent->get('home.trending.title', 'Trending now') }}</h2>
+                    </div>
+                    <a href="{{ route('products.index', ['tag' => 'trending']) }}" class="text-sm font-semibold text-gray-800 hover:text-amber-700">{{ $homeContent->get('home.trending.link', 'Shop all') }} <span aria-hidden="true" class="ml-2">→</span></a>
+                </div>
+                <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
                     @foreach($trendingProducts as $product)
                         @include('components.product-card', ['product' => $product])
                     @endforeach
@@ -31,51 +51,33 @@
         </section>
     @endif
 
-    @if(isset($pickedProducts) && $pickedProducts->count() > 0)
-        <section class="py-16 bg-gray-50">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-12 fade-in">
-                    <p class="text-xs uppercase tracking-widest text-pink-500 font-medium mb-2">Personalised For You</p>
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Picked For You</h2>
-                    <p class="text-lg text-gray-600 max-w-2xl mx-auto">Based on what you've been browsing</p>
+    @if($featuredProducts->isNotEmpty())
+        <section class="bg-white py-16 sm:py-20">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="mb-9 text-center">
+                    <p class="text-xs font-semibold uppercase tracking-[0.24em] text-amber-700">{{ $homeContent->get('home.featured.eyebrow', 'Made for your everyday') }}</p>
+                    <h2 class="mt-2 text-3xl font-bold tracking-tight text-gray-950 sm:text-4xl">{{ $homeContent->get('home.featured.title', 'The Mars edit') }}</h2>
+                    <p class="mx-auto mt-3 max-w-xl text-sm leading-6 text-gray-600">{{ $homeContent->get('home.featured.description', 'Fresh sneakers, smart classics and comfortable pairs for wherever the day takes you.') }}</p>
                 </div>
-                <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-4">
-                    @foreach($pickedProducts as $product)
-                        @include('components.product-card', ['product' => $product])
-                    @endforeach
-                </div>
-            </div>
-        </section>
-    @endif
-
-    @include('components.bundle')
-
-    @if($featuredProducts->count() > 0)
-        <section class="py-16 bg-gray-50">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-12 fade-in">
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Featured Products</h2>
-                    <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-                        Hand-picked beauty products available in Nairobi — delivered to your door
-                    </p>
-                </div>
-                <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
                     @foreach($featuredProducts as $product)
                         @include('components.product-card', ['product' => $product])
                     @endforeach
                 </div>
-                <div class="text-center mt-12">
-                    <a href="{{ route('products.index', ['tag' => 'featured']) }}" class="bg-white border-2 border-pink-600 text-pink-600 px-8 py-4 rounded-full font-semibold hover:bg-pink-600 hover:text-white transition-all duration-300">
-                        View All Featured Products
-                    </a>
+                <div class="mt-10 text-center">
+                    <a href="{{ route('products.index') }}" class="inline-flex items-center rounded-full bg-gray-950 px-7 py-3 text-sm font-semibold text-white transition hover:bg-amber-600">{{ $homeContent->get('home.featured.button', 'Explore all footwear') }} <span aria-hidden="true" class="ml-2">→</span></a>
                 </div>
             </div>
         </section>
     @endif
 
-    @include('components.brand-logos')
-    @include('components.video-section')
-    @include('components.faq-section')
+    <section class="border-y border-gray-200 bg-[#f7f6f3] py-10">
+        <div class="mx-auto grid max-w-7xl gap-8 px-4 text-center sm:grid-cols-3 sm:px-6 lg:px-8">
+            <div><p class="font-semibold text-gray-950">{{ $homeContent->get('home.benefit.size.title', 'A size for your stride') }}</p><p class="mt-1 text-sm text-gray-600">{{ $homeContent->get('home.benefit.size.description', 'Clear size options on every pair') }}</p></div>
+            <div><p class="font-semibold text-gray-950">{{ $homeContent->get('home.benefit.delivery.title', 'Delivery across Kenya') }}</p><p class="mt-1 text-sm text-gray-600">{{ $homeContent->get('home.benefit.delivery.description', 'Convenient dispatch to your door') }}</p></div>
+            <div><p class="font-semibold text-gray-950">{{ $homeContent->get('home.benefit.fit.title', 'Help choosing your fit') }}</p><p class="mt-1 text-sm text-gray-600">{{ $homeContent->get('home.benefit.fit.description', 'Message us with your shoe questions') }}</p></div>
+        </div>
+    </section>
+
     @include('components.newsletter-signup')
-    @include('components.call-to-action')
 @endsection

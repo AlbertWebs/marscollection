@@ -78,7 +78,7 @@
         </div>
         
         <div class="footer">
-            <p>This is an automated notification from Zayn's Beauty booking system.</p>
+            <p>This is an automated notification from Mars Collection booking system.</p>
         </div>
     </div>
 </body>

@@ -32,7 +32,7 @@
                 <!-- Play Button Overlay -->
                 <div class="absolute inset-0 bg-black bg-opacity-70 flex items-center justify-center">
                     <div class="bg-white bg-opacity-90 hover:bg-opacity-100 transition-all duration-300 w-20 h-20 rounded-full flex items-center justify-center shadow-lg transform hover:scale-110">
-                        <svg class="w-8 h-8 text-pink-600 ml-1" fill="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-8 h-8 text-amber-600 ml-1" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M8 5v14l11-7z"/>
                         </svg>
                     </div>

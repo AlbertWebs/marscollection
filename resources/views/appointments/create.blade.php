@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Book a Makeup Session in Nairobi | Zayn\'s Beauty Studio')
+@section('title', 'Book a Makeup Session in Nairobi | Mars Collection')
 
-@section('description', 'Book a luxury makeup session at Zayn\'s Beauty Studio, Nairobi. Bridal, glam, photoshoot & natural looks. Pick your look, customize add-ons, and choose your date & time online.')
+@section('description', 'Book a luxury makeup session at Mars Collection, Nairobi. Bridal, glam, photoshoot & natural looks. Pick your look, customize add-ons, and choose your date & time online.')
 
-@section('keywords', 'book makeup session Nairobi, makeup artist Nairobi, bridal makeup Nairobi, professional makeup booking, makeup appointment Nairobi, Zayn Beauty studio')
+@section('keywords', 'book makeup session Nairobi, makeup artist Nairobi, bridal makeup Nairobi, professional makeup booking, makeup appointment Nairobi, Mars Collection studio')
 
 @section('canonical', url('/appointments/create'))
 
@@ -12,16 +12,16 @@
 <div class="bg-gray-50 min-h-screen pb-16">
 
     {{-- Luxury Studio Header --}}
-    <div class="bg-gradient-to-b from-pink-50/60 via-white to-gray-50 border-b border-pink-100/60 pt-10 pb-12">
+    <div class="bg-gradient-to-b from-amber-50/60 via-white to-gray-50 border-b border-amber-100/60 pt-10 pb-12">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
             <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
                 <div>
-                    <div class="inline-flex items-center gap-2 bg-pink-100/80 text-pink-700 text-xs font-semibold px-3 py-1 rounded-full mb-3 tracking-wide">
-                        <svg class="w-3.5 h-3.5 text-pink-600" fill="currentColor" viewBox="0 0 20 20">
+                    <div class="inline-flex items-center gap-2 bg-amber-100/80 text-amber-700 text-xs font-semibold px-3 py-1 rounded-full mb-3 tracking-wide">
+                        <svg class="w-3.5 h-3.5 text-amber-600" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
                         </svg>
-                        <span>Zayn's Beauty Studio · Nairobi</span>
-                        <span class="text-pink-300">|</span>
+                        <span>Mars Collection · Nairobi</span>
+                        <span class="text-amber-300">|</span>
                         <span>Rated 5/5 by 350+ Clients</span>
                     </div>
                     <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">Book Your Glam Session</h1>
@@ -32,7 +32,7 @@
 
                 {{-- Direct WhatsApp Consultation Button --}}
                 <div class="flex-shrink-0">
-                    <a href="https://wa.me/254707641446?text=Hello%20Zayn%27s%20Beauty%2C%20I%20have%20an%20inquiry%20about%20booking%20a%20makeup%20session."
+                    <a href="{{ route('contact') }}"
                        target="_blank"
                        rel="noopener noreferrer"
                        class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-semibold px-4 py-2.5 rounded-md shadow-sm transition-all hover:shadow">
@@ -45,21 +45,21 @@
             </div>
 
             {{-- Studio Trust Highlights --}}
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-8 pt-6 border-t border-pink-100/80 text-xs text-gray-700">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-8 pt-6 border-t border-amber-100/80 text-xs text-gray-700">
                 <div class="flex items-center gap-2">
-                    <span class="w-6 h-6 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center flex-shrink-0 font-bold">✓</span>
+                    <span class="w-6 h-6 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center flex-shrink-0 font-bold">✓</span>
                     <span>100% Sanitized & Hypoallergenic</span>
                 </div>
                 <div class="flex items-center gap-2">
-                    <span class="w-6 h-6 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center flex-shrink-0 font-bold">★</span>
+                    <span class="w-6 h-6 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center flex-shrink-0 font-bold">★</span>
                     <span>MAC, Fenty & Huda Beauty Brands</span>
                 </div>
                 <div class="flex items-center gap-2">
-                    <span class="w-6 h-6 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center flex-shrink-0 font-bold">⏱</span>
+                    <span class="w-6 h-6 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center flex-shrink-0 font-bold">⏱</span>
                     <span>Guaranteed On-Time Start</span>
                 </div>
                 <div class="flex items-center gap-2">
-                    <span class="w-6 h-6 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center flex-shrink-0 font-bold">☕</span>
+                    <span class="w-6 h-6 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center flex-shrink-0 font-bold">☕</span>
                     <span>Complimentary Studio Refreshments</span>
                 </div>
             </div>
@@ -72,8 +72,8 @@
         {{-- Interactive 3-Step Wizard Navigation --}}
         <div class="bg-white border border-gray-100 rounded-lg p-3 sm:p-4 mb-8 shadow-sm">
             <div class="grid grid-cols-3 gap-2 text-center">
-                <div id="step-nav-1" class="step-nav-item py-2 px-2 rounded-md bg-pink-50 text-pink-700 font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all">
-                    <span class="w-5 h-5 rounded-full bg-pink-600 text-white text-xs flex items-center justify-center font-bold">1</span>
+                <div id="step-nav-1" class="step-nav-item py-2 px-2 rounded-md bg-amber-50 text-amber-700 font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all">
+                    <span class="w-5 h-5 rounded-full bg-amber-600 text-white text-xs flex items-center justify-center font-bold">1</span>
                     <span class="hidden sm:inline">Choose</span> Look & Add-ons
                 </div>
                 <div id="step-nav-2" class="step-nav-item py-2 px-2 rounded-md text-gray-400 font-medium text-xs sm:text-sm flex items-center justify-center gap-2 transition-all">
@@ -102,7 +102,7 @@
                                 <h2 class="text-lg font-bold text-gray-900">Step 1: Select Your Makeup Style</h2>
                                 <p class="text-xs text-gray-500 mt-0.5">Click on a look below to choose your desired makeup service.</p>
                             </div>
-                            <span class="text-xs font-semibold uppercase tracking-wider text-pink-600 bg-pink-50 px-2.5 py-1 rounded-full">Required</span>
+                            <span class="text-xs font-semibold uppercase tracking-wider text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full">Required</span>
                         </div>
 
                         {{-- Service Cards Grid --}}
@@ -110,7 +110,7 @@
                             @php
                                 $serviceBadges = [
                                     'bridal-makeup' => ['label' => 'Signature Bridal', 'color' => 'bg-rose-50 text-rose-700 border-rose-200'],
-                                    'party-makeup' => ['label' => 'Trending Glam', 'color' => 'bg-pink-50 text-pink-700 border-pink-200'],
+                                    'party-makeup' => ['label' => 'Trending Glam', 'color' => 'bg-amber-50 text-amber-700 border-amber-200'],
                                     'photoshoot-makeup' => ['label' => 'Editorial HD', 'color' => 'bg-purple-50 text-purple-700 border-purple-200'],
                                     'everyday-makeup' => ['label' => 'Natural Glow', 'color' => 'bg-emerald-50 text-emerald-700 border-emerald-200'],
                                     'special-occasion' => ['label' => 'Custom Luxe', 'color' => 'bg-amber-50 text-amber-700 border-amber-200'],
@@ -130,7 +130,7 @@
                                     $badge = $serviceBadges[$service->slug] ?? ['label' => 'Professional', 'color' => 'bg-gray-100 text-gray-800 border-gray-200'];
                                     $features = $serviceFeatureMap[$service->slug] ?? ['Skin prep & base application', 'Eyes & brows styling', 'Setting spray lock'];
                                 @endphp
-                                <div class="service-card relative border-2 border-gray-200 rounded-xl p-5 cursor-pointer hover:border-pink-300 hover:shadow-md transition-all group"
+                                <div class="service-card relative border-2 border-gray-200 rounded-xl p-5 cursor-pointer hover:border-amber-300 hover:shadow-md transition-all group"
                                      data-service-slug="{{ $service->slug }}"
                                      data-service-name="{{ $service->name }}"
                                      data-service-price="{{ $service->price }}"
@@ -153,10 +153,10 @@
 
                                     {{-- Title Row (Single line, no wrap) --}}
                                     <div class="flex items-center gap-2.5 mb-2">
-                                        <div class="service-radio w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center transition-all group-hover:border-pink-500 flex-shrink-0">
-                                            <div class="service-radio-inner w-2.5 h-2.5 rounded-full bg-pink-600 hidden"></div>
+                                        <div class="service-radio w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center transition-all group-hover:border-amber-500 flex-shrink-0">
+                                            <div class="service-radio-inner w-2.5 h-2.5 rounded-full bg-amber-600 hidden"></div>
                                         </div>
-                                        <h3 class="text-base font-bold text-gray-900 group-hover:text-pink-600 transition-colors whitespace-nowrap truncate">
+                                        <h3 class="text-base font-bold text-gray-900 group-hover:text-amber-600 transition-colors whitespace-nowrap truncate">
                                             {{ $service->name }}
                                         </h3>
                                     </div>
@@ -175,7 +175,7 @@
                                     <ul class="space-y-1.5 pt-2.5 border-t border-gray-100 text-xs text-gray-600">
                                         @foreach(array_slice($features, 0, 3) as $feat)
                                             <li class="flex items-center gap-2">
-                                                <svg class="w-3.5 h-3.5 text-pink-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                                <svg class="w-3.5 h-3.5 text-amber-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                                                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                                                 </svg>
                                                 <span>{{ $feat }}</span>
@@ -196,7 +196,7 @@
                             <div class="flex items-center justify-between mb-4">
                                 <div>
                                     <h3 class="text-sm font-bold uppercase tracking-wider text-gray-900 flex items-center gap-2">
-                                        <svg class="w-4 h-4 text-pink-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <svg class="w-4 h-4 text-amber-600" fill="currentColor" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"/>
                                         </svg>
                                         <span>Enhance Your Glam (Optional Add-ons)</span>
@@ -207,48 +207,48 @@
 
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="addons-container">
                                 {{-- Addon 1: Lashes --}}
-                                <label class="addon-card flex items-start gap-3 p-3.5 border border-gray-200 rounded-lg cursor-pointer hover:border-pink-300 hover:bg-pink-50/30 transition-all has-[:checked]:border-pink-500 has-[:checked]:bg-pink-50/50">
-                                    <input type="checkbox" name="addons[]" value="3d-mink-lashes" data-name="3D Luxury Mink Lashes" data-price="1000" class="addon-checkbox mt-1 w-4 h-4 text-pink-600 rounded border-gray-300 focus:ring-pink-500">
+                                <label class="addon-card flex items-start gap-3 p-3.5 border border-gray-200 rounded-lg cursor-pointer hover:border-amber-300 hover:bg-amber-50/30 transition-all has-[:checked]:border-amber-500 has-[:checked]:bg-amber-50/50">
+                                    <input type="checkbox" name="addons[]" value="3d-mink-lashes" data-name="3D Luxury Mink Lashes" data-price="1000" class="addon-checkbox mt-1 w-4 h-4 text-amber-600 rounded border-gray-300 focus:ring-amber-500">
                                     <div class="flex-1 min-w-0">
                                         <div class="flex items-center justify-between">
                                             <span class="text-xs font-bold text-gray-900">3D Luxury Mink Lashes</span>
-                                            <span class="text-xs font-bold text-pink-600">+KES 1,000</span>
+                                            <span class="text-xs font-bold text-amber-600">+KES 1,000</span>
                                         </div>
                                         <p class="text-[11px] text-gray-500 mt-0.5">Wispy, lightweight & reusable premium lash upgrade.</p>
                                     </div>
                                 </label>
 
                                 {{-- Addon 2: Hair Styling --}}
-                                <label class="addon-card flex items-start gap-3 p-3.5 border border-gray-200 rounded-lg cursor-pointer hover:border-pink-300 hover:bg-pink-50/30 transition-all has-[:checked]:border-pink-500 has-[:checked]:bg-pink-50/50">
-                                    <input type="checkbox" name="addons[]" value="express-hair" data-name="Express Hair Styling / Curls" data-price="3000" class="addon-checkbox mt-1 w-4 h-4 text-pink-600 rounded border-gray-300 focus:ring-pink-500">
+                                <label class="addon-card flex items-start gap-3 p-3.5 border border-gray-200 rounded-lg cursor-pointer hover:border-amber-300 hover:bg-amber-50/30 transition-all has-[:checked]:border-amber-500 has-[:checked]:bg-amber-50/50">
+                                    <input type="checkbox" name="addons[]" value="express-hair" data-name="Express Hair Styling / Curls" data-price="3000" class="addon-checkbox mt-1 w-4 h-4 text-amber-600 rounded border-gray-300 focus:ring-amber-500">
                                     <div class="flex-1 min-w-0">
                                         <div class="flex items-center justify-between">
                                             <span class="text-xs font-bold text-gray-900">Express Hair Styling / Curls</span>
-                                            <span class="text-xs font-bold text-pink-600">+KES 3,000</span>
+                                            <span class="text-xs font-bold text-amber-600">+KES 3,000</span>
                                         </div>
                                         <p class="text-[11px] text-gray-500 mt-0.5">Hollywood waves, sleek straight, or soft curls.</p>
                                     </div>
                                 </label>
 
                                 {{-- Addon 3: Touch-up Kit --}}
-                                <label class="addon-card flex items-start gap-3 p-3.5 border border-gray-200 rounded-lg cursor-pointer hover:border-pink-300 hover:bg-pink-50/30 transition-all has-[:checked]:border-pink-500 has-[:checked]:bg-pink-50/50">
-                                    <input type="checkbox" name="addons[]" value="touchup-kit" data-name="Deluxe Touch-up & Glow Kit" data-price="1500" class="addon-checkbox mt-1 w-4 h-4 text-pink-600 rounded border-gray-300 focus:ring-pink-500">
+                                <label class="addon-card flex items-start gap-3 p-3.5 border border-gray-200 rounded-lg cursor-pointer hover:border-amber-300 hover:bg-amber-50/30 transition-all has-[:checked]:border-amber-500 has-[:checked]:bg-amber-50/50">
+                                    <input type="checkbox" name="addons[]" value="touchup-kit" data-name="Deluxe Touch-up & Glow Kit" data-price="1500" class="addon-checkbox mt-1 w-4 h-4 text-amber-600 rounded border-gray-300 focus:ring-amber-500">
                                     <div class="flex-1 min-w-0">
                                         <div class="flex items-center justify-between">
                                             <span class="text-xs font-bold text-gray-900">Deluxe Touch-up & Glow Kit</span>
-                                            <span class="text-xs font-bold text-pink-600">+KES 1,500</span>
+                                            <span class="text-xs font-bold text-amber-600">+KES 1,500</span>
                                         </div>
                                         <p class="text-[11px] text-gray-500 mt-0.5">Lip sample, blotting papers, mini powder puff & setting mist.</p>
                                     </div>
                                 </label>
 
                                 {{-- Addon 4: Home Service Callout --}}
-                                <label class="addon-card flex items-start gap-3 p-3.5 border border-gray-200 rounded-lg cursor-pointer hover:border-pink-300 hover:bg-pink-50/30 transition-all has-[:checked]:border-pink-500 has-[:checked]:bg-pink-50/50">
-                                    <input type="checkbox" name="addons[]" value="home-service" data-name="On-Location / Home Service Callout" data-price="3500" class="addon-checkbox mt-1 w-4 h-4 text-pink-600 rounded border-gray-300 focus:ring-pink-500">
+                                <label class="addon-card flex items-start gap-3 p-3.5 border border-gray-200 rounded-lg cursor-pointer hover:border-amber-300 hover:bg-amber-50/30 transition-all has-[:checked]:border-amber-500 has-[:checked]:bg-amber-50/50">
+                                    <input type="checkbox" name="addons[]" value="home-service" data-name="On-Location / Home Service Callout" data-price="3500" class="addon-checkbox mt-1 w-4 h-4 text-amber-600 rounded border-gray-300 focus:ring-amber-500">
                                     <div class="flex-1 min-w-0">
                                         <div class="flex items-center justify-between">
                                             <span class="text-xs font-bold text-gray-900">On-Location / Mobile Callout</span>
-                                            <span class="text-xs font-bold text-pink-600">+KES 3,500</span>
+                                            <span class="text-xs font-bold text-amber-600">+KES 3,500</span>
                                         </div>
                                         <p class="text-[11px] text-gray-500 mt-0.5">We bring the full glam station to your home/hotel in Nairobi.</p>
                                     </div>
@@ -259,7 +259,7 @@
                         {{-- Step 1 Next Button --}}
                         <div class="mt-8 pt-5 border-t border-gray-100 flex justify-end">
                             <button type="button" id="btn-to-step-2" onclick="goToStep(2)"
-                                    class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-pink-600 hover:bg-pink-700 text-white px-8 py-3.5 rounded-lg text-sm font-bold shadow-md hover:shadow-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                                    class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-amber-600 hover:bg-amber-700 text-white px-8 py-3.5 rounded-lg text-sm font-bold shadow-md hover:shadow-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                                     disabled>
                                 <span>Continue to Date & Time</span>
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -279,7 +279,7 @@
                                 <h2 class="text-lg font-bold text-gray-900">Step 2: Choose Your Date & Time Slot</h2>
                                 <p class="text-xs text-gray-500 mt-0.5">Select a day on the calendar, then pick an available arrival time.</p>
                             </div>
-                            <button type="button" onclick="goToStep(1)" class="text-xs text-pink-600 hover:text-pink-700 font-semibold flex items-center gap-1">
+                            <button type="button" onclick="goToStep(1)" class="text-xs text-amber-600 hover:text-amber-700 font-semibold flex items-center gap-1">
                                 ← Change Look
                             </button>
                         </div>
@@ -316,13 +316,13 @@
                         </div>
 
                         {{-- Time Slots Section --}}
-                        <div id="time-slots-section" class="border border-pink-100 rounded-xl p-5 bg-pink-50/30 hidden">
+                        <div id="time-slots-section" class="border border-amber-100 rounded-xl p-5 bg-amber-50/30 hidden">
                             <div class="flex items-center justify-between mb-3">
                                 <h3 class="text-sm font-bold text-gray-900 flex items-center gap-2">
-                                    <svg class="w-4 h-4 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                     </svg>
-                                    <span>Available Start Times on <span id="selected-date-display" class="text-pink-600"></span></span>
+                                    <span>Available Start Times on <span id="selected-date-display" class="text-amber-600"></span></span>
                                 </h3>
                                 <span class="text-[11px] text-gray-500 font-medium">Session duration: <strong id="step2-duration-label" class="text-gray-800"></strong></span>
                             </div>
@@ -339,7 +339,7 @@
                                 ← Back
                             </button>
                             <button type="button" id="btn-to-step-3" onclick="goToStep(3)"
-                                    class="inline-flex items-center justify-center gap-2 bg-pink-600 hover:bg-pink-700 text-white px-8 py-3.5 rounded-lg text-sm font-bold shadow-md hover:shadow-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                                    class="inline-flex items-center justify-center gap-2 bg-amber-600 hover:bg-amber-700 text-white px-8 py-3.5 rounded-lg text-sm font-bold shadow-md hover:shadow-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                                     disabled>
                                 <span>Continue to Details</span>
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -359,7 +359,7 @@
                                 <h2 class="text-lg font-bold text-gray-900">Step 3: Your Details & Inspiration</h2>
                                 <p class="text-xs text-gray-500 mt-0.5">Tell us about yourself and any look preferences for your artist.</p>
                             </div>
-                            <button type="button" onclick="goToStep(2)" class="text-xs text-pink-600 hover:text-pink-700 font-semibold flex items-center gap-1">
+                            <button type="button" onclick="goToStep(2)" class="text-xs text-amber-600 hover:text-amber-700 font-semibold flex items-center gap-1">
                                 ← Change Date/Time
                             </button>
                         </div>
@@ -376,7 +376,7 @@
                                     <label for="customer_name" class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">Full Name *</label>
                                     <input type="text" id="customer_name" name="customer_name"
                                            placeholder="e.g. Sarah Mwangi"
-                                           class="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                                           class="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                                            required>
                                     @error('customer_name')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
                                 </div>
@@ -384,7 +384,7 @@
                                     <label for="customer_phone" class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">Phone Number (M-Pesa / WhatsApp) *</label>
                                     <input type="tel" id="customer_phone" name="customer_phone"
                                            placeholder="e.g. 0712 345 678"
-                                           class="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                                           class="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                                            required>
                                     @error('customer_phone')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
                                 </div>
@@ -394,7 +394,7 @@
                                 <label for="customer_email" class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">Email Address *</label>
                                 <input type="email" id="customer_email" name="customer_email"
                                        placeholder="e.g. sarah@example.com"
-                                       class="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                                       class="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                                        required>
                                 @error('customer_email')<p class="text-red-600 text-xs mt-1">{{ $message }}</p>@enderror
                             </div>
@@ -402,7 +402,7 @@
                             {{-- Occasion Selector --}}
                             <div>
                                 <label for="occasion_type" class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">Event / Occasion</label>
-                                <select id="occasion_type" class="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white">
+                                <select id="occasion_type" class="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 bg-white">
                                     <option value="Bridal / Wedding">Wedding / Bridal Event</option>
                                     <option value="Birthday Celebration">Birthday / Anniversary</option>
                                     <option value="Dinner / Gala / Red Carpet">Evening Gala / Dinner Party</option>
@@ -421,7 +421,7 @@
                                 </label>
                                 <input type="text" id="user_look_notes"
                                        placeholder="e.g. Bronze smokey eye, nude glossy lip, or paste Instagram/Pinterest URL..."
-                                       class="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500">
+                                       class="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500">
                             </div>
 
                             {{-- Special Skin Requests / Allergies --}}
@@ -432,14 +432,14 @@
                                 </label>
                                 <textarea id="user_special_requests" rows="2"
                                           placeholder="e.g. Sensitive skin, prefers matte foundation, bringing own lipstick, etc."
-                                          class="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"></textarea>
+                                          class="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"></textarea>
                             </div>
 
                             {{-- Cancellation Policy Checkbox --}}
                             <div class="bg-gray-50 p-4 rounded-lg border border-gray-200/80">
                                 <label class="flex items-start gap-2.5 cursor-pointer">
                                     <input type="checkbox" id="policy-agree" required checked
-                                           class="mt-1 w-4 h-4 text-pink-600 rounded border-gray-300 focus:ring-pink-500">
+                                           class="mt-1 w-4 h-4 text-amber-600 rounded border-gray-300 focus:ring-amber-500">
                                     <span class="text-xs text-gray-600 leading-relaxed">
                                         I understand that appointments are confirmed via WhatsApp/Email. Please arrive 10 minutes prior with a cleansed face for optimal skin preparation.
                                     </span>
@@ -453,8 +453,8 @@
                                     ← Back
                                 </button>
                                 <button type="submit" id="submit-booking-btn"
-                                        class="flex-1 bg-pink-600 hover:bg-pink-700 text-white py-3.5 rounded-lg text-sm font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2">
-                                    <svg class="w-4 h-4 text-pink-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        class="flex-1 bg-amber-600 hover:bg-amber-700 text-white py-3.5 rounded-lg text-sm font-bold shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2">
+                                    <svg class="w-4 h-4 text-amber-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                                     </svg>
                                     <span>Confirm & Reserve Appointment</span>
@@ -468,7 +468,7 @@
 
             {{-- RIGHT COLUMN: Sticky Luxury Live Summary --}}
             <div class="lg:col-span-4 lg:sticky lg:top-24 space-y-4">
-                <div class="bg-white border-2 border-pink-100 rounded-xl shadow-md p-5 overflow-hidden">
+                <div class="bg-white border-2 border-amber-100 rounded-xl shadow-md p-5 overflow-hidden">
                     
                     {{-- Summary Header --}}
                     <div class="flex items-center justify-between pb-4 border-b border-gray-100">
@@ -476,7 +476,7 @@
                             <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
                             <h3 class="text-sm font-bold uppercase tracking-wider text-gray-900">Your Booking Summary</h3>
                         </div>
-                        <span class="text-[11px] font-semibold text-pink-600 bg-pink-50 px-2 py-0.5 rounded-md">Live Estimate</span>
+                        <span class="text-[11px] font-semibold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md">Live Estimate</span>
                     </div>
 
                     {{-- Selected Service Card --}}
@@ -509,13 +509,13 @@
                         <div id="sidebar-datetime-empty" class="text-xs text-gray-400 italic">Pick date & time in Step 2</div>
                         <div id="sidebar-datetime-details" class="hidden space-y-1">
                             <div class="flex items-center gap-2 text-xs text-gray-900 font-semibold">
-                                <svg class="w-3.5 h-3.5 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-3.5 h-3.5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                 </svg>
                                 <span id="sidebar-date"></span>
                             </div>
-                            <div class="flex items-center gap-2 text-xs text-pink-600 font-bold">
-                                <svg class="w-3.5 h-3.5 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="flex items-center gap-2 text-xs text-amber-600 font-bold">
+                                <svg class="w-3.5 h-3.5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                 </svg>
                                 <span id="sidebar-time"></span>
@@ -535,17 +535,17 @@
                         </div>
                         <div class="flex items-baseline justify-between pt-2 border-t border-gray-100">
                             <span class="text-sm font-bold text-gray-900">Total Investment</span>
-                            <span id="sidebar-grand-total" class="text-xl font-extrabold text-pink-600">KES 0</span>
+                            <span id="sidebar-grand-total" class="text-xl font-extrabold text-amber-600">KES 0</span>
                         </div>
                     </div>
 
                     {{-- Studio Location Badge --}}
                     <div class="mt-4 pt-3 border-t border-gray-100 text-[11px] text-gray-500 flex items-start gap-2">
-                        <svg class="w-4 h-4 text-pink-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                         </svg>
-                        <span>Zayn's Studio, Nairobi · Free on-site parking & refreshments provided</span>
+                        <span>Mars Collection, Nairobi · Free on-site parking & refreshments provided</span>
                     </div>
                 </div>
 
@@ -555,7 +555,7 @@
                         <p class="font-bold">Need a Custom Package?</p>
                         <p class="text-[11px] text-emerald-700 mt-0.5">Chat directly with our Lead Artist for bridal parties of 3+.</p>
                     </div>
-                    <a href="https://wa.me/254707641446?text=Hello%20Zayn%27s%20Beauty%2C%20I%20would%20like%20to%20inquire%20about%20a%20bridal%20or%20group%20booking."
+                    <a href="{{ route('contact') }}"
                        target="_blank"
                        rel="noopener noreferrer"
                        class="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-md flex-shrink-0 shadow-2xs">
@@ -570,12 +570,12 @@
         <div class="mt-16 bg-white border border-gray-200/80 rounded-2xl p-6 sm:p-8 shadow-sm">
             <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
                 <div>
-                    <span class="text-xs uppercase tracking-widest text-pink-600 font-bold">Studio Lookbook</span>
+                    <span class="text-xs uppercase tracking-widest text-amber-600 font-bold">Studio Lookbook</span>
                     <h2 class="text-2xl font-bold text-gray-900 mt-1">Real Transformations & Looks</h2>
                     <p class="text-xs sm:text-sm text-gray-500 mt-1">Explore our signature beauty looks created for our Nairobi clients.</p>
                 </div>
-                <div class="flex items-center gap-1.5 text-xs font-semibold text-pink-600">
-                    <svg class="w-4 h-4 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="flex items-center gap-1.5 text-xs font-semibold text-amber-600">
+                    <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                     <span>100% Client Satisfaction</span>
@@ -584,7 +584,7 @@
 
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div class="group relative rounded-xl overflow-hidden shadow-2xs border border-gray-100 bg-gray-50">
-                    <div class="h-44 bg-gradient-to-tr from-rose-200 via-pink-100 to-amber-100 flex items-center justify-center p-4 text-center">
+                    <div class="h-44 bg-gradient-to-tr from-rose-200 via-amber-100 to-amber-100 flex items-center justify-center p-4 text-center">
                         <div>
                             <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-white/80 flex items-center justify-center text-rose-700 shadow-2xs">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -596,7 +596,7 @@
                         </div>
                     </div>
                     <div class="p-3 bg-white text-center">
-                        <button type="button" onclick="selectServiceCard('bridal-makeup')" class="text-xs font-bold text-pink-600 hover:text-pink-700 flex items-center justify-center gap-1 mx-auto">
+                        <button type="button" onclick="selectServiceCard('bridal-makeup')" class="text-xs font-bold text-amber-600 hover:text-amber-700 flex items-center justify-center gap-1 mx-auto">
                             <span>Book Bridal Glam</span>
                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -606,7 +606,7 @@
                 </div>
 
                 <div class="group relative rounded-xl overflow-hidden shadow-2xs border border-gray-100 bg-gray-50">
-                    <div class="h-44 bg-gradient-to-tr from-pink-200 via-purple-100 to-indigo-100 flex items-center justify-center p-4 text-center">
+                    <div class="h-44 bg-gradient-to-tr from-amber-200 via-purple-100 to-indigo-100 flex items-center justify-center p-4 text-center">
                         <div>
                             <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-white/80 flex items-center justify-center text-purple-700 shadow-2xs">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -618,7 +618,7 @@
                         </div>
                     </div>
                     <div class="p-3 bg-white text-center">
-                        <button type="button" onclick="selectServiceCard('party-makeup')" class="text-xs font-bold text-pink-600 hover:text-pink-700 flex items-center justify-center gap-1 mx-auto">
+                        <button type="button" onclick="selectServiceCard('party-makeup')" class="text-xs font-bold text-amber-600 hover:text-amber-700 flex items-center justify-center gap-1 mx-auto">
                             <span>Book Evening Look</span>
                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -628,7 +628,7 @@
                 </div>
 
                 <div class="group relative rounded-xl overflow-hidden shadow-2xs border border-gray-100 bg-gray-50">
-                    <div class="h-44 bg-gradient-to-tr from-amber-100 via-orange-100 to-pink-100 flex items-center justify-center p-4 text-center">
+                    <div class="h-44 bg-gradient-to-tr from-amber-100 via-orange-100 to-amber-100 flex items-center justify-center p-4 text-center">
                         <div>
                             <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-white/80 flex items-center justify-center text-amber-700 shadow-2xs">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -641,7 +641,7 @@
                         </div>
                     </div>
                     <div class="p-3 bg-white text-center">
-                        <button type="button" onclick="selectServiceCard('photoshoot-makeup')" class="text-xs font-bold text-pink-600 hover:text-pink-700 flex items-center justify-center gap-1 mx-auto">
+                        <button type="button" onclick="selectServiceCard('photoshoot-makeup')" class="text-xs font-bold text-amber-600 hover:text-amber-700 flex items-center justify-center gap-1 mx-auto">
                             <span>Book Editorial HD</span>
                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -651,7 +651,7 @@
                 </div>
 
                 <div class="group relative rounded-xl overflow-hidden shadow-2xs border border-gray-100 bg-gray-50">
-                    <div class="h-44 bg-gradient-to-tr from-emerald-100 via-teal-50 to-pink-100 flex items-center justify-center p-4 text-center">
+                    <div class="h-44 bg-gradient-to-tr from-emerald-100 via-teal-50 to-amber-100 flex items-center justify-center p-4 text-center">
                         <div>
                             <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-white/80 flex items-center justify-center text-emerald-700 shadow-2xs">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -663,7 +663,7 @@
                         </div>
                     </div>
                     <div class="p-3 bg-white text-center">
-                        <button type="button" onclick="selectServiceCard('everyday-makeup')" class="text-xs font-bold text-pink-600 hover:text-pink-700 flex items-center justify-center gap-1 mx-auto">
+                        <button type="button" onclick="selectServiceCard('everyday-makeup')" class="text-xs font-bold text-amber-600 hover:text-amber-700 flex items-center justify-center gap-1 mx-auto">
                             <span>Book Natural Look</span>
                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -775,20 +775,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Visual selection states
         document.querySelectorAll('.service-card').forEach(c => {
-            c.classList.remove('border-pink-600', 'bg-pink-50/40', 'ring-2', 'ring-pink-400');
+            c.classList.remove('border-amber-600', 'bg-amber-50/40', 'ring-2', 'ring-amber-400');
             c.classList.add('border-gray-200');
             const inner = c.querySelector('.service-radio-inner');
             const radio = c.querySelector('.service-radio');
             if (inner) inner.classList.add('hidden');
-            if (radio) radio.classList.remove('border-pink-600');
+            if (radio) radio.classList.remove('border-amber-600');
         });
 
         card.classList.remove('border-gray-200');
-        card.classList.add('border-pink-600', 'bg-pink-50/40', 'ring-2', 'ring-pink-400');
+        card.classList.add('border-amber-600', 'bg-amber-50/40', 'ring-2', 'ring-amber-400');
         const activeInner = card.querySelector('.service-radio-inner');
         const activeRadio = card.querySelector('.service-radio');
         if (activeInner) activeInner.classList.remove('hidden');
-        if (activeRadio) activeRadio.classList.add('border-pink-600');
+        if (activeRadio) activeRadio.classList.add('border-amber-600');
 
         document.getElementById('btn-to-step-2').disabled = false;
         updateLiveSummary();
@@ -886,8 +886,8 @@ document.addEventListener('DOMContentLoaded', function () {
             const nav = document.getElementById(`step-nav-${i}`);
             const badge = nav.querySelector('span:first-child');
             if (i === step) {
-                nav.className = 'step-nav-item py-2 px-2 rounded-md bg-pink-50 text-pink-700 font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all';
-                badge.className = 'w-5 h-5 rounded-full bg-pink-600 text-white text-xs flex items-center justify-center font-bold';
+                nav.className = 'step-nav-item py-2 px-2 rounded-md bg-amber-50 text-amber-700 font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all';
+                badge.className = 'w-5 h-5 rounded-full bg-amber-600 text-white text-xs flex items-center justify-center font-bold';
             } else if (i < step) {
                 nav.className = 'step-nav-item py-2 px-2 rounded-md bg-emerald-50 text-emerald-700 font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all cursor-pointer';
                 badge.className = 'w-5 h-5 rounded-full bg-emerald-600 text-white text-xs flex items-center justify-center font-bold';
@@ -937,11 +937,11 @@ document.addEventListener('DOMContentLoaded', function () {
             if (isPast) {
                 cls += 'text-gray-300 cursor-not-allowed bg-gray-50/50';
             } else if (isSelected) {
-                cls += 'bg-pink-600 text-white shadow-sm ring-2 ring-pink-400 cursor-pointer';
+                cls += 'bg-amber-600 text-white shadow-sm ring-2 ring-amber-400 cursor-pointer';
             } else if (isToday) {
-                cls += 'border-2 border-pink-400 text-pink-600 bg-white hover:bg-pink-50 cursor-pointer shadow-2xs';
+                cls += 'border-2 border-amber-400 text-amber-600 bg-white hover:bg-amber-50 cursor-pointer shadow-2xs';
             } else {
-                cls += 'text-gray-800 bg-white border border-gray-100 hover:border-pink-300 hover:bg-pink-50/40 cursor-pointer shadow-2xs';
+                cls += 'text-gray-800 bg-white border border-gray-100 hover:border-amber-300 hover:bg-amber-50/40 cursor-pointer shadow-2xs';
             }
 
             html += `<button type="button" class="${cls}" ${!isPast ? `data-date="${formatted}" onclick="selectDate(this)"` : 'disabled'}>
@@ -954,11 +954,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     window.selectDate = function (el) {
         document.querySelectorAll('[data-date]').forEach(d => {
-            d.classList.remove('bg-pink-600', 'text-white', 'ring-2', 'ring-pink-400');
+            d.classList.remove('bg-amber-600', 'text-white', 'ring-2', 'ring-amber-400');
             d.classList.add('bg-white', 'text-gray-800');
         });
         el.classList.remove('bg-white', 'text-gray-800');
-        el.classList.add('bg-pink-600', 'text-white', 'ring-2', 'ring-pink-400');
+        el.classList.add('bg-amber-600', 'text-white', 'ring-2', 'ring-amber-400');
 
         const dateStr = el.dataset.date;
         selectedDate = new Date(dateStr);
@@ -972,7 +972,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function loadTimeSlots(date) {
         const container = document.getElementById('time-slots');
-        container.innerHTML = '<div class="col-span-full py-4 text-center text-xs text-gray-500 flex items-center justify-center gap-2"><svg class="animate-spin w-4 h-4 text-pink-600" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Checking available studio slots...</div>';
+        container.innerHTML = '<div class="col-span-full py-4 text-center text-xs text-gray-500 flex items-center justify-center gap-2"><svg class="animate-spin w-4 h-4 text-amber-600" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Checking available studio slots...</div>';
         document.getElementById('time-slots-section').classList.remove('hidden');
 
         fetch(`/appointments/available-slots?date=${date}`)
@@ -985,7 +985,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     data.available_slots.forEach(slot => {
                         const btn = document.createElement('button');
                         btn.type = 'button';
-                        btn.className = 'time-slot-btn px-3 py-2.5 text-xs sm:text-sm font-semibold border-2 border-gray-200 rounded-lg text-gray-800 bg-white hover:border-pink-500 hover:text-pink-600 hover:bg-pink-50 transition-all shadow-2xs flex items-center justify-center';
+                        btn.className = 'time-slot-btn px-3 py-2.5 text-xs sm:text-sm font-semibold border-2 border-gray-200 rounded-lg text-gray-800 bg-white hover:border-amber-500 hover:text-amber-600 hover:bg-amber-50 transition-all shadow-2xs flex items-center justify-center';
                         btn.textContent = formatTime(slot);
                         btn.dataset.time = slot;
                         btn.onclick = () => selectTime(btn);
@@ -1000,11 +1000,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     window.selectTime = function (el) {
         document.querySelectorAll('.time-slot-btn').forEach(b => {
-            b.classList.remove('bg-pink-600', 'text-white', 'border-pink-600', 'ring-2', 'ring-pink-300');
+            b.classList.remove('bg-amber-600', 'text-white', 'border-amber-600', 'ring-2', 'ring-amber-300');
             b.classList.add('bg-white', 'text-gray-800', 'border-gray-200');
         });
         el.classList.remove('bg-white', 'text-gray-800', 'border-gray-200');
-        el.classList.add('bg-pink-600', 'text-white', 'border-pink-600', 'ring-2', 'ring-pink-300');
+        el.classList.add('bg-amber-600', 'text-white', 'border-amber-600', 'ring-2', 'ring-amber-300');
         selectedTime = el.dataset.time;
         document.getElementById('btn-to-step-3').disabled = false;
         updateLiveSummary();

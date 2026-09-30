@@ -14,14 +14,14 @@
                        name="search"
                        value="{{ request('search') }}"
                        placeholder="Search by email..."
-                       class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                       class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500">
             </div>
-            <select name="status" class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+            <select name="status" class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500">
                 <option value="">All statuses</option>
                 <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Active</option>
                 <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
             </select>
-            <button type="submit" class="px-6 py-2 bg-pink-600 text-white rounded-md hover:bg-pink-700">
+            <button type="submit" class="px-6 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700">
                 Search
             </button>
         </form>

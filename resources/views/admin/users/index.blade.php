@@ -33,8 +33,8 @@
                                 <div class="flex items-center justify-between sm:justify-start">
                                     <div class="flex items-center flex-1 min-w-0">
                                         <div class="flex-shrink-0 h-8 w-8 sm:h-10 sm:w-10">
-                                            <div class="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-pink-100 flex items-center justify-center">
-                                                <span class="text-xs sm:text-sm font-medium text-pink-600">{{ substr($user->name, 0, 1) }}</span>
+                                            <div class="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-amber-100 flex items-center justify-center">
+                                                <span class="text-xs sm:text-sm font-medium text-amber-600">{{ substr($user->name, 0, 1) }}</span>
                                             </div>
                                         </div>
                                         <div class="ml-3 sm:ml-4 flex-1 min-w-0">

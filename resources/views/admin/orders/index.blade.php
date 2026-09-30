@@ -83,7 +83,7 @@
                             </td>
                             <td class="px-3 lg:px-6 py-3 sm:py-4 whitespace-nowrap text-sm font-medium">
                                 <a href="{{ route('admin.orders.show', $order) }}" 
-                                   class="text-pink-600 hover:text-pink-900 whitespace-nowrap">View</a>
+                                   class="text-amber-600 hover:text-amber-900 whitespace-nowrap">View</a>
                             </td>
                         </tr>
                     @empty

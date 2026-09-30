@@ -17,7 +17,7 @@
                 Appointments
             </a>
             <a href="{{ route('admin.booking-settings.index') }}" 
-               class="border-b-2 border-pink-500 py-2 px-1 text-sm font-medium text-pink-600">
+               class="border-b-2 border-amber-500 py-2 px-1 text-sm font-medium text-amber-600">
                 Booking Settings
             </a>
         </nav>
@@ -45,7 +45,7 @@
                                        name="settings[{{ $setting->day_of_week }}][is_disabled]" 
                                        value="1"
                                        {{ $setting->is_disabled ? 'checked' : '' }}
-                                       class="h-4 w-4 text-pink-600 focus:ring-pink-500 border-gray-300 rounded-md">
+                                       class="h-4 w-4 text-amber-600 focus:ring-amber-500 border-gray-300 rounded-md">
                                 <label for="disabled_{{ $setting->day_of_week }}" class="ml-2 text-sm text-gray-700">
                                     Disable this day
                                 </label>
@@ -59,14 +59,14 @@
                                 <input type="time" 
                                        name="settings[{{ $setting->day_of_week }}][business_hours_start]"
                                        value="{{ $setting->business_hours_start ? $setting->business_hours_start->format('H:i') : '' }}"
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Business Hours End</label>
                                 <input type="time" 
                                        name="settings[{{ $setting->day_of_week }}][business_hours_end]"
                                        value="{{ $setting->business_hours_end ? $setting->business_hours_end->format('H:i') : '' }}"
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Slot Duration (minutes)</label>
@@ -74,7 +74,7 @@
                                        name="settings[{{ $setting->day_of_week }}][slot_duration]"
                                        value="{{ $setting->slot_duration }}"
                                        min="15" max="240" step="15"
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500">
                             </div>
                         </div>
 
@@ -87,14 +87,14 @@
                                     <input type="time" 
                                            name="settings[{{ $setting->day_of_week }}][break_start]"
                                            value="{{ $setting->break_start ? $setting->break_start->format('H:i') : '' }}"
-                                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500">
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Break End</label>
                                     <input type="time" 
                                            name="settings[{{ $setting->day_of_week }}][break_end]"
                                            value="{{ $setting->break_end ? $setting->break_end->format('H:i') : '' }}"
-                                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500">
                                 </div>
                             </div>
                         </div>
@@ -109,7 +109,7 @@
                                             <input type="time" 
                                                    name="settings[{{ $setting->day_of_week }}][disabled_hours][]"
                                                    value="{{ $hour }}"
-                                                   class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                                                   class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500">
                                             <button type="button" 
                                                     onclick="removeDisabledHour(this)"
                                                     class="text-red-600 hover:text-red-800">
@@ -123,7 +123,7 @@
                             </div>
                             <button type="button" 
                                     onclick="addDisabledHour({{ $setting->day_of_week }})"
-                                    class="mt-2 text-sm text-pink-600 hover:text-pink-800">
+                                    class="mt-2 text-sm text-amber-600 hover:text-amber-800">
                                 + Add Disabled Time Slot
                             </button>
                         </div>
@@ -134,7 +134,7 @@
             <!-- Submit Button -->
             <div class="mt-6 flex justify-end">
                 <button type="submit" 
-                        class="bg-pink-600 text-white px-6 py-2 rounded-md hover:bg-pink-700 transition-colors">
+                        class="bg-amber-600 text-white px-6 py-2 rounded-md hover:bg-amber-700 transition-colors">
                     Save Settings
                 </button>
             </div>
@@ -150,7 +150,7 @@ function addDisabledHour(dayOfWeek) {
     div.innerHTML = `
         <input type="time" 
                name="settings[${dayOfWeek}][disabled_hours][]"
-               class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+               class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500">
         <button type="button" 
                 onclick="removeDisabledHour(this)"
                 class="text-red-600 hover:text-red-800">

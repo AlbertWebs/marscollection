@@ -39,6 +39,8 @@ class WhatsAppService
      */
     private static function formatNumber($number)
     {
-        return preg_replace('/\D/', '', $number);
+        $number = preg_replace('/\D/', '', $number);
+
+        return str_starts_with($number, '0') ? '254' . substr($number, 1) : $number;
     }
 }

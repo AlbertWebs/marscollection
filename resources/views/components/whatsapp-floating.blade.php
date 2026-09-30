@@ -1,13 +1,14 @@
 @php
-    $rawPhone = \App\Models\Setting::get('contact_phone_primary', '254707614446');
+    $rawPhone = \App\Models\Setting::get('contact_phone_primary', '0726243706');
     $cleanPhone = preg_replace('/\D/', '', $rawPhone);
+    if (str_starts_with($cleanPhone, '0')) $cleanPhone = '254' . substr($cleanPhone, 1);
 @endphp
 
 <!-- WhatsApp Floating Button & Modal -->
-<div id="whatsapp-floating-container" style="position: fixed; bottom: 24px; right: 24px; z-index: 99999; display: flex; flex-direction: column; align-items: flex-end;">
+<div id="whatsapp-floating-container" style="position: fixed; bottom: 24px; left: 24px; z-index: 99999; display: flex; flex-direction: column; align-items: flex-start;">
     <!-- WhatsApp Chat Popup Dialog -->
     <div id="whatsapp-chat-popup" 
-         class="hidden mb-3 w-[calc(100vw-2rem)] sm:w-84 max-w-sm rounded-2xl shadow-2xl overflow-hidden transform transition-all duration-300 origin-bottom-right"
+         class="hidden mb-3 w-[calc(100vw-2rem)] sm:w-84 max-w-sm rounded-2xl shadow-2xl overflow-hidden transform transition-all duration-300 origin-bottom-left"
          style="background-color: #ffffff; border: 1px solid #e5e7eb; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);">
         
         <!-- Header -->
@@ -22,7 +23,7 @@
                     <span style="background-color: #34d399; border-color: #059669;" class="absolute bottom-0 right-0 w-2.5 h-2.5 border-2 rounded-full"></span>
                 </div>
                 <div>
-                    <h3 class="font-semibold text-sm leading-tight text-white">Zayn's Beauty Support</h3>
+                    <h3 class="font-semibold text-sm leading-tight text-white">Mars Collection Support</h3>
                     <p class="text-[11px] text-emerald-100">Typically replies instantly</p>
                 </div>
             </div>
@@ -39,7 +40,7 @@
         <!-- Chat Body -->
         <div style="background-color: #f0fdf4;" class="p-4 space-y-3">
             <div style="background-color: #ffffff; border: 1px solid #f3f4f6;" class="p-3 rounded-2xl rounded-tl-sm shadow-xs max-w-[85%] text-xs text-gray-700 leading-relaxed">
-                Hello! Welcome to Zayn's Beauty. How can we help you with our beauty products or makeup bookings today?
+                Hello! Welcome to Mars Collection. How can we help you find the right pair today?
             </div>
         </div>
 
@@ -94,6 +95,14 @@
         </span>
     </button>
 </div>
+<button id="back-to-top-btn" type="button" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
+        style="position: fixed; right: 24px; bottom: 24px; z-index: 99999;"
+        class="hidden md:flex items-center justify-center w-12 h-12 rounded-full bg-gray-900 text-white shadow-lg hover:bg-amber-600 transition-colors"
+        aria-label="Back to top" title="Back to top">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7M12 8v12"/>
+    </svg>
+</button>
 
 <script>
     const waCleanPhone = @json($cleanPhone);

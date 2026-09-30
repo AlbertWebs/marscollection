@@ -1,15 +1,15 @@
 @extends('layouts.app')
 
-@section('title', 'Returns Policy - Zayn\'s Beauty')
+@section('title', 'Returns Policy - Mars Collection')
 
 @section('content')
 <div class="min-h-screen bg-stone-50">
     <section class="border-b border-stone-200 bg-white">
         <div class="mx-auto max-w-5xl px-4 py-14 sm:px-6 lg:px-8">
-            <p class="text-xs font-semibold uppercase tracking-[0.3em] text-pink-600">Customer Care</p>
+            <p class="text-xs font-semibold uppercase tracking-[0.3em] text-amber-600">Customer Care</p>
             <h1 class="mt-4 max-w-3xl text-4xl font-semibold tracking-tight text-stone-900 sm:text-5xl">Returns Policy</h1>
             <p class="mt-5 max-w-2xl text-base leading-7 text-stone-600 sm:text-lg">
-                We handle returns carefully because beauty products are personal-use items. This page explains what we can accept,
+                This page explains how to request a return for footwear purchased from Mars Collection,
                 what we cannot accept, and how to contact us before sending anything back.
             </p>
             <div class="mt-6 text-sm text-stone-500">
@@ -22,14 +22,14 @@
         <div class="grid gap-10 lg:grid-cols-[220px_minmax(0,1fr)]">
             <aside class="lg:sticky lg:top-24 lg:self-start">
                 <nav class="space-y-3 text-sm text-stone-600">
-                    <a href="#overview" class="block hover:text-pink-600">Overview</a>
-                    <a href="#eligible" class="block hover:text-pink-600">Eligible Returns</a>
-                    <a href="#not-eligible" class="block hover:text-pink-600">Items We Cannot Accept</a>
-                    <a href="#process" class="block hover:text-pink-600">How Returns Work</a>
-                    <a href="#refunds" class="block hover:text-pink-600">Refunds</a>
-                    <a href="#damaged-items" class="block hover:text-pink-600">Damaged or Incorrect Items</a>
-                    <a href="#exchanges" class="block hover:text-pink-600">Exchanges</a>
-                    <a href="#contact" class="block hover:text-pink-600">Contact</a>
+                    <a href="#overview" class="block hover:text-amber-600">Overview</a>
+                    <a href="#eligible" class="block hover:text-amber-600">Eligible Returns</a>
+                    <a href="#not-eligible" class="block hover:text-amber-600">Items We Cannot Accept</a>
+                    <a href="#process" class="block hover:text-amber-600">How Returns Work</a>
+                    <a href="#refunds" class="block hover:text-amber-600">Refunds</a>
+                    <a href="#damaged-items" class="block hover:text-amber-600">Damaged or Incorrect Items</a>
+                    <a href="#exchanges" class="block hover:text-amber-600">Exchanges</a>
+                    <a href="#contact" class="block hover:text-amber-600">Contact</a>
                 </nav>
             </aside>
 
@@ -61,7 +61,7 @@
                 <div id="not-eligible" class="border-b border-stone-200 py-8">
                     <h2 class="text-2xl font-semibold text-stone-900">Items We Cannot Accept</h2>
                     <ul class="mt-5 space-y-3 text-base leading-7 text-stone-700">
-                        <li>Opened or used beauty products</li>
+                        <li>Worn or damaged footwear</li>
                         <li>Personal care items that cannot be resold for hygiene reasons</li>
                         <li>Clearance or final-sale items, unless they arrive faulty or incorrect</li>
                         <li>Gift cards</li>

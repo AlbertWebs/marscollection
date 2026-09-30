@@ -67,7 +67,7 @@ class SettingsHelper
      */
     public static function getAdminEmail()
     {
-        return self::get('email_admin', 'admin@zaynsbeauty.com');
+        return self::get('email_admin', 'admin@marscollection.co.ke');
     }
 
     /**

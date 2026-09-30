@@ -3,23 +3,23 @@
     $mobileNavLinkClass = 'block py-3 text-lg font-medium transition-colors border-b border-gray-100';
 @endphp
 
-<header class="bg-white border-b-2 border-gray-100 sticky top-0 z-50">
+<header class="sticky top-0 z-50 border-b border-white/10 bg-[#080808] text-white shadow-lg shadow-black/10">
     {{-- Top Announcement Bar --}}
     <div class="bg-gray-950 text-white text-[11px] sm:text-xs py-2 px-4 border-b border-gray-800">
         <div class="container mx-auto flex items-center justify-between gap-4">
             <div class="flex items-center gap-2 overflow-hidden whitespace-nowrap mx-auto md:mx-0">
-                <span class="inline-flex items-center gap-1.5 font-medium text-pink-300">
-                    <svg class="w-3.5 h-3.5 text-pink-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <span class="inline-flex items-center gap-1.5 font-medium text-amber-300">
+                    <svg class="w-3.5 h-3.5 text-amber-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/>
                     </svg>
-                    <span><strong>FREE Nairobi Delivery</strong> on orders above KES 5,000</span>
+                    <span><strong>Footwear for every move</strong>. Shop the Mars Collection</span>
                 </span>
                 <span class="hidden md:inline text-gray-600">·</span>
                 <span class="hidden md:inline-flex items-center gap-1 text-gray-300">
                     <svg class="w-3.5 h-3.5 text-yellow-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"/>
                     </svg>
-                    <span>Same-Day Dispatch in CBD</span>
+                    <span>Delivery across Kenya</span>
                 </span>
                 <span class="hidden md:inline text-gray-600">·</span>
                 <span class="hidden lg:inline-flex items-center gap-1 text-emerald-400 font-semibold">
@@ -30,12 +30,12 @@
                 </span>
             </div>
             <div class="hidden md:flex items-center gap-4 text-gray-300 text-[11px]">
-                <a href="https://wa.me/254707641446" target="_blank" rel="noopener noreferrer" class="hover:text-pink-300 transition-colors flex items-center gap-1">
+                <a href="{{ route('contact') }}" class="hover:text-amber-300 transition-colors flex items-center gap-1">
                     <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <span>WhatsApp Consultation</span>
+                    <span>Ask about your fit</span>
                 </a>
-                <a href="{{ route('appointments.create') }}" class="hover:text-pink-300 transition-colors font-bold text-pink-400 flex items-center gap-1">
-                    <span>Book Makeup</span>
+                <a href="{{ route('products.index') }}" class="hover:text-amber-300 transition-colors font-bold text-amber-400 flex items-center gap-1">
+                    <span>Shop new arrivals</span>
                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                     </svg>
@@ -46,23 +46,21 @@
 
     <!-- Main Header -->
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center h-16">
+        <div class="flex justify-between items-center h-[76px]">
             <!-- Logo -->
             <div class="flex-shrink-0">
-                <a href="{{ route('home') }}" aria-label="Zayn's Beauty">
-                    <img src="{{ asset('logo.svg') }}" alt="Zayn's Beauty" class="h-10 w-auto">
+                <a href="{{ route('home') }}" aria-label="Mars Collection">
+                    <img src="{{ asset('mars-collections-logo.png') }}" alt="Mars Collection" class="h-14 w-auto">
                 </a>
             </div>
             
             <!-- Navigation -->
             <nav class="hidden md:flex space-x-8">
-                <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $navLinkClass }}">Home</a>
-                <a href="{{ route('products.index') }}" class="{{ request()->routeIs('products.*') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $navLinkClass }}">Products</a>
-                <a href="{{ route('categories.index') }}" class="{{ request()->routeIs('categories.*') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $navLinkClass }}">Categories</a>
-                <a href="{{ route('brands.index') }}" class="{{ request()->routeIs('brands.*') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $navLinkClass }}">Brands</a>
-                <a href="{{ route('appointments.create') }}" class="{{ request()->routeIs('appointments.*') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $navLinkClass }}">Book Makeup Session</a>
-                <a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $navLinkClass }}">About</a>
-                <a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') || request()->routeIs('contact.submit') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $navLinkClass }}">Contact</a>
+                <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'text-amber-300' : 'text-gray-200 hover:text-amber-300' }} {{ $navLinkClass }}">Home</a>
+                <a href="{{ route('products.index') }}" class="{{ request()->routeIs('products.*') ? 'text-amber-300' : 'text-gray-200 hover:text-amber-300' }} {{ $navLinkClass }}">Shop</a>
+                <a href="{{ route('categories.index') }}" class="{{ request()->routeIs('categories.*') ? 'text-amber-300' : 'text-gray-200 hover:text-amber-300' }} {{ $navLinkClass }}">Categories</a>
+                <a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'text-amber-300' : 'text-gray-200 hover:text-amber-300' }} {{ $navLinkClass }}">Our Story</a>
+                <a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') || request()->routeIs('contact.submit') ? 'text-amber-300' : 'text-gray-200 hover:text-amber-300' }} {{ $navLinkClass }}">Contact</a>
             </nav>
             
             <!-- User Actions -->
@@ -72,7 +70,7 @@
                     <div class="relative">
                         <input type="text" name="search" placeholder="Search products..." 
                                value="{{ request('search') }}"
-                               class="w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent">
+                               class="w-64 pl-10 pr-4 py-2 border border-gray-700 bg-gray-900 text-white placeholder-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -85,12 +83,12 @@
                 
                 <!-- Cart -->
                 <div class="relative group">
-                    <a href="{{ route('cart.index') }}" class="text-gray-700 hover:text-pink-600 p-2 transition-colors duration-200">
+                    <a href="{{ route('cart.index') }}" class="text-white hover:text-amber-300 p-2 transition-colors duration-200">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
                         </svg>
                     </a>
-                    <span class="cart-count absolute top-2 -right-2 bg-pink-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold shadow-sm">0</span>
+                    <span class="cart-count absolute top-2 -right-2 bg-amber-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold shadow-sm">0</span>
                     
                     <!-- Cart Dropdown -->
                     <div class="absolute right-0 mt-2 w-72 bg-white rounded-md shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 transform origin-top-right">
@@ -114,10 +112,10 @@
                             <div id="cart-dropdown-summary" class="border-t border-gray-200 pt-3 mt-3 hidden">
                                 <div class="flex justify-between items-center mb-3">
                                     <span class="text-sm font-medium text-gray-700">Total:</span>
-                                    <span id="cart-dropdown-total" class="text-lg font-bold text-pink-600">KES 0</span>
+                                    <span id="cart-dropdown-total" class="text-lg font-bold text-amber-600">KES 0</span>
                                 </div>
                                 <div class="flex space-x-2">
-                                    <a href="{{ route('cart.index') }}" class="flex-1 bg-pink-600 text-white py-2 px-4 rounded-md text-sm font-medium hover:bg-pink-700 transition-colors text-center">
+                                    <a href="{{ route('cart.index') }}" class="flex-1 bg-amber-600 text-white py-2 px-4 rounded-md text-sm font-medium hover:bg-amber-700 transition-colors text-center">
                                         View Cart
                                     </a>
                                     
@@ -128,7 +126,7 @@
                 </div>
                 
                 <!-- Mobile menu button -->
-                <button id="mobile-menu-button" class="md:hidden text-gray-700 hover:text-pink-600 p-2 transition-colors duration-200">
+                <button id="mobile-menu-button" class="md:hidden text-gray-700 hover:text-amber-600 p-2 transition-colors duration-200">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                     </svg>
@@ -146,7 +144,7 @@
             <div class="container mx-auto px-0 sm:px-6 lg:px-8">
                 <div class="h-10 flex items-center gap-0 sm:gap-4">
                     <!-- Categories Label -->
-                    <div class="bg-pink-600 text-white px-3 py-2 flex-shrink-0">
+                    <div class="bg-amber-600 text-white px-3 py-2 flex-shrink-0">
                         <a href="{{ route('categories.index') }}" class="text-xs font-medium text-white uppercase tracking-wide">Categories</a>
                     </div>
                     
@@ -154,7 +152,7 @@
                     <div class="flex gap-0 overflow-x-auto scrollbar-hide flex-1">
                         @foreach($activeCategories as $category)
                         <a href="{{ route('products.index', ['category' => $category->slug]) }}"
-                        class="inline-flex items-center px-4 py-2 h-10 text-sm font-medium {{ request('category') === $category->slug ? 'text-pink-600 ' : 'text-gray-700 hover:text-pink-600 hover:bg-pink-100' }} transition-all duration-200 whitespace-nowrap flex-shrink-0">
+                        class="inline-flex items-center px-4 py-2 h-10 text-sm font-medium {{ request('category') === $category->slug ? 'text-amber-600 ' : 'text-gray-700 hover:text-amber-600 hover:bg-amber-100' }} transition-all duration-200 whitespace-nowrap flex-shrink-0">
                                 {{ $category->name }}
                             </a>
                         @endforeach
@@ -185,13 +183,11 @@
         <!-- Navigation -->
         <nav class="p-6">
             <div class="space-y-4">
-                <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $mobileNavLinkClass }}">Home</a>
-                <a href="{{ route('products.index') }}" class="{{ request()->routeIs('products.*') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $mobileNavLinkClass }}">Products</a>
-                <a href="{{ route('categories.index') }}" class="{{ request()->routeIs('categories.*') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $mobileNavLinkClass }}">Categories</a>
-                <a href="{{ route('brands.index') }}" class="{{ request()->routeIs('brands.*') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $mobileNavLinkClass }}">Brands</a>
-                <a href="{{ route('appointments.create') }}" class="{{ request()->routeIs('appointments.*') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $mobileNavLinkClass }}">Book Makeup Session</a>
-                <a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $mobileNavLinkClass }}">About</a>
-                <a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') || request()->routeIs('contact.submit') ? 'text-pink-600' : 'text-gray-700 hover:text-pink-600' }} {{ $mobileNavLinkClass }}">Contact</a>
+                <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'text-amber-600' : 'text-gray-700 hover:text-amber-600' }} {{ $mobileNavLinkClass }}">Home</a>
+                <a href="{{ route('products.index') }}" class="{{ request()->routeIs('products.*') ? 'text-amber-600' : 'text-gray-700 hover:text-amber-600' }} {{ $mobileNavLinkClass }}">Shop footwear</a>
+                <a href="{{ route('categories.index') }}" class="{{ request()->routeIs('categories.*') ? 'text-amber-600' : 'text-gray-700 hover:text-amber-600' }} {{ $mobileNavLinkClass }}">Categories</a>
+                <a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'text-amber-600' : 'text-gray-700 hover:text-amber-600' }} {{ $mobileNavLinkClass }}">Our Story</a>
+                <a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') || request()->routeIs('contact.submit') ? 'text-amber-600' : 'text-gray-700 hover:text-amber-600' }} {{ $mobileNavLinkClass }}">Contact</a>
             </div>
         </nav>
         
@@ -201,7 +197,7 @@
                 <div class="relative">
                     <input type="text" name="search" placeholder="Search products..." 
                            value="{{ request('search') }}"
-                           class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent">
+                           class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -214,14 +210,14 @@
         <!-- User Actions -->
         <div class="p-6 border-t border-gray-200">
             <div class="space-y-4">
-                <a href="{{ route('cart.index') }}" class="flex items-center space-x-3 text-gray-700 hover:text-pink-600 py-3 transition-colors">
+                <a href="{{ route('cart.index') }}" class="flex items-center space-x-3 text-gray-700 hover:text-amber-600 py-3 transition-colors">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
                     </svg>
                     <span class="text-lg font-medium">Shopping Cart</span>
-                    <span class="cart-count ml-auto bg-pink-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold">0</span>
+                    <span class="cart-count ml-auto bg-amber-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold">0</span>
                 </a>
-                <button class="flex items-center space-x-3 text-gray-700 hover:text-pink-600 py-3 transition-colors w-full">
+                <button class="flex items-center space-x-3 text-gray-700 hover:text-amber-600 py-3 transition-colors w-full">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                     </svg>

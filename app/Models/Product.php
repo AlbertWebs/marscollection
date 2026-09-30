@@ -14,6 +14,7 @@ class Product extends Model
         'name',
         'slug',
         'description',
+        'meta_description',
         'price',
         'original_price',
         'category_id',
@@ -32,6 +33,7 @@ class Product extends Model
         'colors',
         'extra_images',
         'variants',
+        'variant_images',
     ];
 
     protected $casts = [
@@ -46,6 +48,7 @@ class Product extends Model
         'colors' => 'array',
         'extra_images' => 'array',
         'variants'     => 'array',
+        'variant_images' => 'array',
     ];
 
     protected static function boot()
@@ -105,7 +108,7 @@ class Product extends Model
     {
         $reviewsCount = $this->reviews()->count();
         $averageRating = $this->reviews()->avg('rating') ?? 0;
-        
+
         $this->update([
             'reviews_count' => $reviewsCount,
             'rating' => $averageRating
@@ -134,4 +137,4 @@ class Product extends Model
     {
         return 'slug';
     }
-} 
+}

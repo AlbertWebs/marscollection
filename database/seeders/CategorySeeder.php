@@ -2,58 +2,30 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Category;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
 class CategorySeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         $categories = [
-            [
-                'name' => 'Skincare',
-                'description' => 'Face creams, serums, cleansers, and treatments for healthy skin',
-                'image' => 'https://images.unsplash.com/photo-1556228720-195a672e8a03?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'
-            ],
-            [
-                'name' => 'Makeup',
-                'description' => 'Foundation, lipstick, eyeshadow, and other cosmetic products',
-                'image' => 'https://images.unsplash.com/photo-1586495777744-4413f21062fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'
-            ],
-            [
-                'name' => 'Haircare',
-                'description' => 'Shampoo, conditioner, styling products, and hair treatments',
-                'image' => 'https://images.unsplash.com/photo-1522338242992-e1a54906a8da?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'
-            ],
-            [
-                'name' => 'Fragrances',
-                'description' => 'Perfumes, colognes, and body sprays',
-                'image' => 'https://images.unsplash.com/photo-1541643600914-78b084683601?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'
-            ],
-            [
-                'name' => 'Body Care',
-                'description' => 'Body lotions, scrubs, and bath products',
-                'image' => 'https://images.unsplash.com/photo-1556228720-195a672e8a03?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'
-            ],
-            [
-                'name' => 'Tools & Accessories',
-                'description' => 'Makeup brushes, mirrors, and beauty tools',
-                'image' => 'https://images.unsplash.com/photo-1586495777744-4413f21062fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'
-            ]
+            ['name' => 'Sneakers', 'description' => 'Everyday sneakers, court styles and streetwear favourites.', 'image' => '/images/sneakers-runner.jpg'],
+            ['name' => 'Formal Shoes', 'description' => 'Polished lace-ups and dress shoes for sharper occasions.', 'image' => '/images/formal-shoes.jpg'],
+            ['name' => 'Loafers', 'description' => 'Easy slip-on styles for work, weekends and everything between.', 'image' => '/images/loafers.jpg'],
+            ['name' => 'Flats', 'description' => 'Light, versatile flats made for busy days.', 'image' => '/images/flats.jpg'],
+            ['name' => 'Sandals', 'description' => 'Open, comfortable pairs for relaxed days and warm weather.', 'image' => '/images/sandals.jpg'],
+            ['name' => 'Boots', 'description' => 'Statement boots and dependable everyday pairs.', 'image' => '/images/boots.jpg'],
         ];
 
-        foreach ($categories as $category) {
-            Category::create([
-                'name' => $category['name'],
-                'slug' => Str::slug($category['name']),
-                'description' => $category['description'],
-                'image' => $category['image'],
-                'is_active' => true
-            ]);
+        $slugs = [];
+        foreach ($categories as $index => $category) {
+            $slug = Str::slug($category['name']);
+            $slugs[] = $slug;
+            Category::updateOrCreate(['slug' => $slug], $category + ['sort_order' => $index + 1, 'is_active' => true]);
         }
+
+        Category::whereNotIn('slug', $slugs)->update(['is_active' => false]);
     }
 }

@@ -8,7 +8,7 @@
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h1 class="text-xl lg:text-2xl font-bold text-gray-900">Appointment #{{ $appointment->id }}</h1>
         <a href="{{ route('admin.appointments.index') }}" 
-           class="text-pink-600 hover:text-pink-700 text-sm sm:text-base">
+           class="text-amber-600 hover:text-amber-700 text-sm sm:text-base">
             ← Back to Appointments
         </a>
     </div>
@@ -88,7 +88,7 @@
                 <div>
                     <label for="status" class="block text-sm font-medium text-gray-700 mb-2">Appointment Status</label>
                     <select id="status" name="status" 
-                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500">
                         <option value="pending" {{ $appointment->status === 'pending' ? 'selected' : '' }}>Pending</option>
                         <option value="confirmed" {{ $appointment->status === 'confirmed' ? 'selected' : '' }}>Confirmed</option>
                         <option value="completed" {{ $appointment->status === 'completed' ? 'selected' : '' }}>Completed</option>
@@ -99,12 +99,12 @@
                     <label for="notes" class="block text-sm font-medium text-gray-700 mb-2">Admin Notes</label>
                     <textarea id="notes" name="notes" rows="3"
                               placeholder="Add any notes about this appointment..."
-                              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">{{ old('notes', $appointment->notes) }}</textarea>
+                              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500">{{ old('notes', $appointment->notes) }}</textarea>
                 </div>
             </div>
             <div class="mt-4">
                 <button type="submit" 
-                        class="bg-pink-600 text-white px-4 py-2 rounded-md hover:bg-pink-700 transition-colors">
+                        class="bg-amber-600 text-white px-4 py-2 rounded-md hover:bg-amber-700 transition-colors">
                     Update Status
                 </button>
             </div>

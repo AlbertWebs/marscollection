@@ -8,7 +8,7 @@
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h1 class="text-xl lg:text-2xl font-bold text-gray-900">Order #{{ $order->id }}</h1>
         <a href="{{ route('admin.orders.index') }}" 
-           class="text-pink-600 hover:text-pink-700 text-sm sm:text-base">
+           class="text-amber-600 hover:text-amber-700 text-sm sm:text-base">
             ← Back to Orders
         </a>
     </div>
@@ -56,7 +56,7 @@
                     <div>
                         <label for="status" class="block text-sm font-medium text-gray-700">Order Status</label>
                         <select id="status" name="status" 
-                                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-pink-500 focus:border-pink-500 sm:text-sm rounded-md">
+                                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-amber-500 focus:border-amber-500 sm:text-sm rounded-md">
                             <option value="pending" {{ $order->status === 'pending' ? 'selected' : '' }}>Pending</option>
                             <option value="processing" {{ $order->status === 'processing' ? 'selected' : '' }}>Processing</option>
                             <option value="shipped" {{ $order->status === 'shipped' ? 'selected' : '' }}>Shipped</option>
@@ -65,7 +65,7 @@
                         </select>
                     </div>
                     <button type="submit" 
-                            class="w-full bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-md">
+                            class="w-full bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-md">
                         Update Status
                     </button>
                 </div>

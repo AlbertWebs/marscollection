@@ -25,7 +25,7 @@ class GenerateProductEmbeddings extends Command
             }
             $this->info("Generating embedding for: {$product->name}");
             $ok = $service->generateForProduct($product);
-            $this->info($ok ? '✓ Done' : '✗ Failed — check GEMINI_API_KEY');
+            $this->info($ok ? '✓ Done' : '✗ Failed. Check GEMINI_API_KEY');
             return $ok ? 0 : 1;
         }
 

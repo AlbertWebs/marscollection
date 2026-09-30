@@ -8,7 +8,7 @@
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h1 class="text-xl lg:text-2xl font-bold text-gray-900">Products</h1>
         <a href="{{ route('admin.products.create') }}" 
-           class="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-md flex items-center w-full sm:w-auto justify-center">
+           class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-md flex items-center w-full sm:w-auto justify-center">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
             </svg>
@@ -23,14 +23,14 @@
                 <div>
                     <label for="search" class="block text-sm font-medium text-gray-700">Search</label>
                     <input type="text" name="search" id="search" 
-                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500"
+                           class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-amber-500 focus:border-amber-500"
                            value="{{ request('search') }}" placeholder="Search products...">
                 </div>
                 
                 <div>
                     <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
                     <select name="status" id="status" 
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500">
+                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-amber-500 focus:border-amber-500">
                         <option value="">All Status</option>
                         <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Active</option>
                         <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
@@ -40,7 +40,7 @@
                 <div>
                     <label for="category" class="block text-sm font-medium text-gray-700">Category</label>
                     <select name="category" id="category" 
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500">
+                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-amber-500 focus:border-amber-500">
                         <option value="">All Categories</option>
                         @foreach($categories as $category)
                             <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
@@ -53,7 +53,7 @@
                 <div>
                     <label for="brand" class="block text-sm font-medium text-gray-700">Brand</label>
                     <select name="brand" id="brand" 
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500">
+                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-amber-500 focus:border-amber-500">
                         <option value="">All Brands</option>
                         @foreach($brands as $brand)
                             <option value="{{ $brand->id }}" {{ request('brand') == $brand->id ? 'selected' : '' }}>
@@ -66,7 +66,7 @@
             
             <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3">
                 <button type="submit" 
-                        class="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-md w-full sm:w-auto">
+                        class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-md w-full sm:w-auto">
                     Search & Filter
                 </button>
                 
@@ -86,7 +86,7 @@
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <h3 class="text-base lg:text-lg font-medium text-gray-900">All Products</h3>
                 <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
-                    <select id="bulk-action" class="border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 text-sm">
+                    <select id="bulk-action" class="border-gray-300 rounded-md shadow-sm focus:ring-amber-500 focus:border-amber-500 text-sm">
                         <option value="">Bulk Actions</option>
                         <option value="activate">Activate Selected</option>
                         <option value="deactivate">Deactivate Selected</option>
@@ -105,7 +105,7 @@
                 <thead class="bg-gray-50 hidden sm:table-header-group">
                     <tr>
                         <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            <input type="checkbox" id="select-all" class="rounded-md border-gray-300 text-pink-600 shadow-sm focus:border-pink-300 focus:ring focus:ring-pink-200 focus:ring-opacity-50">
+                            <input type="checkbox" id="select-all" class="rounded-md border-gray-300 text-amber-600 shadow-sm focus:border-amber-300 focus:ring focus:ring-amber-200 focus:ring-opacity-50">
                         </th>
                         <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">Image</th>
                         <th class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
@@ -122,7 +122,7 @@
                         <tr class="hover:bg-gray-50 border-b border-gray-200 sm:border-0">
                             <td class="px-2 sm:px-3 lg:px-6 py-3 sm:py-4 hidden sm:table-cell">
                                 <input type="checkbox" name="selected_products[]" value="{{ $product->id }}" 
-                                       class="product-checkbox rounded-md border-gray-300 text-pink-600 shadow-sm focus:border-pink-300 focus:ring focus:ring-pink-200 focus:ring-opacity-50">
+                                       class="product-checkbox rounded-md border-gray-300 text-amber-600 shadow-sm focus:border-amber-300 focus:ring focus:ring-amber-200 focus:ring-opacity-50">
                             </td>
                             <td class="px-2 sm:px-3 lg:px-6 py-3 sm:py-4 hidden md:table-cell">
                                 <div class="w-10 h-10 rounded-md overflow-hidden bg-gray-100 flex-shrink-0">
@@ -148,7 +148,7 @@
                                         </div>
                                         <div class="flex items-center gap-2 sm:hidden flex-shrink-0">
                                             <input type="checkbox" name="selected_products[]" value="{{ $product->id }}" 
-                                                   class="product-checkbox rounded-md border-gray-300 text-pink-600 shadow-sm focus:border-pink-300 focus:ring focus:ring-pink-200 focus:ring-opacity-50">
+                                                   class="product-checkbox rounded-md border-gray-300 text-amber-600 shadow-sm focus:border-amber-300 focus:ring focus:ring-amber-200 focus:ring-opacity-50">
                                         </div>
                                     </div>
                                     <div class="flex items-center gap-3 text-xs sm:text-sm sm:hidden">
@@ -161,7 +161,7 @@
                                     <!-- Mobile toggles -->
                                     <div class="flex items-center gap-3 sm:hidden mt-1">
                                         <label class="flex items-center gap-1 cursor-pointer text-xs text-gray-500">
-                                            <input type="checkbox" class="flag-toggle rounded border-gray-300 text-pink-600 focus:ring-pink-500"
+                                            <input type="checkbox" class="flag-toggle rounded border-gray-300 text-amber-600 focus:ring-amber-500"
                                                    data-product-id="{{ $product->id }}" data-field="is_active"
                                                    {{ $product->is_active ? 'checked' : '' }}>
                                             Active
@@ -229,7 +229,7 @@
                             <td class="px-3 lg:px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <div class="flex items-center gap-2 sm:flex-col sm:items-start sm:gap-1 lg:flex-row lg:gap-2">
                                     <a href="{{ route('admin.products.edit', $product) }}" 
-                                       class="text-pink-600 hover:text-pink-900 whitespace-nowrap">Edit</a>
+                                       class="text-amber-600 hover:text-amber-900 whitespace-nowrap">Edit</a>
                                     <form method="POST" action="{{ route('admin.products.destroy', $product) }}" 
                                           class="inline" onsubmit="return confirm('Are you sure you want to delete this product?')">
                                         @csrf
@@ -242,7 +242,7 @@
                     @empty
                         <tr>
                             <td colspan="9" class="px-6 py-4 text-center text-gray-500">
-                                No products found. <a href="{{ route('admin.products.create') }}" class="text-pink-600 hover:text-pink-700">Add your first product</a>
+                                No products found. <a href="{{ route('admin.products.create') }}" class="text-amber-600 hover:text-amber-700">Add your first product</a>
                             </td>
                         </tr>
                     @endforelse

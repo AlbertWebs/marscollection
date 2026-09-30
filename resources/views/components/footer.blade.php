@@ -7,7 +7,7 @@
     $twitter  = \App\Models\Setting::get('social_twitter', '');
 @endphp
 
-<footer class="bg-gray-950 text-gray-400">
+<footer class="bg-gray-950 text-gray-400" style="background-image: linear-gradient(rgba(3, 7, 18, 0.965), rgba(3, 7, 18, 0.965)), url('{{ asset('images/sneakers-runner.jpg') }}'); background-size: cover; background-position: center 58%;">
     {{-- Reassurance / Trust Highlights Strip --}}
     <div class="border-b border-gray-800/80 bg-gray-900/60">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -15,14 +15,14 @@
                 
                 {{-- Free Delivery --}}
                 <div class="flex flex-col md:flex-row items-center md:items-start gap-3">
-                    <div class="w-10 h-10 rounded-full bg-pink-500/10 border border-pink-500/20 flex items-center justify-center text-pink-500 flex-shrink-0">
+                    <div class="w-10 h-10 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-500 flex-shrink-0">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/>
                         </svg>
                     </div>
                     <div>
-                        <h5 class="text-xs sm:text-sm font-bold text-white uppercase tracking-wider">Free Nairobi Delivery</h5>
-                        <p class="text-[11px] sm:text-xs text-gray-400 mt-0.5">On all orders above KES 5,000</p>
+                        <h5 class="text-xs sm:text-sm font-bold text-white uppercase tracking-wider">Delivery across Kenya</h5>
+                        <p class="text-[11px] sm:text-xs text-gray-400 mt-0.5">Shoes for your next step</p>
                     </div>
                 </div>
 
@@ -39,7 +39,7 @@
                     </div>
                 </div>
 
-                {{-- 100% Authentic --}}
+                {{-- Fit support --}}
                 <div class="flex flex-col md:flex-row items-center md:items-start gap-3">
                     <div class="w-10 h-10 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 flex-shrink-0">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -47,8 +47,8 @@
                         </svg>
                     </div>
                     <div>
-                        <h5 class="text-xs sm:text-sm font-bold text-white uppercase tracking-wider">100% Authentic</h5>
-                        <p class="text-[11px] sm:text-xs text-gray-400 mt-0.5">Original batch-verified products</p>
+                        <h5 class="text-xs sm:text-sm font-bold text-white uppercase tracking-wider">Need a size?</h5>
+                        <p class="text-[11px] sm:text-xs text-gray-400 mt-0.5">Contact us before you order</p>
                     </div>
                 </div>
 
@@ -74,18 +74,18 @@
 
             <!-- Brand column -->
             <div class="md:col-span-4">
-                <a href="{{ route('home') }}" aria-label="Zayn's Beauty">
-                    <img src="{{ asset('logo.svg') }}" alt="Zayn's Beauty" class="h-9 w-auto brightness-0 invert">
+                <a href="{{ route('home') }}" aria-label="Mars Collection">
+                    <img src="{{ asset('mars-collections-logo.png') }}" alt="Mars Collection" class="h-10 w-auto">
                 </a>
                 <p class="mt-3 text-sm leading-relaxed text-gray-400 max-w-xs">
-                    Premium authentic beauty products and luxury studio makeup services, based in Nairobi, serving all of Kenya.
+                    Sneakers, smart classics and everyday footwear. Find your fit with Mars Collection.
                 </p>
 
                 <!-- Contact details -->
                 <ul class="mt-5 space-y-2 text-sm">
                     @if($address)
                     <li class="flex items-start gap-2">
-                        <svg class="w-4 h-4 mt-0.5 shrink-0 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4 mt-0.5 shrink-0 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                         </svg>
@@ -94,7 +94,7 @@
                     @endif
                     @if($phone)
                     <li class="flex items-center gap-2">
-                        <svg class="w-4 h-4 shrink-0 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4 shrink-0 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
                         </svg>
                         <a href="tel:{{ $phone }}" class="hover:text-white transition-colors">{{ $phone }}</a>
@@ -102,7 +102,7 @@
                     @endif
                     @if($email)
                     <li class="flex items-center gap-2">
-                        <svg class="w-4 h-4 shrink-0 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4 shrink-0 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                         </svg>
                         <a href="mailto:{{ $email }}" class="hover:text-white transition-colors">{{ $email }}</a>
@@ -148,20 +148,18 @@
                 <div>
                     <h4 class="text-white text-sm font-semibold uppercase tracking-wider mb-4">Shop</h4>
                     <ul class="space-y-2.5 text-sm">
-                        <li><a href="{{ route('products.index') }}" class="hover:text-white transition-colors">All Products</a></li>
+                        <li><a href="{{ route('products.index') }}" class="hover:text-white transition-colors">All Footwear</a></li>
                         <li><a href="{{ route('categories.index') }}" class="hover:text-white transition-colors">Categories</a></li>
-                        <li><a href="{{ route('brands.index') }}" class="hover:text-white transition-colors">Brands</a></li>
-                        <li><a href="{{ route('bundles.index') }}" class="hover:text-white transition-colors">Bundles</a></li>
+                        <li><a href="{{ route('brands.index') }}" class="hover:text-white transition-colors">Labels</a></li>
                         <li><a href="{{ route('cart.index') }}" class="hover:text-white transition-colors">My Cart</a></li>
                     </ul>
                 </div>
 
-                <!-- Services -->
+                <!-- Company -->
                 <div>
-                    <h4 class="text-white text-sm font-semibold uppercase tracking-wider mb-4">Services</h4>
+                    <h4 class="text-white text-sm font-semibold uppercase tracking-wider mb-4">Mars Collection</h4>
                     <ul class="space-y-2.5 text-sm">
-                        <li><a href="{{ route('appointments.create') }}" class="hover:text-white transition-colors">Book Makeup Session</a></li>
-                        <li><a href="{{ route('about') }}" class="hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="{{ route('about') }}" class="hover:text-white transition-colors">Our Story</a></li>
                         <li><a href="{{ route('contact') }}" class="hover:text-white transition-colors">Contact</a></li>
                     </ul>
                 </div>
@@ -188,9 +186,9 @@
                         <input type="hidden" name="last_name" value="Subscriber">
                         <input type="hidden" name="message" value="Newsletter signup">
                         <input type="email" name="email" required placeholder="your@email.com"
-                               class="w-full px-3 py-2.5 bg-gray-900 border border-gray-800 rounded-md text-white text-sm placeholder-gray-500 focus:outline-none focus:border-pink-500 transition-colors">
+                               class="w-full px-3 py-2.5 bg-gray-900 border border-gray-800 rounded-md text-white text-sm placeholder-gray-500 focus:outline-none focus:border-amber-500 transition-colors">
                         <button type="submit"
-                                class="w-full bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold py-2.5 rounded-md transition-colors shadow-sm">
+                                class="w-full bg-amber-600 hover:bg-amber-700 text-white text-sm font-semibold py-2.5 rounded-md transition-colors shadow-sm">
                             Subscribe
                         </button>
                     </form>
@@ -238,7 +236,7 @@
 
                 {{-- Cash on Delivery Badge --}}
                 <div class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded bg-gray-900 border border-gray-800 text-gray-300 shadow-2xs">
-                    <svg class="w-3 h-3 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-3 h-3 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
                     </svg>
                     <span class="text-[10px] font-semibold">Cash / Card on Delivery</span>
@@ -248,8 +246,8 @@
 
         <!-- Bottom bar -->
         <div class="border-t border-gray-900 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-gray-600">
-            <span>© {{ date('Y') }} Zayn's Beauty. All rights reserved. Nairobi, Kenya.</span>
-            <span>Designed by <a href="https://velinexlabs.com" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">Velinex Labs</a></span>
+            <span>© {{ date('Y') }} Mars Collection. All rights reserved.</span>
+            <span>Designed by <a href="http://designekta.com/" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors">Designekta Studios</a></span>
         </div>
     </div>
 </footer>

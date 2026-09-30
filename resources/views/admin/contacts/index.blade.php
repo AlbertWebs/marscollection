@@ -28,10 +28,10 @@
                        name="search" 
                        value="{{ request('search') }}"
                        placeholder="Search by name, email, subject, or message..."
-                       class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                       class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500">
             </div>
             <button type="submit" 
-                    class="px-6 py-2 bg-pink-600 text-white rounded-md hover:bg-pink-700">
+                    class="px-6 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700">
                 Search
             </button>
             @if(request('search') || request('type'))
@@ -152,7 +152,7 @@
                                 <td class="px-3 lg:px-6 py-3 sm:py-4 whitespace-nowrap text-sm font-medium">
                                     <div class="flex items-center gap-2">
                                         <a href="{{ route('admin.contacts.show', $contact) }}" 
-                                           class="text-pink-600 hover:text-pink-900 whitespace-nowrap">View</a>
+                                           class="text-amber-600 hover:text-amber-900 whitespace-nowrap">View</a>
                                         <form action="{{ route('admin.contacts.destroy', $contact) }}" 
                                               method="POST" 
                                               class="inline"

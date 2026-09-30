@@ -2,185 +2,62 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\Product;
-use App\Models\Category;
 use App\Models\Brand;
+use App\Models\Category;
+use App\Models\Product;
+use Illuminate\Database\Seeder;
 
 class ProductSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        $categories = Category::all();
-        $brands = Brand::all();
+        Product::whereIn('sku', [
+            'VC-SERUM-001', 'HA-MOIST-002', 'LIP-SET-003', 'PERF-FLOR-004',
+            'BRUSH-SET-005', 'NIGHT-CREAM-006', 'FOUND-NAT-007', 'BODY-LOT-008',
+        ])->update(['is_active' => false]);
+
+        $brand = Brand::where('slug', 'mars-collection')->firstOrFail();
+        $sizeVariants = collect(range(39, 45))->map(fn ($size) => ['label' => (string) $size])->all();
 
         $products = [
-            [
-                'name' => 'Vitamin C Serum',
-                'description' => 'Brightening serum with 20% Vitamin C for radiant skin',
-                'price' => 3999,
-                'original_price' => 5999,
-                'category_name' => 'Skincare',
-                'brand_name' => 'Zayn\'s Beauty',
-                'image' => 'https://images.unsplash.com/photo-1556228720-195a672e8a03?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-                'rating' => 4.8,
-                'sold_count' => 2100,
-                'badge' => 'BEST SELLER',
-                'badge_color' => 'pink',
-                'is_featured' => true,
-                'is_trending' => true,
-                'stock_quantity' => 50,
-                'sku' => 'VC-SERUM-001'
-            ],
-            [
-                'name' => 'Hyaluronic Acid Moisturizer',
-                'description' => 'Deeply hydrating moisturizer with hyaluronic acid',
-                'price' => 2999,
-                'original_price' => null,
-                'category_name' => 'Skincare',
-                'brand_name' => 'Glow Essentials',
-                'image' => 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-                'rating' => 4.7,
-                'sold_count' => 1800,
-                'badge' => null,
-                'badge_color' => null,
-                'is_featured' => false,
-                'is_trending' => true,
-                'stock_quantity' => 75,
-                'sku' => 'HA-MOIST-002'
-            ],
-            [
-                'name' => 'Color Pop Lipstick Set',
-                'description' => 'Long-lasting lipstick set in 5 vibrant shades',
-                'price' => 2499,
-                'original_price' => 3499,
-                'category_name' => 'Makeup',
-                'brand_name' => 'Luxe Beauty',
-                'image' => 'https://images.unsplash.com/photo-1586495777744-4413f21062fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-                'rating' => 4.9,
-                'sold_count' => 3200,
-                'badge' => 'NEW',
-                'badge_color' => 'green',
-                'is_featured' => true,
-                'is_trending' => true,
-                'stock_quantity' => 30,
-                'sku' => 'LIP-SET-003'
-            ],
-            [
-                'name' => 'Floral Perfume',
-                'description' => 'Elegant floral fragrance with notes of rose and jasmine',
-                'price' => 5999,
-                'original_price' => null,
-                'category_name' => 'Fragrances',
-                'brand_name' => 'Pure Radiance',
-                'image' => 'https://images.unsplash.com/photo-1541643600914-78b084683601?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-                'rating' => 4.6,
-                'sold_count' => 1500,
-                'badge' => 'PREMIUM',
-                'badge_color' => 'purple',
-                'is_featured' => false,
-                'is_trending' => false,
-                'stock_quantity' => 25,
-                'sku' => 'PERF-FLOR-004'
-            ],
-            [
-                'name' => 'Professional Makeup Brushes',
-                'description' => 'Complete set of professional makeup brushes',
-                'price' => 3499,
-                'original_price' => 4999,
-                'category_name' => 'Tools & Accessories',
-                'brand_name' => 'Beauty Haven',
-                'image' => 'https://images.unsplash.com/photo-1586495777744-4413f21062fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-                'rating' => 4.8,
-                'sold_count' => 2800,
-                'badge' => 'LIMITED',
-                'badge_color' => 'red',
-                'is_featured' => true,
-                'is_trending' => false,
-                'stock_quantity' => 40,
-                'sku' => 'BRUSH-SET-005'
-            ],
-            [
-                'name' => 'Anti-Aging Night Cream',
-                'description' => 'Advanced anti-aging formula for overnight repair',
-                'price' => 8999,
-                'original_price' => 12000,
-                'category_name' => 'Skincare',
-                'brand_name' => 'Zayn\'s Beauty',
-                'image' => 'https://images.unsplash.com/photo-1556228720-195a672e8a03?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-                'rating' => 4.7,
-                'sold_count' => 1800,
-                'badge' => 'BEST SELLER',
-                'badge_color' => 'blue',
-                'is_featured' => true,
-                'is_trending' => true,
-                'stock_quantity' => 35,
-                'sku' => 'NIGHT-CREAM-006'
-            ],
-            [
-                'name' => 'Natural Foundation',
-                'description' => 'Buildable coverage foundation for all skin types',
-                'price' => 5200,
-                'original_price' => null,
-                'category_name' => 'Makeup',
-                'brand_name' => 'Glow Essentials',
-                'image' => 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-                'rating' => 4.6,
-                'sold_count' => 1500,
-                'badge' => null,
-                'badge_color' => null,
-                'is_featured' => false,
-                'is_trending' => false,
-                'stock_quantity' => 60,
-                'sku' => 'FOUND-NAT-007'
-            ],
-            [
-                'name' => 'Luxury Body Lotion',
-                'description' => 'Rich, moisturizing body lotion with natural oils',
-                'price' => 4299,
-                'original_price' => null,
-                'category_name' => 'Body Care',
-                'brand_name' => 'Luxe Beauty',
-                'image' => 'https://images.unsplash.com/photo-1586495777744-4413f21062fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-                'rating' => 4.9,
-                'sold_count' => 1700,
-                'badge' => 'NEW',
-                'badge_color' => 'green',
-                'is_featured' => true,
-                'is_trending' => false,
-                'stock_quantity' => 45,
-                'sku' => 'BODY-LOT-008'
-            ]
+            ['sku' => 'MC-SNK-001', 'name' => 'Court Classic High-Top', 'category' => 'Sneakers', 'description' => 'Meet the Court Classic High-Top, an everyday sneaker designed for clean streetwear styling. Its cushioned collar adds comfort around the ankle, while the grippy rubber sole is built for steady everyday steps. Choose from black, white or gold accents and select your available shoe size. Pair it with denim, joggers or relaxed outfits for an easy finish.', 'meta_description' => 'Shop the Court Classic High-Top from Mars Collection Kenya. Choose your shoe size and black, white or gold color option, then order online.', 'price' => 6500, 'original_price' => 8500, 'image' => '/images/mars-footwear-hero.png', 'colors' => ['Black', 'White', 'Gold'], 'badge' => 'NEW', 'featured' => true, 'trending' => true],
+            ['sku' => 'MC-SNK-002', 'name' => 'Everyday Court Sneaker', 'category' => 'Sneakers', 'description' => 'A lightweight lace-up sneaker with a padded insole for all-day wear.', 'price' => 4200, 'original_price' => null, 'image' => '/images/sneakers-red.jpg', 'colors' => ['Red', 'Black', 'White'], 'badge' => 'POPULAR', 'featured' => true, 'trending' => true],
+            ['sku' => 'MC-SNK-003', 'name' => 'Street Runner', 'category' => 'Sneakers', 'description' => 'A sporty everyday pair with a breathable upper and flexible sole.', 'price' => 5800, 'original_price' => 7200, 'image' => '/images/sneakers-runner.jpg', 'colors' => ['Black', 'Grey', 'White'], 'badge' => null, 'featured' => true, 'trending' => true],
+            ['sku' => 'MC-FRM-004', 'name' => 'City Lace-Up', 'category' => 'Formal Shoes', 'description' => 'A versatile lace-up profile for workdays, events and dressed-up evenings.', 'price' => 7200, 'original_price' => null, 'image' => '/images/formal-shoes.jpg', 'colors' => ['Black', 'Brown'], 'badge' => null, 'featured' => true, 'trending' => false],
+            ['sku' => 'MC-LOA-005', 'name' => 'Weekend Penny Loafer', 'category' => 'Loafers', 'description' => 'An easy slip-on with a classic profile that works with denim or tailored trousers.', 'price' => 5600, 'original_price' => null, 'image' => '/images/loafers.jpg', 'colors' => ['Black', 'Tan'], 'badge' => 'EASY WEAR', 'featured' => true, 'trending' => true],
+            ['sku' => 'MC-FLT-006', 'name' => 'Soft Step Ballet Flat', 'category' => 'Flats', 'description' => 'A simple lightweight flat with a flexible sole for busy days on your feet.', 'price' => 3500, 'original_price' => null, 'image' => '/images/flats.jpg', 'colors' => ['Black', 'Nude'], 'badge' => null, 'featured' => false, 'trending' => true],
+            ['sku' => 'MC-SND-007', 'name' => 'Everyday Comfort Sandal', 'category' => 'Sandals', 'description' => 'A relaxed, easy-to-wear sandal with a supportive footbed and adjustable straps.', 'price' => 2900, 'original_price' => null, 'image' => '/images/sandals.jpg', 'colors' => ['Black', 'Brown'], 'badge' => null, 'featured' => false, 'trending' => false],
+            ['sku' => 'MC-BOT-008', 'name' => 'Everyday Ankle Boot', 'category' => 'Boots', 'description' => 'A sturdy ankle boot with a clean shape for cooler days and evening plans.', 'price' => 7900, 'original_price' => 9500, 'image' => '/images/boots.jpg', 'colors' => ['Black', 'Brown'], 'badge' => 'JUST IN', 'featured' => true, 'trending' => false],
         ];
 
-        foreach ($products as $productData) {
-            $category = $categories->where('name', $productData['category_name'])->first();
-            $brand = $brands->where('name', $productData['brand_name'])->first();
+        foreach ($products as $item) {
+            $category = Category::where('name', $item['category'])->firstOrFail();
+            $product = Product::updateOrCreate(
+                ['sku' => $item['sku']],
+                [
+                    'name' => $item['name'],
+                    'description' => $item['description'],
+                    'price' => $item['price'],
+                    'original_price' => $item['original_price'],
+                    'category_id' => $category->id,
+                    'brand_id' => $brand->id,
+                    'image' => $item['image'],
+                    'rating' => 0,
+                    'reviews_count' => 0,
+                    'sold_count' => 0,
+                    'badge' => $item['badge'],
+                    'badge_color' => 'amber',
+                    'is_featured' => $item['featured'],
+                    'is_trending' => $item['trending'],
+                    'is_active' => true,
+                    'stock_quantity' => 12,
+                    'colors' => $item['colors'],
+                    'variants' => $sizeVariants,
+                ]
+            );
 
-            if ($category && $brand) {
-                Product::updateOrCreate(
-                    ['sku' => $productData['sku']], // Find by SKU
-                    [
-                        'name' => $productData['name'],
-                        'description' => $productData['description'],
-                        'price' => $productData['price'],
-                        'original_price' => $productData['original_price'],
-                        'category_id' => $category->id,
-                        'brand_id' => $brand->id,
-                        'image' => $productData['image'],
-                        'rating' => $productData['rating'],
-                        'sold_count' => $productData['sold_count'],
-                        'badge' => $productData['badge'],
-                        'badge_color' => $productData['badge_color'],
-                        'is_featured' => $productData['is_featured'],
-                        'is_trending' => $productData['is_trending'],
-                        'stock_quantity' => $productData['stock_quantity'],
-                        'sku' => $productData['sku']
-                    ]
-                );
+            if (isset($item['meta_description'])) {
+                $product->update(['meta_description' => $item['meta_description']]);
             }
         }
     }

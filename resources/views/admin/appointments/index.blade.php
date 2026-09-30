@@ -13,7 +13,7 @@
     <div class="border-b border-gray-200 overflow-x-auto">
         <nav class="-mb-px flex space-x-4 sm:space-x-8 min-w-max sm:min-w-0">
             <a href="{{ route('admin.appointments.index') }}" 
-               class="border-b-2 border-pink-500 py-2 px-1 text-sm font-medium text-pink-600">
+               class="border-b-2 border-amber-500 py-2 px-1 text-sm font-medium text-amber-600">
                 Appointments
             </a>
             <a href="{{ route('admin.booking-settings.index') }}" 
@@ -30,12 +30,12 @@
                 <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Search</label>
                 <input type="text" id="search" name="search" value="{{ request('search') }}"
                        placeholder="Search by name, email, phone..."
-                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500">
             </div>
             <div>
                 <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
                 <select id="status" name="status" 
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500">
                     <option value="">All Status</option>
                     <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
                     <option value="confirmed" {{ request('status') === 'confirmed' ? 'selected' : '' }}>Confirmed</option>
@@ -46,7 +46,7 @@
             <div>
                 <label for="date_from" class="block text-sm font-medium text-gray-700 mb-1">From Date</label>
                 <input type="date" id="date_from" name="date_from" value="{{ request('date_from') }}"
-                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500">
             </div>
             <div class="flex items-end">
                 <button type="submit" 
@@ -115,7 +115,7 @@
                             </td>
                             <td class="px-3 lg:px-6 py-3 sm:py-4 whitespace-nowrap text-sm font-medium">
                                 <a href="{{ route('admin.appointments.show', $appointment) }}" 
-                                   class="text-pink-600 hover:text-pink-900 whitespace-nowrap">View</a>
+                                   class="text-amber-600 hover:text-amber-900 whitespace-nowrap">View</a>
                             </td>
                         </tr>
                     @empty

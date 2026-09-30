@@ -15,6 +15,7 @@ class Category extends Model
         'slug',
         'description',
         'image',
+        'sort_order',
         'is_active'
     ];
 
@@ -42,4 +43,4 @@ class Category extends Model
     {
         return $this->hasMany(Product::class);
     }
-} 
+}

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Appointment Details - Zayn\'s Beauty')
+@section('title', 'Appointment Details - Mars Collection')
 
 @section('content')
 
@@ -13,7 +13,7 @@
                 </svg>
             </a>
             <div>
-                <p class="text-xs uppercase tracking-widest text-pink-600 font-medium mb-1">Zayn's Beauty Studio</p>
+                <p class="text-xs uppercase tracking-widest text-amber-600 font-medium mb-1">Mars Collection</p>
                 <h1 class="text-3xl font-bold text-gray-900">Appointment Details</h1>
             </div>
         </div>
@@ -32,7 +32,7 @@
                         <div><dt class="text-gray-500">Date</dt><dd class="font-medium text-gray-900 mt-0.5">{{ $appointment->appointment_date->format('l, F d, Y') }}</dd></div>
                         <div><dt class="text-gray-500">Time</dt><dd class="font-medium text-gray-900 mt-0.5">{{ $appointment->appointment_time->format('g:i A') }}</dd></div>
                         <div><dt class="text-gray-500">Duration</dt><dd class="font-medium text-gray-900 mt-0.5">{{ $appointment->formatted_duration }}</dd></div>
-                        <div><dt class="text-gray-500">Price</dt><dd class="font-semibold text-pink-600 mt-0.5">{{ $appointment->formatted_price }}</dd></div>
+                        <div><dt class="text-gray-500">Price</dt><dd class="font-semibold text-amber-600 mt-0.5">{{ $appointment->formatted_price }}</dd></div>
                         <div>
                             <dt class="text-gray-500">Status</dt>
                             <dd class="mt-0.5">
@@ -74,19 +74,19 @@
             <p class="text-xs uppercase tracking-widest text-gray-400 font-medium mb-4">Before Your Appointment</p>
             <ul class="space-y-2 text-sm text-gray-600">
                 <li class="flex items-start gap-2">
-                    <svg class="w-4 h-4 mt-0.5 shrink-0 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                    <svg class="w-4 h-4 mt-0.5 shrink-0 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                     Please arrive 10 minutes before your appointment time
                 </li>
                 <li class="flex items-start gap-2">
-                    <svg class="w-4 h-4 mt-0.5 shrink-0 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                    <svg class="w-4 h-4 mt-0.5 shrink-0 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                     Bring any reference photos if you have a specific look in mind
                 </li>
                 <li class="flex items-start gap-2">
-                    <svg class="w-4 h-4 mt-0.5 shrink-0 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                    <svg class="w-4 h-4 mt-0.5 shrink-0 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                     Mention any skin sensitivities or allergies to your makeup artist
                 </li>
                 <li class="flex items-start gap-2">
-                    <svg class="w-4 h-4 mt-0.5 shrink-0 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                    <svg class="w-4 h-4 mt-0.5 shrink-0 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                     Contact us if you need to reschedule or cancel
                 </li>
             </ul>
@@ -98,7 +98,7 @@
                 ← All Appointments
             </a>
             <a href="{{ route('appointments.create') }}"
-               class="px-5 py-2.5 bg-pink-600 hover:bg-pink-700 text-white text-sm font-semibold rounded-sm transition-colors">
+               class="px-5 py-2.5 bg-amber-600 hover:bg-amber-700 text-white text-sm font-semibold rounded-sm transition-colors">
                 Book Another
             </a>
         </div>

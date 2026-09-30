@@ -6,10 +6,10 @@
                 Featured Products
             </h2>
             <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-                Discover our most popular beauty products that customers love
+                Discover footwear styles selected by Mars Collection
             </p>
         </div>
-        
+
         <!-- Product Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             @php
@@ -20,12 +20,12 @@
                 @include('components.product-card', ['product' => $product])
             @endforeach
         </div>
-        
+
         <!-- View All Button -->
         <div class="text-center mt-12">
-            <a href="{{ route('products.index', ['tag' => 'featured']) }}" class="bg-white border-2 border-pink-600 text-pink-600 px-8 py-4 rounded-full font-semibold hover:bg-pink-600 hover:text-white transition-all duration-300">
+            <a href="{{ route('products.index', ['tag' => 'featured']) }}" class="bg-white border-2 border-amber-600 text-amber-600 px-8 py-4 rounded-full font-semibold hover:bg-amber-600 hover:text-white transition-all duration-300">
                 View All Products
             </a>
         </div>
     </div>
-</section> 
+</section>

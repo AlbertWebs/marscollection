@@ -22,7 +22,7 @@
                             Discover the essential skincare tips that will help you achieve a radiant, healthy complexion. 
                             From cleansing routines to product recommendations, we've got you covered.
                         </p>
-                        <button class="text-pink-600 font-semibold hover:text-pink-700 transition-colors">
+                        <button class="text-amber-600 font-semibold hover:text-amber-700 transition-colors">
                             Read More →
                         </button>
                     </div>
@@ -43,7 +43,7 @@
                             <span class="mx-2">•</span>
                             <span>3 min read</span>
                         </div>
-                        <button class="text-pink-600 text-sm font-medium hover:text-pink-700 transition-colors">
+                        <button class="text-amber-600 text-sm font-medium hover:text-amber-700 transition-colors">
                             Read More →
                         </button>
                     </div>
@@ -61,7 +61,7 @@
                             <span class="mx-2">•</span>
                             <span>4 min read</span>
                         </div>
-                        <button class="text-pink-600 text-sm font-medium hover:text-pink-700 transition-colors">
+                        <button class="text-amber-600 text-sm font-medium hover:text-amber-700 transition-colors">
                             Read More →
                         </button>
                     </div>
@@ -79,7 +79,7 @@
                             <span class="mx-2">•</span>
                             <span>6 min read</span>
                         </div>
-                        <button class="text-pink-600 text-sm font-medium hover:text-pink-700 transition-colors">
+                        <button class="text-amber-600 text-sm font-medium hover:text-amber-700 transition-colors">
                             Read More →
                         </button>
                     </div>

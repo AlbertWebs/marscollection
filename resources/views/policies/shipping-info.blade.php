@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'Shipping Information - Zayn\'s Beauty')
+@section('title', 'Shipping Information - Mars Collection')
 
 @section('content')
 <div class="min-h-screen bg-stone-50">
     <section class="border-b border-stone-200 bg-white">
         <div class="mx-auto max-w-5xl px-4 py-14 sm:px-6 lg:px-8">
-            <p class="text-xs font-semibold uppercase tracking-[0.3em] text-pink-600">Delivery</p>
+            <p class="text-xs font-semibold uppercase tracking-[0.3em] text-amber-600">Delivery</p>
             <h1 class="mt-4 max-w-3xl text-4xl font-semibold tracking-tight text-stone-900 sm:text-5xl">Shipping Information</h1>
             <p class="mt-5 max-w-2xl text-base leading-7 text-stone-600 sm:text-lg">
                 This page explains how we process orders, where we deliver, and what to expect once your package leaves us.
@@ -21,13 +21,13 @@
         <div class="grid gap-10 lg:grid-cols-[220px_minmax(0,1fr)]">
             <aside class="lg:sticky lg:top-24 lg:self-start">
                 <nav class="space-y-3 text-sm text-stone-600">
-                    <a href="#overview" class="block hover:text-pink-600">Overview</a>
-                    <a href="#areas" class="block hover:text-pink-600">Delivery Areas</a>
-                    <a href="#processing" class="block hover:text-pink-600">Order Processing</a>
-                    <a href="#timing" class="block hover:text-pink-600">Delivery Timelines</a>
-                    <a href="#tracking" class="block hover:text-pink-600">Order Tracking</a>
-                    <a href="#restrictions" class="block hover:text-pink-600">Restrictions</a>
-                    <a href="#contact" class="block hover:text-pink-600">Contact</a>
+                    <a href="#overview" class="block hover:text-amber-600">Overview</a>
+                    <a href="#areas" class="block hover:text-amber-600">Delivery Areas</a>
+                    <a href="#processing" class="block hover:text-amber-600">Order Processing</a>
+                    <a href="#timing" class="block hover:text-amber-600">Delivery Timelines</a>
+                    <a href="#tracking" class="block hover:text-amber-600">Order Tracking</a>
+                    <a href="#restrictions" class="block hover:text-amber-600">Restrictions</a>
+                    <a href="#contact" class="block hover:text-amber-600">Contact</a>
                 </nav>
             </aside>
 
