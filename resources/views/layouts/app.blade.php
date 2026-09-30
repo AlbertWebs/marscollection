@@ -59,7 +59,7 @@
             'name' => 'Mars Collection',
             'description' => 'Shop sneakers, smart classics and everyday footwear from Mars Collection in Kenya.',
             'url' => url('/'),
-            'logo' => asset('mars-collections-logo.png'),
+            'logo' => \App\Helpers\SettingsHelper::getBrandLogoUrl(),
             'image' => asset('images/mars-footwear-hero.png'),
             'areaServed' => ['@type' => 'Country', 'name' => 'Kenya'],
         ];
@@ -76,9 +76,8 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
     <!-- Favicon -->
-    <link rel="icon" href="{{ asset('favicon.ico') }}?v=20260930" sizes="any">
-    <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('favicon.png') }}?v=20260930">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}?v=20260930">
+    <link rel="icon" type="image/png" href="{{ \App\Helpers\SettingsHelper::getBrandFaviconUrl() }}">
+    <link rel="apple-touch-icon" href="{{ \App\Helpers\SettingsHelper::getBrandFaviconUrl() }}">
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])

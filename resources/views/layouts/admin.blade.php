@@ -6,9 +6,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Laravel') }} - Admin</title>
-    <link rel="icon" href="{{ asset('favicon.ico') }}?v=20260930" sizes="any">
-    <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('favicon.png') }}?v=20260930">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}?v=20260930">
+    <link rel="icon" type="image/png" href="{{ \App\Helpers\SettingsHelper::getBrandFaviconUrl() }}">
+    <link rel="apple-touch-icon" href="{{ \App\Helpers\SettingsHelper::getBrandFaviconUrl() }}">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -27,7 +26,7 @@
         <div id="sidebar" class="fixed inset-y-0 left-0 z-50 flex w-64 -translate-x-full flex-col overflow-hidden border-r border-gray-200 bg-white shadow-xl transition-transform duration-300 ease-in-out lg:translate-x-0">
             <div class="flex items-center justify-between min-h-20 bg-gray-950 border-b border-gray-800 px-4 py-3">
                 <a href="{{ route('admin.dashboard') }}" aria-label="Mars Collection Admin" class="flex items-center">
-                    <img src="{{ asset('mars-collections-logo.png') }}" alt="Mars Collection" class="h-12 w-auto">
+                    <img src="{{ \App\Helpers\SettingsHelper::getBrandLogoUrl() }}" alt="Mars Collection" class="h-12 w-auto">
                 </a>
                 <button id="close-sidebar" class="lg:hidden text-gray-500 hover:text-gray-700">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

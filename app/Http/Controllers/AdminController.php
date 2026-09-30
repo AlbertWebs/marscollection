@@ -983,9 +983,11 @@ class AdminController extends Controller
         $validated = $request->validate([
             'hero_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'video_thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'brand_logo' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:2048',
+            'brand_favicon' => 'nullable|image|mimes:png|max:2048|dimensions:min_width=64,min_height=64,max_width=1024,max_height=1024,ratio=1/1',
         ]);
 
-        $settings = $request->except('_token', '_method', 'hero_image', 'video_thumbnail');
+        $settings = $request->except('_token', '_method', 'hero_image', 'video_thumbnail', 'brand_logo', 'brand_favicon');
         
         // Handle image uploads
         if ($request->hasFile('hero_image')) {
@@ -996,6 +998,21 @@ class AdminController extends Controller
         if ($request->hasFile('video_thumbnail')) {
             $videoThumbnailPath = $request->file('video_thumbnail')->store('settings', 's3');
             $settings['video_thumbnail'] = \Storage::disk('s3')->url($videoThumbnailPath);
+        }
+
+        $disk = $this->productImageDisk();
+        foreach (['brand_logo', 'brand_favicon'] as $brandingKey) {
+            if (!$request->hasFile($brandingKey)) {
+                continue;
+            }
+
+            $previousPath = Setting::get($brandingKey);
+            $newPath = $request->file($brandingKey)->store('branding', $disk);
+            Setting::set($brandingKey, $newPath, $brandingKey === 'brand_logo' ? 'Brand logo' : 'Brand favicon', 'branding', 'image');
+
+            if ($previousPath && !str_starts_with($previousPath, 'http') && !str_starts_with($previousPath, '/') && $previousPath !== $newPath) {
+                \Storage::disk($disk)->delete($previousPath);
+            }
         }
         
         foreach ($settings as $key => $value) {

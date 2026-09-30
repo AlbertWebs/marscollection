@@ -20,7 +20,7 @@
             'name' => 'Mars Collection',
             'url' => url('/'),
             'description' => 'A footwear store in Kenya offering sneakers, formal shoes, loafers, flats, sandals and boots.',
-            'logo' => asset('mars-collections-logo.png'),
+            'logo' => \App\Helpers\SettingsHelper::getBrandLogoUrl(),
             'areaServed' => ['@type' => 'Country', 'name' => 'Kenya'],
             'contactPoint' => [
                 '@type' => 'ContactPoint',

@@ -12,7 +12,7 @@
         </div>
         <div class="relative mx-auto flex w-full max-w-2xl flex-col justify-between px-6 py-7 sm:px-10 sm:py-9 lg:px-14 lg:py-12 xl:px-20">
             <a href="{{ route('home') }}" aria-label="Mars Collection home" class="inline-flex w-fit rounded-lg bg-white px-3 py-2 shadow-lg shadow-black/20">
-                <img src="{{ asset('mars-collections-logo.png') }}" alt="Mars Collection" class="h-10 w-auto max-w-[200px] object-contain sm:h-12">
+                <img src="{{ \App\Helpers\SettingsHelper::getBrandLogoUrl() }}" alt="Mars Collection" class="h-10 w-auto max-w-[200px] object-contain sm:h-12">
             </a>
 
             <div class="py-10 lg:py-16">

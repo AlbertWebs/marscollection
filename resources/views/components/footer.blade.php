@@ -75,7 +75,7 @@
             <!-- Brand column -->
             <div class="md:col-span-4">
                 <a href="{{ route('home') }}" aria-label="Mars Collection">
-                    <img src="{{ asset('mars-collections-logo.png') }}" alt="Mars Collection" class="h-10 w-auto">
+                    <img src="{{ \App\Helpers\SettingsHelper::getBrandLogoUrl() }}" alt="Mars Collection" class="h-10 w-auto">
                 </a>
                 <p class="mt-3 text-sm leading-relaxed text-gray-400 max-w-xs">
                     Sneakers, smart classics and everyday footwear. Find your fit with Mars Collection.

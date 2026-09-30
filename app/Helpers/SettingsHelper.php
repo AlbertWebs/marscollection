@@ -14,6 +14,16 @@ class SettingsHelper
         return \App\Models\Setting::get($key, $default);
     }
 
+    public static function getBrandLogoUrl(): string
+    {
+        return \App\Helpers\ImageHelper::getProductImageUrl(self::get('brand_logo')) ?: asset('mars-collections-logo.png');
+    }
+
+    public static function getBrandFaviconUrl(): string
+    {
+        return \App\Helpers\ImageHelper::getProductImageUrl(self::get('brand_favicon')) ?: asset('favicon.png');
+    }
+
     /**
      * Get contact phone number
      */
@@ -54,7 +64,7 @@ class SettingsHelper
         if ($day) {
             return self::get("business_hours_{$day}");
         }
-        
+
         return [
             'monday_friday' => self::get('business_hours_monday_friday'),
             'saturday' => self::get('business_hours_saturday'),
@@ -96,4 +106,4 @@ class SettingsHelper
             'business_name' => self::getBusinessName(),
         ];
     }
-} 
+}

@@ -50,7 +50,7 @@
             <!-- Logo -->
             <div class="flex-shrink-0">
                 <a href="{{ route('home') }}" aria-label="Mars Collection">
-                    <img src="{{ asset('mars-collections-logo.png') }}" alt="Mars Collection" class="h-14 w-auto">
+                    <img src="{{ \App\Helpers\SettingsHelper::getBrandLogoUrl() }}" alt="Mars Collection" class="h-14 w-auto">
                 </a>
             </div>
             

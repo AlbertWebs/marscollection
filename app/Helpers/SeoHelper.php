@@ -167,7 +167,7 @@ class SeoHelper
             '@type' => 'Organization',
             'name' => 'Mars Collection',
             'url' => url('/'),
-            'logo' => asset('mars-collections-logo.png'),
+            'logo' => SettingsHelper::getBrandLogoUrl(),
             'description' => 'Shoes and footwear from Mars Collection in Kenya.',
             'address' => [
                 '@type' => 'PostalAddress',
@@ -219,7 +219,7 @@ class SeoHelper
             'name' => 'Mars Collection',
             'description' => 'Shoes and footwear from Mars Collection in Kenya.',
             'url' => url('/'),
-            'logo' => asset('mars-collections-logo.png'),
+            'logo' => SettingsHelper::getBrandLogoUrl(),
             'image' => asset('images/og-image.jpg'),
             'telephone' => \App\Helpers\SettingsHelper::getPhone('primary'),
             'email' => 'info@marscollection.co.ke',
