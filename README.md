@@ -7,6 +7,31 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## Local development
+
+Requirements: PHP 8.2+, Composer, and Node.js with npm.
+
+```powershell
+composer install
+npm install
+Copy-Item .env.example .env
+php -r "file_exists('database/database.sqlite') || touch('database/database.sqlite');"
+php artisan key:generate
+php artisan migrate --seed
+```
+
+Run these in separate terminals from the project directory:
+
+```powershell
+php artisan serve
+```
+
+```powershell
+npm run dev
+```
+
+Open <http://127.0.0.1:8000>. SQLite, file sessions/cache, and the synchronous queue are set as local defaults, so PostgreSQL and Redis are not needed for development.
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
