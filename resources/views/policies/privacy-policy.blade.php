@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('title', 'Privacy Policy - Mars Collection')
+@section('description', 'Learn how Mars Collection collects, uses and protects personal information when you browse the store, place an order or contact us.')
+@section('canonical', route('privacy-policy'))
+@section('og_type', 'article')
 
 @section('content')
 <div class="min-h-screen bg-stone-50">

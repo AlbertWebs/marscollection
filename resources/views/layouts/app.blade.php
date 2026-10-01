@@ -26,18 +26,20 @@
     <meta property="og:url" content="@yield('canonical', request()->url())">
     <meta property="og:title" content="@yield('title', 'Mars Collection - Footwear for Every Move')">
     <meta property="og:description" content="@yield('description', 'Shop sneakers, smart classics and everyday footwear at Mars Collection.')">
-    <meta property="og:image" content="@yield('og_image', asset('images/og-image.jpg'))">
+    <meta property="og:image" content="@yield('og_image', asset('images/mars-footwear-hero.png'))">
+    <meta property="og:image:alt" content="@yield('og_image_alt', 'Footwear from Mars Collection Kenya')">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:site_name" content="Mars Collection">
     <meta property="og:locale" content="en_US">
 
     <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="@yield('canonical', request()->url())">
-    <meta property="twitter:title" content="@yield('title', 'Mars Collection - Footwear for Every Move')">
-    <meta property="twitter:description" content="@yield('description', 'Shop sneakers, smart classics and everyday footwear at Mars Collection.')">
-    <meta property="twitter:image" content="@yield('og_image', asset('images/og-image.jpg'))">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="@yield('canonical', request()->url())">
+    <meta name="twitter:title" content="@yield('title', 'Mars Collection | Shoes & Sneakers in Kenya')">
+    <meta name="twitter:description" content="@yield('description', 'Shop sneakers, smart classics and everyday footwear at Mars Collection Kenya.')">
+    <meta name="twitter:image" content="@yield('og_image', asset('images/mars-footwear-hero.png'))">
+    <meta name="twitter:image:alt" content="@yield('og_image_alt', 'Footwear from Mars Collection Kenya')">
 
     <!-- Additional SEO Meta Tags -->
     <meta name="geo.region" content="KE">
@@ -52,13 +54,16 @@
         $s_instagram = \App\Models\Setting::get('social_instagram', '');
         $s_facebook  = \App\Models\Setting::get('social_facebook', '');
         $s_twitter   = \App\Models\Setting::get('social_twitter', '');
-        $s_sameAs    = array_filter([$s_instagram, $s_facebook, $s_twitter]);
+        $s_tiktok    = \App\Models\Setting::get('social_tiktok', '');
+        $s_sameAs    = array_values(array_filter([$s_facebook, $s_instagram, $s_twitter, $s_tiktok]));
+        $storeUrl = route('home');
         $storeSchema = [
             '@context' => 'https://schema.org',
+            '@id' => $storeUrl . '#store',
             '@type' => 'OnlineStore',
             'name' => 'Mars Collection',
-            'description' => 'Shop sneakers, smart classics and everyday footwear from Mars Collection in Kenya.',
-            'url' => url('/'),
+            'description' => 'Shop sneakers, formal shoes and everyday footwear from Mars Collection in Kenya.',
+            'url' => $storeUrl,
             'logo' => \App\Helpers\SettingsHelper::getBrandLogoUrl(),
             'image' => asset('images/mars-footwear-hero.png'),
             'areaServed' => ['@type' => 'Country', 'name' => 'Kenya'],

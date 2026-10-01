@@ -1,6 +1,6 @@
 @php($heroImage = ltrim($homeContent->get('home.hero.image', '/images/mars-footwear-hero.png'), '/'))
 <section class="relative isolate flex min-h-[620px] items-center overflow-hidden bg-[#080808] sm:min-h-[680px]">
-    <img src="{{ asset($heroImage) }}" alt="{{ $homeContent->get('home.hero.image_alt', 'Mars Collection footwear') }}" class="absolute inset-0 -z-20 h-full w-full object-cover object-center">
+    <img src="{{ asset($heroImage) }}" alt="{{ $homeContent->get('home.hero.image_alt', 'Mars Collection footwear') }}" fetchpriority="high" loading="eager" class="absolute inset-0 -z-20 h-full w-full object-cover object-center">
     <div class="absolute inset-0 -z-10 bg-gradient-to-r from-black via-black/80 to-black/10"></div>
     <div class="mx-auto w-full max-w-7xl px-5 py-20 sm:px-8 lg:px-12">
         <div class="max-w-2xl">

@@ -12,8 +12,8 @@ class BundleController extends Controller
         $bundles = Bundle::where('is_active', true)
             ->with('products')
             ->paginate(50);
-
-        return view('bundles.index', compact('bundles'));
+        $pageType = 'all';
+        return view('bundles.index', compact('bundles', 'pageType'));
     }
 
     public function featured()
@@ -21,9 +21,9 @@ class BundleController extends Controller
         $bundles = Bundle::where('is_featured', true)
             ->where('is_active', true)
             ->with('products')
-            ->get();
-
-        return view('bundles.featured', compact('bundles'));
+            ->paginate(50);
+        $pageType = 'featured';
+        return view('bundles.index', compact('bundles', 'pageType'));
     }
 
     public function trending()
@@ -31,13 +31,14 @@ class BundleController extends Controller
         $bundles = Bundle::where('is_trending', true)
             ->where('is_active', true)
             ->with('products')
-            ->get();
-
-        return view('bundles.trending', compact('bundles'));
+            ->paginate(50);
+        $pageType = 'trending';
+        return view('bundles.index', compact('bundles', 'pageType'));
     }
 
     public function show(Bundle $bundle)
     {
+        abort_unless($bundle->is_active, 404);
         $bundle->load('products.category', 'products.brand');
         return view('bundles.show', compact('bundle'));
     }

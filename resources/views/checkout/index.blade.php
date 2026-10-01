@@ -1,5 +1,8 @@
 @extends('layouts.app')
 
+@section('robots', 'noindex, nofollow')
+@section('canonical', route('checkout.store'))
+
 @section('content')
 <div class="bg-gray-50 min-h-screen py-8">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -234,4 +237,4 @@
 // Add form ID to the form
 document.querySelector('form').id = 'checkout-form';
 </script>
-@endsection 
+@endsection

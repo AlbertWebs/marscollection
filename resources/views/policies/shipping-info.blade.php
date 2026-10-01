@@ -1,6 +1,10 @@
 @extends('layouts.app')
 
 @section('title', 'Shipping Information - Mars Collection')
+@section('description', 'Read Mars Collection delivery and shipping information for online footwear orders in Nairobi and across Kenya, including dispatch and delivery expectations.')
+@section('keywords', 'shoe delivery Kenya, footwear shipping Nairobi, Mars Collection delivery information')
+@section('canonical', route('shipping-info'))
+@section('og_type', 'article')
 
 @section('content')
 <div class="min-h-screen bg-stone-50">

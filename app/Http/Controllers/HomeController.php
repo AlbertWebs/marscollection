@@ -18,7 +18,9 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $categories = Category::where('is_active', true)->orderBy('sort_order')->orderBy('name')->limit(6)->get();
+        $categories = Category::where('is_active', true)
+            ->whereHas('products', fn ($query) => $query->where('is_active', true))
+            ->orderBy('sort_order')->orderBy('name')->limit(6)->get();
         $trendingProducts = Product::where('is_active', true)->where('is_trending', true)->latest()->limit(5)->get();
         $featuredProducts = Product::where('is_active', true)->where('is_featured', true)->latest()->limit(10)->get();
         $homeContent = Setting::where('group', 'homepage')->pluck('value', 'key');
@@ -29,6 +31,7 @@ class HomeController extends Controller
     {
         $categories = Category::where('is_active', true)
             ->withCount(['products' => fn ($query) => $query->where('is_active', true)])
+            ->whereHas('products', fn ($query) => $query->where('is_active', true))
             ->orderBy('sort_order')
             ->orderBy('name')
             ->get();
@@ -157,16 +160,17 @@ class HomeController extends Controller
             return $entry;
         };
 
+        $categories = Category::where('is_active', true)
+            ->whereHas('products', fn ($query) => $query->where('is_active', true))
+            ->get();
+        $brands = Brand::where('is_active', true)
+            ->whereHas('products', fn ($query) => $query->where('is_active', true))
+            ->get();
+        $bundles = Bundle::where('is_active', true)->get();
+
         // 1. High-Priority Static & Core Pages
         $staticPages = [
             ['url' => route('home'), 'priority' => '1.0', 'changefreq' => 'daily'],
-            ['url' => route('products.index'), 'priority' => '0.9', 'changefreq' => 'daily'],
-            ['url' => route('appointments.create'), 'priority' => '0.9', 'changefreq' => 'weekly'],
-            ['url' => route('categories.index'), 'priority' => '0.85', 'changefreq' => 'daily'],
-            ['url' => route('brands.index'), 'priority' => '0.8', 'changefreq' => 'weekly'],
-            ['url' => route('bundles.index'), 'priority' => '0.85', 'changefreq' => 'weekly'],
-            ['url' => route('products.trending'), 'priority' => '0.85', 'changefreq' => 'daily'],
-            ['url' => route('products.featured'), 'priority' => '0.85', 'changefreq' => 'daily'],
             ['url' => route('about'), 'priority' => '0.7', 'changefreq' => 'monthly'],
             ['url' => route('contact'), 'priority' => '0.7', 'changefreq' => 'monthly'],
             ['url' => route('shipping-info'), 'priority' => '0.6', 'changefreq' => 'monthly'],
@@ -174,13 +178,30 @@ class HomeController extends Controller
             ['url' => route('privacy-policy'), 'priority' => '0.3', 'changefreq' => 'yearly'],
             ['url' => route('terms-of-service'), 'priority' => '0.3', 'changefreq' => 'yearly'],
         ];
+        if (Product::where('is_active', true)->exists()) {
+            $staticPages[] = ['url' => route('products.index'), 'priority' => '0.9', 'changefreq' => 'daily'];
+        }
+        if ($categories->isNotEmpty()) {
+            $staticPages[] = ['url' => route('categories.index'), 'priority' => '0.85', 'changefreq' => 'daily'];
+        }
+        if ($brands->isNotEmpty()) {
+            $staticPages[] = ['url' => route('brands.index'), 'priority' => '0.8', 'changefreq' => 'weekly'];
+        }
+        if ($bundles->isNotEmpty()) {
+            $staticPages[] = ['url' => route('bundles.index'), 'priority' => '0.85', 'changefreq' => 'weekly'];
+        }
+        if (Bundle::where('is_active', true)->where('is_featured', true)->exists()) {
+            $staticPages[] = ['url' => route('bundles.featured'), 'priority' => '0.8', 'changefreq' => 'weekly'];
+        }
+        if (Bundle::where('is_active', true)->where('is_trending', true)->exists()) {
+            $staticPages[] = ['url' => route('bundles.trending'), 'priority' => '0.8', 'changefreq' => 'weekly'];
+        }
 
         foreach ($staticPages as $page) {
             $xml .= $formatUrl($page['url'], null, $page['changefreq'], $page['priority']);
         }
 
         // 2. Active Categories
-        $categories = Category::where('is_active', true)->get();
         foreach ($categories as $category) {
             $catImages = [];
             if ($category->image) {
@@ -222,7 +243,6 @@ class HomeController extends Controller
         }
 
         // 4. Active Brands
-        $brands = Brand::where('is_active', true)->get();
         foreach ($brands as $brand) {
             $brandImages = [];
             if ($brand->logo) {
@@ -241,7 +261,6 @@ class HomeController extends Controller
         }
 
         // 5. Active Bundles
-        $bundles = Bundle::where('is_active', true)->get();
         foreach ($bundles as $bundle) {
             $bundleImages = [];
             $imgUrl = \App\Helpers\ImageHelper::getProductImageUrl($bundle->image);

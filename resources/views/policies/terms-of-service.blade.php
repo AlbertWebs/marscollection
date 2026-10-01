@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('title', 'Terms of Service - Mars Collection')
+@section('description', 'Read the terms that apply when browsing Mars Collection, ordering footwear online in Kenya or contacting our customer support team.')
+@section('canonical', route('terms-of-service'))
+@section('og_type', 'article')
 
 @section('content')
 <div class="min-h-screen bg-stone-50">

@@ -1,5 +1,8 @@
 @extends('layouts.app')
 
+@section('robots', 'noindex, nofollow')
+@section('canonical', route('cart.index'))
+
 @section('content')
 <div class="bg-white">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">

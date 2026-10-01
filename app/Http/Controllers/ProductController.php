@@ -41,8 +41,11 @@ class ProductController extends Controller
         $selectedCategory = $request->filled('category')
             ? $categories->firstWhere('slug', $request->category)
             : null;
+        $selectedBrand = $request->filled('brand')
+            ? $brands->firstWhere('slug', $request->brand)
+            : null;
 
-        return view('products.index', compact('products', 'categories', 'brands', 'selectedCategory'));
+        return view('products.index', compact('products', 'categories', 'brands', 'selectedCategory', 'selectedBrand'));
     }
 
     public function show(Request $request, Product $product)

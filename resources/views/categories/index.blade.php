@@ -3,6 +3,31 @@
 @section('title', $homeContent->get('home.categories.page.title', 'Shop Shoe Categories | Mars Collection'))
 @section('description', $homeContent->get('home.categories.page.description', 'Explore sneakers, formal shoes, loafers, flats, sandals and boots at Mars Collection.'))
 @section('keywords', 'shoe categories Kenya, sneakers, formal shoes, loafers, flats, sandals, boots')
+@section('canonical', route('categories.index'))
+@section('og_type', 'website')
+@section('og_image', asset('images/mars-footwear-hero.png'))
+@if($categories->isEmpty()) @section('robots', 'noindex, follow') @endif
+@php
+    $categoryCollectionSchema = [
+        '@context' => 'https://schema.org',
+        '@type' => 'CollectionPage',
+        'name' => $homeContent->get('home.categories.page.title', 'Shoe Categories in Kenya | Mars Collection'),
+        'description' => $homeContent->get('home.categories.page.description', 'Explore sneakers, formal shoes, loafers, flats, sandals and boots at Mars Collection Kenya.'),
+        'url' => route('categories.index'),
+        'mainEntity' => [
+            '@type' => 'ItemList',
+            'itemListElement' => $categories->values()->map(fn ($category, $index) => [
+                '@type' => 'ListItem',
+                'position' => $index + 1,
+                'name' => $category->name,
+                'url' => route('categories.show', $category),
+            ])->all(),
+        ],
+    ];
+@endphp
+@section('structured_data')
+<script type="application/ld+json">@json($categoryCollectionSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)</script>
+@endsection
 
 @section('content')
 <main class="min-h-screen bg-[#f7f6f3]">
@@ -25,11 +50,11 @@
         @if($categories->isNotEmpty())
             <div class="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
                 @foreach($categories as $category)
-                    <a href="{{ route('products.index', ['category' => $category->slug]) }}" class="group">
+                    <a href="{{ route('categories.show', $category) }}" class="group">
                         <article class="overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-black/5 transition duration-300 group-hover:-translate-y-1 group-hover:shadow-lg">
                             <div class="relative aspect-[4/5] overflow-hidden bg-stone-200">
                                 @if($category->image)
-                                    <img src="{{ $category->image }}" alt="{{ $category->name }} footwear" class="h-full w-full object-cover transition duration-500 group-hover:scale-105" loading="lazy">
+                                    <img src="{{ \App\Helpers\ImageHelper::getProductImageUrl($category->image) }}" alt="{{ $category->name }} footwear" class="h-full w-full object-cover transition duration-500 group-hover:scale-105" loading="lazy" decoding="async">
                                 @else
                                     <div class="flex h-full items-center justify-center bg-gradient-to-br from-stone-200 to-stone-400">
                                         <span class="text-5xl font-black text-white/70">{{ strtoupper(substr($category->name, 0, 1)) }}</span>

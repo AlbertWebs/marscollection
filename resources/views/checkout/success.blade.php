@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Order Placed - Mars Collection')
+@section('robots', 'noindex, nofollow')
 
 @section('content')
 <div class="bg-gray-50 min-h-screen py-12">

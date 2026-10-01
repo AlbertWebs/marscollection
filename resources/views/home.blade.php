@@ -6,6 +6,7 @@
 @section('canonical', route('home'))
 @section('og_type', 'website')
 @section('og_image', asset(ltrim($homeContent->get('home.hero.image', '/images/mars-footwear-hero.png'), '/')))
+@section('og_image_alt', $homeContent->get('home.hero.image_alt', 'Shop sneakers and footwear at Mars Collection Kenya'))
 
 @section('content')
     @include('components.hero')
@@ -22,7 +23,7 @@
                 </div>
                 <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
                     @foreach($categories as $category)
-                        <a href="{{ route('products.index', ['category' => $category->slug]) }}" class="group relative overflow-hidden rounded-xl bg-gray-100">
+                        <a href="{{ route('categories.show', $category) }}" class="group relative overflow-hidden rounded-xl bg-gray-100">
                             <img src="{{ \App\Helpers\ImageHelper::getProductImageUrl($category->image) }}" alt="{{ $category->name }}" class="aspect-[4/5] w-full object-cover transition duration-500 group-hover:scale-105" loading="lazy">
                             <span class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent px-3 pb-4 pt-10 text-sm font-semibold text-white sm:text-base">{{ $category->name }}</span>
                         </a>

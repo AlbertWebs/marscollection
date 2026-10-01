@@ -37,6 +37,7 @@
                     <div>
                         <h5 class="text-xs sm:text-sm font-bold text-white uppercase tracking-wider">Lipa Na M-Pesa</h5>
                         <p class="text-[11px] sm:text-xs text-gray-400 mt-0.5">Till, STK Push & Paybill accepted</p>
+                        <p class="text-[11px] sm:text-xs text-gray-300 mt-1">Till <span class="font-semibold text-white">8625564</span> · Mars Collections</p>
                     </div>
                 </div>
 

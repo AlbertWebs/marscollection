@@ -17,7 +17,7 @@
                 @foreach([1,2,3] as $_)
                     @foreach($row1 as $brand)
                     @php $logoUrl = \App\Helpers\ImageHelper::getProductImageUrl($brand->logo); @endphp
-                    <a href="{{ route('products.index', ['brand' => $brand->slug]) }}"
+                    <a href="{{ route('brands.show', $brand) }}"
                        class="brand-card flex-shrink-0 relative rounded-md overflow-hidden group"
                        style="width: 150px; height: 100px;">
                         <img src="{{ $logoUrl }}" alt="{{ $brand->name }}"
@@ -38,7 +38,7 @@
                 @foreach([1,2,3] as $_)
                     @foreach($row2 as $brand)
                     @php $logoUrl = \App\Helpers\ImageHelper::getProductImageUrl($brand->logo); @endphp
-                    <a href="{{ route('products.index', ['brand' => $brand->slug]) }}"
+                    <a href="{{ route('brands.show', $brand) }}"
                        class="brand-card flex-shrink-0 relative rounded-md overflow-hidden group"
                        style="width: 150px; height: 100px;">
                         <img src="{{ $logoUrl }}" alt="{{ $brand->name }}"

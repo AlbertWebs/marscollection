@@ -9,13 +9,14 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             @php
-                $featuredBundles = App\Models\Bundle::where('is_featured', true)->limit(4)->get();
+                $featuredBundles = App\Models\Bundle::where('is_featured', true)->where('is_active', true)->limit(4)->get();
             @endphp
 
             @foreach($featuredBundles as $bundle)
                 @include('components.bundle-card', [
                     'bundle' => [
                         'id' => $bundle->id,
+                        'slug' => $bundle->slug,
                         'name' => $bundle->name,
                         'category' => $bundle->category,
                         'price' => $bundle->formatted_price,

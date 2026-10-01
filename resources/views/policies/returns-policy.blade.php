@@ -1,6 +1,10 @@
 @extends('layouts.app')
 
 @section('title', 'Returns Policy - Mars Collection')
+@section('description', 'Review the Mars Collection footwear returns policy, eligibility, return process and customer support details for orders in Kenya.')
+@section('keywords', 'shoe returns Kenya, footwear return policy, Mars Collection returns')
+@section('canonical', route('returns-policy'))
+@section('og_type', 'article')
 
 @section('content')
 <div class="min-h-screen bg-stone-50">

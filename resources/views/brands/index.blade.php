@@ -1,6 +1,33 @@
 @extends('layouts.app')
 
-@section('title', 'Brands - Mars Collection')
+@section('title', 'Shoe Brands in Kenya | Mars Collection')
+@section('description', 'Shop footwear by brand at Mars Collection Kenya. Browse available shoe labels, compare styles and find your next pair.')
+@section('keywords', 'shoe brands Kenya, footwear brands Nairobi, buy branded shoes Kenya, Mars Collection')
+@section('canonical', route('brands.index'))
+@section('og_type', 'website')
+@section('og_image', asset('images/mars-footwear-hero.png'))
+@if($brands->isEmpty()) @section('robots', 'noindex, follow') @endif
+@php
+    $brandCollectionSchema = [
+        '@context' => 'https://schema.org',
+        '@type' => 'CollectionPage',
+        'name' => 'Shoe Brands in Kenya | Mars Collection',
+        'description' => 'Browse footwear brands and shop available styles at Mars Collection Kenya.',
+        'url' => route('brands.index'),
+        'mainEntity' => [
+            '@type' => 'ItemList',
+            'itemListElement' => $brands->values()->map(fn ($brand, $index) => [
+                '@type' => 'ListItem',
+                'position' => $index + 1,
+                'name' => $brand->name,
+                'url' => route('brands.show', $brand),
+            ])->all(),
+        ],
+    ];
+@endphp
+@section('structured_data')
+<script type="application/ld+json">@json($brandCollectionSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)</script>
+@endsection
 
 @section('content')
 
@@ -21,12 +48,12 @@
             @php
                 $logoUrl = $brand->logo ? \App\Helpers\ImageHelper::getProductImageUrl($brand->logo) : null;
             @endphp
-            <a href="{{ route('products.index', ['brand' => $brand->slug]) }}"
+            <a href="{{ route('brands.show', $brand) }}"
                class="group relative rounded-lg overflow-hidden block"
                style="height: 120px;">
                 @if($logoUrl)
                     <img src="{{ $logoUrl }}" alt="{{ $brand->name }}"
-                         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy" decoding="async">
                 @else
                     <div class="w-full h-full bg-gray-200 flex items-center justify-center">
                         <span class="text-gray-400 font-bold text-lg uppercase">{{ Str::limit($brand->name, 2) }}</span>

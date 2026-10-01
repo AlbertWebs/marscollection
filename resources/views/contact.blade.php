@@ -13,10 +13,11 @@
 @endphp
 
 @section('title', 'Contact Mars Collection Kenya | Product & Order Support')
-@section('description', 'Contact Mars Collection in Kenya for help with shoes, sizing, orders and delivery. Call 0726243706 or email info@marscollection.co.ke.')
+@section('description', 'Contact Mars Collection in Kenya for help with shoes, sizing, orders and delivery. Call ' . $contactPhone . ' or email ' . $contactEmail . '.')
 @section('keywords', 'contact Mars Collection, Mars Collection Kenya contact, shoe store customer support Kenya, order help Mars Collection')
 @section('canonical', route('contact'))
 @section('og_type', 'website')
+@section('og_image', asset('images/mars-footwear-hero.png'))
 
 @section('content')
 <div class="min-h-screen bg-[#f7f6f3]">

@@ -151,7 +151,7 @@
                     <!-- Category Links with Horizontal Scroll -->
                     <div aria-label="Browse product categories" class="flex min-w-0 flex-1 gap-0 overflow-x-auto overscroll-x-contain touch-pan-x scrollbar-hide">
                         @foreach($activeCategories as $category)
-                        <a href="{{ route('products.index', ['category' => $category->slug]) }}"
+                        <a href="{{ route('categories.show', $category) }}"
                         class="inline-flex items-center px-4 py-2 h-10 text-sm font-medium {{ request('category') === $category->slug ? 'text-amber-600 ' : 'text-gray-700 hover:text-amber-600 hover:bg-amber-100' }} transition-all duration-200 whitespace-nowrap flex-shrink-0">
                                 {{ $category->name }}
                             </a>
@@ -187,7 +187,7 @@
                 <a href="{{ route('products.index') }}" class="{{ request()->routeIs('products.*') ? 'text-amber-600' : 'text-gray-700 hover:text-amber-600' }} {{ $mobileNavLinkClass }}">Shop footwear</a>
                 <a href="{{ route('categories.index') }}" class="{{ request()->routeIs('categories.*') ? 'text-amber-600' : 'text-gray-700 hover:text-amber-600' }} {{ $mobileNavLinkClass }}">All categories</a>
                 @foreach($activeCategories as $category)
-                    <a href="{{ route('products.index', ['category' => $category->slug]) }}" class="block border-b border-gray-100 py-2 pl-4 text-sm font-medium {{ request('category') === $category->slug ? 'text-amber-600' : 'text-gray-500 hover:text-amber-600' }}">{{ $category->name }}</a>
+                    <a href="{{ route('categories.show', $category) }}" class="block border-b border-gray-100 py-2 pl-4 text-sm font-medium {{ request()->route('category')?->slug === $category->slug || request('category') === $category->slug ? 'text-amber-600' : 'text-gray-500 hover:text-amber-600' }}">{{ $category->name }}</a>
                 @endforeach
                 <a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'text-amber-600' : 'text-gray-700 hover:text-amber-600' }} {{ $mobileNavLinkClass }}">Our Story</a>
                 <a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') || request()->routeIs('contact.submit') ? 'text-amber-600' : 'text-gray-700 hover:text-amber-600' }} {{ $mobileNavLinkClass }}">Contact</a>

@@ -2,7 +2,8 @@
 
 @php
     $plainProductDescription = trim(preg_replace('/\s+/', ' ', html_entity_decode(strip_tags($product->description ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8')));
-    $seoDescription = $product->meta_description ?: \Illuminate\Support\Str::limit($plainProductDescription ?: ($product->name . ' from Mars Collection. Choose your size and color, then order online in Kenya.'), 155);
+    $descriptionSource = $product->meta_description ?: $plainProductDescription ?: ($product->name . ' from Mars Collection. Choose your size and color, then order online in Kenya.');
+    $seoDescription = \Illuminate\Support\Str::limit(trim(preg_replace('/\s+/', ' ', strip_tags($descriptionSource))), 155);
     $productReviews = $product->reviews()->latest()->take(3)->get();
     $hasRealReviews = $product->reviews_count > 0 && $productReviews->count() > 0;
     $productSchema = [
@@ -15,22 +16,25 @@
         'sku' => (string) ($product->sku ?: $product->id),
         'brand' => ['@type' => 'Brand', 'name' => $product->brand->name ?? 'Mars Collection'],
         'category' => $product->category->name ?? 'Footwear',
-        'offers' => [
+    ];
+    if (is_numeric($product->price) && (float) $product->price > 0) {
+        $productSchema['offers'] = [
             '@type' => 'Offer',
             'price' => (float) $product->price,
             'priceCurrency' => 'KES',
             'availability' => $product->stock_quantity > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
             'url' => route('products.show', $product),
             'seller' => ['@type' => 'Organization', 'name' => 'Mars Collection'],
-        ],
-    ];
+        ];
+    }
+    if (!$productSchema['image']) unset($productSchema['image']);
     if (!empty($product->colors)) {
         $productSchema['color'] = array_map(fn ($color) => trim(explode(':', $color, 2)[0]), $product->colors);
     }
     if (!empty($product->variants)) {
         $productSchema['size'] = collect($product->variants)->pluck('label')->filter()->values()->all();
     }
-    if ($hasRealReviews) {
+    if ($hasRealReviews && $product->average_rating >= 1 && $product->average_rating <= 5) {
         $productSchema['aggregateRating'] = [
             '@type' => 'AggregateRating',
             'ratingValue' => (string) $product->average_rating,
@@ -39,15 +43,26 @@
             'worstRating' => '1',
         ];
     }
+    $includeProductSchema = isset($productSchema['offers']) || isset($productSchema['aggregateRating']);
+    $breadcrumbItems = [
+        ['@type' => 'ListItem', 'position' => 1, 'name' => 'Home', 'item' => route('home')],
+        ['@type' => 'ListItem', 'position' => 2, 'name' => 'Shoes', 'item' => route('products.index')],
+    ];
+    if ($product->category && $product->category->is_active) {
+        $breadcrumbItems[] = ['@type' => 'ListItem', 'position' => count($breadcrumbItems) + 1, 'name' => $product->category->name, 'item' => route('categories.show', $product->category)];
+    }
+    $breadcrumbItems[] = ['@type' => 'ListItem', 'position' => count($breadcrumbItems) + 1, 'name' => $product->name, 'item' => route('products.show', $product)];
+    $breadcrumbSchema = ['@context' => 'https://schema.org', '@type' => 'BreadcrumbList', 'itemListElement' => $breadcrumbItems];
 @endphp
 
-@section('title', $product->name . ' | Mars Collection Kenya')
+@section('title', \Illuminate\Support\Str::limit($product->name, 39, '') . ' | Mars Collection Kenya')
 @section('description', $seoDescription)
 @section('keywords', $product->name . ' Kenya, buy shoes online, ' . ($product->category->name ?? 'footwear') . ' Nairobi, Mars Collection shoes')
 @section('canonical', route('products.show', $product))
+@section('og_image_alt', $product->name . ' by ' . ($product->brand->name ?? 'Mars Collection'))
 
 @section('og_type', 'product')
-@section('og_image', \App\Helpers\ImageHelper::getProductImageUrl($product->image))
+@section('og_image', \App\Helpers\ImageHelper::getProductImageUrl($product->image) ?: asset('images/mars-footwear-hero.png'))
 
 @section('breadcrumbs')
     <a href="{{ route('home') }}">Home</a>
@@ -55,21 +70,22 @@
     <a href="{{ route('products.index') }}">Products</a>
     <span>/</span>
     @if($product->category)
-        <a href="{{ route('products.index', ['category' => $product->category->slug]) }}">{{ $product->category->name }}</a>
+        <a href="{{ route('categories.show', $product->category) }}">{{ $product->category->name }}</a>
         <span>/</span>
     @endif
     <span class="text-gray-500">{{ $product->name }}</span>
 @endsection
 
 @section('structured_data')
-<script type="application/ld+json">@json($productSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)</script>
+@if($includeProductSchema)<script type="application/ld+json">@json($productSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)</script>@endif
+<script type="application/ld+json">@json($breadcrumbSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)</script>
 @endsection
 
 @section('content')
 <div class="bg-white min-h-screen py-8">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Breadcrumb -->
-        <nav class="mb-8">
+        <nav aria-label="Breadcrumb" class="mb-8">
             <ol class="flex items-center space-x-2 text-sm text-gray-600">
                 <li><a href="{{ route('home') }}" class="hover:text-amber-600 transition-colors">Home</a></li>
                 <li class="flex items-center">
@@ -78,6 +94,12 @@
                     </svg>
                     <a href="{{ route('products.index') }}" class="hover:text-amber-600 transition-colors">Products</a>
                 </li>
+                @if($product->category && $product->category->is_active)
+                    <li class="flex items-center">
+                        <svg class="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
+                        <a href="{{ route('categories.show', $product->category) }}" class="hover:text-amber-600 transition-colors">{{ $product->category->name }}</a>
+                    </li>
+                @endif
                 <li class="flex items-center">
                     <svg class="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                         <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
@@ -267,7 +289,7 @@
                     @if($product->category)
                         <div class="flex items-center space-x-1">
                             <span class="text-gray-500">Category:</span>
-                            <a href="{{ route('products.index', ['category' => $product->category->slug]) }}" 
+                            <a href="{{ route('categories.show', $product->category) }}"
                                class="text-amber-600 hover:text-amber-700 font-medium">
                                 {{ $product->category->name }}
                             </a>
@@ -432,15 +454,17 @@
             </div>
         </div>
 
-        @if($product->description)
-            <section class="mt-14 border-t border-stone-200 pt-10" aria-labelledby="product-description-heading">
+        <section class="mt-14 border-t border-stone-200 pt-10" aria-labelledby="product-description-heading">
                 <p class="text-xs font-semibold uppercase tracking-[0.24em] text-amber-700">Product details</p>
                 <h2 id="product-description-heading" class="mt-2 text-2xl font-bold tracking-tight text-stone-950">About {{ $product->name }}</h2>
-                <div class="prose prose-stone mt-5 max-w-3xl leading-7" itemprop="description">
-                    {!! $product->description !!}
+                <div class="prose prose-stone mt-5 max-w-3xl leading-7">
+                    @if($product->description)
+                        {!! $product->description !!}
+                    @else
+                        <p>Explore this {{ strtolower($product->category->name ?? 'footwear') }} from Mars Collection Kenya. Check the available options and product details above, then order online for delivery across Kenya.</p>
+                    @endif
                 </div>
-            </section>
-        @endif
+        </section>
 
         <!-- You May Also Like -->
         @if($similarProducts->count() > 0)
