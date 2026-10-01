@@ -161,7 +161,7 @@
                         <p class="mt-1 text-xs text-gray-500">Choose every size available. They use the product price; add a custom option below only if needed.</p>
                         <div class="mt-3 flex flex-wrap gap-2">
                             @foreach(range(35, 46) as $size)
-                                <label class="cursor-pointer"><input type="checkbox" class="quick-size sr-only" value="{{ $size }}"><span class="quick-size-chip inline-flex min-w-10 justify-center rounded border border-gray-300 bg-white px-3 py-2 text-sm">{{ $size }}</span></label>
+                                <label class="cursor-pointer"><input type="checkbox" name="quick_sizes[]" class="quick-size sr-only" value="{{ $size }}"><span class="quick-size-chip inline-flex min-w-10 justify-center rounded border border-gray-300 bg-white px-3 py-2 text-sm">{{ $size }}</span></label>
                             @endforeach
                         </div>
                     </div>

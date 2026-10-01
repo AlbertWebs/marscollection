@@ -78,6 +78,40 @@ class AdminController extends Controller
         return $type . ':' . mb_strtolower($value);
     }
 
+    private function productVariantsFromRequest(Request $request): ?array
+    {
+        $variants = json_decode((string) $request->input('variants', ''), true);
+        $variants = is_array($variants) ? $variants : [];
+        $selectedSizes = array_values(array_unique(array_map('strval', $request->input('quick_sizes', []))));
+
+        // The quick shoe size checkboxes are submitted as ordinary form fields,
+        // so saving sizes does not depend on client-side JSON synchronization.
+        $variants = array_values(array_filter($variants, function ($variant) use ($selectedSizes) {
+            if (!is_array($variant)) {
+                return false;
+            }
+            $label = (string) ($variant['label'] ?? '');
+            $isQuickShoeSize = preg_match('/^(3[5-9]|4[0-6])$/', $label) === 1;
+
+            return !$isQuickShoeSize || in_array($label, $selectedSizes, true);
+        }));
+
+        foreach ($selectedSizes as $size) {
+            $alreadyAdded = false;
+            foreach ($variants as $variant) {
+                if (strtolower((string) ($variant['label'] ?? '')) === strtolower($size)) {
+                    $alreadyAdded = true;
+                    break;
+                }
+            }
+            if (!$alreadyAdded) {
+                $variants[] = ['label' => $size, 'price' => null, 'original_price' => null];
+            }
+        }
+
+        return $variants ?: null;
+    }
+
     public function dashboard()
     {
         $analytics = $this->dashboardAnalyticsData();
@@ -237,6 +271,8 @@ class AdminController extends Controller
             'is_trending'    => 'boolean',
             'image'          => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'colors'         => 'nullable|string',
+            'quick_sizes'    => 'nullable|array',
+            'quick_sizes.*'  => 'integer|between:35,46',
             'extra_images'   => 'nullable|array|max:8',
             'extra_images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'variant_images' => 'nullable|array|max:30',
@@ -257,11 +293,7 @@ class AdminController extends Controller
             $validated['colors'] = array_map('trim', explode(',', $request->colors));
         }
 
-        // Handle variants JSON
-        if ($request->filled('variants')) {
-            $decoded = json_decode($request->variants, true);
-            $validated['variants'] = is_array($decoded) ? $decoded : null;
-        }
+        $validated['variants'] = $this->productVariantsFromRequest($request);
 
         // Handle extra images upload
         if ($request->hasFile('extra_images')) {
@@ -305,6 +337,8 @@ class AdminController extends Controller
             'is_trending'    => 'boolean',
             'image'          => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'colors'         => 'nullable|string',
+            'quick_sizes'    => 'nullable|array',
+            'quick_sizes.*'  => 'integer|between:35,46',
             'extra_images'   => 'nullable|array|max:8',
             'extra_images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'delete_extra_images' => 'nullable|array',
@@ -341,13 +375,7 @@ class AdminController extends Controller
             $validated['colors'] = null;
         }
 
-        // Handle variants JSON
-        if ($request->filled('variants')) {
-            $decoded = json_decode($request->variants, true);
-            $validated['variants'] = is_array($decoded) ? $decoded : null;
-        } else {
-            $validated['variants'] = null;
-        }
+        $validated['variants'] = $this->productVariantsFromRequest($request);
 
         // Extra images: keep only the ones the form sent back, plus any new uploads
         $keepPaths = $request->input('keep_extra_images', []);
