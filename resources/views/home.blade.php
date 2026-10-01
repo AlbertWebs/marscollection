@@ -3,7 +3,7 @@
 @section('title', $homeContent->get('home.title', 'Mars Collection | Sneakers & Shoes in Kenya'))
 @section('description', $homeContent->get('home.description', 'Shop sneakers, casual shoes, formal footwear and everyday favourites at Mars Collection. Find your fit and order online in Kenya.'))
 @section('keywords', $homeContent->get('home.keywords', 'shoes Kenya, sneakers Nairobi, buy shoes online Kenya, Mars Collection footwear'))
-@section('canonical', url('/'))
+@section('canonical', route('home'))
 @section('og_type', 'website')
 @section('og_image', asset(ltrim($homeContent->get('home.hero.image', '/images/mars-footwear-hero.png'), '/')))
 

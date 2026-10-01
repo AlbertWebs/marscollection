@@ -13,7 +13,8 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\TrafficController;
 
 // Home and general pages
-Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::view('/', 'maintenance')->name('maintenance');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/about', [HomeController::class, 'about'])->name('about');
 Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
 Route::post('/contact', [HomeController::class, 'submitContact'])->name('contact.submit');
