@@ -1,7 +1,7 @@
 @php
     $phone    = \App\Models\Setting::get('contact_phone_primary', '');
     $email    = \App\Models\Setting::get('contact_email_primary', '');
-    $address  = \App\Models\Setting::get('contact_address_city', 'Nairobi, Kenya');
+    $address  = \App\Models\Setting::get('contact_address_full', 'Mars Collection, Nairobi, Kenya');
     $facebook = \App\Models\Setting::get('social_facebook', '');
     $instagram= \App\Models\Setting::get('social_instagram', '');
     $twitter  = \App\Models\Setting::get('social_twitter', '');
