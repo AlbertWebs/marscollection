@@ -203,9 +203,15 @@
                            class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 shadow-sm transition focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-200">
                 </div>
                 <div>
-                    <label for="social_twitter" class="block text-sm font-medium text-gray-700">Twitter URL</label>
+                    <label for="social_twitter" class="block text-sm font-medium text-gray-700">X URL</label>
                     <input type="url" id="social_twitter" name="social_twitter" 
                            value="{{ $socialSettings->where('key', 'social_twitter')->first()->value ?? '' }}"
+                           class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 shadow-sm transition focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-200">
+                </div>
+                <div>
+                    <label for="social_tiktok" class="block text-sm font-medium text-gray-700">TikTok URL</label>
+                    <input type="url" id="social_tiktok" name="social_tiktok"
+                           value="{{ $socialSettings->where('key', 'social_tiktok')->first()->value ?? '' }}"
                            class="mt-1 block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 shadow-sm transition focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-200">
                 </div>
             </div>

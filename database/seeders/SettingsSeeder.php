@@ -34,6 +34,7 @@ class SettingsSeeder extends Seeder
         Setting::set('social_facebook', 'https://www.facebook.com/people/Mars-collections/100081227420740/', 'Facebook URL', 'social', 'string');
         Setting::set('social_instagram', '', 'Instagram URL', 'social', 'string');
         Setting::set('social_twitter', '', 'Twitter URL', 'social', 'string');
+        Setting::set('social_tiktok', '', 'TikTok URL', 'social', 'string');
 
         // Email Settings
         Setting::set('email_admin', 'admin@marscollection.co.ke', 'Admin Email', 'email', 'string');

@@ -5,7 +5,7 @@
 
 <header class="sticky top-0 z-50 border-b border-white/10 bg-[#080808] text-white shadow-lg shadow-black/10">
     {{-- Top Announcement Bar --}}
-    <div class="bg-gray-950 text-white text-[11px] sm:text-xs py-2 px-4 border-b border-gray-800">
+    <div id="announcement-bar" class="max-h-20 overflow-hidden border-b border-gray-800 bg-gray-950 px-4 py-2 text-[11px] text-white opacity-100 transition-all duration-300 sm:text-xs">
         <div class="container mx-auto flex items-center justify-between gap-4">
             <div class="flex items-center gap-2 overflow-hidden whitespace-nowrap mx-auto md:mx-0">
                     <span class="inline-flex items-center gap-1.5 font-medium text-amber-300">
@@ -55,12 +55,12 @@
             </div>
             
             <!-- Navigation -->
-            <nav class="hidden md:flex space-x-8">
-                <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'text-amber-300' : 'text-gray-200 hover:text-amber-300' }} {{ $navLinkClass }}">Home</a>
-                <a href="{{ route('products.index') }}" class="{{ request()->routeIs('products.*') ? 'text-amber-300' : 'text-gray-200 hover:text-amber-300' }} {{ $navLinkClass }}">Shop</a>
-                <a href="{{ route('categories.index') }}" class="{{ request()->routeIs('categories.*') ? 'text-amber-300' : 'text-gray-200 hover:text-amber-300' }} {{ $navLinkClass }}">Categories</a>
-                <a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'text-amber-300' : 'text-gray-200 hover:text-amber-300' }} {{ $navLinkClass }}">Our Story</a>
-                <a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') || request()->routeIs('contact.submit') ? 'text-amber-300' : 'text-gray-200 hover:text-amber-300' }} {{ $navLinkClass }}">Contact</a>
+            <nav class="hidden lg:flex items-center gap-0 xl:gap-2">
+                <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'text-amber-300' : 'text-gray-200 hover:text-amber-300' }} px-2 xl:px-3 py-2 text-sm font-medium transition-colors">Home</a>
+                <a href="{{ route('products.index') }}" class="{{ request()->routeIs('products.*') ? 'text-amber-300' : 'text-gray-200 hover:text-amber-300' }} px-2 xl:px-3 py-2 text-sm font-medium transition-colors">Shop</a>
+                <a href="{{ route('categories.index') }}" class="{{ request()->routeIs('categories.*') ? 'text-amber-300' : 'text-gray-200 hover:text-amber-300' }} px-2 xl:px-3 py-2 text-sm font-medium transition-colors">Categories</a>
+                <a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'text-amber-300' : 'text-gray-200 hover:text-amber-300' }} px-2 xl:px-3 py-2 text-sm font-medium transition-colors">Our Story</a>
+                <a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') || request()->routeIs('contact.submit') ? 'text-amber-300' : 'text-gray-200 hover:text-amber-300' }} px-2 xl:px-3 py-2 text-sm font-medium transition-colors">Contact</a>
             </nav>
             
             <!-- User Actions -->
@@ -70,7 +70,7 @@
                     <div class="relative">
                         <input type="text" name="search" placeholder="Search products..." 
                                value="{{ request('search') }}"
-                               class="w-64 pl-10 pr-4 py-2 border border-gray-700 bg-gray-900 text-white placeholder-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent">
+                               class="w-36 lg:w-40 xl:w-56 2xl:w-64 pl-10 pr-3 py-2 border border-gray-700 bg-gray-900 text-white placeholder-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -126,7 +126,7 @@
                 </div>
                 
                 <!-- Mobile menu button -->
-                <button id="mobile-menu-button" class="md:hidden text-gray-700 hover:text-amber-600 p-2 transition-colors duration-200">
+                <button id="mobile-menu-button" aria-label="Open menu" aria-controls="mobile-menu" aria-expanded="false" class="lg:hidden text-white hover:text-amber-300 p-2 transition-colors duration-200">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                     </svg>
@@ -142,14 +142,14 @@
     @if($activeCategories->count() > 0)
         <div class="border-gray-100">
             <div class="container mx-auto px-0 sm:px-6 lg:px-8">
-                <div class="h-10 flex items-center gap-0 sm:gap-4">
+                <div class="relative h-10 flex items-center gap-0 sm:gap-3">
                     <!-- Categories Label -->
                     <div class="bg-amber-600 text-white px-3 py-2 flex-shrink-0">
                         <a href="{{ route('categories.index') }}" class="text-xs font-medium text-white uppercase tracking-wide">Categories</a>
                     </div>
                     
                     <!-- Category Links with Horizontal Scroll -->
-                    <div class="flex gap-0 overflow-x-auto scrollbar-hide flex-1">
+                    <div aria-label="Browse product categories" class="flex min-w-0 flex-1 gap-0 overflow-x-auto overscroll-x-contain touch-pan-x scrollbar-hide">
                         @foreach($activeCategories as $category)
                         <a href="{{ route('products.index', ['category' => $category->slug]) }}"
                         class="inline-flex items-center px-4 py-2 h-10 text-sm font-medium {{ request('category') === $category->slug ? 'text-amber-600 ' : 'text-gray-700 hover:text-amber-600 hover:bg-amber-100' }} transition-all duration-200 whitespace-nowrap flex-shrink-0">
@@ -169,7 +169,7 @@
     <div id="mobile-menu-backdrop" class="absolute inset-0 bg-black/50 transition-opacity duration-300"></div>
     
     <!-- Drawer -->
-    <div id="mobile-menu-drawer" class="absolute right-0 top-0 h-full w-80 bg-white shadow-xl transform translate-x-full transition-transform duration-300 ease-in-out">
+    <div id="mobile-menu-drawer" class="absolute right-0 top-0 flex h-full w-[min(20rem,100vw)] flex-col overflow-y-auto bg-white shadow-xl transform translate-x-full transition-transform duration-300 ease-in-out">
         <!-- Header -->
         <div class="flex items-center justify-between p-6 border-b border-gray-200">
             <h2 class="text-xl font-semibold text-gray-900">Menu</h2>
@@ -185,7 +185,10 @@
             <div class="space-y-4">
                 <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'text-amber-600' : 'text-gray-700 hover:text-amber-600' }} {{ $mobileNavLinkClass }}">Home</a>
                 <a href="{{ route('products.index') }}" class="{{ request()->routeIs('products.*') ? 'text-amber-600' : 'text-gray-700 hover:text-amber-600' }} {{ $mobileNavLinkClass }}">Shop footwear</a>
-                <a href="{{ route('categories.index') }}" class="{{ request()->routeIs('categories.*') ? 'text-amber-600' : 'text-gray-700 hover:text-amber-600' }} {{ $mobileNavLinkClass }}">Categories</a>
+                <a href="{{ route('categories.index') }}" class="{{ request()->routeIs('categories.*') ? 'text-amber-600' : 'text-gray-700 hover:text-amber-600' }} {{ $mobileNavLinkClass }}">All categories</a>
+                @foreach($activeCategories as $category)
+                    <a href="{{ route('products.index', ['category' => $category->slug]) }}" class="block border-b border-gray-100 py-2 pl-4 text-sm font-medium {{ request('category') === $category->slug ? 'text-amber-600' : 'text-gray-500 hover:text-amber-600' }}">{{ $category->name }}</a>
+                @endforeach
                 <a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'text-amber-600' : 'text-gray-700 hover:text-amber-600' }} {{ $mobileNavLinkClass }}">Our Story</a>
                 <a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') || request()->routeIs('contact.submit') ? 'text-amber-600' : 'text-gray-700 hover:text-amber-600' }} {{ $mobileNavLinkClass }}">Contact</a>
             </div>
@@ -230,6 +233,31 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Keep the main navigation visible while the announcement strip collapses on scroll.
+    const announcementBar = document.getElementById('announcement-bar');
+    if (announcementBar) {
+        let announcementCollapsed = false;
+        const updateAnnouncementBar = () => {
+            const scrollY = window.scrollY;
+            const shouldCollapse = announcementCollapsed ? scrollY > 8 : scrollY > 64;
+            if (shouldCollapse === announcementCollapsed) return;
+
+            announcementCollapsed = shouldCollapse;
+            announcementBar.classList.toggle('max-h-0', announcementCollapsed);
+            announcementBar.classList.toggle('opacity-0', announcementCollapsed);
+            announcementBar.classList.toggle('py-0', announcementCollapsed);
+            announcementBar.classList.toggle('border-b-0', announcementCollapsed);
+            announcementBar.classList.toggle('max-h-20', !announcementCollapsed);
+            announcementBar.classList.toggle('opacity-100', !announcementCollapsed);
+            announcementBar.classList.toggle('py-2', !announcementCollapsed);
+            announcementBar.classList.toggle('border-b', !announcementCollapsed);
+            announcementBar.setAttribute('aria-hidden', announcementCollapsed ? 'true' : 'false');
+        };
+
+        updateAnnouncementBar();
+        window.addEventListener('scroll', updateAnnouncementBar, { passive: true });
+    }
+
     // Mobile menu functionality
     const mobileMenuButton = document.getElementById('mobile-menu-button');
     const mobileMenu = document.getElementById('mobile-menu');
@@ -239,12 +267,14 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function openMobileMenu() {
         mobileMenu.classList.remove('hidden');
+        mobileMenuButton.setAttribute('aria-expanded', 'true');
         // Trigger reflow to ensure transition works
         mobileMenu.offsetHeight;
         mobileMenuDrawer.classList.remove('translate-x-full');
     }
     
     function closeMobileMenu() {
+        mobileMenuButton.setAttribute('aria-expanded', 'false');
         mobileMenuDrawer.classList.add('translate-x-full');
         setTimeout(() => {
             mobileMenu.classList.add('hidden');
