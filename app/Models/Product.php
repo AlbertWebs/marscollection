@@ -33,6 +33,7 @@ class Product extends Model
         'colors',
         'extra_images',
         'variants',
+        'variant_stock',
         'variant_images',
     ];
 
@@ -48,6 +49,7 @@ class Product extends Model
         'colors' => 'array',
         'extra_images' => 'array',
         'variants'     => 'array',
+        'variant_stock' => 'array',
         'variant_images' => 'array',
     ];
 
@@ -118,6 +120,20 @@ class Product extends Model
     public function getFormattedPriceAttribute()
     {
         return 'KES ' . number_format($this->price, 0);
+    }
+
+    public static function optionStockKey(?string $color = null, ?string $size = null): string
+    {
+        $parts = [];
+        if ($color !== null && trim($color) !== '') $parts[] = 'color:' . mb_strtolower(trim($color));
+        if ($size !== null && trim($size) !== '') $parts[] = 'size:' . mb_strtolower(trim($size));
+        return implode('|', $parts);
+    }
+
+    public function stockForOptions(?string $color = null, ?string $size = null): ?int
+    {
+        if (empty($this->variant_stock)) return null;
+        return (int) ($this->variant_stock[static::optionStockKey($color, $size)] ?? 0);
     }
 
     public function getFormattedOriginalPriceAttribute()

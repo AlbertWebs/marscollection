@@ -112,6 +112,40 @@ class AdminController extends Controller
         return $variants ?: null;
     }
 
+    private function productVariantStockFromRequest(Request $request): ?array
+    {
+        $submitted = json_decode((string) $request->input('variant_stock', ''), true);
+        if (!is_array($submitted)) return null;
+        if (!$submitted) return null;
+
+        $colors = array_filter(array_map(function ($entry) {
+            return mb_strtolower(trim(explode(':', (string) $entry, 2)[0]));
+        }, explode(',', (string) $request->input('colors', ''))));
+        $variants = json_decode((string) $request->input('variants', ''), true) ?: [];
+        $sizes = array_map(fn ($variant) => mb_strtolower(trim((string) ($variant['label'] ?? ''))), $variants);
+        $sizes = array_merge($sizes, array_map('strval', $request->input('quick_sizes', [])));
+        $sizes = array_values(array_unique(array_filter($sizes)));
+
+        if (!$colors && !$sizes) return null;
+
+        $keys = [];
+        if ($colors && $sizes) {
+            foreach ($colors as $color) foreach ($sizes as $size) $keys[] = "color:{$color}|size:{$size}";
+        } elseif ($colors) {
+            foreach ($colors as $color) $keys[] = "color:{$color}";
+        } else {
+            foreach ($sizes as $size) $keys[] = "size:{$size}";
+        }
+
+        $stock = [];
+        foreach ($keys as $key) {
+            $quantity = filter_var($submitted[$key] ?? 0, FILTER_VALIDATE_INT);
+            $stock[$key] = max(0, $quantity === false ? 0 : $quantity);
+        }
+
+        return $stock;
+    }
+
     public function dashboard()
     {
         $analytics = $this->dashboardAnalyticsData();
@@ -271,6 +305,7 @@ class AdminController extends Controller
             'is_trending'    => 'boolean',
             'image'          => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'colors'         => 'nullable|string',
+            'variant_stock'  => 'nullable|string|max:20000',
             'quick_sizes'    => 'nullable|array',
             'quick_sizes.*'  => 'integer|between:35,46',
             'extra_images'   => 'nullable|array|max:8',
@@ -294,6 +329,10 @@ class AdminController extends Controller
         }
 
         $validated['variants'] = $this->productVariantsFromRequest($request);
+        $validated['variant_stock'] = $this->productVariantStockFromRequest($request);
+        if ($validated['variant_stock'] !== null) {
+            $validated['stock_quantity'] = array_sum($validated['variant_stock']);
+        }
 
         // Handle extra images upload
         if ($request->hasFile('extra_images')) {
@@ -337,6 +376,7 @@ class AdminController extends Controller
             'is_trending'    => 'boolean',
             'image'          => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'colors'         => 'nullable|string',
+            'variant_stock'  => 'nullable|string|max:20000',
             'quick_sizes'    => 'nullable|array',
             'quick_sizes.*'  => 'integer|between:35,46',
             'extra_images'   => 'nullable|array|max:8',
@@ -376,6 +416,10 @@ class AdminController extends Controller
         }
 
         $validated['variants'] = $this->productVariantsFromRequest($request);
+        $validated['variant_stock'] = $this->productVariantStockFromRequest($request);
+        if ($validated['variant_stock'] !== null) {
+            $validated['stock_quantity'] = array_sum($validated['variant_stock']);
+        }
 
         // Extra images: keep only the ones the form sent back, plus any new uploads
         $keepPaths = $request->input('keep_extra_images', []);

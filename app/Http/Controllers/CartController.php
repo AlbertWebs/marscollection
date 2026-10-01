@@ -23,6 +23,28 @@ class CartController extends Controller
         });
     }
 
+    private function optionStockError(Product $product, ?string $color, ?string $size, int $quantity): ?string
+    {
+        if (empty($product->variant_stock)) return null;
+
+        $hasColors = !empty($product->colors);
+        $hasSizes = !empty($product->variants);
+        if ($hasColors && !$color) return 'Please select a color first.';
+        if ($hasSizes && !$size) return 'Please select a size first.';
+
+        if ($hasColors) {
+            $validColors = collect($product->colors)->map(fn ($item) => mb_strtolower(trim(explode(':', (string) $item, 2)[0])));
+            if (!$validColors->contains(mb_strtolower(trim((string) $color)))) return 'Please select a valid color.';
+        }
+        if ($hasSizes) {
+            $validSizes = collect($product->variants)->pluck('label')->map(fn ($item) => mb_strtolower(trim((string) $item)));
+            if (!$validSizes->contains(mb_strtolower(trim((string) $size)))) return 'Please select a valid size.';
+        }
+
+        $available = $product->stockForOptions($color, $size) ?? 0;
+        return $quantity > $available ? "Only {$available} available for this option." : null;
+    }
+
     public function index()
     {
         $cartItems = $this->currentCartQuery()
@@ -53,6 +75,10 @@ class CartController extends Controller
             ]);
 
             $product = Product::findOrFail($request->product_id);
+            $optionStockError = $this->optionStockError($product, $request->selected_color, $request->selected_size, (int) $request->quantity);
+            if ($optionStockError) {
+                return response()->json(['success' => false, 'message' => $optionStockError], 422);
+            }
             $availableSizes = collect($product->variants ?? [])->pluck('label')->map(fn ($size) => (string) $size)->all();
             // Product cards on the landing page support quick-add without choosing a size.
             // When a size is supplied (e.g. on the product page), still validate it.
@@ -73,6 +99,13 @@ class CartController extends Controller
                     }
                 })
                 ->first();
+
+            if ($cartItem) {
+                $optionStockError = $this->optionStockError($product, $request->selected_color, $request->selected_size, $cartItem->quantity + (int) $request->quantity);
+                if ($optionStockError) {
+                    return response()->json(['success' => false, 'message' => $optionStockError], 422);
+                }
+            }
 
             if ($cartItem) {
                 $cartItem->update([
@@ -119,6 +152,14 @@ class CartController extends Controller
             $request->validate([
                 'quantity' => 'required|integer|min:1'
             ]);
+
+            $cart->loadMissing('product');
+            if ($cart->product) {
+                $optionStockError = $this->optionStockError($cart->product, $cart->selected_color, $cart->selected_size, (int) $request->quantity);
+                if ($optionStockError) {
+                    return response()->json(['success' => false, 'message' => $optionStockError], 422);
+                }
+            }
 
             $cart->update(['quantity' => $request->quantity]);
 

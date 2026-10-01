@@ -347,7 +347,7 @@
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                             </svg>
-                            <span class="font-medium">In Stock ({{ $product->stock_quantity }} available)</span>
+                            <span id="option-stock-status" class="font-medium">In Stock ({{ $product->stock_quantity }} available)</span>
                         </div>
 
                         <!-- Color Selection -->
@@ -730,6 +730,7 @@ function handleColorSelect(name, btn) {
     circle.classList.add('border-amber-600', 'ring-2', 'ring-amber-200');
     circle.querySelector('.selected-check').classList.remove('hidden');
     updateOptionImage();
+    updateOptionStockStatus();
 }
 
 function handleAddWithColor(productId) {
@@ -755,6 +756,15 @@ function handleAddWithColor(productId) {
         return;
     }
 
+    if (Object.keys(optionInventory).length) {
+        const key = inventoryKey(color, size);
+        const available = Number(optionInventory[key] ?? 0);
+        if (available < 1) {
+            showToast('This color and size is out of stock', 'error');
+            return;
+        }
+    }
+
     addToCart(productId, 1, color, size);
 }
 
@@ -762,6 +772,31 @@ function handleAddWithColor(productId) {
 const basePrice         = {{ (float) $product->price }};
 const basePriceFormatted = 'KES {{ number_format($product->price, 0) }}';
 const baseOriginalPrice  = {{ $product->original_price ? (float)$product->original_price : 'null' }};
+const optionInventory = @json($product->variant_stock ?? []);
+
+function inventoryKey(color, size) {
+    const parts = [];
+    if (color) parts.push(`color:${color.trim().toLowerCase()}`);
+    if (size) parts.push(`size:${size.trim().toLowerCase()}`);
+    return parts.join('|');
+}
+
+function updateOptionStockStatus() {
+    if (!Object.keys(optionInventory).length) return;
+    const color = document.getElementById('selected-color-input')?.value?.trim() || null;
+    const size = document.querySelector('.variant-btn.border-amber-500')?.dataset.label?.trim() || null;
+    const needsColor = document.querySelector('.color-option-btn') !== null;
+    const needsSize = document.querySelector('.variant-btn') !== null;
+    const status = document.getElementById('option-stock-status');
+    if ((needsColor && !color) || (needsSize && !size)) {
+        status.textContent = 'Select options to check availability';
+        status.className = 'font-medium text-gray-600';
+        return;
+    }
+    const available = Number(optionInventory[inventoryKey(color, size)] ?? 0);
+    status.textContent = available > 0 ? `In Stock (${available} available)` : 'Out of stock for this option';
+    status.className = available > 0 ? 'font-medium text-green-600' : 'font-medium text-red-600';
+}
 
 function handleVariantChange(btn) {
     // Active pill state
@@ -803,6 +838,7 @@ function handleVariantChange(btn) {
     }
 
     updateOptionImage();
+    updateOptionStockStatus();
 }
 
 // Auto-select first (cheapest) variant on load

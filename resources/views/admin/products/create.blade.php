@@ -86,7 +86,7 @@
 
                 <!-- Stock -->
                 <div>
-                    <label for="stock_quantity" class="block text-sm font-medium text-gray-700">Stock Quantity</label>
+                    <label for="stock_quantity" class="block text-sm font-medium text-gray-700">Total Stock <span class="text-gray-400 font-normal">(calculated from option stock)</span></label>
                     <input type="number" id="stock_quantity" name="stock_quantity" value="{{ old('stock_quantity', 0) }}" min="0" required
                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-amber-500 focus:border-amber-500 sm:text-sm @error('stock_quantity') border-red-500 @enderror">
                     @error('stock_quantity')
@@ -189,6 +189,13 @@
                     </div>
                     <p class="mt-1 text-xs text-gray-400">Leave price blank to use the product's base price. Set "Was" price to show a strikethrough discount on the product page.</p>
                     @error('variants')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+                </div>
+
+                <div class="lg:col-span-2 rounded-lg border border-gray-200 p-4">
+                    <h3 class="text-sm font-semibold text-gray-900">Stock by color and size</h3>
+                    <p class="mt-1 text-xs text-gray-500">Choose colors and sizes above, then enter how many you have for each combination. Leave this empty for products without options.</p>
+                    <input type="hidden" id="variant-stock" name="variant_stock" value="{{ old('variant_stock') }}">
+                    <div id="variant-stock-rows" class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3"></div>
                 </div>
 
                 <!-- Images by shoe option -->
@@ -401,8 +408,9 @@ function previewOptionImage(input, preview) {
         });
     }
 
-    function sync() {
+function sync() {
         hiddenInput.value = colors.map(c => `${c.name}:${c.hex}`).join(',');
+        hiddenInput.dispatchEvent(new Event('change'));
     }
 
     function escapeHtml(str) {
@@ -467,6 +475,7 @@ function previewOptionImage(input, preview) {
 
     function sync() {
         hiddenInput.value = JSON.stringify(variants);
+        hiddenInput.dispatchEvent(new Event('change'));
     }
 
     function escapeHtmlV(str) {
@@ -594,5 +603,59 @@ document.querySelectorAll('.quick-size').forEach(box => {
     paint();
     box.addEventListener('change', paint);
 });
+
+(function () {
+    const stockInput = document.getElementById('variant-stock');
+    const rows = document.getElementById('variant-stock-rows');
+    const colorsInput = document.getElementById('colors');
+    const variantsInput = document.getElementById('variants');
+    let stock = {};
+    try { stock = JSON.parse(stockInput.value || '{}'); } catch (e) {}
+    let enabled = Object.keys(stock).length > 0;
+
+    function render() {
+        const colors = (colorsInput.value || '').split(',').map(value => value.split(':', 1)[0].trim().toLowerCase()).filter(Boolean);
+        let variants = [];
+        try { variants = JSON.parse(variantsInput.value || '[]'); } catch (e) {}
+        const sizes = [...new Set([
+            ...variants.map(variant => String(variant.label || '').trim().toLowerCase()),
+            ...[...document.querySelectorAll('.quick-size:checked')].map(box => box.value)
+        ].filter(Boolean))];
+        const options = colors.length && sizes.length
+            ? colors.flatMap(color => sizes.map(size => [`color:${color}|size:${size}`, `${color} / ${size}`]))
+            : colors.length ? colors.map(color => [`color:${color}`, color])
+            : sizes.map(size => [`size:${size}`, size]);
+        rows.innerHTML = '';
+        options.forEach(([key, label]) => {
+            const row = document.createElement('label');
+            row.className = 'flex items-center justify-between gap-3 rounded border border-gray-200 px-3 py-2 text-sm';
+            const title = document.createElement('span');
+            title.className = 'font-medium text-gray-700';
+            title.textContent = label;
+            const input = document.createElement('input');
+            input.type = 'number'; input.min = '0'; input.step = '1'; input.value = stock[key] ?? '';
+            input.className = 'w-24 rounded border-gray-300 text-sm';
+            input.setAttribute('aria-label', `Stock for ${label}`);
+            input.addEventListener('input', () => {
+                enabled = true;
+                options.forEach(([optionKey]) => { if (!(optionKey in stock)) stock[optionKey] = 0; });
+                stock[key] = Number(input.value) || 0;
+                stockInput.value = JSON.stringify(stock);
+                document.getElementById('stock_quantity').value = Object.values(stock).reduce((sum, qty) => sum + Number(qty || 0), 0);
+            });
+            row.append(title, input); rows.appendChild(row);
+        });
+        if (enabled) {
+            stock = Object.fromEntries(options.map(([key]) => [key, stock[key] ?? 0]));
+            stockInput.value = JSON.stringify(stock);
+            document.getElementById('stock_quantity').value = Object.values(stock).reduce((sum, qty) => sum + Number(qty || 0), 0);
+        }
+        document.getElementById('stock_quantity').readOnly = enabled;
+    }
+    colorsInput.addEventListener('change', render);
+    variantsInput.addEventListener('change', render);
+    document.querySelectorAll('.quick-size').forEach(box => box.addEventListener('change', render));
+    render();
+})();
 </script>
 @endsection
