@@ -11,10 +11,21 @@ use Illuminate\Support\Facades\Log;
 
 class CartController extends Controller
 {
+    private function currentCartQuery()
+    {
+        return Cart::where(function ($query) {
+            if (Auth::check()) {
+                $query->where('user_id', Auth::id())
+                    ->orWhere('session_id', session()->getId());
+            } else {
+                $query->where('session_id', session()->getId());
+            }
+        });
+    }
+
     public function index()
     {
-        $cartItems = Cart::where('user_id', Auth::id())
-            ->orWhere('session_id', session()->getId())
+        $cartItems = $this->currentCartQuery()
             ->with(['product', 'bundle'])
             ->get();
 
@@ -80,9 +91,7 @@ class CartController extends Controller
                 Log::info('New cart item created', ['cart_id' => $cartItem->id]);
             }
 
-            $cartCount = Cart::where('user_id', Auth::id())
-                ->orWhere('session_id', session()->getId())
-                ->sum('quantity');
+            $cartCount = $this->currentCartQuery()->sum('quantity');
 
             Log::info('Cart operation successful', ['cart_count' => $cartCount]);
 
@@ -116,9 +125,7 @@ class CartController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Cart updated successfully',
-                'cart_count' => Cart::where('user_id', Auth::id())
-                    ->orWhere('session_id', session()->getId())
-                    ->sum('quantity')
+                'cart_count' => $this->currentCartQuery()->sum('quantity')
             ]);
         } catch (\Exception $e) {
             Log::error('Error updating cart', [
@@ -142,9 +149,7 @@ class CartController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Item removed from cart',
-                'cart_count' => Cart::where('user_id', Auth::id())
-                    ->orWhere('session_id', session()->getId())
-                    ->sum('quantity')
+                'cart_count' => $this->currentCartQuery()->sum('quantity')
             ]);
         } catch (\Exception $e) {
             Log::error('Error removing from cart', [
@@ -162,9 +167,7 @@ class CartController extends Controller
     public function count()
     {
         try {
-            $count = Cart::where('user_id', Auth::id())
-                ->orWhere('session_id', session()->getId())
-                ->sum('quantity');
+            $count = $this->currentCartQuery()->sum('quantity');
 
             return response()->json(['count' => $count]);
         } catch (\Exception $e) {
@@ -179,8 +182,7 @@ class CartController extends Controller
     public function dropdown()
     {
         try {
-            $cartItems = Cart::where('user_id', Auth::id())
-                ->orWhere('session_id', session()->getId())
+            $cartItems = $this->currentCartQuery()
                 ->with(['product', 'bundle'])
                 ->get();
 
@@ -266,9 +268,7 @@ class CartController extends Controller
                 Log::info('New bundle cart item created', ['bundle_id' => $bundle->id, 'quantity' => $request->quantity]);
             }
 
-            $cartCount = Cart::where('user_id', Auth::id())
-                ->orWhere('session_id', session()->getId())
-                ->sum('quantity');
+            $cartCount = $this->currentCartQuery()->sum('quantity');
 
             Log::info('Bundle cart operation successful', ['cart_count' => $cartCount]);
 
