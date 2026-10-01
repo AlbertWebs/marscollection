@@ -156,6 +156,15 @@
 
                 <!-- Variants (Size / Type) Builder -->
                 <div class="lg:col-span-2">
+                    <div class="mb-4 rounded-md border border-gray-200 bg-gray-50 p-4">
+                        <p class="text-sm font-semibold text-gray-800">Quick select shoe sizes</p>
+                        <p class="mt-1 text-xs text-gray-500">Choose every size available. They use the product price; add a custom option below only if needed.</p>
+                        <div class="mt-3 flex flex-wrap gap-2">
+                            @foreach(range(35, 46) as $size)
+                                <label class="cursor-pointer"><input type="checkbox" class="quick-size sr-only" value="{{ $size }}"><span class="quick-size-chip inline-flex min-w-10 justify-center rounded border border-gray-300 bg-white px-3 py-2 text-sm">{{ $size }}</span></label>
+                            @endforeach
+                        </div>
+                    </div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                         Sizes and options <span class="text-gray-400 font-normal">Add shoe sizes or other product options. Each can use its own price or inherit the base price.</span>
                     </label>
@@ -553,5 +562,37 @@ function renderExtraPreviews() {
         reader.readAsDataURL(file);
     });
 }
+</script>
+<script>
+document.querySelector('form').addEventListener('submit', () => {
+    const input = document.getElementById('variants');
+    let variants = [];
+    try { variants = JSON.parse(input.value || '[]'); } catch (e) {}
+    const selected = new Set([...document.querySelectorAll('.quick-size:checked')].map(box => box.value));
+    variants = variants.filter(variant => {
+        const label = String(variant.label);
+        return !/^(3[5-9]|4[0-6])$/.test(label) || selected.has(label);
+    });
+    selected.forEach(label => {
+        if (!variants.some(variant => String(variant.label).toLowerCase() === label)) {
+            variants.push({ label, price: null, original_price: null });
+        }
+    });
+    input.value = JSON.stringify(variants);
+});
+const createSizeInput = document.getElementById('variants');
+let createSavedVariants = [];
+try { createSavedVariants = JSON.parse(createSizeInput.value || '[]'); } catch (e) {}
+document.querySelectorAll('.quick-size').forEach(box => {
+    box.checked = createSavedVariants.some(variant => String(variant.label).toLowerCase() === box.value);
+    const chip = box.nextElementSibling;
+    const paint = () => {
+        chip.classList.toggle('border-amber-600', box.checked);
+        chip.classList.toggle('bg-amber-50', box.checked);
+        chip.classList.toggle('text-amber-700', box.checked);
+    };
+    paint();
+    box.addEventListener('change', paint);
+});
 </script>
 @endsection
