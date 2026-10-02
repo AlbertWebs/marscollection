@@ -25,6 +25,15 @@
     if (!is_array($productColors) && $productColors) {
         $productColors = json_decode($productColors, true);
     }
+    $productVariants = is_object($product) ? $product->variants : ($product['variants'] ?? []);
+    if (is_string($productVariants)) $productVariants = json_decode($productVariants, true) ?: [];
+    $productSizes = collect(is_array($productVariants) ? $productVariants : [])
+        ->pluck('label')->filter(fn ($size) => trim((string) $size) !== '')
+        ->map(fn ($size) => (string) $size)->values()->all();
+    $productVariantStock = is_object($product) ? $product->variant_stock : ($product['variant_stock'] ?? []);
+    if (is_string($productVariantStock)) $productVariantStock = json_decode($productVariantStock, true) ?: [];
+    $productVariantStock = is_array($productVariantStock) ? $productVariantStock : [];
+    $productStock = is_object($product) ? (int) $product->stock_quantity : (int) ($product['stock_quantity'] ?? 0);
     
     // Handle image URL using helper
     $imageUrl = \App\Helpers\ImageHelper::getProductImageUrl($productImage);
@@ -58,9 +67,13 @@
             
             <!-- Hover Overlay with Add to Cart Button -->
             <div class="absolute inset-0 bg-gray-900/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                <button onclick="event.preventDefault(); handleCardAddToCart(this, {{ $productId }})" 
+                <button onclick="event.preventDefault(); event.stopPropagation(); handleCardAddToCart(this, {{ $productId }})"
                         class="card-add-btn bg-white text-gray-900 px-6 py-3 rounded-md font-semibold hover:bg-amber-600 hover:text-white transition-colors duration-200 flex items-center space-x-2 shadow-lg"
                         data-selected-color=""
+                        data-product-name="{{ $productName }}"
+                        data-size-options="{{ json_encode($productSizes) }}"
+                        data-variant-stock="{{ json_encode($productVariantStock) }}"
+                        data-base-stock="{{ $productStock }}"
                         aria-label="Add {{ $productName }} to cart">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>

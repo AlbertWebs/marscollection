@@ -137,6 +137,30 @@
     <!-- Toast Container -->
     <div id="toast-container" class="fixed bottom-4 left-4 z-50 space-y-2 max-w-sm"></div>
 
+    <!-- Quick size picker used by product cards -->
+    <div id="card-size-picker" class="fixed inset-0 z-[100010] hidden items-end justify-center bg-gray-950/60 p-0 opacity-0 backdrop-blur-sm transition-opacity duration-200 sm:items-center sm:p-4" aria-hidden="true">
+        <button type="button" id="card-size-picker-backdrop" class="absolute inset-0 cursor-default" aria-label="Close size picker"></button>
+        <section id="card-size-picker-panel" role="dialog" aria-modal="true" aria-labelledby="card-size-picker-title" class="relative z-10 w-full max-w-md translate-y-8 rounded-t-3xl bg-white p-6 shadow-2xl transition-transform duration-300 sm:translate-y-4 sm:rounded-3xl">
+            <div class="mx-auto mb-5 h-1 w-10 rounded-full bg-gray-200 sm:hidden"></div>
+            <div class="flex items-start justify-between gap-4">
+                <div class="min-w-0">
+                    <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-amber-700">Quick add</p>
+                    <h2 id="card-size-picker-title" class="mt-1 text-xl font-black text-gray-950">Choose your size</h2>
+                    <p id="card-size-picker-product" class="mt-1 truncate text-sm text-gray-500"></p>
+                </div>
+                <button type="button" id="card-size-picker-close" class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gray-100 text-gray-600 transition hover:bg-gray-200" aria-label="Close size picker">
+                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m6 6 12 12M18 6 6 18"/></svg>
+                </button>
+            </div>
+            <div id="card-size-picker-options" class="mt-6 grid grid-cols-4 gap-2.5" aria-label="Available shoe sizes"></div>
+            <p id="card-size-picker-stock-note" class="mt-3 text-xs text-gray-500">Tap a size to select it.</p>
+            <button type="button" id="card-size-picker-add" disabled class="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gray-950 px-5 py-3.5 text-sm font-bold text-white shadow-lg transition hover:bg-amber-500 hover:text-gray-950 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400 disabled:shadow-none">
+                Add selected size to cart
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-6-6 6 6-6 6"/></svg>
+            </button>
+        </section>
+    </div>
+
     <!-- Structured Data for Current Page -->
     @yield('structured_data')
 
@@ -355,8 +379,113 @@
                 return;
             }
 
+            let sizes = [];
+            let variantStock = {};
+            try { sizes = JSON.parse(btn.dataset.sizeOptions || '[]'); } catch (_) {}
+            try { variantStock = JSON.parse(btn.dataset.variantStock || '{}'); } catch (_) {}
+            if (sizes.length) {
+                openCardSizePicker(btn, productId, color, sizes, variantStock, Number(btn.dataset.baseStock || 0));
+                return;
+            }
+
             addToCart(productId, 1, color);
         }
+
+        let cardSizeSelection = null;
+        let cardSizePickerCloseTimer = null;
+        function openCardSizePicker(button, productId, color, sizes, variantStock, baseStock) {
+            const picker = document.getElementById('card-size-picker');
+            const panel = document.getElementById('card-size-picker-panel');
+            const options = document.getElementById('card-size-picker-options');
+            const addButton = document.getElementById('card-size-picker-add');
+            const stockNote = document.getElementById('card-size-picker-stock-note');
+            const normalizedColor = (color || '').trim().toLowerCase();
+            window.clearTimeout(cardSizePickerCloseTimer);
+            cardSizeSelection = { productId, color, size: null, trigger: button };
+            document.getElementById('card-size-picker-product').textContent = button.dataset.productName || '';
+            options.replaceChildren();
+            addButton.disabled = true;
+
+            const hasInventory = Object.keys(variantStock || {}).length > 0;
+            sizes.forEach(rawSize => {
+                const size = String(rawSize).trim();
+                if (!size) return;
+                const sizeKey = size.toLowerCase();
+                const stockKey = normalizedColor
+                    ? `color:${normalizedColor}|size:${sizeKey}`
+                    : `size:${sizeKey}`;
+                const stock = hasInventory
+                    ? Number(variantStock[stockKey] ?? 0)
+                    : baseStock;
+                const available = !hasInventory || stock > 0;
+                const option = document.createElement('button');
+                option.type = 'button';
+                option.textContent = size;
+                option.dataset.size = size;
+                option.disabled = !available;
+                option.setAttribute('aria-pressed', 'false');
+                option.className = 'min-h-12 rounded-xl border px-3 py-2 text-sm font-bold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500';
+                if (available) {
+                    option.classList.add('border-gray-200', 'bg-white', 'text-gray-800', 'hover:border-amber-500', 'hover:bg-amber-50');
+                    option.addEventListener('click', () => {
+                        options.querySelectorAll('button').forEach(item => {
+                            item.setAttribute('aria-pressed', 'false');
+                            item.classList.remove('border-amber-500', 'bg-amber-400', 'text-gray-950', 'ring-2', 'ring-amber-200');
+                            if (!item.disabled) item.classList.add('border-gray-200', 'bg-white', 'text-gray-800');
+                        });
+                        option.setAttribute('aria-pressed', 'true');
+                        option.classList.remove('border-gray-200', 'bg-white', 'text-gray-800');
+                        option.classList.add('border-amber-500', 'bg-amber-400', 'text-gray-950', 'ring-2', 'ring-amber-200');
+                        cardSizeSelection.size = size;
+                        addButton.disabled = false;
+                        stockNote.textContent = hasInventory ? `${stock} available in this size.` : 'Size selected and ready to add.';
+                    });
+                } else {
+                    option.classList.add('cursor-not-allowed', 'border-gray-100', 'bg-gray-50', 'text-gray-300', 'line-through');
+                    option.title = 'Out of stock';
+                    option.setAttribute('aria-label', `${size}, out of stock`);
+                }
+                options.appendChild(option);
+            });
+
+            stockNote.textContent = hasInventory ? 'Choose an in-stock size.' : 'Tap a size to select it.';
+            picker.classList.remove('hidden');
+            picker.classList.add('flex');
+            picker.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('overflow-hidden');
+            requestAnimationFrame(() => {
+                picker.classList.remove('opacity-0');
+                panel.classList.remove('translate-y-8', 'sm:translate-y-4');
+                panel.querySelector('#card-size-picker-close').focus();
+            });
+        }
+
+        function closeCardSizePicker() {
+            const picker = document.getElementById('card-size-picker');
+            const panel = document.getElementById('card-size-picker-panel');
+            if (!picker || picker.classList.contains('hidden')) return;
+            picker.classList.add('opacity-0');
+            panel.classList.add('translate-y-8', 'sm:translate-y-4');
+            picker.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('overflow-hidden');
+            const trigger = cardSizeSelection?.trigger;
+            cardSizePickerCloseTimer = window.setTimeout(() => {
+                picker.classList.add('hidden'); picker.classList.remove('flex');
+                trigger?.focus();
+            }, 220);
+        }
+
+        document.getElementById('card-size-picker-close').addEventListener('click', closeCardSizePicker);
+        document.getElementById('card-size-picker-backdrop').addEventListener('click', closeCardSizePicker);
+        document.getElementById('card-size-picker-add').addEventListener('click', () => {
+            if (!cardSizeSelection?.size) return;
+            const { productId, color, size } = cardSizeSelection;
+            closeCardSizePicker();
+            addToCart(productId, 1, color, size);
+        });
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape') closeCardSizePicker();
+        });
 
         // Initialize cart count on page load
         document.addEventListener('DOMContentLoaded', function() {

@@ -26,7 +26,6 @@ class AppServiceProvider extends ServiceProvider
             $view->with([
                 'contact' => \App\Helpers\SettingsHelper::getContactInfo(),
                 'activeCategories' => \App\Models\Category::where('is_active', true)
-                    ->whereHas('products', fn ($query) => $query->where('is_active', true))
                     ->orderBy('sort_order')->orderBy('name')->get()
             ]);
         });

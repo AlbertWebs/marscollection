@@ -19,7 +19,6 @@ class HomeController extends Controller
     public function index()
     {
         $categories = Category::where('is_active', true)
-            ->whereHas('products', fn ($query) => $query->where('is_active', true))
             ->orderBy('sort_order')->orderBy('name')->limit(6)->get();
         $trendingProducts = Product::where('is_active', true)->where('is_trending', true)->latest()->limit(5)->get();
         $featuredProducts = Product::where('is_active', true)->where('is_featured', true)->latest()->limit(10)->get();
