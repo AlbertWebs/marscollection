@@ -678,7 +678,11 @@ class AdminController extends Controller
             'name' => 'required|string|max:255|unique:categories',
             'description' => 'nullable|string',
             'sort_order' => 'nullable|integer|min:0',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
         ]);
+        if ($request->hasFile('image')) {
+            $validated['image'] = $request->file('image')->store('categories', $this->productImageDisk());
+        }
         $validated['is_active'] = $request->boolean('is_active', true);
         $validated['sort_order'] = $validated['sort_order'] ?? ((int) Category::max('sort_order') + 1);
 
@@ -698,7 +702,14 @@ class AdminController extends Controller
             'name' => 'required|string|max:255|unique:categories,name,' . $category->id,
             'description' => 'nullable|string',
             'sort_order' => 'nullable|integer|min:0',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
         ]);
+        if ($request->hasFile('image')) {
+            if ($category->image && !str_starts_with($category->image, 'http') && !str_starts_with($category->image, '/')) {
+                \Storage::disk($this->productImageDisk())->delete($category->image);
+            }
+            $validated['image'] = $request->file('image')->store('categories', $this->productImageDisk());
+        }
         $validated['sort_order'] = $validated['sort_order'] ?? $category->sort_order;
         $validated['is_active'] = $request->boolean('is_active');
 
