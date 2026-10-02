@@ -48,8 +48,11 @@ class PerformanceOptimization
      */
     private function addPerformanceHeaders(Response $response): void
     {
-        // Cache control for static assets
-        $response->headers->set('Cache-Control', 'public, max-age=3600, s-maxage=86400');
+        // HTML pages contain live catalog data, including admin-managed category order.
+        // Keep shared and browser caches from serving stale storefront content.
+        $response->headers->set('Cache-Control', 'no-cache, no-store, must-revalidate');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
         
         // Enable compression
         $response->headers->set('Vary', 'Accept-Encoding');
