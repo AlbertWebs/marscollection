@@ -132,6 +132,7 @@
 
     <!-- WhatsApp Floating Inquiry Chat -->
     @include('components.whatsapp-floating')
+    @include('components.floating-checkout')
 
     <!-- Toast Container -->
     <div id="toast-container" class="fixed bottom-4 left-4 z-50 space-y-2 max-w-sm"></div>
@@ -201,10 +202,10 @@
             fetch('/cart/count')
                 .then(response => response.json())
                 .then(data => {
-                    const cartBadge = document.querySelector('.cart-count');
-                    if (cartBadge) {
+                    document.querySelectorAll('.cart-count').forEach(cartBadge => {
                         cartBadge.textContent = data.count;
-                    }
+                    });
+                    window.dispatchEvent(new CustomEvent('cartCountChanged', { detail: { count: data.count } }));
                 })
                 .catch(error => {
                     console.error('Error updating cart count:', error);
