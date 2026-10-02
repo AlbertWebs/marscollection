@@ -13,8 +13,8 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\TrafficController;
 
 // Home and general pages
-Route::view('/', 'maintenance')->name('maintenance');
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::redirect('/home', '/', 301)->name('home.legacy');
 Route::get('/about', [HomeController::class, 'about'])->name('about');
 Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
 Route::post('/contact', [HomeController::class, 'submitContact'])->name('contact.submit');
@@ -24,6 +24,7 @@ Route::get('/search', [HomeController::class, 'search'])->name('search');
 
 // Sitemap
 Route::get('/sitemap.xml', [HomeController::class, 'sitemap'])->name('sitemap');
+Route::get('/siemap.xml', [HomeController::class, 'sitemap'])->name('sitemap.legacy-typo');
 
 // Policy pages
 Route::get('/privacy-policy', [HomeController::class, 'privacyPolicy'])->name('privacy-policy');

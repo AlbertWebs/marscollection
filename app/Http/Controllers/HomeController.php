@@ -159,9 +159,7 @@ class HomeController extends Controller
             return $entry;
         };
 
-        $categories = Category::where('is_active', true)
-            ->whereHas('products', fn ($query) => $query->where('is_active', true))
-            ->get();
+        $categories = Category::where('is_active', true)->get();
         $brands = Brand::where('is_active', true)
             ->whereHas('products', fn ($query) => $query->where('is_active', true))
             ->get();
@@ -283,7 +281,9 @@ class HomeController extends Controller
 
         return response($xml, 200, [
             'Content-Type'  => 'application/xml; charset=utf-8',
-            'Cache-Control' => 'public, max-age=3600'
+            'Cache-Control' => 'no-cache, no-store, must-revalidate',
+            'Pragma' => 'no-cache',
+            'Expires' => '0',
         ]);
     }
 
