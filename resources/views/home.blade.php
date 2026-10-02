@@ -24,7 +24,11 @@
                 <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
                     @foreach($categories as $category)
                         <a href="{{ route('categories.show', $category) }}" class="group relative overflow-hidden rounded-xl bg-gray-100">
-                            <img src="{{ \App\Helpers\ImageHelper::getProductImageUrl($category->image) }}" alt="{{ $category->name }}" class="aspect-[4/5] w-full object-cover transition duration-500 group-hover:scale-105" loading="lazy">
+                            @if($category->image)
+                                <img src="{{ \App\Helpers\ImageHelper::getProductImageUrl($category->image) }}" alt="{{ $category->name }}" class="aspect-[4/5] w-full object-cover transition duration-500 group-hover:scale-105" loading="lazy">
+                            @else
+                                <x-category-placeholder class="aspect-[4/5]" />
+                            @endif
                             <span class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent px-3 pb-4 pt-10 text-sm font-semibold text-white sm:text-base">{{ $category->name }}</span>
                         </a>
                     @endforeach

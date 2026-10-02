@@ -158,7 +158,7 @@
 
                         {{-- Free Delivery Progress Meter --}}
                         @php
-                            $freeDeliveryGoal = 5000;
+                            $freeDeliveryGoal = (int) config('shipping.free_delivery_threshold', 15000);
                             $amountRemaining = max(0, $freeDeliveryGoal - $total);
                             $progressPct = min(100, round(($total / $freeDeliveryGoal) * 100));
                         @endphp
@@ -194,7 +194,7 @@
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-gray-600">Shipping</span>
-                                <span class="font-semibold text-emerald-600" id="shipping-cost">{{ $total >= 5000 ? 'FREE (KES 0)' : 'KES 0' }}</span>
+                                <span class="font-semibold text-emerald-600" id="shipping-cost">{{ $total >= config('shipping.free_delivery_threshold', 15000) ? 'FREE (KES 0)' : 'KES 0' }}</span>
                             </div>
                             <div class="border-t border-gray-200 pt-3">
                                 <div class="flex justify-between">
@@ -236,7 +236,7 @@
                                                placeholder="e.g. Nairobi, Westlands, Kilimani, Mombasa..."
                                                class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm"
                                                oninput="calculateShipping()">
-                                        <p class="text-xs text-gray-500 mt-1">Free delivery in Nairobi & local towns on orders over KES 5,000</p>
+                                        <p class="text-xs text-gray-500 mt-1">Free delivery in Nairobi & local towns on orders of KES {{ number_format(config('shipping.free_delivery_threshold', 15000)) }} or more</p>
                                     </div>
 
                                     <div>
@@ -363,7 +363,7 @@ function calculateShipping() {
     let shippingCost = 2500; // Default shipping cost in KES
 
     // Free shipping threshold
-    if (subtotal >= 5000) {
+    if (subtotal >= @json(config('shipping.free_delivery_threshold', 15000))) {
         shippingCost = 0;
     } else {
         // Local cities (free shipping)

@@ -108,7 +108,11 @@
             <div class="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3">
                 @forelse($categories as $category)
                     <a href="{{ route('categories.show', $category) }}" class="group relative isolate min-h-52 overflow-hidden rounded-2xl bg-gray-950 sm:min-h-64">
-                        <img src="{{ \App\Helpers\ImageHelper::getProductImageUrl($category->image) }}" alt="{{ $category->name }} at Mars Collection Kenya" loading="lazy" class="absolute inset-0 -z-20 h-full w-full object-cover transition duration-500 group-hover:scale-105">
+                        @if($category->image)
+                            <img src="{{ \App\Helpers\ImageHelper::getProductImageUrl($category->image) }}" alt="{{ $category->name }} at Mars Collection Kenya" loading="lazy" class="absolute inset-0 -z-20 h-full w-full object-cover transition duration-500 group-hover:scale-105">
+                        @else
+                            <x-category-placeholder class="absolute inset-0 -z-20" />
+                        @endif
                         <div class="absolute inset-0 -z-10 bg-gradient-to-t from-gray-950 via-gray-950/30 to-transparent transition group-hover:from-gray-950/95"></div>
                         <div class="absolute inset-x-0 bottom-0 p-4 sm:p-5">
                             <div class="flex items-end justify-between gap-2">

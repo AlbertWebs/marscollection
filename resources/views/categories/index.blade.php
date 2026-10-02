@@ -56,9 +56,7 @@
                                 @if($category->image)
                                     <img src="{{ \App\Helpers\ImageHelper::getProductImageUrl($category->image) }}" alt="{{ $category->name }} footwear" class="h-full w-full object-cover transition duration-500 group-hover:scale-105" loading="lazy" decoding="async">
                                 @else
-                                    <div class="flex h-full items-center justify-center bg-gradient-to-br from-stone-200 to-stone-400">
-                                        <span class="text-5xl font-black text-white/70">{{ strtoupper(substr($category->name, 0, 1)) }}</span>
-                                    </div>
+                                    <x-category-placeholder />
                                 @endif
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/5 to-transparent"></div>
                                 <div class="absolute inset-x-0 bottom-0 p-4 sm:p-5">

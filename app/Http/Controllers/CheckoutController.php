@@ -163,8 +163,8 @@ class CheckoutController extends Controller
 
     private function calculateShipping($city, $subtotal = 0)
     {
-        // Free delivery on all orders above KES 5,000
-        if ($subtotal >= 5000) {
+        // Free delivery threshold configured in KES.
+        if ($subtotal >= (int) config('shipping.free_delivery_threshold', 15000)) {
             return 0.00;
         }
 
