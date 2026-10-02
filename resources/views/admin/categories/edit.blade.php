@@ -53,7 +53,10 @@
                     </span>
                     <span id="category-image-replace" class="{{ $category->image ? '' : 'hidden' }} absolute inset-x-0 bottom-0 bg-black/60 px-4 py-3 text-center text-sm font-medium text-white">Current photo · drop or click to replace</span>
                 </button>
-                <p class="mt-2 text-xs text-gray-500">Recommended: 1200 × 1500 px (4:5 portrait). JPG, PNG, GIF or WebP, up to 4 MB.</p>
+                <div class="mt-2 rounded-lg border border-amber-100 bg-amber-50 px-3 py-2">
+                    <p class="text-sm text-gray-800"><span class="font-semibold">Recommended image size:</span> <span class="font-bold text-amber-800">1200 × 1500 px</span> <span class="text-xs text-gray-600">(4:5 portrait)</span></p>
+                    <p class="mt-0.5 text-xs text-gray-500">JPG, PNG, GIF or WebP, up to 4 MB.</p>
+                </div>
                 @error('image')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
             </div>
 
