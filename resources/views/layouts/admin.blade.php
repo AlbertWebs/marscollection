@@ -206,10 +206,6 @@
 
         <!-- Main content -->
         <div class="lg:ml-64">
-            <!-- Top navigation -->
-            <div class="bg-white shadow-sm border-b">
-                <div class="flex items-center justify-between px-4 lg:px-6 py-4">
-                    <div class="flex items-center space-x-4">
             <header class="sticky top-0 z-30 border-b border-gray-200 bg-white/95 shadow-sm backdrop-blur">
                 <div class="flex min-h-[76px] items-center justify-between gap-3 px-4 sm:px-5 lg:px-8">
                     <div class="flex min-w-0 items-center gap-3 sm:gap-4">
