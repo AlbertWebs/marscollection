@@ -96,7 +96,7 @@
 
                 
                 <!-- Cart -->
-                <div class="relative group">
+                <div id="cart-dropdown" class="relative group">
                     <a href="{{ route('cart.index') }}" class="text-white hover:text-amber-300 p-2 transition-colors duration-200">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
@@ -292,41 +292,41 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Cart dropdown functionality
-    const cartDropdown = document.querySelector('.group');
+    const cartDropdown = document.getElementById('cart-dropdown');
     const cartItemsContainer = document.getElementById('cart-dropdown-items');
     const cartSummary = document.getElementById('cart-dropdown-summary');
     const cartDropdownTotal = document.getElementById('cart-dropdown-total');
     let cartLoaded = false;
+    let cartLoading = false;
 
-    // Load cart items on hover
-    cartDropdown.addEventListener('mouseenter', function() {
-        if (!cartLoaded) {
-            loadCartItems();
-            cartLoaded = true;
-        }
-    });
+    // Load details as soon as the actual cart dropdown is opened or focused.
+    cartDropdown.addEventListener('mouseenter', loadCartItemsIfNeeded);
+    cartDropdown.addEventListener('focusin', loadCartItemsIfNeeded);
+
+    function loadCartItemsIfNeeded() {
+        if (!cartLoaded && !cartLoading) loadCartItems();
+    }
 
     function loadCartItems() {
-        fetch('/cart/count')
-            .then(response => response.json())
-            .then(data => {
-                if (data.count > 0) {
-                    // Load detailed cart items
-                    fetch('/cart/dropdown')
-                        .then(response => response.json())
-                        .then(cartData => {
-                            displayCartItems(cartData.items, cartData.total);
-                        })
-                        .catch(error => {
-                            console.error('Error loading cart items:', error);
-                        });
+        cartLoading = true;
+        fetch('/cart/dropdown', { headers: { 'Accept': 'application/json' }, cache: 'no-store' })
+            .then(response => {
+                if (!response.ok) throw new Error(`Unable to load cart (HTTP ${response.status})`);
+                return response.json();
+            })
+            .then(cartData => {
+                if (cartData.items?.length) {
+                    displayCartItems(cartData.items, cartData.total);
                 } else {
-                    // Show empty cart
                     displayEmptyCart();
                 }
+                cartLoaded = true;
             })
             .catch(error => {
-                console.error('Error loading cart count:', error);
+                console.error('Error loading cart items:', error);
+            })
+            .finally(() => {
+                cartLoading = false;
             });
     }
 
@@ -395,7 +395,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Listen for cart updates (you can trigger this from other parts of the app)
     window.addEventListener('cartUpdated', function() {
         updateCartCount();
-        cartLoaded = false; // Reload cart items on next hover
+        cartLoaded = false;
+        if (cartDropdown.matches(':hover') || cartDropdown.contains(document.activeElement)) {
+            loadCartItemsIfNeeded();
+        }
     });
 });
 </script> 
