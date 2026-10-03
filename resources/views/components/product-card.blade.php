@@ -21,18 +21,11 @@
     $productId = is_object($product) ? $product->id : ($product['id'] ?? null);
     $productSlug = is_object($product) ? $product->slug : ($product['slug'] ?? null);
     $productBrand = is_object($product) ? ($product->brand->name ?? 'Mars Collection') : ($product['brand'] ?? 'Mars Collection');
-    $productColors = is_object($product) ? $product->colors : ($product['colors'] ?? null);
-    if (!is_array($productColors) && $productColors) {
-        $productColors = json_decode($productColors, true);
-    }
-    $productVariants = is_object($product) ? $product->variants : ($product['variants'] ?? []);
-    if (is_string($productVariants)) $productVariants = json_decode($productVariants, true) ?: [];
-    $productSizes = collect(is_array($productVariants) ? $productVariants : [])
-        ->pluck('label')->filter(fn ($size) => trim((string) $size) !== '')
-        ->map(fn ($size) => (string) $size)->values()->all();
-    $productVariantStock = is_object($product) ? $product->variant_stock : ($product['variant_stock'] ?? []);
-    if (is_string($productVariantStock)) $productVariantStock = json_decode($productVariantStock, true) ?: [];
-    $productVariantStock = is_array($productVariantStock) ? $productVariantStock : [];
+    $productSizes = is_object($product) ? ($product->sizes ?? []) : ($product['sizes'] ?? []);
+    if (is_string($productSizes)) $productSizes = json_decode($productSizes, true) ?: [];
+    $productSizes = collect(is_array($productSizes) ? $productSizes : [])
+        ->map(fn ($size) => (string) $size)->filter(fn ($size) => $size !== '')
+        ->sort(fn ($left, $right) => (int) $left <=> (int) $right)->values()->all();
     $productStock = is_object($product) ? (int) $product->stock_quantity : (int) ($product['stock_quantity'] ?? 0);
     
     // Handle image URL using helper
@@ -69,10 +62,8 @@
             <div class="absolute inset-0 bg-gray-900/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                 <button onclick="event.preventDefault(); event.stopPropagation(); handleCardAddToCart(this, {{ $productId }})"
                         class="card-add-btn bg-white text-gray-900 px-6 py-3 rounded-md font-semibold hover:bg-amber-600 hover:text-white transition-colors duration-200 flex items-center space-x-2 shadow-lg"
-                        data-selected-color=""
                         data-product-name="{{ $productName }}"
                         data-size-options="{{ json_encode($productSizes) }}"
-                        data-variant-stock="{{ json_encode($productVariantStock) }}"
                         data-base-stock="{{ $productStock }}"
                         aria-label="Add {{ $productName }} to cart">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -174,23 +165,6 @@
                 @endif
             </div>
 
-            @if($productColors && count($productColors) > 0)
-                <div class="flex flex-wrap gap-1 mb-1 color-swatches-container">
-                    @foreach($productColors as $colorOption)
-                        @php
-                            $parts = explode(':', $colorOption);
-                            $cName = trim($parts[0]);
-                            $cVal  = isset($parts[1]) ? trim($parts[1]) : $cName;
-                        @endphp
-                        <div class="w-3 h-3 rounded-full border border-gray-200 shadow-sm swatch-dot transition-all cursor-pointer hover:scale-110"
-                             style="background-color: {{ $cVal }};"
-                             title="{{ $cName }}"
-                             onclick="event.preventDefault(); event.stopPropagation(); selectCardColor(this, '{{ $cName }}')">
-                        </div>
-                    @endforeach
-                    <span class="text-[10px] text-gray-400 ml-0.5 italic selected-color-text"></span>
-                </div>
-            @endif
         </div>
     </a>
     

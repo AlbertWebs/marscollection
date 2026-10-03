@@ -237,8 +237,8 @@
         }
 
         // Add to cart functionality
-        function addToCart(productId, quantity = 1, color = null, size = null) {
-            console.log('Adding to cart:', productId, quantity, color);
+        function addToCart(productId, quantity = 1, size = null) {
+            console.log('Adding to cart:', productId, quantity, size);
 
             // Validate productId
             if (!productId || productId === 'null' || productId === 'undefined') {
@@ -250,7 +250,6 @@
             const requestData = {
                 product_id: productId,
                 quantity: quantity,
-                selected_color: color,
                 selected_size: size
             };
 
@@ -346,78 +345,35 @@
             });
         }
 
-        // Card color selection helpers
-        function selectCardColor(dot, name) {
-            const container = dot.closest('.color-swatches-container');
-            const card = dot.closest('article');
-            const addBtn = card.querySelector('.card-add-btn');
-            const label = container.querySelector('.selected-color-text');
-
-            // Update button data attribute
-            if (addBtn) addBtn.setAttribute('data-selected-color', name);
-            if (label) label.textContent = name;
-
-            // Reset all dots in this card
-            container.querySelectorAll('.swatch-dot').forEach(d => {
-                d.classList.remove('ring-2', 'ring-amber-400', 'ring-offset-1', 'scale-110');
-            });
-
-            // Highlight selected dot
-            dot.classList.add('ring-2', 'ring-amber-400', 'ring-offset-1', 'scale-110');
-        }
-
         function handleCardAddToCart(btn, productId) {
-            const color = btn.getAttribute('data-selected-color');
-            const card = btn.closest('article');
-            const swatches = card.querySelector('.color-swatches-container');
-
-            // If colors exist on card but none selected
-            if (swatches && !color) {
-                showToast('Please select a color first', 'error');
-                swatches.classList.add('animate-pulse', 'bg-amber-50', 'rounded', 'p-1');
-                setTimeout(() => swatches.classList.remove('animate-pulse', 'bg-amber-50'), 1500);
-                return;
-            }
-
             let sizes = [];
-            let variantStock = {};
             try { sizes = JSON.parse(btn.dataset.sizeOptions || '[]'); } catch (_) {}
-            try { variantStock = JSON.parse(btn.dataset.variantStock || '{}'); } catch (_) {}
             if (sizes.length) {
-                openCardSizePicker(btn, productId, color, sizes, variantStock, Number(btn.dataset.baseStock || 0));
+                openCardSizePicker(btn, productId, sizes, Number(btn.dataset.baseStock || 0));
                 return;
             }
 
-            addToCart(productId, 1, color);
+            addToCart(productId);
         }
 
         let cardSizeSelection = null;
         let cardSizePickerCloseTimer = null;
-        function openCardSizePicker(button, productId, color, sizes, variantStock, baseStock) {
+        function openCardSizePicker(button, productId, sizes, baseStock) {
             const picker = document.getElementById('card-size-picker');
             const panel = document.getElementById('card-size-picker-panel');
             const options = document.getElementById('card-size-picker-options');
             const addButton = document.getElementById('card-size-picker-add');
             const stockNote = document.getElementById('card-size-picker-stock-note');
-            const normalizedColor = (color || '').trim().toLowerCase();
             window.clearTimeout(cardSizePickerCloseTimer);
-            cardSizeSelection = { productId, color, size: null, trigger: button };
+            cardSizeSelection = { productId, size: null, trigger: button };
             document.getElementById('card-size-picker-product').textContent = button.dataset.productName || '';
             options.replaceChildren();
             addButton.disabled = true;
 
-            const hasInventory = Object.keys(variantStock || {}).length > 0;
             sizes.forEach(rawSize => {
                 const size = String(rawSize).trim();
                 if (!size) return;
-                const sizeKey = size.toLowerCase();
-                const stockKey = normalizedColor
-                    ? `color:${normalizedColor}|size:${sizeKey}`
-                    : `size:${sizeKey}`;
-                const stock = hasInventory
-                    ? Number(variantStock[stockKey] ?? 0)
-                    : baseStock;
-                const available = !hasInventory || stock > 0;
+                const available = baseStock > 0;
                 const option = document.createElement('button');
                 option.type = 'button';
                 option.textContent = size;
@@ -438,7 +394,7 @@
                         option.classList.add('border-amber-500', 'bg-amber-400', 'text-gray-950', 'ring-2', 'ring-amber-200');
                         cardSizeSelection.size = size;
                         addButton.disabled = false;
-                        stockNote.textContent = hasInventory ? `${stock} available in this size.` : 'Size selected and ready to add.';
+                        stockNote.textContent = 'Size selected and ready to add.';
                     });
                 } else {
                     option.classList.add('cursor-not-allowed', 'border-gray-100', 'bg-gray-50', 'text-gray-300', 'line-through');
@@ -448,7 +404,7 @@
                 options.appendChild(option);
             });
 
-            stockNote.textContent = hasInventory ? 'Choose an in-stock size.' : 'Tap a size to select it.';
+            stockNote.textContent = baseStock > 0 ? 'Tap a size to select it.' : 'This product is currently out of stock.';
             picker.classList.remove('hidden');
             picker.classList.add('flex');
             picker.setAttribute('aria-hidden', 'false');
@@ -479,9 +435,9 @@
         document.getElementById('card-size-picker-backdrop').addEventListener('click', closeCardSizePicker);
         document.getElementById('card-size-picker-add').addEventListener('click', () => {
             if (!cardSizeSelection?.size) return;
-            const { productId, color, size } = cardSizeSelection;
+            const { productId, size } = cardSizeSelection;
             closeCardSizePicker();
-            addToCart(productId, 1, color, size);
+            addToCart(productId, 1, size);
         });
         document.addEventListener('keydown', event => {
             if (event.key === 'Escape') closeCardSizePicker();

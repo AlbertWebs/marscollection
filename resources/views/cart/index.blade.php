@@ -47,9 +47,6 @@
                                                         <p class="text-xs text-gray-600">{{ $item->product->category->name }}</p>
                                                     @endif
                                                     <p class="text-sm font-bold text-amber-600">{{ $item->product->formatted_price }}</p>
-                                                    @if($item->selected_color)
-                                                        <p class="text-[10px] mt-0.5 font-medium text-amber-600">Color: {{ $item->selected_color }}</p>
-                                                    @endif
                                                     @if($item->selected_size)
                                                         <p class="text-[10px] mt-0.5 font-medium text-gray-600">Size: {{ $item->selected_size }}</p>
                                                     @endif
@@ -113,9 +110,6 @@
                                                 <p class="text-sm text-gray-600">{{ $item->product->category->name }}</p>
                                             @endif
                                             <p class="text-lg font-bold text-amber-600">{{ $item->product->formatted_price }}</p>
-                                            @if($item->selected_color)
-                                                <p class="text-xs mt-1 font-medium text-amber-600">Color: {{ $item->selected_color }}</p>
-                                            @endif
                                             @if($item->selected_size)
                                                 <p class="text-xs mt-1 font-medium text-gray-600">Size: {{ $item->selected_size }}</p>
                                             @endif

@@ -20,7 +20,11 @@ use App\Mail\AppointmentConfirmed;
 use App\Mail\ReviewLinkEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
+use Throwable;
 
 
 class AdminController extends Controller
@@ -34,6 +38,43 @@ class AdminController extends Controller
     private function productImageDisk(): string
     {
         return config('filesystems.default') === 's3' ? 's3' : 'public';
+    }
+
+    private function storeProductImage(\Illuminate\Http\UploadedFile $file): string
+    {
+        $path = $file->store('products', $this->productImageDisk());
+
+        if (!is_string($path) || $path === '') {
+            throw new \RuntimeException('The image could not be saved to storage.');
+        }
+
+        return $path;
+    }
+
+    private function cleanupProductImages(array $paths): void
+    {
+        $paths = array_values(array_filter($paths, fn ($path) =>
+            is_string($path) && $path !== '' && !str_starts_with($path, 'http') && !str_starts_with($path, '/')
+        ));
+
+        if (!$paths) {
+            return;
+        }
+
+        try {
+            Storage::disk($this->productImageDisk())->delete($paths);
+        } catch (Throwable $exception) {
+            Log::warning('Could not clean up product image files.', ['exception' => $exception->getMessage()]);
+        }
+    }
+
+    private function deleteReplacedProductImages(array $paths): void
+    {
+        try {
+            $this->cleanupProductImages($paths);
+        } catch (Throwable $exception) {
+            Log::warning('Could not delete replaced product image files.', ['exception' => $exception->getMessage()]);
+        }
     }
 
     public function dashboard()
@@ -193,37 +234,61 @@ class AdminController extends Controller
             'is_active'      => 'boolean',
             'is_featured'    => 'boolean',
             'is_trending'    => 'boolean',
-            'image'          => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'image'          => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048|dimensions:min_width=200,min_height=200,max_width=8000,max_height=8000',
             'colors'         => 'nullable|string',
+            'sizes'          => 'nullable|array|max:30',
+            'sizes.*'        => 'required|integer|between:19,48|distinct',
             'extra_images'   => 'nullable|array|max:8',
-            'extra_images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-        ]);
+            'extra_images.*' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048|dimensions:min_width=200,min_height=200,max_width=8000,max_height=8000',
+        ], $this->productImageValidationMessages());
+        if ($this->productUploadBytes($request) > 7 * 1024 * 1024) {
+            return back()->withInput()->withErrors([
+                'image_upload' => 'New image files must total 7 MB or less per save. Remove a file and try again.',
+            ]);
+        }
         $validated['is_active'] = $request->boolean('is_active');
         $validated['is_featured'] = $request->boolean('is_featured');
         $validated['is_trending'] = $request->boolean('is_trending');
         unset($validated['image']); // Never trust validated image. Only set from actual file upload.
         unset($validated['extra_images']); // handle separately below
 
-        if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('products', $this->productImageDisk());
-        }
-
         if ($request->filled('colors')) {
             $validated['colors'] = array_map('trim', explode(',', $request->colors));
         }
+        $validated['sizes'] = $this->normalizeProductSizes($request->input('sizes', []));
 
-        // Handle extra images upload
-        if ($request->hasFile('extra_images')) {
-            $extraPaths = [];
-            foreach ($request->file('extra_images') as $file) {
-                $extraPaths[] = $file->store('products', $this->productImageDisk());
+        $uploadedPaths = [];
+        try {
+            if ($request->hasFile('image')) {
+                $validated['image'] = $this->storeProductImage($request->file('image'));
+                $uploadedPaths[] = $validated['image'];
             }
-            $validated['extra_images'] = $extraPaths;
+
+            $extraPaths = [];
+            foreach ($request->file('extra_images', []) as $file) {
+                $path = $this->storeProductImage($file);
+                $extraPaths[] = $path;
+                $uploadedPaths[] = $path;
+            }
+            $validated['extra_images'] = $extraPaths ?: null;
+
+            DB::transaction(fn () => Product::create($validated));
+        } catch (Throwable $exception) {
+            $this->cleanupProductImages($uploadedPaths);
+            Log::error('Product creation failed while saving product images.', ['exception' => $exception->getMessage()]);
+
+            return back()->withInput()->withErrors([
+                'image_upload' => 'We could not save the product and its images. Please try again. If the problem continues, contact support.',
+            ]);
         }
 
-        Product::create($validated);
+        $imageCount = count($uploadedPaths);
+        $message = 'Product created successfully.';
+        if ($imageCount > 0) {
+            $message .= ' ' . $imageCount . ' ' . \Illuminate\Support\Str::plural('image', $imageCount) . ' uploaded successfully.';
+        }
 
-        return redirect()->route('admin.products.index')->with('success', 'Product created successfully!');
+        return redirect()->route('admin.products.index')->with('success', $message);
     }
 
     public function editProduct(Product $product)
@@ -250,66 +315,122 @@ class AdminController extends Controller
             'is_active'      => 'boolean',
             'is_featured'    => 'boolean',
             'is_trending'    => 'boolean',
-            'image'          => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'image'          => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048|dimensions:min_width=200,min_height=200,max_width=8000,max_height=8000',
             'colors'         => 'nullable|string',
+            'sizes'          => 'nullable|array|max:30',
+            'sizes.*'        => 'required|integer|between:19,48|distinct',
             'extra_images'   => 'nullable|array|max:8',
-            'extra_images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'extra_images.*' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048|dimensions:min_width=200,min_height=200,max_width=8000,max_height=8000',
             'delete_extra_images' => 'nullable|array',
             'delete_extra_images.*' => 'string',
-        ]);
+            'keep_extra_images' => 'nullable|array|max:8',
+            'keep_extra_images.*' => ['required', 'string', Rule::in($product->extra_images ?? [])],
+        ], $this->productImageValidationMessages());
+        if ($this->productUploadBytes($request) > 7 * 1024 * 1024) {
+            return back()->withInput()->withErrors([
+                'image_upload' => 'New image files must total 7 MB or less per save. Remove a file and try again.',
+            ]);
+        }
+
+        $previousExtraImages = $product->extra_images ?? [];
+        $previousMainImage = $product->image;
+        $keepPaths = array_values(array_unique($request->input('keep_extra_images', [])));
+        $newFiles = $request->file('extra_images', []);
+
+        if (count($keepPaths) + count($newFiles) > 8) {
+            return back()->withInput()->withErrors([
+                'extra_images' => 'A product can have up to 8 gallery images total. Remove an existing image or choose fewer new images.',
+            ]);
+        }
         $validated['is_active'] = $request->boolean('is_active');
         $validated['is_featured'] = $request->boolean('is_featured');
         $validated['is_trending'] = $request->boolean('is_trending');
-
-        // Handle main image upload
-        if ($request->hasFile('image')) {
-            // Delete old image from S3 if it exists and is a path (not external URL)
-            if ($product->image && !str_starts_with($product->image, 'http') && !str_starts_with($product->image, '/')) {
-                \Storage::disk($this->productImageDisk())->delete($product->image);
-            }
-
-            $imagePath = $request->file('image')->store('products', $this->productImageDisk());
-            $validated['image'] = $imagePath;
-        } elseif ($request->input('clear_image') === '1') {
-            // User explicitly removed the main image
-            if ($product->image && !str_starts_with($product->image, 'http') && !str_starts_with($product->image, '/')) {
-                \Storage::disk($this->productImageDisk())->delete($product->image);
-            }
-            $validated['image'] = null;
-        }
 
         if ($request->filled('colors')) {
             $validated['colors'] = array_map('trim', explode(',', $request->colors));
         } else {
             $validated['colors'] = null;
         }
+        $validated['sizes'] = $this->normalizeProductSizes($request->input('sizes', []));
 
-        // Extra images: keep only the ones the form sent back, plus any new uploads
-        $keepPaths = $request->input('keep_extra_images', []);
-
-        // Delete any existing extras that were NOT in keep list
-        foreach ($product->extra_images ?? [] as $existing) {
-            if (!in_array($existing, $keepPaths)) {
-                if (!str_starts_with($existing, 'http') && !str_starts_with($existing, '/')) {
-                    \Storage::disk($this->productImageDisk())->delete($existing);
-                }
+        $uploadedPaths = [];
+        try {
+            if ($request->hasFile('image')) {
+                $validated['image'] = $this->storeProductImage($request->file('image'));
+                $uploadedPaths[] = $validated['image'];
+            } elseif ($request->input('clear_image') === '1') {
+                $validated['image'] = null;
             }
+
+            $newExtras = [];
+            foreach ($newFiles as $file) {
+                $path = $this->storeProductImage($file);
+                $newExtras[] = $path;
+                $uploadedPaths[] = $path;
+            }
+
+            $allExtras = array_values(array_merge($keepPaths, $newExtras));
+            $validated['extra_images'] = $allExtras ?: null;
+            unset($validated['delete_extra_images'], $validated['keep_extra_images']);
+            DB::transaction(fn () => $product->update($validated));
+        } catch (Throwable $exception) {
+            $this->cleanupProductImages($uploadedPaths);
+            Log::error('Product update failed while saving product images.', ['product_id' => $product->id, 'exception' => $exception->getMessage()]);
+
+            return back()->withInput()->withErrors([
+                'image_upload' => 'We could not save the product changes and images. Your existing images were kept. Please try again.',
+            ]);
         }
 
-        // Upload new extra images and append to kept ones
-        $newExtras = [];
-        if ($request->hasFile('extra_images')) {
-            foreach ($request->file('extra_images') as $file) {
-                $newExtras[] = $file->store('products', $this->productImageDisk());
-            }
+        $removedImages = array_diff($previousExtraImages, $keepPaths);
+        if ($request->hasFile('image') || $request->input('clear_image') === '1') {
+            $removedImages[] = $previousMainImage;
+        }
+        $this->deleteReplacedProductImages($removedImages);
+
+        $imageCount = count($uploadedPaths);
+        $message = 'Product updated successfully.';
+        if ($imageCount > 0) {
+            $message .= ' ' . $imageCount . ' ' . \Illuminate\Support\Str::plural('image', $imageCount) . ' uploaded successfully.';
+        } elseif ($request->input('clear_image') === '1') {
+            $message .= ' The product image was removed.';
         }
 
-        $allExtras = array_values(array_merge($keepPaths, $newExtras));
-        $validated['extra_images'] = !empty($allExtras) ? $allExtras : null;
-        unset($validated['delete_extra_images']);
-        $product->update($validated);
+        return redirect()->route('admin.products.index')->with('success', $message);
+    }
 
-        return redirect()->route('admin.products.index')->with('success', 'Product updated successfully!');
+    private function productImageValidationMessages(): array
+    {
+        return [
+            'image.image' => 'Choose a valid image file for the main product image.',
+            'image.mimes' => 'The main image must be JPG, PNG, GIF, or WebP.',
+            'image.max' => 'The main image must be 2 MB or smaller.',
+            'image.dimensions' => 'The main image must be at least 200 × 200 px and no larger than 8,000 × 8,000 px.',
+            'extra_images.max' => 'Choose no more than 8 gallery images.',
+            'extra_images.*.image' => 'Each gallery file must be a valid image.',
+            'extra_images.*.mimes' => 'Gallery images must be JPG, PNG, GIF, or WebP.',
+            'extra_images.*.max' => 'Each gallery image must be 2 MB or smaller.',
+            'extra_images.*.dimensions' => 'Each gallery image must be at least 200 × 200 px and no larger than 8,000 × 8,000 px.',
+            'keep_extra_images.*.in' => 'One of the existing gallery images is invalid. Reload the page and try again.',
+        ];
+    }
+
+    private function productUploadBytes(Request $request): int
+    {
+        $files = array_filter(array_merge(
+            [$request->file('image')],
+            $request->file('extra_images', [])
+        ));
+
+        return array_sum(array_map(fn ($file) => $file->getSize() ?: 0, $files));
+    }
+
+    private function normalizeProductSizes(array $sizes): ?array
+    {
+        $sizes = array_values(array_unique(array_map('intval', $sizes)));
+        sort($sizes, SORT_NUMERIC);
+
+        return $sizes ?: null;
     }
 
     public function deleteProduct(Product $product)

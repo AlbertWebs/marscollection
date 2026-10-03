@@ -2,7 +2,7 @@
 
 @php
     $plainProductDescription = trim(preg_replace('/\s+/', ' ', html_entity_decode(strip_tags($product->description ?? ''), ENT_QUOTES | ENT_HTML5, 'UTF-8')));
-    $descriptionSource = $product->meta_description ?: $plainProductDescription ?: ($product->name . ' from Mars Collection. Choose your size and color, then order online in Kenya.');
+    $descriptionSource = $product->meta_description ?: $plainProductDescription ?: ($product->name . ' from Mars Collection. Choose your shoe size and order online in Kenya.');
     $seoDescription = \Illuminate\Support\Str::limit(trim(preg_replace('/\s+/', ' ', strip_tags($descriptionSource))), 155);
     $productReviews = $product->reviews()->latest()->take(3)->get();
     $hasRealReviews = $product->reviews_count > 0 && $productReviews->count() > 0;
@@ -28,11 +28,8 @@
         ];
     }
     if (!$productSchema['image']) unset($productSchema['image']);
-    if (!empty($product->colors)) {
-        $productSchema['color'] = array_map(fn ($color) => trim(explode(':', $color, 2)[0]), $product->colors);
-    }
-    if (!empty($product->variants)) {
-        $productSchema['size'] = collect($product->variants)->pluck('label')->filter()->values()->all();
+    if (!empty($product->sizes)) {
+        $productSchema['size'] = array_values(array_map('strval', $product->sizes));
     }
     if ($hasRealReviews && $product->average_rating >= 1 && $product->average_rating <= 5) {
         $productSchema['aggregateRating'] = [
@@ -311,35 +308,24 @@
                 <div class="space-y-4">
                     @if($product->stock_quantity > 0)
 
-                        @if($product->variants && count($product->variants) > 0)
-                        @php
-                            // Sort variants: those with a price first (ascending), then base-price ones
-                            $sortedVariants = collect($product->variants)->sortBy(function($v) {
-                                return isset($v['price']) && $v['price'] !== null ? (float)$v['price'] : PHP_INT_MAX;
-                            })->values()->all();
-                        @endphp
-                        <!-- Variant Selector -->
-                        <div class="border-t border-gray-100 pt-4 space-y-2">
+                        @if($product->sizes && count($product->sizes) > 0)
+                        <div id="size-selector" class="border-t border-gray-100 pt-4 space-y-2">
                             <div class="flex items-center justify-between">
-                                <label class="block text-sm font-semibold text-gray-900 uppercase tracking-widest">Select Size</label>
-                                <span id="variant-label" class="text-sm font-bold text-amber-600"></span>
+                                <p class="block text-sm font-semibold text-gray-900 uppercase tracking-widest">Select Shoe Size</p>
+                                <span id="size-label" class="text-sm font-bold text-amber-600" aria-live="polite"></span>
                             </div>
-                            <div class="flex flex-wrap gap-2">
-                                @foreach($sortedVariants as $i => $variant)
+                            <div class="grid grid-cols-5 gap-2 sm:grid-cols-8" role="group" aria-label="Available shoe sizes">
+                                @foreach($product->sizes as $size)
                                 <button type="button"
-                                        onclick="handleVariantChange(this)"
-                                        data-label="{{ $variant['label'] }}"
-                                        data-price="{{ $variant['price'] ?? '' }}"
-                                        data-original-price="{{ $variant['original_price'] ?? '' }}"
-                                        class="variant-btn px-4 py-2 rounded-md border-2 text-sm font-medium transition-all duration-150 whitespace-nowrap
-                                               {{ $i === 0 ? 'border-amber-500 text-amber-600 bg-amber-50' : 'border-gray-200 text-gray-700 hover:border-amber-400 hover:text-amber-600' }}">
-                                    {{ $variant['label'] }}
-                                    @if(!empty($variant['price']))
-                                        <span class="text-xs {{ $i === 0 ? 'text-amber-400' : 'text-gray-400' }} ml-1">KES&nbsp;{{ number_format($variant['price'], 0) }}</span>
-                                    @endif
+                                        onclick="handleSizeSelect(this)"
+                                        data-size="{{ $size }}"
+                                        aria-pressed="false"
+                                        class="size-btn min-h-11 rounded-md border-2 border-gray-200 px-3 py-2 text-sm font-semibold text-gray-700 transition-all duration-150 hover:border-amber-400 hover:text-amber-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500">
+                                    {{ $size }}
                                 </button>
                                 @endforeach
                             </div>
+                            <p id="size-selection-hint" class="text-xs text-gray-500" aria-live="polite">Choose your size before adding this shoe to your cart.</p>
                         </div>
                         @endif
 
@@ -350,41 +336,6 @@
                             <span id="option-stock-status" class="font-medium">In Stock ({{ $product->stock_quantity }} available)</span>
                         </div>
 
-                        <!-- Color Selection -->
-                        @if($product->colors && count($product->colors) > 0)
-                            <div class="pt-4 border-t border-gray-100 space-y-3">
-                                <div class="flex justify-between items-center">
-                                    <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-widest">Select Color</h3>
-                                    <span id="color-label" class="text-sm font-bold text-amber-600"></span>
-                                </div>
-                                <div class="flex flex-wrap gap-4">
-                                    @foreach($product->colors as $index => $colorOption)
-                                        @php
-                                            $parts = explode(':', $colorOption);
-                                            $cName = trim($parts[0]);
-                                            $cVal  = isset($parts[1]) ? trim($parts[1]) : $cName;
-                                        @endphp
-                                        <button type="button" 
-                                                class="color-option-btn group relative"
-                                                onclick="handleColorSelect('{{ $cName }}', this)"
-                                                title="{{ $cName }}">
-                                            <div class="w-10 h-10 rounded-full border-2 border-gray-200 transition-all duration-200 group-hover:scale-110 flex items-center justify-center p-0.5"
-                                                 style="background-color: {{ $cVal }};">
-                                                <div class="hidden selected-check">
-                                                    <svg class="w-5 h-5 text-white drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                            <span class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] whitespace-nowrap opacity-0 group-hover:opacity-100 font-medium text-gray-500 transition-opacity">
-                                                {{ $cName }}
-                                            </span>
-                                        </button>
-                                    @endforeach
-                                </div>
-                                <input type="hidden" id="selected-color-input" value="">
-                            </div>
-                        @endif
                     @else
                         <div class="flex items-center space-x-2 text-red-600">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
@@ -408,7 +359,7 @@
                     @if($product->stock_quantity > 0)
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <button type="button"
-                                    onclick="handleAddWithColor({{ $product->id }})" 
+                                    onclick="handleAddToCart({{ $product->id }})"
                                     style="background-color: #db2777; color: #ffffff;"
                                     class="w-full py-3.5 px-5 rounded-lg font-semibold hover:opacity-95 active:scale-[0.98] transition-all duration-200 flex items-center justify-center space-x-2 shadow-md cursor-pointer"
                                     aria-label="Add {{ $product->name }} to cart">
@@ -688,164 +639,35 @@ document.addEventListener('DOMContentLoaded', function () {
     lbNextBtn && lbNextBtn.addEventListener('click', function(e) { e.stopPropagation(); lbNext(); });
 });
 
-const optionImages = @json(collect($product->variant_images ?? [])->mapWithKeys(fn ($path, $key) => [$key => \App\Helpers\ImageHelper::getProductImageUrl($path)])->all());
-const primaryProductImage = @json(\App\Helpers\ImageHelper::getProductImageUrl($product->image));
+function handleAddToCart(productId) {
+    const sizeButtons = document.querySelectorAll('.size-btn');
+    const selectedSize = document.querySelector('.size-btn[aria-pressed="true"]')?.dataset.size || null;
 
-function updateOptionImage() {
-    const color = document.getElementById('selected-color-input')?.value?.trim().toLowerCase();
-    const size = document.querySelector('.variant-btn.border-amber-500')?.dataset.label?.trim().toLowerCase();
-    const selectedImage = (color && size ? optionImages[`color_size:${color}|${size}`] : null)
-        || (color ? optionImages[`color:${color}`] : null)
-        || (size ? optionImages[`size:${size}`] || optionImages[`option:${size}`] : null)
-        || primaryProductImage;
-    if (!selectedImage) return;
+    if (sizeButtons.length && !selectedSize) {
+        showToast('Please select a shoe size first.', 'error');
+        const selector = document.getElementById('size-selector');
+        selector?.classList.add('animate-pulse');
+        selector?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        window.setTimeout(() => selector?.classList.remove('animate-pulse'), 900);
+        return;
+    }
 
-    const mainImage = document.getElementById('zoom-img');
-    if (mainImage) mainImage.src = selectedImage;
-    const firstThumbnail = document.querySelector('.thumb-btn img');
-    if (firstThumbnail) firstThumbnail.src = selectedImage;
-    if (Array.isArray(lbImages) && lbImages.length) lbImages[0] = selectedImage;
-    const zoomPanel = document.getElementById('zoom-panel');
-    if (zoomPanel) zoomPanel.style.backgroundImage = `url('${selectedImage}')`;
+    addToCart(productId, 1, selectedSize);
 }
 
-// ---------- Color Selection Helpers ----------
-function handleColorSelect(name, btn) {
-    // Update hidden input
-    document.getElementById('selected-color-input').value = name;
-    
-    // Update label
-    document.getElementById('color-label').textContent = name;
-    
-    // Reset all buttons
-    document.querySelectorAll('.color-option-btn .rounded-full').forEach(el => {
-        el.classList.remove('border-amber-600', 'ring-2', 'ring-amber-200');
-        el.classList.add('border-gray-200');
-        el.querySelector('.selected-check').classList.add('hidden');
+function handleSizeSelect(button) {
+    document.querySelectorAll('.size-btn').forEach(sizeButton => {
+        sizeButton.setAttribute('aria-pressed', 'false');
+        sizeButton.classList.remove('border-amber-500', 'bg-amber-50', 'text-amber-700', 'ring-2', 'ring-amber-200');
+        sizeButton.classList.add('border-gray-200', 'text-gray-700');
     });
-    
-    // Highlight selected
-    const circle = btn.querySelector('.rounded-full');
-    circle.classList.remove('border-gray-200');
-    circle.classList.add('border-amber-600', 'ring-2', 'ring-amber-200');
-    circle.querySelector('.selected-check').classList.remove('hidden');
-    updateOptionImage();
-    updateOptionStockStatus();
+
+    button.setAttribute('aria-pressed', 'true');
+    button.classList.remove('border-gray-200', 'text-gray-700');
+    button.classList.add('border-amber-500', 'bg-amber-50', 'text-amber-700', 'ring-2', 'ring-amber-200');
+    document.getElementById('size-label').textContent = `Size ${button.dataset.size} selected`;
+    document.getElementById('size-selection-hint').textContent = 'Size selected. You can add this shoe to your cart.';
 }
-
-function handleAddWithColor(productId) {
-    const colorInput = document.getElementById('selected-color-input');
-    const color = colorInput ? colorInput.value : null;
-    
-    // If colors exist but none selected, alert user
-    if (colorInput && !color) {
-        showToast('Please select a color first', 'error');
-        
-        // Pulse the color section to draw attention
-        const colorSection = colorInput.parentElement;
-        colorSection.classList.add('animate-pulse');
-        setTimeout(() => colorSection.classList.remove('animate-pulse'), 1000);
-        return;
-    }
-    
-    const selectedVariant = document.querySelector('.variant-btn.border-amber-500');
-    const hasSizeOptions = document.querySelector('.variant-btn') !== null;
-    const size = selectedVariant ? selectedVariant.dataset.label : null;
-    if (hasSizeOptions && !size) {
-        showToast('Please select a shoe size first', 'error');
-        return;
-    }
-
-    if (Object.keys(optionInventory).length) {
-        const key = inventoryKey(color, size);
-        const available = Number(optionInventory[key] ?? 0);
-        if (available < 1) {
-            showToast('This color and size is out of stock', 'error');
-            return;
-        }
-    }
-
-    addToCart(productId, 1, color, size);
-}
-
-// ---------- Variant selector ----------
-const basePrice         = {{ (float) $product->price }};
-const basePriceFormatted = 'KES {{ number_format($product->price, 0) }}';
-const baseOriginalPrice  = {{ $product->original_price ? (float)$product->original_price : 'null' }};
-const optionInventory = @json($product->variant_stock ?? []);
-
-function inventoryKey(color, size) {
-    const parts = [];
-    if (color) parts.push(`color:${color.trim().toLowerCase()}`);
-    if (size) parts.push(`size:${size.trim().toLowerCase()}`);
-    return parts.join('|');
-}
-
-function updateOptionStockStatus() {
-    if (!Object.keys(optionInventory).length) return;
-    const color = document.getElementById('selected-color-input')?.value?.trim() || null;
-    const size = document.querySelector('.variant-btn.border-amber-500')?.dataset.label?.trim() || null;
-    const needsColor = document.querySelector('.color-option-btn') !== null;
-    const needsSize = document.querySelector('.variant-btn') !== null;
-    const status = document.getElementById('option-stock-status');
-    if ((needsColor && !color) || (needsSize && !size)) {
-        status.textContent = 'Select options to check availability';
-        status.className = 'font-medium text-gray-600';
-        return;
-    }
-    const available = Number(optionInventory[inventoryKey(color, size)] ?? 0);
-    status.textContent = available > 0 ? `In Stock (${available} available)` : 'Out of stock for this option';
-    status.className = available > 0 ? 'font-medium text-green-600' : 'font-medium text-red-600';
-}
-
-function handleVariantChange(btn) {
-    // Active pill state
-    document.querySelectorAll('.variant-btn').forEach(b => {
-        b.classList.remove('border-amber-500', 'text-amber-600', 'bg-amber-50');
-        b.classList.add('border-gray-200', 'text-gray-700');
-        const sub = b.querySelector('span');
-        if (sub) sub.classList.replace('text-amber-400', 'text-gray-400');
-    });
-    btn.classList.add('border-amber-500', 'text-amber-600', 'bg-amber-50');
-    btn.classList.remove('border-gray-200', 'text-gray-700');
-    const sub = btn.querySelector('span');
-    if (sub) sub.classList.replace('text-gray-400', 'text-amber-400');
-
-    // Label
-    const labelEl = document.getElementById('variant-label');
-    if (labelEl) labelEl.textContent = btn.dataset.label;
-
-    // Resolve prices
-    const rawPrice    = btn.dataset.price;
-    const rawOriginal = btn.dataset.originalPrice;
-    const price    = rawPrice    && rawPrice    !== '' ? parseFloat(rawPrice)    : basePrice;
-    const original = rawOriginal && rawOriginal !== '' ? parseFloat(rawOriginal) : null;
-
-    // Update main price
-    const priceEl = document.getElementById('product-price');
-    if (priceEl) priceEl.textContent = 'KES ' + price.toLocaleString('en-KE', { maximumFractionDigits: 0 });
-
-    // Update strikethrough + badge
-    const origEl  = document.getElementById('product-original-price');
-    const badgeEl = document.getElementById('product-discount-badge');
-
-    if (original && original > price) {
-        if (origEl)  { origEl.textContent  = 'KES ' + original.toLocaleString('en-KE', { maximumFractionDigits: 0 }); origEl.classList.remove('hidden'); }
-        if (badgeEl) { badgeEl.textContent = Math.round(((original - price) / original) * 100) + '% OFF'; badgeEl.classList.remove('hidden'); }
-    } else {
-        if (origEl)  origEl.classList.add('hidden');
-        if (badgeEl) badgeEl.classList.add('hidden');
-    }
-
-    updateOptionImage();
-    updateOptionStockStatus();
-}
-
-// Auto-select first (cheapest) variant on load
-document.addEventListener('DOMContentLoaded', function () {
-    const firstVariant = document.querySelector('.variant-btn');
-    if (firstVariant) handleVariantChange(firstVariant);
-});
 
 // ---------- Gallery lightbox state ----------
 const lbImages = @json(array_map(fn($p) => \App\Helpers\ImageHelper::getProductImageUrl($p), $galleryImages));

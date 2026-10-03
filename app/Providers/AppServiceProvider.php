@@ -21,12 +21,16 @@ class AppServiceProvider extends ServiceProvider
         // Register product observer for auto-embedding
         Product::observe(ProductObserver::class);
 
-        // Share contact information and categories with all views
+        // Share the active catalog navigation with all views.
         \Illuminate\Support\Facades\View::composer('*', function ($view) {
             $view->with([
                 'contact' => \App\Helpers\SettingsHelper::getContactInfo(),
                 'activeCategories' => \App\Models\Category::where('is_active', true)
-                    ->orderBy('sort_order')->orderBy('name')->get()
+                    ->orderBy('sort_order')->orderBy('name')->get(),
+                'activeBrands' => \App\Models\Brand::where('is_active', true)
+                    ->whereHas('products', fn ($query) => $query->where('is_active', true))
+                    ->withCount(['products' => fn ($query) => $query->where('is_active', true)])
+                    ->orderBy('name')->limit(5)->get(),
             ]);
         });
 

@@ -18,6 +18,16 @@
     <div class="bg-white shadow rounded-md p-4 lg:p-6">
         <form method="POST" action="{{ route('admin.products.store') }}" enctype="multipart/form-data" class="space-y-6">
             @csrf
+
+            @if($errors->any())
+                <div id="form-errors" role="alert" tabindex="-1" class="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+                    <p class="font-semibold">We couldn’t save this product yet.</p>
+                    <p class="mt-1">Review the items below. You’ll need to reselect image files after correcting any errors.</p>
+                    <ul class="mt-2 list-disc space-y-1 pl-5">
+                        @foreach($errors->all() as $message)<li>{{ $message }}</li>@endforeach
+                    </ul>
+                </div>
+            @endif
             
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
                 <!-- Product Name -->
@@ -86,13 +96,30 @@
 
                 <!-- Stock -->
                 <div>
-                    <label for="stock_quantity" class="block text-sm font-medium text-gray-700">Total Stock <span class="text-gray-400 font-normal">(calculated from option stock)</span></label>
+                    <label for="stock_quantity" class="block text-sm font-medium text-gray-700">Total Stock</label>
                     <input type="number" id="stock_quantity" name="stock_quantity" value="{{ old('stock_quantity', 0) }}" min="0" required
                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-amber-500 focus:border-amber-500 sm:text-sm @error('stock_quantity') border-red-500 @enderror">
                     @error('stock_quantity')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
+
+                <!-- Available Shoe Sizes -->
+                @php $selectedProductSizes = array_map('strval', old('sizes', range(19, 48))); @endphp
+                <fieldset class="lg:col-span-2 rounded-lg border border-gray-200 p-4">
+                    <legend class="px-1 text-sm font-semibold text-gray-900">Available shoe sizes</legend>
+                    <p class="mb-3 text-xs text-gray-500">Select every size available for this product. Customers must choose one before adding it to their cart.</p>
+                    <div class="grid grid-cols-5 gap-2 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12">
+                        @foreach(range(19, 48) as $size)
+                            <label class="cursor-pointer">
+                                <input type="checkbox" name="sizes[]" value="{{ $size }}" class="peer sr-only" @checked(in_array((string) $size, $selectedProductSizes, true))>
+                                <span class="flex min-h-10 items-center justify-center rounded-md border border-gray-300 bg-white text-sm font-medium text-gray-700 transition peer-checked:border-amber-600 peer-checked:bg-amber-50 peer-checked:text-amber-800 peer-focus-visible:ring-2 peer-focus-visible:ring-amber-500">{{ $size }}</span>
+                            </label>
+                        @endforeach
+                    </div>
+                    @error('sizes')<p class="mt-2 text-sm text-red-700">{{ $message }}</p>@enderror
+                    @error('sizes.*')<p class="mt-2 text-sm text-red-700">{{ $message }}</p>@enderror
+                </fieldset>
 
                 <!-- SKU -->
                 <div>
@@ -175,21 +202,21 @@
             </div>
 
             <!-- Main Image Drop Zone -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Product Image</label>
-                <input type="file" id="image" name="image" accept="image/*" class="sr-only">
+            <div class="rounded-xl border border-gray-200 bg-white p-4 sm:p-5">
+                <label for="image" class="block text-sm font-semibold text-gray-900">Product image <span class="font-normal text-gray-500">(optional)</span></label>
+                <p class="mt-1 text-xs text-gray-500">JPG, PNG, GIF or WebP. 2 MB max, at least 200 × 200 px.</p>
+                <input type="file" id="image" name="image" accept="image/jpeg,image/png,image/gif,image/webp" class="sr-only" aria-describedby="image-upload-status">
                 <div id="main-drop-zone"
-                     class="relative border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-amber-400 transition-colors bg-gray-50"
-                     style="width: 200px; height: 200px;"
+                     role="button" tabindex="0" aria-label="Choose or drop a product image"
+                     class="relative mt-3 aspect-square w-full max-w-xs border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:border-amber-400 hover:bg-amber-50/40 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-colors bg-gray-50"
                      onclick="document.getElementById('image').click()"
                      ondragover="event.preventDefault(); this.classList.add('border-amber-500','bg-amber-50')"
                      ondragleave="this.classList.remove('border-amber-500','bg-amber-50')"
                      ondrop="handleMainDrop(event)">
                     <div id="main-drop-placeholder" class="flex flex-col items-center gap-2 py-8 pointer-events-none">
                         <svg class="w-10 h-10 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                        <p class="text-sm text-gray-500">Drop image here or <span class="text-amber-600 font-medium">click to browse</span></p>
-                        <p class="text-xs text-gray-400">JPG, PNG, WebP. Max 2 MB.</p>
-                        <p class="text-xs font-medium text-amber-700">Recommended: 1200 × 1200 px square</p>
+                        <p class="text-sm text-gray-600">Drop an image here or <span class="text-amber-700 font-semibold">browse files</span></p>
+                        <p class="text-xs text-gray-500">Square images around 1200 × 1200 px work best.</p>
                     </div>
                     <div id="main-drop-preview" class="hidden w-full h-full relative">
                         <img id="main-preview-img" src="" alt="Preview" class="w-full h-full object-cover rounded-lg">
@@ -200,15 +227,18 @@
                         </button>
                     </div>
                 </div>
-                @error('image')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+                <p id="image-upload-status" role="status" aria-live="polite" class="mt-2 text-sm text-gray-600">No product image selected.</p>
+                @error('image')<p id="image-error" class="mt-1 text-sm text-red-700">{{ $message }}</p>@enderror
             </div>
 
             <!-- Extra Images Drop Zone -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Extra Images <span class="text-gray-400 font-normal">(optional, up to 8)</span></label>
-                <input type="file" id="extra_images" name="extra_images[]" accept="image/*" multiple class="sr-only">
+            <div class="rounded-xl border border-gray-200 bg-white p-4 sm:p-5">
+                <label for="extra_images" class="block text-sm font-semibold text-gray-900">Gallery images <span class="font-normal text-gray-500">(optional, up to 8)</span></label>
+                <p class="mt-1 text-xs text-gray-500">JPG, PNG, GIF or WebP. Each image must be 2 MB or smaller; combined new uploads up to 7 MB.</p>
+                <input type="file" id="extra_images" name="extra_images[]" accept="image/jpeg,image/png,image/gif,image/webp" multiple class="sr-only" aria-describedby="extra-upload-status">
                 <div id="extra-drop-zone"
-                     class="border-2 border-dashed border-gray-300 rounded-lg p-4 cursor-pointer hover:border-amber-400 transition-colors bg-gray-50"
+                     role="button" tabindex="0" aria-label="Choose or drop gallery images"
+                     class="border-2 border-dashed border-gray-300 rounded-xl p-4 cursor-pointer hover:border-amber-400 hover:bg-amber-50/40 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-colors bg-gray-50"
                      onclick="document.getElementById('extra_images').click()"
                      ondragover="event.preventDefault(); this.classList.add('border-amber-500','bg-amber-50')"
                      ondragleave="this.classList.remove('border-amber-500','bg-amber-50')"
@@ -216,13 +246,13 @@
                     <div id="extra-drop-placeholder" class="flex flex-col items-center gap-2 py-4 pointer-events-none">
                         <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4"/></svg>
                         <p class="text-sm text-gray-500">Drop multiple images or <span class="text-amber-600 font-medium">click to browse</span></p>
-                        <p class="text-xs text-gray-400">Up to 8 images. They appear as a gallery on the product page.</p>
-                        <p class="text-xs font-medium text-amber-700">Recommended: 1200 × 1200 px square for a consistent gallery</p>
+                        <p class="text-xs text-gray-500">Add up to 8 images for the product gallery.</p>
                     </div>
                     <div id="extra-images-preview" class="flex flex-wrap gap-2"></div>
                 </div>
-                @error('extra_images')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
-                @error('extra_images.*')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+                <p id="extra-upload-status" role="status" aria-live="polite" class="mt-2 text-sm text-gray-600">No gallery images selected.</p>
+                @error('extra_images')<p id="extra-images-error" class="mt-1 text-sm text-red-700">{{ $message }}</p>@enderror
+                @error('extra_images.*')<p class="mt-1 text-sm text-red-700">{{ $message }}</p>@enderror
             </div>
 
             <!-- Description -->
@@ -249,8 +279,8 @@
                    class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md text-center">
                     Cancel
                 </a>
-                <button type="submit" 
-                        class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-md">
+                <button type="submit" id="save-product-button"
+                        class="bg-amber-600 hover:bg-amber-700 disabled:cursor-wait disabled:opacity-70 text-white px-4 py-2 rounded-md">
                     Create Product
                 </button>
             </div>
@@ -332,91 +362,216 @@ function sync() {
 </script>
 
 <script>
-// ---- Main image drop zone (create) ----
+// ---- Accessible, validated product image uploads ----
 const mainInput = document.getElementById('image');
-mainInput.addEventListener('change', () => showMainPreview(mainInput.files[0]));
+const extraInput = document.getElementById('extra_images');
+const mainZone = document.getElementById('main-drop-zone');
+const extraZone = document.getElementById('extra-drop-zone');
+const mainStatus = document.getElementById('image-upload-status');
+const extraStatus = document.getElementById('extra-upload-status');
+const clearImageFlag = document.getElementById('clear-image-flag');
+const maxFileBytes = 2 * 1024 * 1024;
+const maxNewUploadBytes = 7 * 1024 * 1024;
+const maxGalleryImages = 8;
+const acceptedExtensions = /\.(jpe?g|png|gif|webp)$/i;
+let extraFiles = [];
+let previewUrls = [];
 
-function handleMainDrop(e) {
-    e.preventDefault();
-    document.getElementById('main-drop-zone').classList.remove('border-amber-500','bg-amber-50');
-    const file = e.dataTransfer.files[0];
-    if (!file || !file.type.startsWith('image/')) return;
-    const dt = new DataTransfer(); dt.items.add(file); mainInput.files = dt.files;
-    showMainPreview(file);
+function setUploadStatus(element, message, isError = false) {
+    if (!element) return;
+    element.textContent = message;
+    element.classList.toggle('text-red-700', isError);
+    element.classList.toggle('text-gray-600', !isError);
 }
 
-function showMainPreview(file) {
+function formatFileSize(bytes) {
+    return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+}
+
+function imageFileError(file) {
+    const validMime = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'].includes(file.type);
+    if ((!validMime && file.type !== '') || (!validMime && !acceptedExtensions.test(file.name))) {
+        return 'Choose a JPG, PNG, GIF, or WebP image.';
+    }
+    if (file.size > maxFileBytes) return 'Each image must be 2 MB or smaller.';
+    if (file.size === 0) return 'This file is empty. Choose another image.';
+    return null;
+}
+
+function selectedUploadBytes() {
+    return (mainInput.files?.[0]?.size || 0) + extraFiles.reduce((total, file) => total + file.size, 0);
+}
+
+function setMainImage(file) {
+    const error = imageFileError(file);
+    if (error) {
+        mainInput.value = '';
+        if (clearImageFlag) clearImageFlag.value = '0';
+        setUploadStatus(mainStatus, `${file.name}: ${error}`, true);
+        return;
+    }
+
+    const combinedBytes = file.size + extraFiles.reduce((total, item) => total + item.size, 0);
+    if (combinedBytes > maxNewUploadBytes) {
+        mainInput.value = '';
+        if (clearImageFlag) clearImageFlag.value = '0';
+        setUploadStatus(mainStatus, 'New image files must total 7 MB or less. Remove a gallery image and try again.', true);
+        return;
+    }
+
+    mainInput.classList.remove('border-red-500');
+    if (clearImageFlag) clearImageFlag.value = '0';
+    document.getElementById('main-preview-img').src = URL.createObjectURL(file);
+    document.getElementById('main-drop-placeholder').classList.add('hidden');
+    document.getElementById('main-drop-preview').classList.remove('hidden');
+    document.getElementById('main-existing-note')?.classList.add('hidden');
+    setUploadStatus(mainStatus, `Ready to upload: ${file.name} (${formatFileSize(file.size)}).`);
+}
+
+mainInput.addEventListener('change', () => {
+    if (mainInput.files?.[0]) setMainImage(mainInput.files[0]);
+});
+
+function handleMainDrop(event) {
+    event.preventDefault();
+    mainZone.classList.remove('border-amber-500', 'bg-amber-50');
+    const file = event.dataTransfer.files?.[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = e => {
-        document.getElementById('main-preview-img').src = e.target.result;
-        document.getElementById('main-drop-placeholder').classList.add('hidden');
-        document.getElementById('main-drop-preview').classList.remove('hidden');
-    };
-    reader.readAsDataURL(file);
+    const transfer = new DataTransfer();
+    transfer.items.add(file);
+    mainInput.files = transfer.files;
+    setMainImage(file);
 }
 
 function clearMainImage() {
     mainInput.value = '';
     document.getElementById('main-drop-placeholder').classList.remove('hidden');
     document.getElementById('main-drop-preview').classList.add('hidden');
+    if (clearImageFlag) {
+        document.getElementById('clear-image-flag').value = '1';
+        setUploadStatus(mainStatus, 'The current product image will be removed when you save.');
+    } else {
+        setUploadStatus(mainStatus, 'Product image cleared.');
+    }
 }
 
-// ---- Extra images drop zone (create) ----
-let extraFiles = [];
-const extraInput = document.getElementById('extra_images');
-extraInput.addEventListener('change', () => addExtraFiles(extraInput.files));
-
-function handleExtraDrop(e) {
-    e.preventDefault();
-    document.getElementById('extra-drop-zone').classList.remove('border-amber-500','bg-amber-50');
-    addExtraFiles(e.dataTransfer.files);
+function existingGalleryCount() {
+    return document.querySelectorAll('input[name="keep_extra_images[]"]').length;
 }
 
 function addExtraFiles(fileList) {
+    const rejected = [];
     Array.from(fileList).forEach(file => {
-        if (!file.type.startsWith('image/')) return;
-        if (extraFiles.length >= 8) return;
+        const error = imageFileError(file);
+        if (error) {
+            rejected.push(`${file.name}: ${error}`);
+            return;
+        }
+        if (existingGalleryCount() + extraFiles.length >= maxGalleryImages) {
+            rejected.push(`${file.name}: a product can have up to 8 gallery images total.`);
+            return;
+        }
+        if (selectedUploadBytes() + file.size > maxNewUploadBytes) {
+            rejected.push(`${file.name}: new image files must total 7 MB or less.`);
+            return;
+        }
         extraFiles.push(file);
     });
+
     syncExtraInput();
     renderExtraPreviews();
+    const count = extraFiles.length;
+    const ready = count ? `${count} new ${count === 1 ? 'image' : 'images'} ready to upload (${formatFileSize(extraFiles.reduce((sum, file) => sum + file.size, 0))}).` : 'No new gallery images selected.';
+    setUploadStatus(extraStatus, rejected.length ? `${ready} ${rejected.join(' ')}` : ready, rejected.length > 0);
 }
 
-function removeExtraFile(idx) {
-    extraFiles.splice(idx, 1);
+function handleExtraDrop(event) {
+    event.preventDefault();
+    extraZone.classList.remove('border-amber-500', 'bg-amber-50');
+    addExtraFiles(event.dataTransfer.files);
+}
+
+extraInput.addEventListener('change', () => addExtraFiles(extraInput.files));
+
+function removeExtraFile(index) {
+    extraFiles.splice(index, 1);
     syncExtraInput();
     renderExtraPreviews();
+    const count = extraFiles.length;
+    setUploadStatus(extraStatus, count ? `${count} new ${count === 1 ? 'image' : 'images'} ready to upload (${formatFileSize(extraFiles.reduce((sum, file) => sum + file.size, 0))}).` : 'No new gallery images selected.');
 }
 
 function syncExtraInput() {
-    const dt = new DataTransfer();
-    extraFiles.forEach(f => dt.items.add(f));
-    extraInput.files = dt.files;
+    const transfer = new DataTransfer();
+    extraFiles.forEach(file => transfer.items.add(file));
+    extraInput.files = transfer.files;
 }
 
 function renderExtraPreviews() {
     const container = document.getElementById('extra-images-preview');
-    const placeholder = document.getElementById('extra-drop-placeholder');
+    previewUrls.forEach(url => URL.revokeObjectURL(url));
+    previewUrls = [];
     container.innerHTML = '';
-    if (extraFiles.length === 0) {
-        placeholder.classList.remove('hidden');
-        return;
-    }
-    placeholder.classList.add('hidden');
-    extraFiles.forEach((file, idx) => {
-        const reader = new FileReader();
-        reader.onload = e => {
-            const div = document.createElement('div');
-            div.className = 'relative w-20 h-20 flex-shrink-0';
-            div.innerHTML = `
-                <img src="${e.target.result}" class="w-full h-full object-cover rounded-md border border-gray-200">
-                <button type="button" onclick="event.stopPropagation(); removeExtraFile(${idx})"
-                        class="absolute -top-1.5 -right-1.5 bg-red-600 hover:bg-red-700 text-white rounded-full w-5 h-5 flex items-center justify-center shadow text-xs leading-none">×</button>`;
-            container.appendChild(div);
-        };
-        reader.readAsDataURL(file);
+
+    extraFiles.forEach((file, index) => {
+        const url = URL.createObjectURL(file);
+        previewUrls.push(url);
+        const card = document.createElement('div');
+        card.className = 'relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg border border-gray-200 bg-white';
+        const image = document.createElement('img');
+        image.src = url;
+        image.alt = file.name;
+        image.className = 'h-full w-full object-cover';
+        const remove = document.createElement('button');
+        remove.type = 'button';
+        remove.className = 'absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-black/70 text-sm text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-white';
+        remove.setAttribute('aria-label', `Remove ${file.name}`);
+        remove.textContent = '×';
+        remove.addEventListener('click', event => {
+            event.stopPropagation();
+            removeExtraFile(index);
+        });
+        card.append(image, remove);
+        container.appendChild(card);
     });
 }
+
+function bindUploadKeyboard(zone, input) {
+    zone.addEventListener('keydown', event => {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            input.click();
+        }
+    });
+}
+
+bindUploadKeyboard(mainZone, mainInput);
+bindUploadKeyboard(extraZone, extraInput);
+
+document.querySelector('form').addEventListener('submit', event => {
+    const totalBytes = selectedUploadBytes();
+    if (totalBytes > maxNewUploadBytes) {
+        event.preventDefault();
+        setUploadStatus(extraStatus, 'New image files must total 7 MB or less. Remove an image before saving.', true);
+        extraZone.focus();
+        return;
+    }
+    const button = document.getElementById('save-product-button');
+    button.disabled = true;
+    button.textContent = 'Saving product…';
+    setUploadStatus(extraStatus, 'Uploading images and saving your changes…');
+});
+
+function deleteExistingExtra(path, hash) {
+    const wrapper = document.getElementById('existing-' + hash);
+    const keepInput = document.getElementById('keep-' + hash);
+    if (wrapper) wrapper.remove();
+    if (keepInput) keepInput.remove();
+    const count = existingGalleryCount() + extraFiles.length;
+    setUploadStatus(extraStatus, `${count} gallery ${count === 1 ? 'image' : 'images'} will remain after saving.`);
+}
+
+const formErrors = document.getElementById('form-errors');
+if (formErrors) formErrors.focus();
 </script>
 @endsection

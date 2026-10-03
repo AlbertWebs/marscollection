@@ -35,7 +35,7 @@ class ProductController extends Controller
                                       ->orWhere('description', 'like', '%'.$request->search.'%'));
         }
 
-        $products   = $query->paginate(50);
+        $products   = $query->orderByDesc('created_at')->orderByDesc('id')->paginate(50);
         $categories = Category::where('is_active', true)->get();
         $brands     = Brand::where('is_active', true)->get();
         $selectedCategory = $request->filled('category')

@@ -57,10 +57,24 @@
             <!-- Navigation -->
             <nav class="hidden lg:flex items-center gap-0 xl:gap-2">
                 <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'text-amber-300' : 'text-gray-200 hover:text-amber-300' }} px-2 xl:px-3 py-2 text-sm font-medium transition-colors">Home</a>
+                <div class="group relative">
+                    <a href="{{ route('brands.index') }}" aria-haspopup="true" class="inline-flex items-center gap-1 px-2 py-2 text-sm font-medium transition-colors xl:px-3 {{ request()->routeIs('brands.*') ? 'text-amber-300' : 'text-gray-200 hover:text-amber-300' }}">
+                        Brand
+                        <svg class="h-4 w-4 transition-transform group-hover:rotate-180 group-focus-within:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.09 1.03l-4.255 4.516a.75.75 0 01-1.09 0L5.21 8.26a.75.75 0 01.02-1.05z" clip-rule="evenodd"/></svg>
+                    </a>
+                    <div class="invisible absolute left-0 top-full z-50 mt-1 w-60 translate-y-1 rounded-xl border border-gray-200 bg-white p-2 text-gray-800 opacity-0 shadow-xl transition group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
+                        @forelse($activeBrands as $brand)
+                            <a href="{{ route('brands.show', $brand) }}" class="block rounded-lg px-3 py-2.5 text-sm font-medium hover:bg-amber-50 hover:text-amber-800">{{ $brand->name }}</a>
+                        @empty
+                            <p class="px-3 py-2 text-sm text-gray-500">No brands available yet.</p>
+                        @endforelse
+                        <a href="{{ route('brands.index') }}" class="mt-1 block border-t border-gray-100 px-3 py-2.5 text-sm font-bold text-amber-800 hover:bg-amber-50">All brands <span aria-hidden="true">→</span></a>
+                    </div>
+                </div>
+                <a href="{{ route('categories.index') }}" class="{{ request()->routeIs('categories.*') ? 'text-amber-300' : 'text-gray-200 hover:text-amber-300' }} px-2 xl:px-3 py-2 text-sm font-medium transition-colors">Category</a>
                 <a href="{{ route('products.index') }}" class="{{ request()->routeIs('products.*') ? 'text-amber-300' : 'text-gray-200 hover:text-amber-300' }} px-2 xl:px-3 py-2 text-sm font-medium transition-colors">Shop</a>
-                <a href="{{ route('categories.index') }}" class="{{ request()->routeIs('categories.*') ? 'text-amber-300' : 'text-gray-200 hover:text-amber-300' }} px-2 xl:px-3 py-2 text-sm font-medium transition-colors">Categories</a>
                 <a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'text-amber-300' : 'text-gray-200 hover:text-amber-300' }} px-2 xl:px-3 py-2 text-sm font-medium transition-colors">Our Story</a>
-                <a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') || request()->routeIs('contact.submit') ? 'text-amber-300' : 'text-gray-200 hover:text-amber-300' }} px-2 xl:px-3 py-2 text-sm font-medium transition-colors">Contact</a>
+                <a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') || request()->routeIs('contact.submit') ? 'text-amber-300' : 'text-gray-200 hover:text-amber-300' }} px-2 xl:px-3 py-2 text-sm font-medium transition-colors">Contact Us</a>
             </nav>
             
             <!-- User Actions -->
@@ -135,32 +149,6 @@
         </div>
     </div>
     
-    <!-- Split Line between Main Header and Categories -->
-    <div class="h-px bg-gray-200"></div>
-    
-    <!-- Categories Navigation -->
-    @if($activeCategories->count() > 0)
-        <div class="border-gray-100">
-            <div class="container mx-auto px-0 sm:px-6 lg:px-8">
-                <div class="relative h-10 flex items-center gap-0 sm:gap-3">
-                    <!-- Categories Label -->
-                    <div class="bg-amber-600 text-white px-3 py-2 flex-shrink-0">
-                        <a href="{{ route('categories.index') }}" class="text-xs font-medium text-white uppercase tracking-wide">Categories</a>
-                    </div>
-                    
-                    <!-- Category Links with Horizontal Scroll -->
-                    <div aria-label="Browse product categories" class="flex min-w-0 flex-1 gap-0 overflow-x-auto overscroll-x-contain touch-pan-x scrollbar-hide">
-                        @foreach($activeCategories as $category)
-                        <a href="{{ route('categories.show', $category) }}"
-                        class="inline-flex items-center px-4 py-2 h-10 text-sm font-medium {{ request('category') === $category->slug ? 'text-amber-600 ' : 'text-gray-700 hover:text-amber-600 hover:bg-amber-100' }} transition-all duration-200 whitespace-nowrap flex-shrink-0">
-                                {{ $category->name }}
-                            </a>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-        </div>
-    @endif
 </header>
 
 <!-- Mobile Menu Drawer -->
@@ -184,13 +172,21 @@
         <nav class="p-6">
             <div class="space-y-4">
                 <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'text-amber-600' : 'text-gray-700 hover:text-amber-600' }} {{ $mobileNavLinkClass }}">Home</a>
-                <a href="{{ route('products.index') }}" class="{{ request()->routeIs('products.*') ? 'text-amber-600' : 'text-gray-700 hover:text-amber-600' }} {{ $mobileNavLinkClass }}">Shop footwear</a>
-                <a href="{{ route('categories.index') }}" class="{{ request()->routeIs('categories.*') ? 'text-amber-600' : 'text-gray-700 hover:text-amber-600' }} {{ $mobileNavLinkClass }}">All categories</a>
-                @foreach($activeCategories as $category)
-                    <a href="{{ route('categories.show', $category) }}" class="block border-b border-gray-100 py-2 pl-4 text-sm font-medium {{ request()->route('category')?->slug === $category->slug || request('category') === $category->slug ? 'text-amber-600' : 'text-gray-500 hover:text-amber-600' }}">{{ $category->name }}</a>
-                @endforeach
+                <details class="border-b border-gray-100 py-3" {{ request()->routeIs('brands.*') ? 'open' : '' }}>
+                    <summary class="cursor-pointer list-none text-lg font-medium {{ request()->routeIs('brands.*') ? 'text-amber-600' : 'text-gray-700 hover:text-amber-600' }}">Brand</summary>
+                    <div class="mt-2 space-y-1 pl-4">
+                        @forelse($activeBrands as $brand)
+                            <a href="{{ route('brands.show', $brand) }}" class="block py-2 text-sm font-medium text-gray-600 hover:text-amber-600">{{ $brand->name }}</a>
+                        @empty
+                            <p class="py-2 text-sm text-gray-500">No brands available yet.</p>
+                        @endforelse
+                        <a href="{{ route('brands.index') }}" class="block border-t border-gray-100 py-2 text-sm font-bold text-amber-800">All brands</a>
+                    </div>
+                </details>
+                <a href="{{ route('categories.index') }}" class="{{ request()->routeIs('categories.*') ? 'text-amber-600' : 'text-gray-700 hover:text-amber-600' }} {{ $mobileNavLinkClass }}">Category</a>
+                <a href="{{ route('products.index') }}" class="{{ request()->routeIs('products.*') ? 'text-amber-600' : 'text-gray-700 hover:text-amber-600' }} {{ $mobileNavLinkClass }}">Shop</a>
                 <a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'text-amber-600' : 'text-gray-700 hover:text-amber-600' }} {{ $mobileNavLinkClass }}">Our Story</a>
-                <a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') || request()->routeIs('contact.submit') ? 'text-amber-600' : 'text-gray-700 hover:text-amber-600' }} {{ $mobileNavLinkClass }}">Contact</a>
+                <a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') || request()->routeIs('contact.submit') ? 'text-amber-600' : 'text-gray-700 hover:text-amber-600' }} {{ $mobileNavLinkClass }}">Contact Us</a>
             </div>
         </nav>
         

@@ -42,22 +42,28 @@ class CartController extends Controller
 
     public function add(Request $request)
     {
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'quantity' => 'required|integer|min:1',
+            'selected_size' => 'nullable|integer|between:19,48',
+        ]);
+
+        $product = Product::findOrFail($request->product_id);
+        $availableSizes = array_map('strval', $product->sizes ?? []);
+        if ($availableSizes && !$request->filled('selected_size')) {
+            return response()->json(['success' => false, 'message' => 'Please select a shoe size first.'], 422);
+        }
+        if ($request->filled('selected_size') && $availableSizes && !in_array((string) $request->selected_size, $availableSizes, true)) {
+            return response()->json(['success' => false, 'message' => 'That size is not available for this product.'], 422);
+        }
+
         try {
             Log::info('Add to cart request', $request->all());
-
-            $request->validate([
-                'product_id' => 'required|exists:products,id',
-                'quantity' => 'required|integer|min:1',
-                'selected_color' => 'nullable|string|max:255',
-                'selected_size' => 'nullable|string|max:50'
-            ]);
-
-            $product = Product::findOrFail($request->product_id);
             Log::info('Product found', ['product_id' => $product->id, 'name' => $product->name]);
 
-            // Keep separate cart lines for each selected size and color.
+            // Keep separate cart lines for each selected size.
             $cartItem = Cart::where('product_id', $request->product_id)
-                ->where('selected_color', $request->selected_color)
+                ->whereNull('selected_color')
                 ->where('selected_size', $request->selected_size)
                 ->where(function ($query) {
                     if (Auth::check()) {
@@ -79,7 +85,6 @@ class CartController extends Controller
                     'session_id' => session()->getId(),
                     'product_id' => $request->product_id,
                     'quantity' => $request->quantity,
-                    'selected_color' => $request->selected_color,
                     'selected_size' => $request->selected_size
                 ]);
                 Log::info('New cart item created', ['cart_id' => $cartItem->id]);
@@ -200,7 +205,6 @@ class CartController extends Controller
                         'product_name' => $item->product->name,
                         'product_image' => \App\Helpers\ImageHelper::getProductImageUrl($item->product->image),
                         'quantity' => $item->quantity,
-                        'selected_color' => $item->selected_color,
                         'selected_size' => $item->selected_size,
                         'price' => $item->product->price * $item->quantity
                     ];

@@ -51,6 +51,7 @@ class ProductSeeder extends Seeder
                     'is_active' => true,
                     'stock_quantity' => 12,
                     'colors' => $item['colors'],
+                    'sizes' => range(19, 48),
                 ]
             );
 

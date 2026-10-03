@@ -32,6 +32,7 @@ class Product extends Model
         'sku',
         'colors',
         'extra_images',
+        'sizes',
     ];
 
     protected $casts = [
@@ -45,6 +46,7 @@ class Product extends Model
         'is_active' => 'boolean',
         'colors' => 'array',
         'extra_images' => 'array',
+        'sizes' => 'array',
     ];
 
     protected static function boot()
