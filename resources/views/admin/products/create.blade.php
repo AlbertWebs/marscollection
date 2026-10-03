@@ -105,7 +105,7 @@
                 </div>
 
                 <!-- Available Shoe Sizes -->
-                @php $selectedProductSizes = array_map('strval', old('sizes', range(19, 48))); @endphp
+                @php $selectedProductSizes = array_map('strval', old('sizes', [])); @endphp
                 <fieldset class="lg:col-span-2 rounded-lg border border-gray-200 p-4">
                     <legend class="px-1 text-sm font-semibold text-gray-900">Available shoe sizes</legend>
                     <p class="mb-3 text-xs text-gray-500">Select every size available for this product. Customers must choose one before adding it to their cart.</p>
