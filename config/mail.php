@@ -39,7 +39,9 @@ return [
 
         'smtp' => [
             'transport' => 'smtp',
-            'scheme' => env('MAIL_SCHEME'),
+            // Symfony accepts smtp/smtps schemes; older .env files may use "tls".
+            // Leave the scheme unset in that case so SMTP can negotiate STARTTLS.
+            'scheme' => in_array(env('MAIL_SCHEME'), ['smtp', 'smtps'], true) ? env('MAIL_SCHEME') : null,
             'url' => env('MAIL_URL'),
             'host' => env('MAIL_HOST', '127.0.0.1'),
             'port' => env('MAIL_PORT', 2525),

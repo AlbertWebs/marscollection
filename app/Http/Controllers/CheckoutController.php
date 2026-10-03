@@ -6,8 +6,10 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Cart;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Throwable;
 
 class CheckoutController extends Controller
 {
@@ -116,8 +118,8 @@ class CheckoutController extends Controller
         // Send customer email notification
         try {
             Mail::to($order->customer_email)->send(new \App\Mail\OrderPlacedCustomer($order));
-        } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Failed to send customer order notification: ' . $e->getMessage());
+        } catch (Throwable) {
+            Log::warning('Failed to send customer order notification.', ['order_id' => $order->id]);
         }
 
         // Send WhatsApp notification to admin
@@ -177,11 +179,14 @@ class CheckoutController extends Controller
 
     private function sendAdminOrderNotification(Order $order)
     {
-        $adminEmail = \App\Helpers\SettingsHelper::getAdminEmail();
-
-        Mail::send('emails.admin-order-notification', ['order' => $order], function ($message) use ($adminEmail, $order) {
-            $message->to($adminEmail)
-                    ->subject('New Order Received - ' . $order->order_number);
-        });
+        try {
+            $adminEmail = \App\Helpers\SettingsHelper::getAdminEmail();
+            Mail::send('emails.admin-order-notification', ['order' => $order], function ($message) use ($adminEmail, $order) {
+                $message->to($adminEmail)
+                        ->subject('New Order Received - ' . $order->order_number);
+            });
+        } catch (Throwable) {
+            Log::warning('Failed to send admin order notification.', ['order_id' => $order->id]);
+        }
     }
 }
