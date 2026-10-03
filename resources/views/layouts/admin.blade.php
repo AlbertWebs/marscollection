@@ -174,6 +174,10 @@
                     <div>
                         <h3 class="mb-2 px-4 text-[10px] font-bold uppercase tracking-[0.16em] text-gray-400">System</h3>
                         <div class="space-y-1">
+                            <a href="{{ route('admin.profile.edit') }}" class="flex items-center rounded-md px-4 py-2 text-gray-700 hover:bg-gray-100 {{ request()->routeIs('admin.profile.*') ? 'bg-amber-100 text-amber-700' : '' }}">
+                                <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4" stroke-width="2"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 21a8 8 0 0116 0"/></svg>
+                                Admin profile
+                            </a>
                             <a href="{{ route('admin.settings.index') }}" 
                                class="flex items-center px-4 py-2 text-gray-700 rounded-md hover:bg-gray-100 {{ request()->routeIs('admin.settings.*') ? 'bg-amber-100 text-amber-700' : '' }}">
                                 <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">

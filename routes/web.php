@@ -9,6 +9,7 @@ use App\Http\Controllers\BundleController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\AdminPaymentController;
+use App\Http\Controllers\AdminProfileController;
 use App\Http\Controllers\KopoKopoWebhookController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ReviewController;
@@ -86,6 +87,8 @@ Route::get('/reviews/{token}/complete', [ReviewController::class, 'complete'])->
 
 // Admin Routes
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/profile', [AdminProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [AdminProfileController::class, 'update'])->name('profile.update');
     Route::get('/dashboard/analytics', [AdminController::class, 'dashboardAnalytics'])->name('dashboard.analytics');
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
 
