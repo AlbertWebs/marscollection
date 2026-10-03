@@ -45,6 +45,11 @@ class Order extends Model
         return $this->hasMany(OrderItem::class)->with(['product', 'bundle']);
     }
 
+    public function payments()
+    {
+        return $this->hasMany(Payment::class)->latest();
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -82,4 +87,4 @@ class Order extends Model
 
         return $statuses[$this->status] ?? 'bg-gray-100 text-gray-800';
     }
-} 
+}

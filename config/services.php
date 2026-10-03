@@ -40,4 +40,13 @@ return [
         'embedding_model' => env('GEMINI_EMBEDDING_MODEL', 'gemini-embedding-2'),
     ],
 
+    'kopokopo' => [
+        'base_url' => env('KOPOKOPO_BASE_URL', 'https://sandbox.kopokopo.com'),
+        'client_id' => env('KOPOKOPO_CLIENT_ID'),
+        'client_secret' => env('KOPOKOPO_CLIENT_SECRET'),
+        'api_key' => env('KOPOKOPO_API_KEY'),
+        'till_number' => env('KOPOKOPO_TILL_NUMBER'),
+        'callback_url' => env('KOPOKOPO_CALLBACK_URL'),
+    ],
+
 ];

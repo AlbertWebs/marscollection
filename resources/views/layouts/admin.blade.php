@@ -101,6 +101,11 @@
                                 </svg>
                                 Orders
                             </a>
+
+                            <a href="{{ route('admin.payments.index') }}" class="flex items-center rounded-md px-4 py-2 text-gray-700 hover:bg-gray-100 {{ request()->routeIs('admin.payments.*') ? 'bg-amber-100 text-amber-700' : '' }}">
+                                <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h18M5 7V5a2 2 0 012-2h10a2 2 0 012 2v2m-16 0v12a2 2 0 002 2h14a2 2 0 002-2V7M7 12h4m-4 4h7"/></svg>
+                                Payments
+                            </a>
                             
                             <a href="{{ route('admin.users.index') }}" 
                                class="flex items-center px-4 py-2 text-gray-700 rounded-md hover:bg-gray-100 {{ request()->routeIs('admin.users.*') ? 'bg-amber-100 text-amber-700' : '' }}">

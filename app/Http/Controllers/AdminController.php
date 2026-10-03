@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Order;
+use App\Models\OrderItem;
+use App\Models\Payment;
 use App\Models\User;
 use App\Models\Category;
 use App\Models\Brand;
@@ -20,6 +22,7 @@ use App\Mail\AppointmentConfirmed;
 use App\Mail\ReviewLinkEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
@@ -491,8 +494,151 @@ class AdminController extends Controller
 
     public function orders()
     {
-        $orders = Order::with(['user', 'orderItems.product', 'orderItems.bundle'])->latest()->paginate(50);
+        $orders = Order::with(['user', 'orderItems.product', 'orderItems.bundle', 'payments'])->latest()->paginate(50);
         return view('admin.orders.index', compact('orders'));
+    }
+
+    public function createOrder()
+    {
+        $products = Product::where('is_active', true)->orderBy('name')->get();
+        return view('admin.orders.create', compact('products'));
+    }
+
+    public function storeOrder(Request $request)
+    {
+        $validated = $request->validate([
+            'customer_name' => 'required|string|max:255',
+            'customer_email' => 'required|email|max:255',
+            'customer_phone' => 'required|string|max:30',
+            'customer_city' => 'required|string|max:255',
+            'delivery_address' => 'required|string|max:1000',
+            'payment_method' => 'required|in:mpesa,cash_on_delivery,credit_card,bank_transfer',
+            'shipping_cost' => 'nullable|numeric|min:0|max:100000',
+            'notes' => 'nullable|string|max:1000',
+            'items' => 'required|array|min:1|max:30',
+            'items.*.product_id' => 'required|integer|exists:products,id',
+            'items.*.quantity' => 'required|integer|min:1|max:100',
+            'items.*.size' => 'nullable|integer|between:19,48',
+        ]);
+
+        $products = Product::whereIn('id', collect($validated['items'])->pluck('product_id')->unique())
+            ->where('is_active', true)->get()->keyBy('id');
+        if ($products->count() !== collect($validated['items'])->pluck('product_id')->unique()->count()) {
+            return back()->withInput()->withErrors(['items' => 'One or more selected products are no longer available.']);
+        }
+
+        foreach ($validated['items'] as $index => $item) {
+            $product = $products->get($item['product_id']);
+            $availableSizes = array_map('strval', $product->sizes ?? []);
+            if ($availableSizes && (empty($item['size']) || !in_array((string) $item['size'], $availableSizes, true))) {
+                return back()->withInput()->withErrors(["items.{$index}.size" => "Choose an available size for {$product->name}."]);
+            }
+            if ($product->stock_quantity < $item['quantity']) {
+                return back()->withInput()->withErrors(["items.{$index}.quantity" => "{$product->name} only has {$product->stock_quantity} in stock."]);
+            }
+        }
+
+        $subtotal = collect($validated['items'])->sum(fn ($item) => (float) $products->get($item['product_id'])->price * (int) $item['quantity']);
+        $tax = round($subtotal * 0.15, 2);
+        $shipping = (float) ($validated['shipping_cost'] ?? 0);
+        $total = $subtotal + $tax + $shipping;
+
+        $order = DB::transaction(function () use ($validated, $products, $subtotal, $tax, $shipping, $total) {
+            $order = Order::create([
+                'order_number' => 'ORD-' . strtoupper(\Illuminate\Support\Str::random(8)),
+                'user_id' => null,
+                'customer_name' => $validated['customer_name'],
+                'customer_email' => $validated['customer_email'],
+                'customer_phone' => $validated['customer_phone'],
+                'shipping_address' => ['street' => $validated['delivery_address'], 'city' => $validated['customer_city'], 'state' => 'N/A', 'zip_code' => 'N/A', 'country' => 'Kenya'],
+                'billing_address' => ['street' => $validated['delivery_address'], 'city' => $validated['customer_city'], 'state' => 'N/A', 'zip_code' => 'N/A', 'country' => 'Kenya'],
+                'subtotal' => $subtotal,
+                'tax' => $tax,
+                'shipping_cost' => $shipping,
+                'total' => $total,
+                'status' => 'pending',
+                'payment_method' => $validated['payment_method'],
+                'notes' => $validated['notes'] ?? null,
+            ]);
+
+            foreach ($validated['items'] as $item) {
+                $product = $products->get($item['product_id']);
+                OrderItem::create([
+                    'order_id' => $order->id,
+                    'product_id' => $product->id,
+                    'product_name' => $product->name,
+                    'product_price' => $product->price,
+                    'quantity' => $item['quantity'],
+                    'subtotal' => $product->price * $item['quantity'],
+                    'selected_size' => $item['size'] ?? null,
+                ]);
+                $product->increment('sold_count', $item['quantity']);
+            }
+
+            Payment::create([
+                'order_id' => $order->id,
+                'user_id' => auth()->id(),
+                'customer_name' => $order->customer_name,
+                'customer_email' => $order->customer_email,
+                'phone' => $order->customer_phone,
+                'method' => $order->payment_method,
+                'provider' => $order->payment_method === 'mpesa' ? 'kopokopo' : 'manual',
+                'source' => 'admin_order',
+                'amount' => $order->total,
+                'currency' => 'KES',
+                'status' => 'pending',
+                'metadata' => ['order_number' => $order->order_number],
+            ]);
+
+            return $order;
+        });
+
+        return redirect()->route('admin.orders.show', $order)->with('success', 'Order created and payment record added.');
+    }
+
+    public function createOrderDeleteCode(Request $request, Order $order)
+    {
+        $code = (string) random_int(100000, 999999);
+        $request->session()->put('order_delete_code_' . $order->id, [
+            'hash' => Hash::make($code),
+            'expires_at' => now()->addMinutes(3)->timestamp,
+            'attempts' => 0,
+        ]);
+
+        return response()->json(['code' => $code, 'expires_in' => 180]);
+    }
+
+    public function destroyOrder(Request $request, Order $order)
+    {
+        $validated = $request->validate(['delete_code' => 'required|digits:6']);
+        $sessionKey = 'order_delete_code_' . $order->id;
+        $challenge = $request->session()->get($sessionKey);
+
+        if (!$challenge || $challenge['expires_at'] < now()->timestamp || !Hash::check($validated['delete_code'], $challenge['hash'])) {
+            if ($challenge) {
+                $challenge['attempts']++;
+                if ($challenge['attempts'] >= 5 || $challenge['expires_at'] < now()->timestamp) {
+                    $request->session()->forget($sessionKey);
+                } else {
+                    $request->session()->put($sessionKey, $challenge);
+                }
+            }
+
+            return back()->with('error', 'The deletion code is incorrect or expired. Generate a fresh code and try again.');
+        }
+
+        $request->session()->forget($sessionKey);
+        DB::transaction(function () use ($order) {
+            foreach ($order->payments as $payment) {
+                $metadata = $payment->metadata ?? [];
+                $metadata['deleted_order_number'] = $order->order_number;
+                $metadata['deleted_order_at'] = now()->toIso8601String();
+                $payment->update(['order_id' => null, 'metadata' => $metadata]);
+            }
+            $order->delete();
+        });
+
+        return redirect()->route('admin.orders.index')->with('success', 'Order and its order items were deleted. Payment records remain in the payment ledger.');
     }
 
     public function showOrder(Order $order)

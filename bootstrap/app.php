@@ -14,6 +14,8 @@ return Application::configure(basePath: dirname(__DIR__))
         \App\Providers\RouteServiceProvider::class,
     ])
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->validateCsrfTokens(except: ['payments/kopokopo/callback']);
+
         $middleware->web(append: [
             \App\Http\Middleware\TrackPublicTraffic::class,
         ]);

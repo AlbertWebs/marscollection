@@ -8,6 +8,10 @@
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
         <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-6 md:mb-8">Shopping Cart</h1>
 
+        @if(session('error'))
+            <div class="mb-5 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-800" role="alert">{{ session('error') }}</div>
+        @endif
+
         @if($cartItems->count() > 0)
             <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 md:gap-8">
                 <!-- Cart Items -->
@@ -187,19 +191,23 @@
                                 <span class="font-semibold">KES {{ number_format($total) }}</span>
                             </div>
                             <div class="flex justify-between">
+                                <span class="text-gray-600">Tax (15%)</span>
+                                <span class="font-semibold">KES {{ number_format($total * 0.15) }}</span>
+                            </div>
+                            <div class="flex justify-between">
                                 <span class="text-gray-600">Shipping</span>
                                 <span class="font-semibold text-emerald-600" id="shipping-cost">{{ $total >= config('shipping.free_delivery_threshold', 15000) ? 'FREE (KES 0)' : 'KES 0' }}</span>
                             </div>
                             <div class="border-t border-gray-200 pt-3">
                                 <div class="flex justify-between">
                                     <span class="text-lg font-semibold">Total</span>
-                                    <span class="text-lg font-bold text-amber-600" id="total-cost">KES {{ number_format($total) }}</span>
+                                    <span class="text-lg font-bold text-amber-600" id="total-cost">KES {{ number_format($total + ($total * 0.15)) }}</span>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Simple Delivery Form -->
-                        <form action="{{ route('checkout.store') }}" method="POST" class="space-y-4">
+                        <form id="cart-checkout-form" action="{{ route('checkout.store') }}" method="POST" class="space-y-4">
                             @csrf
                             <div class="border-t border-gray-200 pt-4">
                                 <h3 class="text-md font-semibold text-gray-900 mb-3">Delivery Details</h3>
@@ -207,26 +215,26 @@
                                 <div class="space-y-3">
                                     <div>
                                         <label for="customer_name" class="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
-                                        <input type="text" id="customer_name" name="customer_name" required
+                                        <input type="text" id="customer_name" name="customer_name" value="{{ old('customer_name') }}" required
                                                class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">
                                     </div>
 
                                     <div>
                                         <label for="customer_email" class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
-                                        <input type="email" id="customer_email" name="customer_email" required
+                                        <input type="email" id="customer_email" name="customer_email" value="{{ old('customer_email') }}" required
                                                class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">
                                     </div>
 
                                     <div>
                                         <label for="customer_phone" class="block text-sm font-medium text-gray-700 mb-1">Phone Number (M-Pesa) *</label>
-                                        <input type="tel" id="customer_phone" name="customer_phone" required
+                                        <input type="tel" id="customer_phone" name="customer_phone" value="{{ old('customer_phone') }}" required
                                                placeholder="0712 345 678"
                                                class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">
                                     </div>
 
                                     <div>
                                         <label for="customer_city" class="block text-sm font-medium text-gray-700 mb-1">City / Town *</label>
-                                        <input type="text" id="customer_city" name="customer_city" required
+                                        <input type="text" id="customer_city" name="customer_city" value="{{ old('customer_city') }}" required
                                                placeholder="e.g. Nairobi, Westlands, Kilimani, Mombasa..."
                                                class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm"
                                                oninput="calculateShipping()">
@@ -237,32 +245,33 @@
                                         <label for="delivery_address" class="block text-sm font-medium text-gray-700 mb-1">Delivery Address *</label>
                                         <textarea id="delivery_address" name="delivery_address" rows="2" required
                                                   placeholder="Building, street, apartment or estate name"
-                                                  class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm"></textarea>
+                                                  class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">{{ old('delivery_address') }}</textarea>
                                     </div>
 
                                     <div>
                                         <label for="payment_method" class="block text-sm font-medium text-gray-700 mb-1">Payment Method *</label>
-                                        <select id="payment_method" name="payment_method" required
+                                        <select id="payment_method" name="payment_method" required onchange="updateCheckoutAction()"
                                                 class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm bg-white">
-                                            <option value="mpesa" selected>Lipa Na M-Pesa (Till / STK Push / Paybill)</option>
-                                            <option value="cash_on_delivery">Cash / Card on Delivery (Nairobi)</option>
-                                            <option value="credit_card">Credit / Debit Card (Visa / Mastercard)</option>
-                                            <option value="bank_transfer">Bank Transfer / Airtel Money</option>
+                                            <option value="mpesa" @selected(old('payment_method', 'mpesa') === 'mpesa')>Lipa Na M-Pesa (STK Push)</option>
+                                            <option value="cash_on_delivery" @selected(old('payment_method') === 'cash_on_delivery')>Cash / Card on Delivery (Nairobi)</option>
+                                            <option value="credit_card" @selected(old('payment_method') === 'credit_card')>Credit / Debit Card (Visa / Mastercard)</option>
+                                            <option value="bank_transfer" @selected(old('payment_method') === 'bank_transfer')>Bank Transfer / Airtel Money</option>
                                         </select>
+                                        <p id="payment-method-hint" class="mt-2 text-xs leading-5 text-stone-500">Continue to a secure M-Pesa payment step. Your order is only placed after payment is confirmed.</p>
                                     </div>
 
                                     <div>
                                         <label for="notes" class="block text-sm font-medium text-gray-700 mb-1">Order Notes</label>
                                         <textarea id="notes" name="notes" rows="2"
                                                   placeholder="Any special instructions..."
-                                                  class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm"></textarea>
+                                                  class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">{{ old('notes') }}</textarea>
                                     </div>
                                 </div>
                             </div>
 
-                            <button type="submit"
+                            <button id="checkout-submit-button" type="submit"
                                     class="w-full bg-amber-600 hover:bg-amber-700 text-white py-4 md:py-3 rounded-sm font-semibold transition-colors">
-                                Place Order
+                                Continue to M-Pesa
                             </button>
                         </form>
 
@@ -296,6 +305,23 @@
 <script>
 const subtotal = {{ $total }};
 const tax = subtotal * 0.15;
+
+function updateCheckoutAction() {
+    const method = document.getElementById('payment_method')?.value;
+    const button = document.getElementById('checkout-submit-button');
+    const hint = document.getElementById('payment-method-hint');
+    if (!button || !hint) return;
+
+    if (method === 'mpesa') {
+        button.textContent = 'Continue to M-Pesa';
+        hint.textContent = 'Continue to a secure M-Pesa payment step. Your order is only placed after payment is confirmed.';
+    } else {
+        button.textContent = 'Place Order';
+        hint.textContent = 'Your order details will be submitted for confirmation.';
+    }
+}
+
+updateCheckoutAction();
 
 // Toast notification function
 function showToast(message, type = 'success') {
@@ -377,7 +403,7 @@ function calculateShipping() {
     document.getElementById('shipping-cost').textContent = shippingCost === 0 ? 'FREE (KES 0)' : `KES ${shippingCost.toLocaleString()}`;
 
     // Calculate and update total
-    const total = subtotal + shippingCost;
+    const total = subtotal + tax + shippingCost;
     document.getElementById('total-cost').textContent = `KES ${total.toLocaleString()}`;
 }
 

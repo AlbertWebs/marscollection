@@ -8,6 +8,8 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\BundleController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\AdminPaymentController;
+use App\Http\Controllers\KopoKopoWebhookController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\TrafficController;
@@ -63,7 +65,11 @@ Route::get('/cart/dropdown', [CartController::class, 'dropdown'])->name('cart.dr
 
 // Checkout
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+Route::get('/checkout/mpesa', [CheckoutController::class, 'showMpesaCheckout'])->name('checkout.mpesa');
+Route::post('/checkout/mpesa/stk', [CheckoutController::class, 'prepareMpesaStk'])->name('checkout.mpesa.stk');
+Route::get('/checkout/mpesa/status/{publicId}', [CheckoutController::class, 'showMpesaStatus'])->name('checkout.mpesa.status');
 Route::get('/checkout/success/{order}', [CheckoutController::class, 'success'])->name('checkout.success');
+Route::post('/payments/kopokopo/callback', [KopoKopoWebhookController::class, 'incomingPayment'])->name('payments.kopokopo.callback');
 
 // Appointment booking belonged to the previous service business. Direct users to shoe support.
 Route::redirect('/appointments/book', '/contact')->name('appointments.create');
@@ -82,7 +88,7 @@ Route::get('/reviews/{token}/complete', [ReviewController::class, 'complete'])->
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard/analytics', [AdminController::class, 'dashboardAnalytics'])->name('dashboard.analytics');
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
-    
+
     // Products Management
     Route::get('/products', [AdminController::class, 'products'])->name('products.index');
     Route::get('/products/create', [AdminController::class, 'createProduct'])->name('products.create');
@@ -92,16 +98,25 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::delete('/products/{product}', [AdminController::class, 'deleteProduct'])->name('products.destroy');
     Route::post('/products/bulk-action', [AdminController::class, 'bulkAction'])->name('products.bulk-action');
     Route::patch('/products/{product}/toggle-flag', [AdminController::class, 'toggleProductFlag'])->name('products.toggle-flag');
-    
+
     // Orders Management
     Route::get('/orders', [AdminController::class, 'orders'])->name('orders.index');
+    Route::get('/orders/create', [AdminController::class, 'createOrder'])->name('orders.create');
+    Route::post('/orders', [AdminController::class, 'storeOrder'])->name('orders.store');
+    Route::post('/orders/{order}/delete-code', [AdminController::class, 'createOrderDeleteCode'])->middleware('throttle:10,1')->name('orders.delete-code');
+    Route::delete('/orders/{order}', [AdminController::class, 'destroyOrder'])->name('orders.destroy');
     Route::get('/orders/{order}', [AdminController::class, 'showOrder'])->name('orders.show');
     Route::put('/orders/{order}/status', [AdminController::class, 'updateOrderStatus'])->name('orders.update-status');
-    
+
+    // Payments and KopoKopo STK playground
+    Route::get('/payments', [AdminPaymentController::class, 'index'])->name('payments.index');
+    Route::post('/payments/stk-playground', [AdminPaymentController::class, 'startStk'])->middleware('throttle:10,1')->name('payments.stk-playground');
+    Route::patch('/payments/{payment}/status', [AdminPaymentController::class, 'updateStatus'])->name('payments.update-status');
+
     // Users Management
     Route::get('/users', [AdminController::class, 'users'])->name('users.index');
     Route::put('/users/{user}/toggle-admin', [AdminController::class, 'toggleAdmin'])->name('users.toggle-admin');
-    
+
     // Categories Management
     Route::get('/categories', [AdminController::class, 'categories'])->name('categories.index');
     Route::get('/categories/create', [AdminController::class, 'createCategory'])->name('categories.create');
@@ -109,7 +124,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/categories/{category}/edit', [AdminController::class, 'editCategory'])->name('categories.edit');
     Route::put('/categories/{category}', [AdminController::class, 'updateCategory'])->name('categories.update');
     Route::delete('/categories/{category}', [AdminController::class, 'deleteCategory'])->name('categories.destroy');
-    
+
     // Brands Management
     Route::get('/brands', [AdminController::class, 'brands'])->name('brands.index');
     Route::get('/brands/create', [AdminController::class, 'createBrand'])->name('brands.create');
@@ -117,7 +132,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/brands/{brand}/edit', [AdminController::class, 'editBrand'])->name('brands.edit');
     Route::put('/brands/{brand}', [AdminController::class, 'updateBrand'])->name('brands.update');
     Route::delete('/brands/{brand}', [AdminController::class, 'deleteBrand'])->name('brands.destroy');
-    
+
     // Bundles Management
     Route::get('/bundles', [AdminController::class, 'bundles'])->name('bundles.index');
     Route::get('/bundles/create', [AdminController::class, 'createBundle'])->name('bundles.create');
@@ -125,10 +140,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/bundles/{bundle}/edit', [AdminController::class, 'editBundle'])->name('bundles.edit');
     Route::put('/bundles/{bundle}', [AdminController::class, 'updateBundle'])->name('bundles.update');
     Route::delete('/bundles/{bundle}', [AdminController::class, 'deleteBundle'])->name('bundles.destroy');
-    
+
     // Product Search API for Bundles
     Route::get('/search-products', [AdminController::class, 'searchProducts'])->name('search-products');
-    
+
     // Services Management
     Route::get('/services', [AdminController::class, 'services'])->name('services.index');
     Route::get('/services/create', [AdminController::class, 'createService'])->name('services.create');
@@ -136,25 +151,25 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/services/{service}/edit', [AdminController::class, 'editService'])->name('services.edit');
     Route::put('/services/{service}', [AdminController::class, 'updateService'])->name('services.update');
     Route::delete('/services/{service}', [AdminController::class, 'deleteService'])->name('services.destroy');
-    
+
     // Appointments Management
     Route::get('/appointments', [AdminController::class, 'appointments'])->name('appointments.index');
     Route::get('/appointments/{appointment}', [AdminController::class, 'showAppointment'])->name('appointments.show');
     Route::put('/appointments/{appointment}/status', [AdminController::class, 'updateAppointmentStatus'])->name('appointments.update-status');
-    
+
     // Booking Settings Management
     Route::get('/booking-settings', [AdminController::class, 'bookingSettings'])->name('booking-settings.index');
     Route::put('/booking-settings', [AdminController::class, 'updateBookingSettings'])->name('booking-settings.update');
-    
+
     // Settings Management
     Route::get('/settings', [AdminController::class, 'settings'])->name('settings.index');
     Route::put('/settings', [AdminController::class, 'updateSettings'])->name('settings.update');
-    
+
     // Reviews Management
     Route::get('/reviews', [AdminController::class, 'reviews'])->name('reviews.index');
     Route::put('/reviews/{review}/approve', [AdminController::class, 'approveReview'])->name('reviews.approve');
     Route::delete('/reviews/{review}', [AdminController::class, 'deleteReview'])->name('reviews.destroy');
-    
+
     // Contact Messages Management
     Route::get('/contacts', [AdminController::class, 'contacts'])->name('contacts.index');
     Route::get('/contacts/{contact}', [AdminController::class, 'showContact'])->name('contacts.show');
