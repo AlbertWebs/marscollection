@@ -32,12 +32,6 @@ class EmbeddingService
             strip_tags($product->description ?? ''),
         ];
 
-        // Include variant labels for better semantic matching
-        if ($product->variants) {
-            $labels = collect($product->variants)->pluck('label')->filter()->implode(', ');
-            if ($labels) $parts[] = "Options: {$labels}";
-        }
-
         return implode('. ', array_filter($parts));
     }
 

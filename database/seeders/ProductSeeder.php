@@ -17,7 +17,6 @@ class ProductSeeder extends Seeder
         ])->update(['is_active' => false]);
 
         $brand = Brand::where('slug', 'mars-collection')->firstOrFail();
-        $sizeVariants = collect(range(39, 45))->map(fn ($size) => ['label' => (string) $size])->all();
 
         $products = [
             ['sku' => 'MC-SNK-001', 'name' => 'Court Classic High-Top', 'category' => 'Sneakers', 'description' => 'Meet the Court Classic High-Top, an everyday sneaker designed for clean streetwear styling. Its cushioned collar adds comfort around the ankle, while the grippy rubber sole is built for steady everyday steps. Choose from black, white or gold accents and select your available shoe size. Pair it with denim, joggers or relaxed outfits for an easy finish.', 'meta_description' => 'Shop the Court Classic High-Top from Mars Collection Kenya. Choose your shoe size and black, white or gold color option, then order online.', 'price' => 6500, 'original_price' => 8500, 'image' => '/images/mars-footwear-hero.png', 'colors' => ['Black', 'White', 'Gold'], 'badge' => 'NEW', 'featured' => true, 'trending' => true],
@@ -52,7 +51,6 @@ class ProductSeeder extends Seeder
                     'is_active' => true,
                     'stock_quantity' => 12,
                     'colors' => $item['colors'],
-                    'variants' => $sizeVariants,
                 ]
             );
 

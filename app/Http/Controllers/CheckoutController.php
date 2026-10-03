@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Cart;
-use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -31,14 +30,6 @@ class CheckoutController extends Controller
 
         if ($cartItems->isEmpty()) {
             return redirect()->route('cart.index')->with('error', 'Your cart is empty.');
-        }
-
-        foreach ($cartItems as $item) {
-            if (!$item->product || empty($item->product->variant_stock)) continue;
-            $available = $item->product->stockForOptions($item->selected_color, $item->selected_size) ?? 0;
-            if ($item->quantity > $available) {
-                return redirect()->route('cart.index')->with('error', "{$item->product->name} has only {$available} left for the selected color and size.");
-            }
         }
 
         // Calculate totals
@@ -114,16 +105,6 @@ class CheckoutController extends Controller
                 // Increment product sold count
                 $cartItem->product->increment('sold_count', $cartItem->quantity);
 
-                if (!empty($cartItem->product->variant_stock)) {
-                    $stockProduct = Product::find($cartItem->product_id);
-                    $stock = $stockProduct->variant_stock ?? [];
-                    $stockKey = Product::optionStockKey($cartItem->selected_color, $cartItem->selected_size);
-                    $stock[$stockKey] = max(0, (int) ($stock[$stockKey] ?? 0) - $cartItem->quantity);
-                    $stockProduct->update([
-                        'variant_stock' => $stock,
-                        'stock_quantity' => max(0, $stockProduct->stock_quantity - $cartItem->quantity),
-                    ]);
-                }
             }
         }
 

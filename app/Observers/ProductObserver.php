@@ -18,7 +18,7 @@ class ProductObserver
         cache()->forget('similar_products_' . $product->id);
 
         // Only re-embed when fields that affect semantic meaning change
-        $semantic = ['name', 'description', 'brand_id', 'category_id', 'variants'];
+        $semantic = ['name', 'description', 'brand_id', 'category_id'];
         if ($product->wasChanged($semantic)) {
             $this->dispatchEmbedding($product);
         }

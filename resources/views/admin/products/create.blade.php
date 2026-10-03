@@ -154,66 +154,6 @@
                     @error('colors')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
                 </div>
 
-                <!-- Variants (Size / Type) Builder -->
-                <div class="lg:col-span-2">
-                    <div class="mb-4 rounded-md border border-gray-200 bg-gray-50 p-4">
-                        <p class="text-sm font-semibold text-gray-800">Quick select shoe sizes</p>
-                        <p class="mt-1 text-xs text-gray-500">Choose every size available. They use the product price; add a custom option below only if needed.</p>
-                        <div class="mt-3 flex flex-wrap gap-2">
-                            @foreach(range(35, 46) as $size)
-                                <label class="cursor-pointer"><input type="checkbox" name="quick_sizes[]" class="quick-size sr-only" value="{{ $size }}"><span class="quick-size-chip inline-flex min-w-10 justify-center rounded border border-gray-300 bg-white px-3 py-2 text-sm">{{ $size }}</span></label>
-                            @endforeach
-                        </div>
-                    </div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                        Sizes and options <span class="text-gray-400 font-normal">Add shoe sizes or other product options. Each can use its own price or inherit the base price.</span>
-                    </label>
-                    <input type="hidden" id="variants" name="variants" value="{{ old('variants') }}">
-                    <div id="variant-tags" class="flex flex-wrap gap-2 mb-3 min-h-[36px]"></div>
-                    <div class="grid grid-cols-1 sm:grid-cols-4 gap-2">
-                        <input type="text" id="variant-label-input" placeholder="Label (e.g. Small, XL, Coconut)"
-                               class="sm:col-span-2 border-gray-300 rounded-md shadow-sm focus:ring-amber-500 focus:border-amber-500 sm:text-sm"
-                               onkeydown="if(event.key==='Enter'){event.preventDefault();createAddVariant();}">
-                        <input type="number" id="variant-price-input" placeholder="Price (optional)"
-                               min="0" step="1"
-                               class="border-gray-300 rounded-md shadow-sm focus:ring-amber-500 focus:border-amber-500 sm:text-sm">
-                        <input type="number" id="variant-original-price-input" placeholder="Was / Original price"
-                               min="0" step="1"
-                               class="border-gray-300 rounded-md shadow-sm focus:ring-amber-500 focus:border-amber-500 sm:text-sm">
-                    </div>
-                    <div class="mt-2">
-                        <button type="button" onclick="createAddVariant()"
-                                class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-md text-sm font-medium">
-                            + Add Variant
-                        </button>
-                    </div>
-                    <p class="mt-1 text-xs text-gray-400">Leave price blank to use the product's base price. Set "Was" price to show a strikethrough discount on the product page.</p>
-                    @error('variants')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
-                </div>
-
-                <div class="lg:col-span-2 rounded-lg border border-gray-200 p-4">
-                    <h3 class="text-sm font-semibold text-gray-900">Stock by color and size</h3>
-                    <p class="mt-1 text-xs text-gray-500">Choose colors and sizes above, then enter how many you have for each combination. Leave this empty for products without options.</p>
-                    <input type="hidden" id="variant-stock" name="variant_stock" value="{{ old('variant_stock') }}">
-                    <div id="variant-stock-rows" class="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3"></div>
-                </div>
-
-                <!-- Images by shoe option -->
-                <div class="lg:col-span-2 rounded-lg border border-gray-200 p-4">
-                    <h3 class="text-sm font-semibold text-gray-900">Images by color, size or option</h3>
-                    <p class="mt-1 text-xs text-gray-500">Add a photo for a specific color or size. When a shopper selects it, that image becomes the main product photo.</p>
-                    <p class="mt-2 rounded-md bg-amber-50 px-3 py-2 text-xs text-amber-900">Recommended: square image, 1200 × 1200 px. Keep the shoe centered with a little space around it.</p>
-                    <div id="option-image-rows" class="mt-3 space-y-3"></div>
-                    <div class="mt-3 grid gap-2 sm:grid-cols-[130px_1fr_auto]">
-                        <select id="option-image-type" class="rounded-md border-gray-300 text-sm focus:border-amber-500 focus:ring-amber-500">
-                            <option value="color">Color</option><option value="size">Size</option><option value="option">Other option</option><option value="color_size">Color + size</option>
-                        </select>
-                        <input id="option-image-label" type="text" placeholder="Option value, e.g. Black or 40" class="rounded-md border-gray-300 text-sm focus:border-amber-500 focus:ring-amber-500">
-                        <button type="button" onclick="addOptionImageRow()" class="rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700">Add image slot</button>
-                    </div>
-                    @error('variant_images.*')<p class="mt-2 text-sm text-red-600">{{ $message }}</p>@enderror
-                </div>
-
                 <!-- Flags -->
                 <div class="space-y-2">
                     <label class="flex items-center">
@@ -322,37 +262,6 @@
 
 @section('scripts')
 <script>
-function addOptionImageRow() {
-    const typeInput = document.getElementById('option-image-type');
-    const labelInput = document.getElementById('option-image-label');
-    const type = typeInput.value;
-    const label = labelInput.value.trim();
-    const normalized = label.toLowerCase().replace(/[^a-z0-9 _|/-]/g, '').trim();
-    if (!normalized) { labelInput.focus(); return; }
-    const key = `${type}:${normalized}`;
-    if ([...document.querySelectorAll('[data-option-image-key]')].some(row => row.dataset.optionImageKey === key)) return;
-
-    const row = document.createElement('div');
-    row.className = 'flex flex-wrap items-center gap-3 rounded-md bg-gray-50 p-3';
-    row.dataset.optionImageKey = key;
-    row.innerHTML = `<span class="min-w-32 text-sm font-medium text-gray-700"></span><input type="file" accept="image/*" class="min-w-0 flex-1 text-sm"><img class="hidden h-14 w-14 rounded object-cover"><button type="button" class="text-sm font-medium text-red-600 hover:text-red-800">Remove</button>`;
-    row.querySelector('span').textContent = `${typeInput.options[typeInput.selectedIndex].text}: ${label}`;
-    const fileInput = row.querySelector('input[type=file]');
-    fileInput.name = `variant_images[${key}]`;
-    fileInput.addEventListener('change', () => previewOptionImage(fileInput, row.querySelector('img')));
-    row.querySelector('button').addEventListener('click', () => row.remove());
-    document.getElementById('option-image-rows').appendChild(row);
-    labelInput.value = '';
-}
-
-function previewOptionImage(input, preview) {
-    const file = input.files?.[0];
-    if (!file) return;
-    preview.src = URL.createObjectURL(file);
-    preview.classList.remove('hidden');
-}
-</script>
-<script>
 // ---- Color Tag Builder (Create Form) ----
 (function () {
     const tagsContainer = document.getElementById('color-tags');
@@ -423,68 +332,6 @@ function sync() {
 </script>
 
 <script>
-// ---- Variant Builder (Create Form) ----
-(function () {
-    const tagsContainer = document.getElementById('variant-tags');
-    const hiddenInput   = document.getElementById('variants');
-    const labelInput    = document.getElementById('variant-label-input');
-    const priceInput    = document.getElementById('variant-price-input');
-    const origPriceInput = document.getElementById('variant-original-price-input');
-
-    if (!tagsContainer || !hiddenInput) return;
-
-    let variants = [];
-
-    // Restore from old() on validation failure
-    const initial = hiddenInput.value.trim();
-    if (initial) {
-        try { variants = JSON.parse(initial); } catch(e) {}
-        renderTags();
-    }
-
-    window.createAddVariant = function () {
-        const label = labelInput.value.trim();
-        if (!label) { labelInput.focus(); return; }
-        const price = priceInput.value.trim() !== '' ? parseFloat(priceInput.value) : null;
-        const originalPrice = origPriceInput.value.trim() !== '' ? parseFloat(origPriceInput.value) : null;
-        variants.push({ label, price, original_price: originalPrice });
-        labelInput.value = '';
-        priceInput.value = '';
-        origPriceInput.value = '';
-        renderTags();
-        sync();
-    };
-
-    function removeVariant(idx) {
-        variants.splice(idx, 1);
-        renderTags();
-        sync();
-    }
-
-    function renderTags() {
-        tagsContainer.innerHTML = '';
-        variants.forEach((v, i) => {
-            const chip = document.createElement('span');
-            chip.className = 'inline-flex items-center gap-1.5 bg-amber-50 border border-amber-200 rounded-full px-3 py-1 text-sm font-medium text-gray-800';
-            let priceText = v.price != null ? `KES ${Number(v.price).toLocaleString()}` : 'base price';
-            if (v.original_price != null) priceText += ` <span class="line-through text-gray-400">KES ${Number(v.original_price).toLocaleString()}</span>`;
-            chip.innerHTML = `${escapeHtmlV(v.label)} <span class="text-gray-400 text-xs">${priceText}</span><button type="button" onclick="removeVariant_create(${i})" class="ml-1 text-gray-400 hover:text-red-500 leading-none">&times;</button>`;
-            tagsContainer.appendChild(chip);
-        });
-    }
-
-    function sync() {
-        hiddenInput.value = JSON.stringify(variants);
-        hiddenInput.dispatchEvent(new Event('change'));
-    }
-
-    function escapeHtmlV(str) {
-        return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-    }
-
-    window.removeVariant_create = removeVariant;
-})();
-
 // ---- Main image drop zone (create) ----
 const mainInput = document.getElementById('image');
 mainInput.addEventListener('change', () => showMainPreview(mainInput.files[0]));
@@ -571,91 +418,5 @@ function renderExtraPreviews() {
         reader.readAsDataURL(file);
     });
 }
-</script>
-<script>
-document.querySelector('form').addEventListener('submit', () => {
-    const input = document.getElementById('variants');
-    let variants = [];
-    try { variants = JSON.parse(input.value || '[]'); } catch (e) {}
-    const selected = new Set([...document.querySelectorAll('.quick-size:checked')].map(box => box.value));
-    variants = variants.filter(variant => {
-        const label = String(variant.label);
-        return !/^(3[5-9]|4[0-6])$/.test(label) || selected.has(label);
-    });
-    selected.forEach(label => {
-        if (!variants.some(variant => String(variant.label).toLowerCase() === label)) {
-            variants.push({ label, price: null, original_price: null });
-        }
-    });
-    input.value = JSON.stringify(variants);
-});
-const createSizeInput = document.getElementById('variants');
-let createSavedVariants = [];
-try { createSavedVariants = JSON.parse(createSizeInput.value || '[]'); } catch (e) {}
-document.querySelectorAll('.quick-size').forEach(box => {
-    box.checked = createSavedVariants.some(variant => String(variant.label).toLowerCase() === box.value);
-    const chip = box.nextElementSibling;
-    const paint = () => {
-        chip.classList.toggle('border-amber-600', box.checked);
-        chip.classList.toggle('bg-amber-50', box.checked);
-        chip.classList.toggle('text-amber-700', box.checked);
-    };
-    paint();
-    box.addEventListener('change', paint);
-});
-
-(function () {
-    const stockInput = document.getElementById('variant-stock');
-    const rows = document.getElementById('variant-stock-rows');
-    const colorsInput = document.getElementById('colors');
-    const variantsInput = document.getElementById('variants');
-    let stock = {};
-    try { stock = JSON.parse(stockInput.value || '{}'); } catch (e) {}
-    let enabled = Object.keys(stock).length > 0;
-
-    function render() {
-        const colors = (colorsInput.value || '').split(',').map(value => value.split(':', 1)[0].trim().toLowerCase()).filter(Boolean);
-        let variants = [];
-        try { variants = JSON.parse(variantsInput.value || '[]'); } catch (e) {}
-        const sizes = [...new Set([
-            ...variants.map(variant => String(variant.label || '').trim().toLowerCase()),
-            ...[...document.querySelectorAll('.quick-size:checked')].map(box => box.value)
-        ].filter(Boolean))];
-        const options = colors.length && sizes.length
-            ? colors.flatMap(color => sizes.map(size => [`color:${color}|size:${size}`, `${color} / ${size}`]))
-            : colors.length ? colors.map(color => [`color:${color}`, color])
-            : sizes.map(size => [`size:${size}`, size]);
-        rows.innerHTML = '';
-        options.forEach(([key, label]) => {
-            const row = document.createElement('label');
-            row.className = 'flex items-center justify-between gap-3 rounded border border-gray-200 px-3 py-2 text-sm';
-            const title = document.createElement('span');
-            title.className = 'font-medium text-gray-700';
-            title.textContent = label;
-            const input = document.createElement('input');
-            input.type = 'number'; input.min = '0'; input.step = '1'; input.value = stock[key] ?? '';
-            input.className = 'w-24 rounded border-gray-300 text-sm';
-            input.setAttribute('aria-label', `Stock for ${label}`);
-            input.addEventListener('input', () => {
-                enabled = true;
-                options.forEach(([optionKey]) => { if (!(optionKey in stock)) stock[optionKey] = 0; });
-                stock[key] = Number(input.value) || 0;
-                stockInput.value = JSON.stringify(stock);
-                document.getElementById('stock_quantity').value = Object.values(stock).reduce((sum, qty) => sum + Number(qty || 0), 0);
-            });
-            row.append(title, input); rows.appendChild(row);
-        });
-        if (enabled) {
-            stock = Object.fromEntries(options.map(([key]) => [key, stock[key] ?? 0]));
-            stockInput.value = JSON.stringify(stock);
-            document.getElementById('stock_quantity').value = Object.values(stock).reduce((sum, qty) => sum + Number(qty || 0), 0);
-        }
-        document.getElementById('stock_quantity').readOnly = enabled;
-    }
-    colorsInput.addEventListener('change', render);
-    variantsInput.addEventListener('change', render);
-    document.querySelectorAll('.quick-size').forEach(box => box.addEventListener('change', render));
-    render();
-})();
 </script>
 @endsection
