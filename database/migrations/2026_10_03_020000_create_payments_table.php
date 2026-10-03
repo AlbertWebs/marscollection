@@ -8,11 +8,21 @@ return new class extends Migration
 {
     public function up(): void
     {
+        // MySQL can leave the table behind when adding a foreign key fails
+        // because an existing production table has a different engine or ID
+        // type. Keep this migration safe to retry after that partial DDL.
+        if (Schema::hasTable('payments')) {
+            return;
+        }
+
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->uuid('public_id')->unique();
-            $table->foreignId('order_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
+            // Deliberately avoid foreign constraints: live databases may have
+            // legacy orders/users ID definitions or non-InnoDB tables. The
+            // application detaches order references before deleting orders.
+            $table->unsignedBigInteger('order_id')->nullable()->index();
+            $table->unsignedBigInteger('user_id')->nullable()->index();
             $table->string('reference')->unique();
             $table->string('cart_session_id')->nullable()->index();
             $table->string('customer_name')->nullable();
