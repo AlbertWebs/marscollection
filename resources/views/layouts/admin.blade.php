@@ -210,24 +210,36 @@
             <div class="bg-white shadow-sm border-b">
                 <div class="flex items-center justify-between px-4 lg:px-6 py-4">
                     <div class="flex items-center space-x-4">
-                        <button id="open-sidebar" class="lg:hidden text-gray-600 hover:text-gray-900">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                            </svg>
+            <header class="sticky top-0 z-30 border-b border-gray-200 bg-white/95 shadow-sm backdrop-blur">
+                <div class="flex min-h-[76px] items-center justify-between gap-3 px-4 sm:px-5 lg:px-8">
+                    <div class="flex min-w-0 items-center gap-3 sm:gap-4">
+                        <button id="open-sidebar" type="button" aria-label="Open admin navigation" aria-controls="sidebar" aria-expanded="false" class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-700 shadow-sm transition hover:border-amber-300 hover:bg-amber-50 hover:text-amber-900 focus:outline-none focus:ring-4 focus:ring-amber-100 lg:hidden">
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 7h16M4 12h16M4 17h16"/></svg>
                         </button>
-                        <h2 class="text-lg lg:text-xl font-semibold text-gray-800">@yield('title', 'Dashboard')</h2>
+                        <div class="hidden h-9 w-px bg-gray-200 lg:block"></div>
+                        <div class="min-w-0">
+                            <div class="mb-0.5 hidden items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 sm:flex"><span>Mars Collection</span><span class="text-amber-500">/</span><span>Admin workspace</span></div>
+                            <h1 class="truncate text-base font-black tracking-tight text-gray-950 sm:text-xl">@yield('title', 'Dashboard')</h1>
+                        </div>
                     </div>
-                    
-                    <div class="flex items-center space-x-2 lg:space-x-4">
-                        <span class="text-xs lg:text-sm text-gray-600 hidden sm:inline">Welcome, {{ auth()->user()->name }}</span>
-                        
-                        <a href="{{ route('home') }}" class="text-xs lg:text-sm text-amber-600 hover:text-amber-700 px-2 lg:px-0">
-                            <span class="hidden sm:inline">View Site</span>
-                            <span class="sm:hidden">Site</span>
+
+                    <div class="flex shrink-0 items-center gap-2 sm:gap-3">
+                        <a href="{{ route('admin.orders.create') }}" class="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-gray-950 px-3 text-xs font-bold text-white shadow-sm transition hover:bg-amber-700 focus:outline-none focus:ring-4 focus:ring-amber-100 sm:px-4 sm:text-sm">
+                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v14m7-7H5"/></svg>
+                            <span class="hidden sm:inline">New order</span><span class="sm:hidden">Order</span>
+                        </a>
+                        <a href="{{ route('home') }}" target="_blank" rel="noopener" class="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-3 text-xs font-bold text-gray-700 transition hover:border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-100 sm:px-4 sm:text-sm" aria-label="Open storefront in a new tab">
+                            <svg class="h-4 w-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M14 4h6v6m-11 4L20 4M18 13v5a2 2 0 01-2 2H6a2 2 0 01-2-2V8a2 2 0 012-2h5"/></svg>
+                            <span class="hidden md:inline">View store</span>
+                        </a>
+                        <a href="{{ route('admin.profile.edit') }}" class="group flex h-10 items-center gap-2 rounded-xl border border-gray-200 bg-white py-1 pl-1 pr-2 transition hover:border-amber-300 hover:bg-amber-50 focus:outline-none focus:ring-4 focus:ring-amber-100 sm:gap-2.5 sm:pr-3" aria-label="Edit admin profile">
+                            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 text-xs font-black text-amber-900 ring-1 ring-amber-200">{{ mb_strtoupper(mb_substr(auth()->user()->name, 0, 1)) }}</span>
+                            <span class="hidden max-w-28 text-left sm:block"><span class="block truncate text-xs font-bold text-gray-900">{{ auth()->user()->name }}</span><span class="block text-[10px] font-medium text-gray-500">Administrator</span></span>
+                            <svg class="hidden h-3.5 w-3.5 text-gray-400 transition group-hover:text-amber-800 sm:block" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m7 10 5 5 5-5"/></svg>
                         </a>
                     </div>
                 </div>
-            </div>
+            </header>
 
             <!-- Page content -->
             <main class="p-4 lg:p-6">
@@ -258,11 +270,14 @@
         function openSidebar() {
             sidebar.classList.remove('-translate-x-full');
             overlay.classList.remove('hidden');
+            openBtn?.setAttribute('aria-expanded', 'true');
+            closeBtn?.focus();
         }
 
         function closeSidebar() {
             sidebar.classList.add('-translate-x-full');
             overlay.classList.add('hidden');
+            openBtn?.setAttribute('aria-expanded', 'false');
         }
 
         if (openBtn) {
