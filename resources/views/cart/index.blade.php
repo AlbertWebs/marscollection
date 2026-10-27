@@ -171,7 +171,9 @@
                             <span class="rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-emerald-700">Secure</span>
                         </div>
 
-                        @php($firstCartItem = $cartItems->first())
+                        @php
+                            $firstCartItem = $cartItems->first();
+                        @endphp
                         <div class="mb-4 flex items-center gap-3 rounded-xl bg-stone-50 p-3 xl:hidden">
                             @if($firstCartItem->bundle_id)
                                 <img src="{{ \App\Helpers\ImageHelper::getProductImageUrl($firstCartItem->bundle->image) }}" alt="{{ $firstCartItem->bundle->name }}" class="h-12 w-12 rounded-lg object-cover">
