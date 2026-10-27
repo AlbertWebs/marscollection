@@ -34,7 +34,7 @@ class EconfirmService
                 'currency' => 'KES',
                 'buyer_email' => $order->customer_email,
                 'seller_email' => config('services.econfirm.seller_email'),
-                'receiver_phone' => config('services.econfirm.receiver_phone'),
+                'receiver_phone' => $this->normalizeReceiverPhone(config('services.econfirm.receiver_phone')),
                 'description' => 'Mars Collection order ' . $order->order_number,
                 'terms' => 'Payment for goods in order ' . $order->order_number . ', delivered to ' . data_get($order->shipping_address, 'city', 'Kenya'),
             ]);
@@ -100,6 +100,23 @@ class EconfirmService
 
         return ($parts['scheme'] ?? '') === 'https'
             && ($host === 'econfirm.co.ke' || str_ends_with($host, '.econfirm.co.ke'));
+    }
+
+    private function normalizeReceiverPhone(?string $phone): string
+    {
+        $phone = preg_replace('/\D+/', '', (string) $phone);
+
+        if (str_starts_with($phone, '0')) {
+            $phone = '254' . substr($phone, 1);
+        } elseif (preg_match('/^[17]\d{8}$/', $phone)) {
+            $phone = '254' . $phone;
+        }
+
+        if (!preg_match('/^254[17]\d{8}$/', $phone)) {
+            throw new RuntimeException('ECONFIRM_RECEIVER_PHONE must be a valid Kenyan mobile number.');
+        }
+
+        return $phone;
     }
 
     private function responseFailure($response, string $operation): string
