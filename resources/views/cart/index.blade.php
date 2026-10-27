@@ -4,21 +4,35 @@
 @section('canonical', route('cart.index'))
 
 @section('content')
-<div class="bg-white">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
-        <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-6 md:mb-8">Shopping Cart</h1>
+<div class="min-h-screen bg-[#f7f6f3] pb-24 md:pb-10">
+    <div class="container mx-auto max-w-7xl px-4 py-5 sm:px-6 md:py-9 lg:px-8">
+        <div class="mb-5 flex items-end justify-between gap-4 md:mb-8">
+            <div>
+                <p class="mb-1 text-[11px] font-bold uppercase tracking-[0.2em] text-amber-700">Mars Collection</p>
+                <h1 class="text-2xl font-bold tracking-tight text-gray-950 md:text-3xl">Your cart</h1>
+                <p class="mt-1 text-sm text-gray-500">Review your picks and choose how you’d like to pay.</p>
+            </div>
+            @if($cartItems->count() > 0)
+                <span class="mb-1 inline-flex shrink-0 items-center rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-gray-600 shadow-sm ring-1 ring-gray-200">
+                    {{ $cartItems->sum('quantity') }} {{ \Illuminate\Support\Str::plural('item', $cartItems->sum('quantity')) }}
+                </span>
+            @endif
+        </div>
 
         @if(session('error'))
             <div class="mb-5 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-800" role="alert">{{ session('error') }}</div>
         @endif
 
         @if($cartItems->count() > 0)
-            <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 md:gap-8">
+            <div class="grid grid-cols-1 items-start gap-5 xl:grid-cols-3 xl:gap-8">
                 <!-- Cart Items -->
-                <div class="xl:col-span-2">
-                    <div class="bg-white rounded-md shadow-sm border border-gray-200">
+                <div class="order-2 xl:order-1 xl:col-span-2">
+                    <div class="overflow-hidden rounded-2xl border border-gray-200/80 bg-white shadow-[0_12px_40px_-28px_rgba(15,23,42,.28)]">
                         <div class="p-4 md:p-6">
-                            <h2 class="text-lg font-semibold text-gray-900 mb-4">Cart Items ({{ $cartItems->count() }})</h2>
+                            <div class="mb-2 flex items-center justify-between">
+                                <h2 class="text-base font-bold text-gray-900 md:text-lg">Items in your cart</h2>
+                                <a href="{{ route('products.index') }}" class="text-xs font-semibold text-amber-700 hover:text-amber-800">Continue shopping</a>
+                            </div>
 
                             @foreach($cartItems as $item)
                                 <div class="py-4 border-b border-gray-200 last:border-b-0">
@@ -150,9 +164,34 @@
                 </div>
 
                 <!-- Order Summary & Delivery Form -->
-                <div class="xl:col-span-1">
-                    <div class="bg-white rounded-md shadow-sm border border-gray-200 p-4 md:p-6">
-                        <h2 class="text-lg font-semibold text-gray-900 mb-4">Order Summary</h2>
+                <div class="order-1 xl:order-2 xl:col-span-1">
+                    <div class="rounded-2xl border border-gray-200/80 bg-white p-4 shadow-[0_12px_40px_-28px_rgba(15,23,42,.28)] md:p-6 xl:sticky xl:top-24">
+                        <div class="mb-4 flex items-center justify-between">
+                            <h2 class="text-lg font-bold text-gray-950">Checkout</h2>
+                            <span class="rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-emerald-700">Secure</span>
+                        </div>
+
+                        @php($firstCartItem = $cartItems->first())
+                        <div class="mb-4 flex items-center gap-3 rounded-xl bg-stone-50 p-3 xl:hidden">
+                            @if($firstCartItem->bundle_id)
+                                <img src="{{ \App\Helpers\ImageHelper::getProductImageUrl($firstCartItem->bundle->image) }}" alt="{{ $firstCartItem->bundle->name }}" class="h-12 w-12 rounded-lg object-cover">
+                                <div class="min-w-0 flex-1">
+                                    <p class="truncate text-sm font-semibold text-gray-900">{{ $firstCartItem->bundle->name }}</p>
+                                    <p class="text-xs text-gray-500">Bundle · Qty {{ $firstCartItem->quantity }}</p>
+                                </div>
+                                <span class="shrink-0 text-sm font-bold text-gray-900">KES {{ number_format($firstCartItem->bundle->price * $firstCartItem->quantity) }}</span>
+                            @else
+                                <img src="{{ \App\Helpers\ImageHelper::getProductImageUrl($firstCartItem->product->image) }}" alt="{{ $firstCartItem->product->name }}" class="h-12 w-12 rounded-lg object-cover">
+                                <div class="min-w-0 flex-1">
+                                    <p class="truncate text-sm font-semibold text-gray-900">{{ $firstCartItem->product->name }}</p>
+                                    <p class="text-xs text-gray-500">Qty {{ $firstCartItem->quantity }}@if($firstCartItem->selected_size) · Size {{ $firstCartItem->selected_size }}@endif</p>
+                                </div>
+                                <span class="shrink-0 text-sm font-bold text-gray-900">KES {{ number_format($firstCartItem->product->price * $firstCartItem->quantity) }}</span>
+                            @endif
+                            @if($cartItems->count() > 1)
+                                <span class="shrink-0 text-[10px] font-semibold text-gray-500">+{{ $cartItems->count() - 1 }}</span>
+                            @endif
+                        </div>
 
                         {{-- Free Delivery Progress Meter --}}
                         @php
@@ -185,7 +224,7 @@
                             </div>
                         </div>
 
-                        <div class="space-y-3 mb-6">
+                        <div class="mb-4 space-y-2.5 text-sm">
                             <div class="flex justify-between">
                                 <span class="text-gray-600">Subtotal</span>
                                 <span class="font-semibold">KES {{ number_format($total) }}</span>
@@ -207,71 +246,74 @@
                         </div>
 
                         <!-- Simple Delivery Form -->
-                        <form id="cart-checkout-form" action="{{ route('checkout.store') }}" method="POST" class="space-y-4">
+                        <form id="cart-checkout-form" action="{{ route('checkout.store') }}" method="POST" class="space-y-3">
                             @csrf
-                            <div class="border-t border-gray-200 pt-4">
-                                <h3 class="text-md font-semibold text-gray-900 mb-3">Delivery Details</h3>
+                            <div class="border-t border-gray-200 pt-3">
+                                <h3 class="mb-2 text-sm font-bold text-gray-900">Delivery details</h3>
 
-                                <div class="space-y-3">
+                                <div class="grid grid-cols-2 gap-2.5">
                                     <div>
-                                        <label for="customer_name" class="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
+                                        <label for="customer_name" class="mb-1 block text-xs font-semibold text-gray-600">Full name *</label>
                                         <input type="text" id="customer_name" name="customer_name" value="{{ old('customer_name', session('checkout_form.customer_name')) }}" required
-                                               class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">
+                                               autocomplete="name" class="w-full rounded-lg border-gray-300 px-3 py-2.5 text-sm focus:border-amber-500 focus:ring-amber-500">
                                     </div>
 
                                     <div>
-                                        <label for="customer_email" class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
-                                        <input type="email" id="customer_email" name="customer_email" value="{{ old('customer_email', session('checkout_form.customer_email')) }}" required
-                                               class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">
-                                    </div>
-
-                                    <div>
-                                        <label for="customer_phone" class="block text-sm font-medium text-gray-700 mb-1">Phone Number *</label>
+                                        <label for="customer_phone" class="mb-1 block text-xs font-semibold text-gray-600">Phone *</label>
                                         <input type="tel" id="customer_phone" name="customer_phone" value="{{ old('customer_phone', session('checkout_form.customer_phone')) }}" required
-                                               placeholder="0712 345 678"
-                                               class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">
+                                               placeholder="0712 345 678" autocomplete="tel" class="w-full rounded-lg border-gray-300 px-3 py-2.5 text-sm focus:border-amber-500 focus:ring-amber-500">
                                     </div>
 
                                     <div>
-                                        <label for="customer_city" class="block text-sm font-medium text-gray-700 mb-1">City / Town *</label>
+                                        <label for="customer_email" class="mb-1 block text-xs font-semibold text-gray-600">Email *</label>
+                                        <input type="email" id="customer_email" name="customer_email" value="{{ old('customer_email', session('checkout_form.customer_email')) }}" required
+                                               autocomplete="email" class="w-full rounded-lg border-gray-300 px-3 py-2.5 text-sm focus:border-amber-500 focus:ring-amber-500">
+                                    </div>
+
+                                    <div>
+                                        <label for="customer_city" class="mb-1 block text-xs font-semibold text-gray-600">City / town *</label>
                                         <input type="text" id="customer_city" name="customer_city" value="{{ old('customer_city', session('checkout_form.customer_city')) }}" required
-                                               placeholder="e.g. Nairobi, Westlands, Kilimani, Mombasa..."
-                                               class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm"
+                                               placeholder="e.g. Nairobi" autocomplete="address-level2" class="w-full rounded-lg border-gray-300 px-3 py-2.5 text-sm focus:border-amber-500 focus:ring-amber-500"
                                                oninput="calculateShipping()">
-                                        <p class="text-xs text-gray-500 mt-1">Free delivery in Nairobi & local towns on orders of KES {{ number_format(config('shipping.free_delivery_threshold', 15000)) }} or more</p>
                                     </div>
 
-                                    <div>
-                                        <label for="delivery_address" class="block text-sm font-medium text-gray-700 mb-1">Delivery Address *</label>
-                                        <textarea id="delivery_address" name="delivery_address" rows="2" required
-                                                  placeholder="Building, street, apartment or estate name"
-                                                  class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">{{ old('delivery_address', session('checkout_form.delivery_address')) }}</textarea>
+                                    <div class="col-span-2">
+                                        <label for="delivery_address" class="mb-1 block text-xs font-semibold text-gray-600">Delivery address *</label>
+                                        <textarea id="delivery_address" name="delivery_address" rows="2" required autocomplete="street-address" placeholder="Building, street, apartment or estate"
+                                                  class="w-full rounded-lg border-gray-300 px-3 py-2.5 text-sm focus:border-amber-500 focus:ring-amber-500">{{ old('delivery_address', session('checkout_form.delivery_address')) }}</textarea>
                                     </div>
 
-                                    <div>
-                                        <label for="payment_method" class="block text-sm font-medium text-gray-700 mb-1">Payment Method *</label>
+                                    <div class="col-span-2">
+                                        <label for="payment_method" class="mb-1 block text-xs font-semibold text-gray-600">Payment method *</label>
                                         <select id="payment_method" name="payment_method" required onchange="updateCheckoutAction()"
-                                                class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm bg-white">
+                                                class="w-full rounded-lg border-gray-300 bg-white px-3 py-2.5 text-sm focus:border-amber-500 focus:ring-amber-500">
                                             <option value="econfirm" @selected(old('payment_method', session('checkout_form.payment_method', 'econfirm')) === 'econfirm')>Buy with Escrow</option>
                                             <option value="cash_on_delivery" @selected(old('payment_method', session('checkout_form.payment_method')) === 'cash_on_delivery')>Payment on Delivery</option>
                                         </select>
-                                        <p id="payment-method-hint" class="mt-2 text-xs leading-5 text-stone-500">Pay securely through escrow. We confirm funding before processing your order.</p>
+                                        <p id="payment-method-hint" class="mt-1.5 text-[11px] leading-4 text-stone-500">Pay securely through escrow. We confirm funding before processing your order.</p>
                                     </div>
 
-                                    <div>
-                                        <label for="notes" class="block text-sm font-medium text-gray-700 mb-1">Order Notes</label>
-                                        <textarea id="notes" name="notes" rows="2"
-                                                  placeholder="Any special instructions..."
-                                                  class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">{{ old('notes', session('checkout_form.notes')) }}</textarea>
-                                    </div>
+                                    <details class="col-span-2">
+                                        <summary class="cursor-pointer py-1 text-xs font-semibold text-gray-600">Add a delivery note (optional)</summary>
+                                        <textarea id="notes" name="notes" rows="2" placeholder="Any special instructions..."
+                                                  class="mt-2 w-full rounded-lg border-gray-300 px-3 py-2.5 text-sm focus:border-amber-500 focus:ring-amber-500">{{ old('notes', session('checkout_form.notes')) }}</textarea>
+                                    </details>
                                 </div>
                             </div>
 
-                            <button id="checkout-submit-button" type="submit"
-                                    class="w-full bg-amber-600 hover:bg-amber-700 text-white py-4 md:py-3 rounded-sm font-semibold transition-colors">
-                                Continue to secure checkout
+                            <button type="submit" data-checkout-submit
+                                    class="hidden w-full rounded-xl bg-gray-950 px-4 py-3.5 font-semibold text-white shadow-sm transition hover:bg-amber-700 md:block">
+                                <span data-submit-label>Buy with Escrow</span>
                             </button>
                         </form>
+
+                        <div class="fixed inset-x-0 bottom-0 z-40 border-t border-gray-200 bg-white/95 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-[0_-8px_24px_rgba(15,23,42,.08)] backdrop-blur md:hidden">
+                            <button type="submit" form="cart-checkout-form" data-checkout-submit
+                                    class="flex w-full items-center justify-between rounded-xl bg-gray-950 px-4 py-3.5 text-sm font-bold text-white">
+                                <span data-submit-label>Continue to secure checkout</span>
+                                <span data-checkout-total>KES {{ number_format($total + ($total * 0.15)) }}</span>
+                            </button>
+                        </div>
 
                         <div class="mt-4 text-center">
                             <a href="{{ route('products.index') }}" class="text-amber-600 hover:text-amber-700 text-sm">
@@ -306,20 +348,27 @@ const tax = subtotal * 0.15;
 
 function updateCheckoutAction() {
     const method = document.getElementById('payment_method')?.value;
-    const button = document.getElementById('checkout-submit-button');
+    const buttons = document.querySelectorAll('[data-checkout-submit]');
     const hint = document.getElementById('payment-method-hint');
-    if (!button || !hint) return;
+    if (!buttons.length || !hint) return;
 
     if (method === 'econfirm') {
-        button.textContent = 'Continue to secure checkout';
+        buttons.forEach((button) => {
+            const label = button.querySelector('[data-submit-label]') || button;
+            label.textContent = 'Buy with Escrow';
+        });
         hint.textContent = 'Pay securely through escrow. We confirm funding before processing your order.';
     } else {
-        button.textContent = 'Place order';
+        buttons.forEach((button) => {
+            const label = button.querySelector('[data-submit-label]') || button;
+            label.textContent = 'Place order';
+        });
         hint.textContent = 'Pay for your order when it is delivered.';
     }
 }
 
 updateCheckoutAction();
+if (document.getElementById('customer_city')) calculateShipping();
 
 // Toast notification function
 function showToast(message, type = 'success') {
@@ -402,7 +451,11 @@ function calculateShipping() {
 
     // Calculate and update total
     const total = subtotal + tax + shippingCost;
-    document.getElementById('total-cost').textContent = `KES ${total.toLocaleString()}`;
+    const formattedTotal = `KES ${Math.round(total).toLocaleString()}`;
+    document.getElementById('total-cost').textContent = formattedTotal;
+    document.querySelectorAll('[data-checkout-total]').forEach((element) => {
+        element.textContent = formattedTotal;
+    });
 }
 
 function updateQuantity(cartItemId, newQuantity) {
