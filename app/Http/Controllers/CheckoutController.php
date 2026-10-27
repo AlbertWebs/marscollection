@@ -330,7 +330,9 @@ class CheckoutController extends Controller
             return redirect()->route('checkout.econfirm.complete', $payment->public_id);
         }
 
-        return view('checkout.econfirm', compact('payment', 'checkout'));
+        return redirect()->away(
+            $checkout['checkout_url'] . '#secret=' . rawurlencode($checkout['checkout_secret'])
+        );
     }
 
     public function completeEconfirmCheckout(Request $request, string $publicId, EconfirmService $econfirm)
