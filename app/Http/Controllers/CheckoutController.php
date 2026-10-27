@@ -283,7 +283,7 @@ class CheckoutController extends Controller
                 $payment->update(['status' => 'setup_required', 'failure_reason' => 'eConfirm credentials and merchant details are not configured.']);
                 $request->session()->forget('pending_econfirm_payment_id');
 
-                return redirect()->route('cart.index')->with('error', 'Secure checkout is temporarily unavailable. Please choose another payment method.');
+                return redirect()->route('cart.index')->with('error', 'Buy with Escrow could not start: eConfirm configuration is incomplete.');
             }
 
             if (!$payment->provider_request_id) {
@@ -316,7 +316,7 @@ class CheckoutController extends Controller
                 'reason' => $exception->getMessage(),
             ]);
 
-            return redirect()->route('cart.index')->with('error', 'We could not start Buy with Escrow. Your cart is still available; please try again.');
+            return redirect()->route('cart.index')->with('error', 'Buy with Escrow could not start: ' . $exception->getMessage());
         }
     }
 
