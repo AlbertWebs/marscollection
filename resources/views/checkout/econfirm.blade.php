@@ -6,11 +6,7 @@
 @section('content')
 <main class="min-h-[70vh] bg-stone-50 px-4 py-8 sm:py-12">
     <div class="mx-auto w-[90vw] max-w-none">
-        <a href="{{ route('cart.index') }}" class="inline-flex items-center gap-2 text-sm font-semibold text-stone-600 hover:text-stone-950">
-            <span aria-hidden="true">←</span> Back to cart
-        </a>
-
-        <section class="mt-5 overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm">
+        <section class="overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm">
             <div class="flex flex-col gap-3 border-b border-stone-100 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-7">
                 <div>
                     <h1 class="text-xl font-black text-stone-950 sm:text-2xl">Buy with Escrow</h1>
@@ -43,6 +39,10 @@
             </div>
             <p class="px-5 py-4 text-xs leading-5 text-stone-500 sm:px-7">Your payment is handled securely by eConfirm. We verify escrow funding with eConfirm before confirming your order.</p>
         </section>
+
+        <a href="{{ route('cart.index') }}" class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-stone-600 hover:text-stone-950">
+            <span aria-hidden="true">←</span> Back to cart
+        </a>
     </div>
 </main>
 
