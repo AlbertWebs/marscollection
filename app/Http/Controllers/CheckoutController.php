@@ -70,7 +70,7 @@ class CheckoutController extends Controller
             }
         });
 
-        $tax = $subtotal * 0.15; // 15% tax
+        $tax = 0;
         $shipping = $this->calculateShipping($request->customer_city, $subtotal);
         $total = $subtotal + $tax + $shipping;
 
@@ -203,7 +203,7 @@ class CheckoutController extends Controller
             $subtotal = $cartItems->sum(fn ($item) => $item->bundle_id
                 ? $item->bundle->price * $item->quantity
                 : $item->product->price * $item->quantity);
-            $tax = $subtotal * 0.15;
+            $tax = 0;
             $shipping = $this->calculateShipping($details['customer_city'], $subtotal);
             $total = $subtotal + $tax + $shipping;
 
@@ -330,9 +330,7 @@ class CheckoutController extends Controller
             return redirect()->route('checkout.econfirm.complete', $payment->public_id);
         }
 
-        return redirect()->away(
-            $checkout['checkout_url'] . '#secret=' . rawurlencode($checkout['checkout_secret'])
-        );
+        return view('checkout.econfirm', compact('payment', 'checkout'));
     }
 
     public function completeEconfirmCheckout(Request $request, string $publicId, EconfirmService $econfirm)
@@ -417,7 +415,7 @@ class CheckoutController extends Controller
         $subtotal = $cartItems->sum(fn ($item) => $item->bundle_id
             ? $item->bundle->price * $item->quantity
             : $item->product->price * $item->quantity);
-        $tax = $subtotal * 0.15;
+        $tax = 0;
         $shipping = $this->calculateShipping($checkoutDetails['customer_city'], $subtotal);
         $total = $subtotal + $tax + $shipping;
 
@@ -456,7 +454,7 @@ class CheckoutController extends Controller
         $subtotal = $cartItems->sum(fn ($item) => $item->bundle_id
             ? $item->bundle->price * $item->quantity
             : $item->product->price * $item->quantity);
-        $tax = $subtotal * 0.15;
+        $tax = 0;
         $shipping = $this->calculateShipping($checkoutDetails['customer_city'], $subtotal);
         $total = $subtotal + $tax + $shipping;
         $orderId = $request->session()->get('pending_mpesa_order_id');

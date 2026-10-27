@@ -204,10 +204,6 @@
                             <span class="text-gray-900">${{ number_format($subtotal, 2) }}</span>
                         </div>
                         <div class="flex justify-between text-sm">
-                            <span class="text-gray-600">Tax (15%)</span>
-                            <span class="text-gray-900">${{ number_format($tax, 2) }}</span>
-                        </div>
-                        <div class="flex justify-between text-sm">
                             <span class="text-gray-600">Shipping</span>
                             <span class="text-gray-900">${{ number_format($shipping, 2) }}</span>
                         </div>

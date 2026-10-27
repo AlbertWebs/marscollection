@@ -61,7 +61,7 @@
 
         <aside class="h-fit rounded-2xl border border-gray-200 bg-white p-5 shadow-sm xl:sticky xl:top-6 sm:p-6">
             <h2 class="text-lg font-extrabold text-gray-950">Order total</h2>
-            <div class="mt-5 space-y-3 text-sm"><div class="flex justify-between text-gray-600"><span>Items subtotal</span><span id="order-subtotal" class="font-bold text-gray-900">KES 0</span></div><div class="flex justify-between text-gray-600"><span>Tax (15%)</span><span id="order-tax" class="font-bold text-gray-900">KES 0</span></div><div class="flex justify-between text-gray-600"><span>Delivery</span><span id="order-shipping" class="font-bold text-gray-900">KES 0</span></div><div class="border-t border-dashed border-gray-200 pt-4"><div class="flex justify-between"><span class="font-extrabold text-gray-950">Total</span><span id="order-total" class="text-xl font-black text-amber-800">KES 0</span></div></div></div>
+            <div class="mt-5 space-y-3 text-sm"><div class="flex justify-between text-gray-600"><span>Items subtotal</span><span id="order-subtotal" class="font-bold text-gray-900">KES 0</span></div><div class="flex justify-between text-gray-600"><span>Delivery</span><span id="order-shipping" class="font-bold text-gray-900">KES 0</span></div><div class="border-t border-dashed border-gray-200 pt-4"><div class="flex justify-between"><span class="font-extrabold text-gray-950">Total</span><span id="order-total" class="text-xl font-black text-amber-800">KES 0</span></div></div></div>
             <p class="mt-4 rounded-xl bg-amber-50 p-3 text-xs leading-5 text-amber-950">Prices are pulled from the catalog at save time. A payment record will be created with the order.</p>
             <button type="submit" class="mt-5 w-full rounded-xl bg-gray-950 px-5 py-3.5 text-sm font-extrabold text-white transition hover:bg-amber-700 focus:outline-none focus:ring-4 focus:ring-amber-200">Create order</button>
             <a href="{{ route('admin.payments.index') }}" class="mt-3 flex w-full items-center justify-center rounded-xl border border-gray-200 px-5 py-3 text-sm font-bold text-gray-700 transition hover:bg-gray-50">Open payment records</a>
@@ -100,12 +100,10 @@
             const selected = row.querySelector('.order-product').selectedOptions[0];
             subtotal += Number(selected?.dataset.price || 0) * Number(row.querySelector('.order-quantity').value || 0);
         });
-        const tax = subtotal * 0.15;
         const shipping = Number(document.getElementById('shipping_cost').value || 0);
         document.getElementById('order-subtotal').textContent = money(subtotal);
-        document.getElementById('order-tax').textContent = money(tax);
         document.getElementById('order-shipping').textContent = money(shipping);
-        document.getElementById('order-total').textContent = money(subtotal + tax + shipping);
+        document.getElementById('order-total').textContent = money(subtotal + shipping);
     }
 
     rows.querySelectorAll('.order-item-row').forEach(row => {

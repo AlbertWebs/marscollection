@@ -116,7 +116,6 @@
 
                 <div class="space-y-3 p-5 sm:p-6">
                     <div class="flex justify-between text-sm text-stone-600"><span>Subtotal</span><span class="font-semibold text-stone-900">KES {{ number_format($subtotal) }}</span></div>
-                    <div class="flex justify-between text-sm text-stone-600"><span>Tax</span><span class="font-semibold text-stone-900">KES {{ number_format($tax) }}</span></div>
                     <div class="flex justify-between text-sm text-stone-600"><span>Delivery</span><span class="font-semibold {{ $shipping ? 'text-stone-900' : 'text-emerald-700' }}">{{ $shipping ? 'KES ' . number_format($shipping) : 'FREE' }}</span></div>
                     <div class="border-t border-dashed border-stone-200 pt-4">
                         <div class="flex items-end justify-between gap-3">

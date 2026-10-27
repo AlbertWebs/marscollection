@@ -539,7 +539,7 @@ class AdminController extends Controller
         }
 
         $subtotal = collect($validated['items'])->sum(fn ($item) => (float) $products->get($item['product_id'])->price * (int) $item['quantity']);
-        $tax = round($subtotal * 0.15, 2);
+        $tax = 0;
         $shipping = (float) ($validated['shipping_cost'] ?? 0);
         $total = $subtotal + $tax + $shipping;
 

@@ -132,7 +132,9 @@
 
     <!-- WhatsApp Floating Inquiry Chat -->
     @include('components.whatsapp-floating')
-    @include('components.floating-checkout')
+    @unless (request()->routeIs('checkout.*'))
+        @include('components.floating-checkout')
+    @endunless
 
     <!-- Toast Container -->
     <div id="toast-container" class="fixed bottom-4 left-4 z-50 space-y-2 max-w-sm"></div>

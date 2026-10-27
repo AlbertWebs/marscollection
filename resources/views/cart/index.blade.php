@@ -26,7 +26,7 @@
         @if($cartItems->count() > 0)
             <div class="grid grid-cols-1 items-start gap-5 xl:grid-cols-3 xl:gap-8">
                 <!-- Cart Items -->
-                <div class="order-2 xl:order-1 xl:col-span-2">
+                <div class="order-2 self-start xl:sticky xl:top-24 xl:order-1 xl:col-span-2">
                     <div class="overflow-hidden rounded-2xl border border-gray-200/80 bg-white shadow-[0_12px_40px_-28px_rgba(15,23,42,.28)]">
                         <div class="p-4 md:p-6">
                             <div class="mb-2 flex items-center justify-between">
@@ -232,17 +232,13 @@
                                 <span class="font-semibold">KES {{ number_format($total) }}</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="text-gray-600">Tax (15%)</span>
-                                <span class="font-semibold">KES {{ number_format($total * 0.15) }}</span>
-                            </div>
-                            <div class="flex justify-between">
                                 <span class="text-gray-600">Shipping</span>
                                 <span class="font-semibold text-emerald-600" id="shipping-cost">{{ $total >= config('shipping.free_delivery_threshold', 15000) ? 'FREE (KES 0)' : 'KES 0' }}</span>
                             </div>
                             <div class="border-t border-gray-200 pt-3">
                                 <div class="flex justify-between">
                                     <span class="text-lg font-semibold">Total</span>
-                                    <span class="text-lg font-bold text-amber-600" id="total-cost">KES {{ number_format($total + ($total * 0.15)) }}</span>
+                                    <span class="text-lg font-bold text-amber-600" id="total-cost">KES {{ number_format($total) }}</span>
                                 </div>
                             </div>
                         </div>
@@ -313,7 +309,7 @@
                             <button type="submit" form="cart-checkout-form" data-checkout-submit
                                     class="flex w-full items-center justify-between rounded-xl bg-gray-950 px-4 py-3.5 text-sm font-bold text-white">
                                 <span data-submit-label>Continue to secure checkout</span>
-                                <span data-checkout-total>KES {{ number_format($total + ($total * 0.15)) }}</span>
+                                <span data-checkout-total>KES {{ number_format($total) }}</span>
                             </button>
                         </div>
 
@@ -346,7 +342,6 @@
 
 <script>
 const subtotal = {{ $total }};
-const tax = subtotal * 0.15;
 
 function updateCheckoutAction() {
     const method = document.getElementById('payment_method')?.value;
@@ -452,7 +447,7 @@ function calculateShipping() {
     document.getElementById('shipping-cost').textContent = shippingCost === 0 ? 'FREE (KES 0)' : `KES ${shippingCost.toLocaleString()}`;
 
     // Calculate and update total
-    const total = subtotal + tax + shippingCost;
+    const total = subtotal + shippingCost;
     const formattedTotal = `KES ${Math.round(total).toLocaleString()}`;
     document.getElementById('total-cost').textContent = formattedTotal;
     document.querySelectorAll('[data-checkout-total]').forEach((element) => {

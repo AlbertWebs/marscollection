@@ -27,7 +27,7 @@ class PerformanceOptimization
                 $response->headers->set('Pragma', 'no-cache');
                 $response->headers->set('Expires', '0');
             } else {
-                $this->addPerformanceHeaders($response);
+                $this->addPerformanceHeaders($response, $request->is('checkout/econfirm/*'));
             }
         }
 
@@ -46,7 +46,7 @@ class PerformanceOptimization
     /**
      * Add performance optimization headers
      */
-    private function addPerformanceHeaders(Response $response): void
+    private function addPerformanceHeaders(Response $response, bool $allowEconfirmFrames = false): void
     {
         // HTML pages contain live catalog data, including admin-managed category order.
         // Keep shared and browser caches from serving stale storefront content.
@@ -69,7 +69,12 @@ class PerformanceOptimization
         $response->headers->set('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
         
         // Content Security Policy for better security and performance
-        $csp = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://fonts.bunny.net http://localhost:5173 http://localhost:5174 http://localhost:5175 http://127.0.0.1:5173 http://127.0.0.1:5174 http://127.0.0.1:5175; style-src 'self' 'unsafe-inline' https://fonts.bunny.net http://localhost:5173 http://localhost:5174 http://localhost:5175 http://127.0.0.1:5173 http://127.0.0.1:5174 http://127.0.0.1:5175; font-src 'self' https://fonts.bunny.net; img-src 'self' data: https:; connect-src 'self' http://localhost:5173 http://localhost:5174 http://localhost:5175 http://127.0.0.1:5173 http://127.0.0.1:5174 http://127.0.0.1:5175; frame-src https://www.youtube.com https://youtube.com; object-src 'none';";
+        $frameSources = 'https://www.youtube.com https://youtube.com';
+        if ($allowEconfirmFrames) {
+            $frameSources .= ' https://econfirm.co.ke https://*.econfirm.co.ke';
+        }
+
+        $csp = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://fonts.bunny.net http://localhost:5173 http://localhost:5174 http://localhost:5175 http://127.0.0.1:5173 http://127.0.0.1:5174 http://127.0.0.1:5175; style-src 'self' 'unsafe-inline' https://fonts.bunny.net http://localhost:5173 http://localhost:5174 http://localhost:5175 http://127.0.0.1:5173 http://127.0.0.1:5174 http://127.0.0.1:5175; font-src 'self' https://fonts.bunny.net; img-src 'self' data: https:; connect-src 'self' http://localhost:5173 http://localhost:5174 http://localhost:5175 http://127.0.0.1:5173 http://127.0.0.1:5174 http://127.0.0.1:5175; frame-src {$frameSources}; object-src 'none';";
         $response->headers->set('Content-Security-Policy', $csp);
     }
 }
