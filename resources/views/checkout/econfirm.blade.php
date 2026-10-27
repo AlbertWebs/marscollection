@@ -5,7 +5,7 @@
 
 @section('content')
 <main class="min-h-[70vh] bg-stone-50 px-4 py-8 sm:py-12">
-    <div class="mx-auto max-w-4xl">
+    <div class="mx-auto w-[90vw] max-w-none">
         <a href="{{ route('cart.index') }}" class="inline-flex items-center gap-2 text-sm font-semibold text-stone-600 hover:text-stone-950">
             <span aria-hidden="true">←</span> Back to cart
         </a>
@@ -23,7 +23,7 @@
                 <iframe
                     id="econfirm-checkout"
                     title="eConfirm secure escrow checkout"
-                    class="h-[680px] min-h-[70vh] w-full rounded-xl border border-stone-200 bg-white"
+                    class="h-[85vh] min-h-[760px] w-full rounded-xl border border-stone-200 bg-white"
                     loading="eager"
                     referrerpolicy="strict-origin-when-cross-origin"
                     allow="payment"
