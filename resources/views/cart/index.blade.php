@@ -215,26 +215,26 @@
                                 <div class="space-y-3">
                                     <div>
                                         <label for="customer_name" class="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
-                                        <input type="text" id="customer_name" name="customer_name" value="{{ old('customer_name') }}" required
+                                        <input type="text" id="customer_name" name="customer_name" value="{{ old('customer_name', session('checkout_form.customer_name')) }}" required
                                                class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">
                                     </div>
 
                                     <div>
                                         <label for="customer_email" class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
-                                        <input type="email" id="customer_email" name="customer_email" value="{{ old('customer_email') }}" required
+                                        <input type="email" id="customer_email" name="customer_email" value="{{ old('customer_email', session('checkout_form.customer_email')) }}" required
                                                class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">
                                     </div>
 
                                     <div>
-                                        <label for="customer_phone" class="block text-sm font-medium text-gray-700 mb-1">Phone Number (M-Pesa) *</label>
-                                        <input type="tel" id="customer_phone" name="customer_phone" value="{{ old('customer_phone') }}" required
+                                        <label for="customer_phone" class="block text-sm font-medium text-gray-700 mb-1">Phone Number *</label>
+                                        <input type="tel" id="customer_phone" name="customer_phone" value="{{ old('customer_phone', session('checkout_form.customer_phone')) }}" required
                                                placeholder="0712 345 678"
                                                class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">
                                     </div>
 
                                     <div>
                                         <label for="customer_city" class="block text-sm font-medium text-gray-700 mb-1">City / Town *</label>
-                                        <input type="text" id="customer_city" name="customer_city" value="{{ old('customer_city') }}" required
+                                        <input type="text" id="customer_city" name="customer_city" value="{{ old('customer_city', session('checkout_form.customer_city')) }}" required
                                                placeholder="e.g. Nairobi, Westlands, Kilimani, Mombasa..."
                                                class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm"
                                                oninput="calculateShipping()">
@@ -245,31 +245,31 @@
                                         <label for="delivery_address" class="block text-sm font-medium text-gray-700 mb-1">Delivery Address *</label>
                                         <textarea id="delivery_address" name="delivery_address" rows="2" required
                                                   placeholder="Building, street, apartment or estate name"
-                                                  class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">{{ old('delivery_address') }}</textarea>
+                                                  class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">{{ old('delivery_address', session('checkout_form.delivery_address')) }}</textarea>
                                     </div>
 
                                     <div>
                                         <label for="payment_method" class="block text-sm font-medium text-gray-700 mb-1">Payment Method *</label>
                                         <select id="payment_method" name="payment_method" required onchange="updateCheckoutAction()"
                                                 class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm bg-white">
-                                            <option value="econfirm" @selected(old('payment_method', 'econfirm') === 'econfirm')>Buy with Escrow</option>
-                                            <option value="cash_on_delivery" @selected(old('payment_method') === 'cash_on_delivery')>Payment on Delivery</option>
+                                            <option value="econfirm" @selected(old('payment_method', session('checkout_form.payment_method', 'econfirm')) === 'econfirm')>Buy with Escrow</option>
+                                            <option value="cash_on_delivery" @selected(old('payment_method', session('checkout_form.payment_method')) === 'cash_on_delivery')>Payment on Delivery</option>
                                         </select>
-                                        <p id="payment-method-hint" class="mt-2 text-xs leading-5 text-stone-500">Continue to a secure M-Pesa payment step. Your order is only placed after payment is confirmed.</p>
+                                        <p id="payment-method-hint" class="mt-2 text-xs leading-5 text-stone-500">Pay securely through escrow. We confirm funding before processing your order.</p>
                                     </div>
 
                                     <div>
                                         <label for="notes" class="block text-sm font-medium text-gray-700 mb-1">Order Notes</label>
                                         <textarea id="notes" name="notes" rows="2"
                                                   placeholder="Any special instructions..."
-                                                  class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">{{ old('notes') }}</textarea>
+                                                  class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm">{{ old('notes', session('checkout_form.notes')) }}</textarea>
                                     </div>
                                 </div>
                             </div>
 
                             <button id="checkout-submit-button" type="submit"
                                     class="w-full bg-amber-600 hover:bg-amber-700 text-white py-4 md:py-3 rounded-sm font-semibold transition-colors">
-                                Continue to M-Pesa
+                                Continue to secure checkout
                             </button>
                         </form>
 

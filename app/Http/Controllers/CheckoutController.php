@@ -29,6 +29,8 @@ class CheckoutController extends Controller
             'notes' => 'nullable|string|max:1000',
         ]);
 
+        $request->session()->put('checkout_form', $validated);
+
         // Get cart items
         $cartItems = Cart::where('session_id', session()->getId())
             ->with(['product', 'bundle'])
@@ -152,6 +154,7 @@ class CheckoutController extends Controller
 
         // Clear cart
         Cart::where('session_id', session()->getId())->delete();
+        $request->session()->forget('checkout_form');
 
         // Send admin email notification
         $this->sendAdminOrderNotification($order);
@@ -377,6 +380,7 @@ class CheckoutController extends Controller
         if ($payment->status === 'succeeded') {
             $request->session()->forget('pending_econfirm_payment_id');
             $request->session()->forget('econfirm_checkout_session.' . $payment->public_id);
+            $request->session()->forget('checkout_form');
 
             return redirect()->route('checkout.success', $payment->order);
         }
