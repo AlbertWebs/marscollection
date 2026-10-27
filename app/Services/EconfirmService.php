@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Exceptions\EconfirmTransactionNotFoundException;
 use App\Models\Order;
 use Illuminate\Support\Facades\Http;
 use RuntimeException;
@@ -54,7 +55,7 @@ class EconfirmService
         $baseUrl = rtrim(config('services.econfirm.base_url'), '/');
         $response = Http::withToken(config('services.econfirm.api_key'))
             ->acceptJson()
-            ->withHeaders(['Idempotency-Key' => 'order:' . $merchantReference . ':checkout-v2-webhook'])
+            ->withHeaders(['Idempotency-Key' => 'order:' . $merchantReference . ':transaction:' . $transactionId . ':checkout-v2'])
             ->timeout(25)
             ->post($baseUrl . '/checkout/sessions', [
                 'transaction_id' => $transactionId,
@@ -63,12 +64,18 @@ class EconfirmService
                 'webhook_url' => $webhookUrl,
             ]);
 
+        if (!$response->successful()) {
+            $failure = $this->responseFailure($response, 'create checkout session');
+            if ($response->status() === 404 && str_contains(strtolower($failure), 'transaction not found for this business')) {
+                throw new EconfirmTransactionNotFoundException($failure);
+            }
+
+            throw new RuntimeException($failure);
+        }
+
         $checkoutUrl = $response->json('data.checkout_url');
         $secret = $response->json('data.checkout_secret');
         $webhookSecret = $response->json('data.webhook_secret');
-        if (!$response->successful()) {
-            throw new RuntimeException($this->responseFailure($response, 'create checkout session'));
-        }
         if (!$checkoutUrl || !$secret || !$webhookSecret) {
             throw new RuntimeException('eConfirm returned an incomplete checkout session response.');
         }

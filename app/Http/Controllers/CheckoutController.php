@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\EconfirmTransactionNotFoundException;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Cart;
@@ -304,12 +305,33 @@ class CheckoutController extends Controller
                 throw new \RuntimeException('The eConfirm return and webhook URLs must use HTTPS. Configure APP_URL with the registered HTTPS website URL.');
             }
 
-            $checkoutSession = $econfirm->createCheckoutSession(
-                $payment->provider_request_id,
-                $returnUrl,
-                $payment->order->order_number,
-                $webhookUrl
-            );
+            try {
+                $checkoutSession = $econfirm->createCheckoutSession(
+                    $payment->provider_request_id,
+                    $returnUrl,
+                    $payment->order->order_number,
+                    $webhookUrl
+                );
+            } catch (EconfirmTransactionNotFoundException) {
+                // A pending local payment may reference an escrow created under a previous business API key.
+                // Create a fresh escrow under the currently configured account and retry checkout once.
+                $previousTransactionId = $payment->provider_request_id;
+                $transaction = $econfirm->createCheckout($payment->order);
+                $metadata = $payment->metadata ?? [];
+                $metadata['econfirm_previous_transaction_id'] = $previousTransactionId;
+                $metadata['econfirm_confirmation_code'] = $transaction['confirmation_code'];
+                $payment->update([
+                    'provider_request_id' => $transaction['transaction_id'],
+                    'metadata' => $metadata,
+                ]);
+
+                $checkoutSession = $econfirm->createCheckoutSession(
+                    $payment->provider_request_id,
+                    $returnUrl,
+                    $payment->order->order_number,
+                    $webhookUrl
+                );
+            }
             $metadata = $payment->metadata ?? [];
             $metadata['econfirm_webhook_secret_encrypted'] = Crypt::encryptString($checkoutSession['webhook_secret']);
             $payment->update(['metadata' => $metadata]);
