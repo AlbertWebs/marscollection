@@ -49,4 +49,11 @@ return [
         'callback_url' => env('KOPOKOPO_CALLBACK_URL'),
     ],
 
+    'econfirm' => [
+        'base_url' => env('ECONFIRM_API_V2_URL', 'https://api.econfirm.co.ke/api/2'),
+        'api_key' => env('ECONFIRM_API_KEY'),
+        'seller_email' => env('ECONFIRM_SELLER_EMAIL'),
+        'receiver_phone' => env('ECONFIRM_RECEIVER_PHONE'),
+    ],
+
 ];

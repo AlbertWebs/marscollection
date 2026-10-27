@@ -66,6 +66,8 @@ Route::get('/cart/dropdown', [CartController::class, 'dropdown'])->name('cart.dr
 
 // Checkout
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+Route::get('/checkout/econfirm/{publicId}', [CheckoutController::class, 'showEconfirmCheckout'])->name('checkout.econfirm.show');
+Route::get('/checkout/econfirm/complete/{publicId}', [CheckoutController::class, 'completeEconfirmCheckout'])->name('checkout.econfirm.complete');
 Route::get('/checkout/mpesa', [CheckoutController::class, 'showMpesaCheckout'])->name('checkout.mpesa');
 Route::post('/checkout/mpesa/stk', [CheckoutController::class, 'prepareMpesaStk'])->name('checkout.mpesa.stk');
 Route::get('/checkout/mpesa/status/{publicId}', [CheckoutController::class, 'showMpesaStatus'])->name('checkout.mpesa.status');

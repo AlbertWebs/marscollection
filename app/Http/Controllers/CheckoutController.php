@@ -7,6 +7,7 @@ use App\Models\OrderItem;
 use App\Models\Cart;
 use App\Models\Payment;
 use App\Services\KopoKopoService;
+use App\Services\EconfirmService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -24,7 +25,7 @@ class CheckoutController extends Controller
             'customer_phone' => 'required|string|max:20',
             'customer_city' => 'required|string|max:255',
             'delivery_address' => 'required|string|max:1000',
-            'payment_method' => 'required|in:mpesa,cash_on_delivery,credit_card,bank_transfer',
+            'payment_method' => 'required|in:mpesa,econfirm,cash_on_delivery,credit_card,bank_transfer',
             'notes' => 'nullable|string|max:1000',
         ]);
 
@@ -35,6 +36,10 @@ class CheckoutController extends Controller
 
         if ($cartItems->isEmpty()) {
             return redirect()->route('cart.index')->with('error', 'Your cart is empty.');
+        }
+
+        if ($validated['payment_method'] === 'econfirm') {
+            return $this->startEconfirmCheckout($request, $validated, $cartItems);
         }
 
         if ($validated['payment_method'] === 'mpesa') {
@@ -177,6 +182,215 @@ class CheckoutController extends Controller
     {
         // Just show a generic success message without any order details
         return view('checkout.success');
+    }
+
+    private function startEconfirmCheckout(Request $request, array $details, $cartItems)
+    {
+        $pendingPaymentId = $request->session()->get('pending_econfirm_payment_id');
+        $payment = $pendingPaymentId
+            ? Payment::with('order')->whereKey($pendingPaymentId)
+                ->where('cart_session_id', $request->session()->getId())
+                ->where('provider', 'econfirm')
+                ->where('status', 'pending')
+                ->whereHas('order', fn ($query) => $query->where('status', 'pending'))
+                ->first()
+            : null;
+
+        if (!$payment) {
+            $subtotal = $cartItems->sum(fn ($item) => $item->bundle_id
+                ? $item->bundle->price * $item->quantity
+                : $item->product->price * $item->quantity);
+            $tax = $subtotal * 0.15;
+            $shipping = $this->calculateShipping($details['customer_city'], $subtotal);
+            $total = $subtotal + $tax + $shipping;
+
+            [$order, $payment] = DB::transaction(function () use ($request, $details, $cartItems, $subtotal, $tax, $shipping, $total) {
+                $order = Order::create([
+                    'order_number' => 'ORD-' . Str::upper(Str::random(8)),
+                    'user_id' => auth()->id(),
+                    'customer_name' => $details['customer_name'],
+                    'customer_email' => $details['customer_email'],
+                    'customer_phone' => $details['customer_phone'],
+                    'shipping_address' => [
+                        'street' => $details['delivery_address'], 'city' => $details['customer_city'],
+                        'state' => 'N/A', 'zip_code' => 'N/A', 'country' => 'Kenya',
+                    ],
+                    'billing_address' => [
+                        'street' => $details['delivery_address'], 'city' => $details['customer_city'],
+                        'state' => 'N/A', 'zip_code' => 'N/A', 'country' => 'Kenya',
+                    ],
+                    'subtotal' => $subtotal,
+                    'tax' => $tax,
+                    'shipping_cost' => $shipping,
+                    'total' => $total,
+                    'payment_method' => 'econfirm',
+                    'notes' => $details['notes'] ?? null,
+                ]);
+
+                foreach ($cartItems as $cartItem) {
+                    if ($cartItem->bundle_id) {
+                        OrderItem::create([
+                            'order_id' => $order->id,
+                            'bundle_id' => $cartItem->bundle_id,
+                            'bundle_name' => $cartItem->bundle->name,
+                            'bundle_price' => $cartItem->bundle->price,
+                            'quantity' => $cartItem->quantity,
+                            'subtotal' => $cartItem->bundle->price * $cartItem->quantity,
+                        ]);
+                        $cartItem->bundle->increment('sold_count', $cartItem->quantity);
+                    } else {
+                        OrderItem::create([
+                            'order_id' => $order->id,
+                            'product_id' => $cartItem->product_id,
+                            'product_name' => $cartItem->product->name,
+                            'product_price' => $cartItem->product->price,
+                            'quantity' => $cartItem->quantity,
+                            'subtotal' => $cartItem->product->price * $cartItem->quantity,
+                            'selected_size' => $cartItem->selected_size,
+                        ]);
+                        $cartItem->product->increment('sold_count', $cartItem->quantity);
+                    }
+                }
+
+                $payment = Payment::create([
+                    'order_id' => $order->id,
+                    'user_id' => auth()->id(),
+                    'cart_session_id' => $request->session()->getId(),
+                    'customer_name' => $order->customer_name,
+                    'customer_email' => $order->customer_email,
+                    'phone' => $order->customer_phone,
+                    'method' => 'mpesa',
+                    'provider' => 'econfirm',
+                    'source' => 'storefront',
+                    'amount' => $order->total,
+                    'currency' => 'KES',
+                    'status' => 'pending',
+                    'metadata' => ['order_number' => $order->order_number],
+                ]);
+
+                return [$order, $payment];
+            });
+        }
+
+        $request->session()->put('pending_econfirm_payment_id', $payment->id);
+
+        try {
+            $econfirm = app(EconfirmService::class);
+            if (!$econfirm->isConfigured()) {
+                $payment->update(['status' => 'setup_required', 'failure_reason' => 'eConfirm credentials and merchant details are not configured.']);
+                $request->session()->forget('pending_econfirm_payment_id');
+
+                return redirect()->route('cart.index')->with('error', 'Secure checkout is temporarily unavailable. Please choose another payment method.');
+            }
+
+            if (!$payment->provider_request_id) {
+                $transaction = $econfirm->createCheckout($payment->order);
+                $payment->update([
+                    'provider_request_id' => $transaction['transaction_id'],
+                    'metadata' => array_merge($payment->metadata ?? [], [
+                        'econfirm_confirmation_code' => $transaction['confirmation_code'],
+                    ]),
+                ]);
+            }
+
+            $returnUrl = route('checkout.econfirm.complete', $payment->public_id);
+            if (!str_starts_with($returnUrl, 'https://')) {
+                throw new \RuntimeException('The eConfirm return URL must use HTTPS. Configure APP_URL with the registered HTTPS website URL.');
+            }
+
+            $checkoutSession = $econfirm->createCheckoutSession(
+                $payment->provider_request_id,
+                $returnUrl,
+                $payment->order->order_number
+            );
+            $request->session()->put('econfirm_checkout_session.' . $payment->public_id, $checkoutSession);
+
+            return redirect()->route('checkout.econfirm.show', $payment->public_id);
+        } catch (Throwable $exception) {
+            Log::warning('eConfirm hosted checkout could not be started.', [
+                'payment_id' => $payment->id,
+                'order_id' => $payment->order_id,
+                'reason' => $exception->getMessage(),
+            ]);
+
+            return redirect()->route('cart.index')->with('error', 'We could not start secure checkout. Your cart is still available; please try again.');
+        }
+    }
+
+    public function showEconfirmCheckout(Request $request, string $publicId)
+    {
+        $payment = Payment::with('order')->where('public_id', $publicId)->where('provider', 'econfirm')->firstOrFail();
+        $this->authorizeEconfirmPayment($request, $payment);
+        $checkout = $request->session()->get('econfirm_checkout_session.' . $payment->public_id);
+
+        if (!$checkout) {
+            return redirect()->route('checkout.econfirm.complete', $payment->public_id);
+        }
+
+        return view('checkout.econfirm', compact('payment', 'checkout'));
+    }
+
+    public function completeEconfirmCheckout(Request $request, string $publicId, EconfirmService $econfirm)
+    {
+        $payment = Payment::with('order')->where('public_id', $publicId)->where('provider', 'econfirm')->firstOrFail();
+        $this->authorizeEconfirmPayment($request, $payment);
+
+        if ($payment->status !== 'succeeded') {
+            try {
+                $transaction = $econfirm->getTransaction($payment->provider_request_id);
+                if (strcasecmp((string) ($transaction['status'] ?? ''), 'Escrow Funded') === 0) {
+                    $newlySucceeded = DB::transaction(function () use ($payment, $transaction) {
+                        $lockedPayment = Payment::whereKey($payment->id)->lockForUpdate()->first();
+                        if ($lockedPayment->status === 'succeeded') return false;
+
+                        $lockedPayment->update([
+                            'status' => 'succeeded',
+                            'provider_reference' => $transaction['id'] ?? $lockedPayment->provider_request_id,
+                            'failure_reason' => null,
+                        ]);
+                        if ($lockedPayment->order && $lockedPayment->order->status === 'pending') {
+                            $lockedPayment->order->update(['status' => 'processing']);
+                        }
+                        if ($lockedPayment->cart_session_id) {
+                            Cart::where('session_id', $lockedPayment->cart_session_id)->delete();
+                        }
+
+                        return true;
+                    });
+
+                    if ($newlySucceeded) {
+                        $payment->refresh();
+                        $this->sendAdminOrderNotification($payment->order);
+                        try {
+                            Mail::to($payment->order->customer_email)->send(new \App\Mail\OrderPlacedCustomer($payment->order));
+                        } catch (Throwable) {
+                            Log::warning('Failed to send customer order notification.', ['order_id' => $payment->order_id]);
+                        }
+                    }
+                }
+            } catch (Throwable $exception) {
+                Log::warning('eConfirm funding verification failed.', ['payment_id' => $payment->id]);
+            }
+        }
+
+        $payment->refresh();
+        if ($payment->status === 'succeeded') {
+            $request->session()->forget('pending_econfirm_payment_id');
+            $request->session()->forget('econfirm_checkout_session.' . $payment->public_id);
+
+            return redirect()->route('checkout.success', $payment->order);
+        }
+
+        return view('checkout.econfirm-status', compact('payment'));
+    }
+
+    private function authorizeEconfirmPayment(Request $request, Payment $payment): void
+    {
+        abort_unless(
+            ($payment->cart_session_id && hash_equals($payment->cart_session_id, $request->session()->getId()))
+                || (auth()->check() && $payment->user_id === auth()->id()),
+            404
+        );
     }
 
     public function showMpesaCheckout(Request $request)
