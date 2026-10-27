@@ -11,6 +11,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\AdminPaymentController;
 use App\Http\Controllers\AdminProfileController;
 use App\Http\Controllers\KopoKopoWebhookController;
+use App\Http\Controllers\EconfirmWebhookController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\TrafficController;
@@ -68,6 +69,7 @@ Route::get('/cart/dropdown', [CartController::class, 'dropdown'])->name('cart.dr
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 Route::get('/checkout/econfirm/{publicId}', [CheckoutController::class, 'showEconfirmCheckout'])->name('checkout.econfirm.show');
 Route::get('/checkout/econfirm/complete/{publicId}', [CheckoutController::class, 'completeEconfirmCheckout'])->name('checkout.econfirm.complete');
+Route::post('/api/webhooks/econfirm/checkout', [EconfirmWebhookController::class, 'checkoutFunded'])->name('webhooks.econfirm.checkout');
 Route::get('/checkout/mpesa', [CheckoutController::class, 'showMpesaCheckout'])->name('checkout.mpesa');
 Route::post('/checkout/mpesa/stk', [CheckoutController::class, 'prepareMpesaStk'])->name('checkout.mpesa.stk');
 Route::get('/checkout/mpesa/status/{publicId}', [CheckoutController::class, 'showMpesaStatus'])->name('checkout.mpesa.status');

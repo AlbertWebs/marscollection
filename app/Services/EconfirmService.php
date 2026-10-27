@@ -49,23 +49,28 @@ class EconfirmService
         ];
     }
 
-    public function createCheckoutSession(string $transactionId, string $returnUrl, string $merchantReference): array
+    public function createCheckoutSession(string $transactionId, string $returnUrl, string $merchantReference, string $webhookUrl): array
     {
         $baseUrl = rtrim(config('services.econfirm.base_url'), '/');
         $response = Http::withToken(config('services.econfirm.api_key'))
             ->acceptJson()
-            ->withHeaders(['Idempotency-Key' => 'order:' . $merchantReference . ':checkout-v1'])
+            ->withHeaders(['Idempotency-Key' => 'order:' . $merchantReference . ':checkout-v2-webhook'])
             ->timeout(25)
             ->post($baseUrl . '/checkout/sessions', [
                 'transaction_id' => $transactionId,
                 'return_url' => $returnUrl,
                 'merchant_reference' => $merchantReference,
+                'webhook_url' => $webhookUrl,
             ]);
 
         $checkoutUrl = $response->json('data.checkout_url');
         $secret = $response->json('data.checkout_secret');
-        if (!$response->successful() || !$checkoutUrl || !$secret) {
+        $webhookSecret = $response->json('data.webhook_secret');
+        if (!$response->successful()) {
             throw new RuntimeException($this->responseFailure($response, 'create checkout session'));
+        }
+        if (!$checkoutUrl || !$secret || !$webhookSecret) {
+            throw new RuntimeException('eConfirm returned an incomplete checkout session response.');
         }
         if (!$this->isTrustedCheckoutUrl($checkoutUrl)) {
             throw new RuntimeException('eConfirm returned a checkout URL outside the trusted eConfirm domain.');
@@ -74,6 +79,7 @@ class EconfirmService
         return [
             'checkout_url' => $checkoutUrl,
             'checkout_secret' => $secret,
+            'webhook_secret' => $webhookSecret,
             'expires_at' => $response->json('data.expires_at'),
         ];
     }

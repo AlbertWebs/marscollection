@@ -63,6 +63,8 @@
 
         if (event.data.event === 'checkout.completed' && event.data.status === 'funded') {
             window.location.assign(completeUrl);
+        } else if (event.data.event === 'checkout.return') {
+            window.location.assign(completeUrl);
         } else if (event.data.event === 'checkout.closed') {
             frame.removeAttribute('src');
             closedPanel.classList.remove('hidden');

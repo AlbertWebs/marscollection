@@ -8,8 +8,10 @@ use App\Models\Cart;
 use App\Models\Payment;
 use App\Services\KopoKopoService;
 use App\Services\EconfirmService;
+use App\Services\EconfirmPaymentFinalizer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -297,15 +299,21 @@ class CheckoutController extends Controller
             }
 
             $returnUrl = route('checkout.econfirm.complete', $payment->public_id);
-            if (!str_starts_with($returnUrl, 'https://')) {
-                throw new \RuntimeException('The eConfirm return URL must use HTTPS. Configure APP_URL with the registered HTTPS website URL.');
+            $webhookUrl = route('webhooks.econfirm.checkout');
+            if (!str_starts_with($returnUrl, 'https://') || !str_starts_with($webhookUrl, 'https://')) {
+                throw new \RuntimeException('The eConfirm return and webhook URLs must use HTTPS. Configure APP_URL with the registered HTTPS website URL.');
             }
 
             $checkoutSession = $econfirm->createCheckoutSession(
                 $payment->provider_request_id,
                 $returnUrl,
-                $payment->order->order_number
+                $payment->order->order_number,
+                $webhookUrl
             );
+            $metadata = $payment->metadata ?? [];
+            $metadata['econfirm_webhook_secret_encrypted'] = Crypt::encryptString($checkoutSession['webhook_secret']);
+            $payment->update(['metadata' => $metadata]);
+            unset($checkoutSession['webhook_secret']);
             $request->session()->put('econfirm_checkout_session.' . $payment->public_id, $checkoutSession);
 
             return redirect()->route('checkout.econfirm.show', $payment->public_id);
@@ -333,7 +341,7 @@ class CheckoutController extends Controller
         return view('checkout.econfirm', compact('payment', 'checkout'));
     }
 
-    public function completeEconfirmCheckout(Request $request, string $publicId, EconfirmService $econfirm)
+    public function completeEconfirmCheckout(Request $request, string $publicId, EconfirmService $econfirm, EconfirmPaymentFinalizer $finalizer)
     {
         $payment = Payment::with('order')->where('public_id', $publicId)->where('provider', 'econfirm')->firstOrFail();
         $this->authorizeEconfirmPayment($request, $payment);
@@ -341,35 +349,17 @@ class CheckoutController extends Controller
         if ($payment->status !== 'succeeded') {
             try {
                 $transaction = $econfirm->getTransaction($payment->provider_request_id);
-                if (strcasecmp((string) ($transaction['status'] ?? ''), 'Escrow Funded') === 0) {
-                    $newlySucceeded = DB::transaction(function () use ($payment, $transaction) {
-                        $lockedPayment = Payment::whereKey($payment->id)->lockForUpdate()->first();
-                        if ($lockedPayment->status === 'succeeded') return false;
+                $status = strtolower((string) ($transaction['status'] ?? ''));
+                $transactionId = (string) ($transaction['id'] ?? '');
+                $amountMatches = is_numeric($transaction['amount'] ?? null)
+                    && abs((float) $transaction['amount'] - (float) $payment->amount) < 0.01;
+                $currencyMatches = strtoupper((string) ($transaction['currency'] ?? '')) === strtoupper((string) $payment->currency);
 
-                        $lockedPayment->update([
-                            'status' => 'succeeded',
-                            'provider_reference' => $transaction['id'] ?? $lockedPayment->provider_request_id,
-                            'failure_reason' => null,
-                        ]);
-                        if ($lockedPayment->order && $lockedPayment->order->status === 'pending') {
-                            $lockedPayment->order->update(['status' => 'processing']);
-                        }
-                        if ($lockedPayment->cart_session_id) {
-                            Cart::where('session_id', $lockedPayment->cart_session_id)->delete();
-                        }
-
-                        return true;
-                    });
-
-                    if ($newlySucceeded) {
-                        $payment->refresh();
-                        $this->sendAdminOrderNotification($payment->order);
-                        try {
-                            Mail::to($payment->order->customer_email)->send(new \App\Mail\OrderPlacedCustomer($payment->order));
-                        } catch (Throwable) {
-                            Log::warning('Failed to send customer order notification.', ['order_id' => $payment->order_id]);
-                        }
-                    }
+                if (in_array($status, ['escrow funded', 'completed'], true)
+                    && hash_equals((string) $payment->provider_request_id, $transactionId)
+                    && $amountMatches
+                    && $currencyMatches) {
+                    $finalizer->markFunded($payment, $transactionId);
                 }
             } catch (Throwable $exception) {
                 Log::warning('eConfirm funding verification failed.', ['payment_id' => $payment->id]);
