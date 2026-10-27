@@ -54,7 +54,7 @@ class EconfirmWebhookController extends Controller
         $expectedSignature = 'sha256=' . hash_hmac('sha256', $timestamp . '.' . $rawBody, $webhookSecret);
         abort_unless(hash_equals($expectedSignature, (string) $request->header('X-eConfirm-Signature')), 401, 'Webhook signature is invalid.');
 
-        $amount = $data['amount'] ?? null;
+        $amount = $data['amount_kes'] ?? null;
         $currency = strtoupper((string) ($data['currency'] ?? ''));
         $status = strtolower((string) ($data['status'] ?? ''));
         abort_unless($merchantReference === $payment->order->order_number, 409, 'Merchant reference mismatch.');

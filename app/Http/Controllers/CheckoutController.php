@@ -11,6 +11,7 @@ use App\Services\KopoKopoService;
 use App\Services\EconfirmService;
 use App\Services\EconfirmPaymentFinalizer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
@@ -354,6 +355,9 @@ class CheckoutController extends Controller
     {
         $payment = Payment::with('order')->where('public_id', $publicId)->where('provider', 'econfirm')->firstOrFail();
         $this->authorizeEconfirmPayment($request, $payment);
+        if ($payment->status === 'succeeded') {
+            return redirect()->route('checkout.success', $payment->order);
+        }
         $checkout = $request->session()->get('econfirm_checkout_session.' . $payment->public_id);
 
         if (!$checkout) {
@@ -368,25 +372,7 @@ class CheckoutController extends Controller
         $payment = Payment::with('order')->where('public_id', $publicId)->where('provider', 'econfirm')->firstOrFail();
         $this->authorizeEconfirmPayment($request, $payment);
 
-        if ($payment->status !== 'succeeded') {
-            try {
-                $transaction = $econfirm->getTransaction($payment->provider_request_id);
-                $status = strtolower((string) ($transaction['status'] ?? ''));
-                $transactionId = (string) ($transaction['id'] ?? '');
-                $amountMatches = is_numeric($transaction['amount'] ?? null)
-                    && abs((float) $transaction['amount'] - (float) $payment->amount) < 0.01;
-                $currencyMatches = strtoupper((string) ($transaction['currency'] ?? '')) === strtoupper((string) $payment->currency);
-
-                if (in_array($status, ['escrow funded', 'completed'], true)
-                    && hash_equals((string) $payment->provider_request_id, $transactionId)
-                    && $amountMatches
-                    && $currencyMatches) {
-                    $finalizer->markFunded($payment, $transactionId);
-                }
-            } catch (Throwable $exception) {
-                Log::warning('eConfirm funding verification failed.', ['payment_id' => $payment->id]);
-            }
-        }
+        $this->reconcileEconfirmFunding($payment, $econfirm, $finalizer);
 
         $payment->refresh();
         if ($payment->status === 'succeeded') {
@@ -400,6 +386,52 @@ class CheckoutController extends Controller
         return view('checkout.econfirm-status', compact('payment'));
     }
 
+    public function pollEconfirmCheckout(Request $request, string $publicId, EconfirmService $econfirm, EconfirmPaymentFinalizer $finalizer)
+    {
+        $payment = Payment::with('order')->where('public_id', $publicId)->where('provider', 'econfirm')->firstOrFail();
+        $this->authorizeEconfirmPayment($request, $payment);
+
+        // The browser may poll frequently while the provider webhook is in flight. Limit provider
+        // status lookups per payment; the webhook can still mark it funded at any time.
+        if ($payment->status !== 'succeeded' && $payment->provider_request_id
+            && Cache::add('econfirm_checkout_status_check_' . $payment->id, true, 8)) {
+            $this->reconcileEconfirmFunding($payment, $econfirm, $finalizer);
+        }
+
+        $payment->refresh();
+
+        return response()->json([
+            'status' => $payment->status === 'succeeded' ? 'funded' : $payment->status,
+            'continue_url' => $payment->status === 'succeeded'
+                ? route('checkout.econfirm.complete', $payment->public_id)
+                : null,
+        ]);
+    }
+
+    private function reconcileEconfirmFunding(Payment $payment, EconfirmService $econfirm, EconfirmPaymentFinalizer $finalizer): void
+    {
+        if ($payment->status === 'succeeded' || !$payment->provider_request_id) {
+            return;
+        }
+
+        try {
+            $transaction = $econfirm->getTransaction($payment->provider_request_id);
+            $status = strtolower(str_replace('_', ' ', (string) ($transaction['status'] ?? '')));
+            $transactionId = (string) ($transaction['id'] ?? '');
+            $amountMatches = is_numeric($transaction['amount'] ?? null)
+                && abs((float) $transaction['amount'] - (float) $payment->amount) < 0.01;
+            $currencyMatches = strtoupper((string) ($transaction['currency'] ?? '')) === strtoupper((string) $payment->currency);
+
+            if (in_array($status, ['escrow funded', 'funded', 'completed'], true)
+                && hash_equals((string) $payment->provider_request_id, $transactionId)
+                && $amountMatches
+                && $currencyMatches) {
+                $finalizer->markFunded($payment, $transactionId);
+            }
+        } catch (Throwable) {
+            Log::warning('eConfirm funding verification failed.', ['payment_id' => $payment->id]);
+        }
+    }
     private function authorizeEconfirmPayment(Request $request, Payment $payment): void
     {
         abort_unless(

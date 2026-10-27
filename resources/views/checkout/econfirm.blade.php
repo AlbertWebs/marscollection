@@ -37,6 +37,10 @@
                     </div>
                 </div>
             </div>
+            <div id="econfirm-confirming" class="hidden items-center gap-3 border-t border-emerald-100 bg-emerald-50 px-5 py-4 text-sm text-emerald-950 sm:px-7" role="status" aria-live="polite">
+                <span class="h-2.5 w-2.5 shrink-0 animate-pulse rounded-full bg-emerald-600"></span>
+                <span id="econfirm-confirming-copy">Payment received. We are confirming your order securely.</span>
+            </div>
             <p class="px-5 py-4 text-xs leading-5 text-stone-500 sm:px-7">Your payment is handled securely by eConfirm. We verify escrow funding with eConfirm before confirming your order.</p>
         </section>
     </div>
@@ -47,9 +51,15 @@
     const checkout = @js($checkout);
     const frame = document.getElementById('econfirm-checkout');
     const closedPanel = document.getElementById('econfirm-closed');
+    const confirmingPanel = document.getElementById('econfirm-confirming');
+    const confirmingCopy = document.getElementById('econfirm-confirming-copy');
     const completeUrl = @js(route('checkout.econfirm.complete', $payment->public_id));
+    const statusUrl = @js(route('checkout.econfirm.status', $payment->public_id));
     const checkoutUrl = new URL(checkout.checkout_url);
     const checkoutOrigin = checkoutUrl.origin;
+    let pollStarted = false;
+    let polling = false;
+    let pollDelay = 2500;
 
     function openCheckout() {
         closedPanel.classList.add('hidden');
@@ -57,15 +67,60 @@
         frame.src = checkoutUrl.href + '#secret=' + encodeURIComponent(checkout.checkout_secret);
     }
 
+    function startConfirmation() {
+        confirmingPanel.classList.remove('hidden');
+        confirmingPanel.classList.add('flex');
+        if (pollStarted) return;
+        pollStarted = true;
+        void checkFunding();
+    }
+
+    async function checkFunding() {
+        if (polling) return;
+        polling = true;
+        try {
+            const response = await fetch(statusUrl, {
+                method: 'POST',
+                credentials: 'same-origin',
+                cache: 'no-store',
+                headers: {
+                    Accept: 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+                },
+            });
+            if (!response.ok) throw new Error('Payment status is temporarily unavailable.');
+            const result = await response.json();
+            if (result.status === 'funded') {
+                confirmingCopy.textContent = 'Payment confirmed. Preparing your order confirmation…';
+                window.location.replace(completeUrl);
+                return;
+            }
+            if (['failed', 'setup_required'].includes(result.status)) {
+                confirmingCopy.textContent = 'We could not confirm this payment. Your order is still saved; please contact support before trying again.';
+            } else {
+                confirmingCopy.textContent = 'Payment received. We are confirming your order securely. Please do not pay again while this finishes.';
+            }
+        } catch (error) {
+            confirmingCopy.textContent = 'We are still checking your payment securely. Please do not pay again; this page will update automatically.';
+        } finally {
+            polling = false;
+            if (pollStarted) {
+                window.setTimeout(checkFunding, pollDelay);
+                pollDelay = Math.min(Math.round(pollDelay * 1.5), 10000);
+            }
+        }
+    }
+
     document.getElementById('econfirm-retry').addEventListener('click', openCheckout);
     window.addEventListener('message', (event) => {
         if (event.origin !== checkoutOrigin || event.source !== frame.contentWindow || event.data?.source !== 'econfirm') return;
 
         if (event.data.event === 'checkout.completed' && event.data.status === 'funded') {
-            window.location.assign(completeUrl);
-        } else if (event.data.event === 'checkout.return') {
-            window.location.assign(completeUrl);
-        } else if (event.data.event === 'checkout.closed') {
+            // Keep eConfirm's success screen visible while the merchant server finalizes the order.
+            startConfirmation();
+        } else if (event.data.event === 'checkout.return' && event.data.status === 'funded') {
+            startConfirmation();
+        } else if (event.data.event === 'checkout.closed' && !pollStarted) {
             frame.removeAttribute('src');
             closedPanel.classList.remove('hidden');
             closedPanel.classList.add('flex');

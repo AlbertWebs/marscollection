@@ -69,6 +69,7 @@ Route::get('/cart/dropdown', [CartController::class, 'dropdown'])->name('cart.dr
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 Route::get('/checkout/econfirm/{publicId}', [CheckoutController::class, 'showEconfirmCheckout'])->name('checkout.econfirm.show');
 Route::get('/checkout/econfirm/complete/{publicId}', [CheckoutController::class, 'completeEconfirmCheckout'])->name('checkout.econfirm.complete');
+Route::post('/checkout/econfirm/status/{publicId}', [CheckoutController::class, 'pollEconfirmCheckout'])->middleware('throttle:30,1')->name('checkout.econfirm.status');
 Route::post('/api/webhooks/econfirm/checkout', [EconfirmWebhookController::class, 'checkoutFunded'])->name('webhooks.econfirm.checkout');
 Route::get('/checkout/mpesa', [CheckoutController::class, 'showMpesaCheckout'])->name('checkout.mpesa');
 Route::post('/checkout/mpesa/stk', [CheckoutController::class, 'prepareMpesaStk'])->name('checkout.mpesa.stk');
