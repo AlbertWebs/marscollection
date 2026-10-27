@@ -132,7 +132,7 @@
 
     <!-- WhatsApp Floating Inquiry Chat -->
     @include('components.whatsapp-floating')
-    @unless (request()->routeIs('checkout.*'))
+    @unless (request()->routeIs('checkout.*', 'cart.index'))
         @include('components.floating-checkout')
     @endunless
 
