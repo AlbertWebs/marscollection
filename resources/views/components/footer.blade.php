@@ -27,7 +27,7 @@
                     </div>
                 </div>
 
-                {{-- M-Pesa Support --}}
+                {{-- Payment options --}}
                 <div class="flex flex-col md:flex-row items-center md:items-start gap-3">
                     <div class="w-10 h-10 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 flex-shrink-0">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -35,9 +35,8 @@
                         </svg>
                     </div>
                     <div>
-                        <h5 class="text-xs sm:text-sm font-bold text-white uppercase tracking-wider">Lipa Na M-Pesa</h5>
-                        <p class="text-[11px] sm:text-xs text-gray-400 mt-0.5">Till, STK Push & Paybill accepted</p>
-                        <p class="text-[11px] sm:text-xs text-gray-300 mt-1">Till <span class="font-semibold text-white">8625564</span> · Mars Collections</p>
+                        <h5 class="text-xs sm:text-sm font-bold text-white uppercase tracking-wider">Buy with Escrow</h5>
+                        <p class="text-[11px] sm:text-xs text-gray-400 mt-0.5">Pay securely through eConfirm</p>
                     </div>
                 </div>
 
@@ -206,32 +205,12 @@
                 <span>Guaranteed Safe & Secure Checkout</span>
             </div>
 
-            {{-- Payment Badges: M-Pesa, Visa, Mastercard, Cash on Delivery --}}
+            {{-- Storefront payment options --}}
             <div class="flex flex-wrap items-center justify-center gap-2">
-                {{-- M-Pesa Badge --}}
+                {{-- Escrow Badge --}}
                 <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-white border border-gray-200 shadow-2xs">
-                    <span class="w-2.5 h-2.5 rounded-full bg-[#00A34F]"></span>
-                    <span class="text-xs font-black tracking-tight text-[#00A34F]">M-PESA</span>
-                    <span class="text-[9px] font-semibold text-gray-500 uppercase tracking-tighter">Till / STK</span>
-                </div>
-
-                {{-- Visa Badge --}}
-                <div class="inline-flex items-center px-2.5 py-1.5 rounded bg-white border border-gray-200 shadow-2xs">
-                    <span class="text-xs font-black italic tracking-tighter text-[#1434CB]">VISA</span>
-                </div>
-
-                {{-- Mastercard Badge --}}
-                <div class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded bg-white border border-gray-200 shadow-2xs">
-                    <div class="flex -space-x-1">
-                        <span class="w-3 h-3 rounded-full bg-[#EB001B] inline-block opacity-90"></span>
-                        <span class="w-3 h-3 rounded-full bg-[#F79E1B] inline-block opacity-90"></span>
-                    </div>
-                    <span class="text-[10px] font-bold text-gray-800">Mastercard</span>
-                </div>
-
-                {{-- Airtel Money Badge --}}
-                <div class="inline-flex items-center px-2.5 py-1.5 rounded bg-white border border-gray-200 shadow-2xs">
-                    <span class="text-xs font-bold text-[#E40000]">airtel <span class="font-normal text-[10px]">money</span></span>
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-600"></span>
+                    <span class="text-xs font-bold text-emerald-800">Buy with Escrow</span>
                 </div>
 
                 {{-- Cash on Delivery Badge --}}
@@ -239,7 +218,7 @@
                     <svg class="w-3 h-3 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
                     </svg>
-                    <span class="text-[10px] font-semibold">Cash / Card on Delivery</span>
+                    <span class="text-[10px] font-semibold">Payment on Delivery</span>
                 </div>
             </div>
         </div>

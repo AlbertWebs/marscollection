@@ -252,11 +252,8 @@
                                         <label for="payment_method" class="block text-sm font-medium text-gray-700 mb-1">Payment Method *</label>
                                         <select id="payment_method" name="payment_method" required onchange="updateCheckoutAction()"
                                                 class="w-full px-3 py-3 md:py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm bg-white">
-                                            <option value="mpesa" @selected(old('payment_method', 'mpesa') === 'mpesa')>Lipa Na M-Pesa (STK Push)</option>
-                                            <option value="econfirm" @selected(old('payment_method') === 'econfirm')>Hosted checkout (M-Pesa via eConfirm)</option>
-                                            <option value="cash_on_delivery" @selected(old('payment_method') === 'cash_on_delivery')>Cash / Card on Delivery (Nairobi)</option>
-                                            <option value="credit_card" @selected(old('payment_method') === 'credit_card')>Credit / Debit Card (Visa / Mastercard)</option>
-                                            <option value="bank_transfer" @selected(old('payment_method') === 'bank_transfer')>Bank Transfer / Airtel Money</option>
+                                            <option value="econfirm" @selected(old('payment_method', 'econfirm') === 'econfirm')>Buy with Escrow</option>
+                                            <option value="cash_on_delivery" @selected(old('payment_method') === 'cash_on_delivery')>Payment on Delivery</option>
                                         </select>
                                         <p id="payment-method-hint" class="mt-2 text-xs leading-5 text-stone-500">Continue to a secure M-Pesa payment step. Your order is only placed after payment is confirmed.</p>
                                     </div>
@@ -313,15 +310,12 @@ function updateCheckoutAction() {
     const hint = document.getElementById('payment-method-hint');
     if (!button || !hint) return;
 
-    if (method === 'mpesa') {
-        button.textContent = 'Continue to M-Pesa';
-        hint.textContent = 'Continue to a secure M-Pesa payment step. Your order is only placed after payment is confirmed.';
-    } else if (method === 'econfirm') {
+    if (method === 'econfirm') {
         button.textContent = 'Continue to secure checkout';
-        hint.textContent = 'Pay securely in eConfirm’s hosted checkout. We confirm payment before processing your order.';
+        hint.textContent = 'Pay securely through escrow. We confirm funding before processing your order.';
     } else {
-        button.textContent = 'Place Order';
-        hint.textContent = 'Your order details will be submitted for confirmation.';
+        button.textContent = 'Place order';
+        hint.textContent = 'Pay for your order when it is delivered.';
     }
 }
 

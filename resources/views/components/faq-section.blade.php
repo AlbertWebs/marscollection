@@ -166,12 +166,11 @@
                      x-transition:leave-end="opacity-0 transform -translate-y-2"
                      class="px-6 pb-4">
                     <p class="text-gray-600 leading-relaxed">
-                        We accept cash on delivery for all orders. This allows you to pay when you receive your 
-                        order, ensuring a secure and convenient shopping experience. Payment is collected by our 
-                        delivery team upon successful delivery of your items.
+                        Choose Buy with Escrow to pay securely through eConfirm, or select Payment on Delivery
+                        and pay our delivery team when your items arrive.
                     </p>
                 </div>
             </div>
         </div>
     </div>
-</section> 
+</section>

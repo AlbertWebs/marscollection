@@ -8,7 +8,7 @@
         <div class="mt-5 overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm">
             <div class="flex flex-col gap-2 border-b border-stone-200 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-7">
                 <div>
-                    <h1 class="text-xl font-bold text-stone-900">Secure checkout</h1>
+                    <h1 class="text-xl font-bold text-stone-900">Buy with Escrow</h1>
                     <p class="mt-1 text-sm text-stone-600">Order {{ $payment->order->order_number }} · KES {{ number_format((float) $payment->amount) }}</p>
                 </div>
                 <span class="inline-flex w-fit items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-800">Hosted securely by eConfirm</span>

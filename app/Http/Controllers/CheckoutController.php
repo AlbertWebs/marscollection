@@ -25,7 +25,7 @@ class CheckoutController extends Controller
             'customer_phone' => 'required|string|max:20',
             'customer_city' => 'required|string|max:255',
             'delivery_address' => 'required|string|max:1000',
-            'payment_method' => 'required|in:mpesa,econfirm,cash_on_delivery,credit_card,bank_transfer',
+            'payment_method' => 'required|in:econfirm,cash_on_delivery',
             'notes' => 'nullable|string|max:1000',
         ]);
 
@@ -313,7 +313,7 @@ class CheckoutController extends Controller
                 'reason' => $exception->getMessage(),
             ]);
 
-            return redirect()->route('cart.index')->with('error', 'We could not start secure checkout. Your cart is still available; please try again.');
+            return redirect()->route('cart.index')->with('error', 'We could not start Buy with Escrow. Your cart is still available; please try again.');
         }
     }
 

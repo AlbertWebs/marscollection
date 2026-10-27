@@ -40,7 +40,7 @@ class EconfirmService
             ]);
 
         if (!$transaction->successful() || !($transactionId = $transaction->json('data.id'))) {
-            throw new RuntimeException('eConfirm could not create the escrow transaction.');
+            throw new RuntimeException($this->responseFailure($transaction, 'create escrow'));
         }
 
         return [
@@ -64,8 +64,11 @@ class EconfirmService
 
         $checkoutUrl = $response->json('data.checkout_url');
         $secret = $response->json('data.checkout_secret');
-        if (!$response->successful() || !$checkoutUrl || !$secret || !$this->isTrustedCheckoutUrl($checkoutUrl)) {
-            throw new RuntimeException('eConfirm did not return a valid hosted checkout session.');
+        if (!$response->successful() || !$checkoutUrl || !$secret) {
+            throw new RuntimeException($this->responseFailure($response, 'create checkout session'));
+        }
+        if (!$this->isTrustedCheckoutUrl($checkoutUrl)) {
+            throw new RuntimeException('eConfirm returned a checkout URL outside the trusted eConfirm domain.');
         }
 
         return [
@@ -84,7 +87,7 @@ class EconfirmService
             ->get($baseUrl . '/transactions/' . rawurlencode($transactionId));
 
         if (!$response->successful() || !is_array($response->json('data'))) {
-            throw new RuntimeException('eConfirm transaction status could not be verified.');
+            throw new RuntimeException($this->responseFailure($response, 'get transaction status'));
         }
 
         return $response->json('data');
@@ -97,5 +100,21 @@ class EconfirmService
 
         return ($parts['scheme'] ?? '') === 'https'
             && ($host === 'econfirm.co.ke' || str_ends_with($host, '.econfirm.co.ke'));
+    }
+
+    private function responseFailure($response, string $operation): string
+    {
+        $message = $response->json('message');
+        $errors = $response->json('errors');
+        $details = is_string($message) ? $message : '';
+
+        if (!$details && is_array($errors)) {
+            $details = collect($errors)
+                ->map(fn ($value, $key) => $key . ': ' . (is_array($value) ? implode(', ', $value) : (string) $value))
+                ->implode('; ');
+        }
+
+        return 'eConfirm could not ' . $operation . ' (HTTP ' . $response->status() . ')'
+            . ($details ? ': ' . substr($details, 0, 300) : '.');
     }
 }
