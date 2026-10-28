@@ -285,8 +285,8 @@
                                         <label for="payment_method" class="mb-1 block text-xs font-semibold text-gray-600">Payment method *</label>
                                         <select id="payment_method" name="payment_method" required onchange="updateCheckoutAction()"
                                                 class="w-full rounded-lg border-gray-300 bg-white px-3 py-2.5 text-sm focus:border-amber-500 focus:ring-amber-500">
-                                            <option value="econfirm" @selected(old('payment_method', session('checkout_form.payment_method', 'econfirm')) === 'econfirm')>Buy with Escrow</option>
-                                            <option value="cash_on_delivery" @selected(old('payment_method', session('checkout_form.payment_method')) === 'cash_on_delivery')>Payment on Delivery</option>
+                                            <option value="econfirm" @selected(old('payment_method', session('checkout_form.payment_method', 'cash_on_delivery')) === 'econfirm')>Buy with Escrow</option>
+                                            <option value="cash_on_delivery" @selected(old('payment_method', session('checkout_form.payment_method', 'cash_on_delivery')) === 'cash_on_delivery')>Payment on Delivery</option>
                                         </select>
                                         <p id="payment-method-hint" class="mt-1.5 text-[11px] leading-4 text-stone-500">Pay securely through escrow. We confirm funding before processing your order.</p>
                                     </div>
