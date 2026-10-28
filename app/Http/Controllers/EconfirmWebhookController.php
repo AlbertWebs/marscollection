@@ -37,22 +37,32 @@ class EconfirmWebhookController extends Controller
             ->first();
 
         abort_unless($payment && $payment->order, 404, 'Payment not found.');
-        $encryptedSecret = (string) data_get($payment->metadata, 'econfirm_webhook_secret_encrypted', '');
-        abort_unless($encryptedSecret !== '', 401, 'Webhook secret is unavailable.');
-
-        try {
-            $webhookSecret = Crypt::decryptString($encryptedSecret);
-        } catch (Throwable) {
-            abort(401, 'Webhook secret is invalid.');
-        }
-
         $timestampValue = $request->header('X-eConfirm-Timestamp');
         abort_unless(is_numeric($timestampValue), 401, 'Webhook timestamp is invalid.');
         $timestamp = (int) $timestampValue;
         abort_unless($timestamp > 0 && abs(now()->timestamp - $timestamp) <= 300, 401, 'Webhook timestamp has expired.');
 
-        $expectedSignature = 'sha256=' . hash_hmac('sha256', $timestamp . '.' . $rawBody, $webhookSecret);
-        abort_unless(hash_equals($expectedSignature, (string) $request->header('X-eConfirm-Signature')), 401, 'Webhook signature is invalid.');
+        $encryptedSecrets = array_filter(array_merge(
+            [(string) data_get($payment->metadata, 'econfirm_webhook_secret_encrypted', '')],
+            (array) data_get($payment->metadata, 'econfirm_previous_webhook_secrets_encrypted', [])
+        ));
+        abort_unless($encryptedSecrets !== [], 401, 'Webhook secret is unavailable.');
+
+        $providedSignature = (string) $request->header('X-eConfirm-Signature');
+        $signatureValid = false;
+        foreach ($encryptedSecrets as $encryptedSecret) {
+            try {
+                $webhookSecret = Crypt::decryptString((string) $encryptedSecret);
+                $expectedSignature = 'sha256=' . hash_hmac('sha256', $timestamp . '.' . $rawBody, $webhookSecret);
+                if (hash_equals($expectedSignature, $providedSignature)) {
+                    $signatureValid = true;
+                    break;
+                }
+            } catch (Throwable) {
+                continue;
+            }
+        }
+        abort_unless($signatureValid, 401, 'Webhook signature is invalid.');
 
         $amount = $data['amount_kes'] ?? null;
         $currency = strtoupper((string) ($data['currency'] ?? ''));

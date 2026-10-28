@@ -50,12 +50,16 @@ class EconfirmService
         ];
     }
 
-    public function createCheckoutSession(string $transactionId, string $returnUrl, string $merchantReference, string $webhookUrl): array
+    public function createCheckoutSession(string $transactionId, string $returnUrl, string $merchantReference, string $webhookUrl, ?string $idempotencySuffix = null): array
     {
         $baseUrl = rtrim(config('services.econfirm.base_url'), '/');
+        $idempotencyKey = 'order:' . $merchantReference . ':transaction:' . $transactionId . ':checkout-v2';
+        if ($idempotencySuffix !== null && $idempotencySuffix !== '') {
+            $idempotencyKey .= ':' . $idempotencySuffix;
+        }
         $response = Http::withToken(config('services.econfirm.api_key'))
             ->acceptJson()
-            ->withHeaders(['Idempotency-Key' => 'order:' . $merchantReference . ':transaction:' . $transactionId . ':checkout-v2'])
+            ->withHeaders(['Idempotency-Key' => $idempotencyKey])
             ->timeout(25)
             ->post($baseUrl . '/checkout/sessions', [
                 'transaction_id' => $transactionId,

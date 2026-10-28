@@ -300,19 +300,8 @@ class CheckoutController extends Controller
                 ]);
             }
 
-            $returnUrl = route('checkout.econfirm.complete', $payment->public_id);
-            $webhookUrl = route('webhooks.econfirm.checkout');
-            if (!str_starts_with($returnUrl, 'https://') || !str_starts_with($webhookUrl, 'https://')) {
-                throw new \RuntimeException('The eConfirm return and webhook URLs must use HTTPS. Configure APP_URL with the registered HTTPS website URL.');
-            }
-
             try {
-                $checkoutSession = $econfirm->createCheckoutSession(
-                    $payment->provider_request_id,
-                    $returnUrl,
-                    $payment->order->order_number,
-                    $webhookUrl
-                );
+                $checkoutSession = $this->checkoutSessionFor($request, $payment, $econfirm);
             } catch (EconfirmTransactionNotFoundException) {
                 // A pending local payment may reference an escrow created under a previous business API key.
                 // Create a fresh escrow under the currently configured account and retry checkout once.
@@ -326,18 +315,9 @@ class CheckoutController extends Controller
                     'metadata' => $metadata,
                 ]);
 
-                $checkoutSession = $econfirm->createCheckoutSession(
-                    $payment->provider_request_id,
-                    $returnUrl,
-                    $payment->order->order_number,
-                    $webhookUrl
-                );
+                $request->session()->forget('econfirm_checkout_session.' . $payment->public_id);
+                $checkoutSession = $this->checkoutSessionFor($request, $payment->fresh(), $econfirm);
             }
-            $metadata = $payment->metadata ?? [];
-            $metadata['econfirm_webhook_secret_encrypted'] = Crypt::encryptString($checkoutSession['webhook_secret']);
-            $payment->update(['metadata' => $metadata]);
-            unset($checkoutSession['webhook_secret']);
-            $request->session()->put('econfirm_checkout_session.' . $payment->public_id, $checkoutSession);
 
             return redirect()->route('checkout.econfirm.show', $payment->public_id);
         } catch (Throwable $exception) {
@@ -351,16 +331,21 @@ class CheckoutController extends Controller
         }
     }
 
-    public function showEconfirmCheckout(Request $request, string $publicId)
+    public function showEconfirmCheckout(Request $request, string $publicId, EconfirmService $econfirm)
     {
         $payment = Payment::with('order')->where('public_id', $publicId)->where('provider', 'econfirm')->firstOrFail();
         $this->authorizeEconfirmPayment($request, $payment);
         if ($payment->status === 'succeeded') {
             return redirect()->route('checkout.success', $payment->order);
         }
-        $checkout = $request->session()->get('econfirm_checkout_session.' . $payment->public_id);
+        try {
+            $checkout = $this->checkoutSessionFor($request, $payment, $econfirm);
+        } catch (Throwable $exception) {
+            Log::warning('Expired eConfirm checkout session could not be renewed.', [
+                'payment_id' => $payment->id,
+                'reason' => $exception->getMessage(),
+            ]);
 
-        if (!$checkout) {
             return redirect()->route('checkout.econfirm.complete', $payment->public_id);
         }
 
@@ -439,6 +424,60 @@ class CheckoutController extends Controller
                 || (auth()->check() && $payment->user_id === auth()->id()),
             404
         );
+    }
+
+    private function checkoutSessionFor(Request $request, Payment $payment, EconfirmService $econfirm): array
+    {
+        $sessionKey = 'econfirm_checkout_session.' . $payment->public_id;
+        $checkout = $request->session()->get($sessionKey);
+        $expiresAt = data_get($checkout, 'expires_at');
+
+        try {
+            $notExpired = filled($expiresAt) && \Illuminate\Support\Carbon::parse($expiresAt)->isFuture();
+        } catch (Throwable) {
+            $notExpired = false;
+        }
+
+        if (is_array($checkout)
+            && filled(data_get($checkout, 'checkout_url'))
+            && filled(data_get($checkout, 'checkout_secret'))
+            && filled(data_get($checkout, 'idempotency_suffix'))
+            && hash_equals((string) $payment->provider_request_id, (string) data_get($checkout, 'transaction_id'))
+            && $notExpired) {
+            return $checkout;
+        }
+
+        $returnUrl = route('checkout.econfirm.complete', $payment->public_id);
+        $webhookUrl = route('webhooks.econfirm.checkout');
+        if (!str_starts_with($returnUrl, 'https://') || !str_starts_with($webhookUrl, 'https://')) {
+            throw new \RuntimeException('The eConfirm return and webhook URLs must use HTTPS. Configure APP_URL with the registered HTTPS website URL.');
+        }
+
+        $idempotencySuffix = 'attempt-' . Str::uuid();
+        $checkout = $econfirm->createCheckoutSession(
+            (string) $payment->provider_request_id,
+            $returnUrl,
+            $payment->order->order_number,
+            $webhookUrl,
+            $idempotencySuffix
+        );
+
+        $metadata = $payment->metadata ?? [];
+        $previousWebhookSecrets = (array) ($metadata['econfirm_previous_webhook_secrets_encrypted'] ?? []);
+        $previousWebhookSecret = (string) ($metadata['econfirm_webhook_secret_encrypted'] ?? '');
+        if ($previousWebhookSecret !== '') {
+            $previousWebhookSecrets[] = $previousWebhookSecret;
+        }
+        $metadata['econfirm_previous_webhook_secrets_encrypted'] = array_values(array_unique(array_filter($previousWebhookSecrets)));
+        $metadata['econfirm_webhook_secret_encrypted'] = Crypt::encryptString($checkout['webhook_secret']);
+        $payment->update(['metadata' => $metadata]);
+
+        unset($checkout['webhook_secret']);
+        $checkout['transaction_id'] = (string) $payment->provider_request_id;
+        $checkout['idempotency_suffix'] = $idempotencySuffix;
+        $request->session()->put($sessionKey, $checkout);
+
+        return $checkout;
     }
 
     public function showMpesaCheckout(Request $request)
