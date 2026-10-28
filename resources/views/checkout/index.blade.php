@@ -148,12 +148,12 @@
                         <h2 class="text-xl font-semibold text-gray-900 mb-4">Payment Method</h2>
                         <div class="space-y-3">
                             <label class="flex items-center">
-                                <input type="radio" name="payment_method" value="econfirm" checked
+                                <input type="radio" name="payment_method" value="econfirm" @checked(old('payment_method') === 'econfirm')
                                        class="h-4 w-4 text-amber-600 focus:ring-amber-500 border-gray-300">
                                 <span class="ml-3 text-sm text-gray-700">Buy with Escrow</span>
                             </label>
                             <label class="flex items-center">
-                                <input type="radio" name="payment_method" value="cash_on_delivery"
+                                <input type="radio" name="payment_method" value="cash_on_delivery" @checked(old('payment_method', 'cash_on_delivery') === 'cash_on_delivery')
                                        class="h-4 w-4 text-amber-600 focus:ring-amber-500 border-gray-300">
                                 <span class="ml-3 text-sm text-gray-700">Payment on Delivery</span>
                             </label>
