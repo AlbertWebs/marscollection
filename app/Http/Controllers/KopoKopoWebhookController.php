@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\Payment;
 use App\Services\KopoKopoService;
+use App\Mail\OrderPlacedCustomer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class KopoKopoWebhookController extends Controller
 {
@@ -49,9 +51,9 @@ class KopoKopoWebhookController extends Controller
                 return response()->json(['message' => 'Payment details do not match.'], 422);
             }
 
-            DB::transaction(function () use ($payment, $resource) {
+            $newlyFundedOrder = DB::transaction(function () use ($payment, $resource) {
                 $locked = Payment::whereKey($payment->id)->lockForUpdate()->first();
-                if (in_array($locked->status, ['succeeded', 'refunded'], true)) return;
+                if (in_array($locked->status, ['succeeded', 'refunded'], true)) return null;
 
                 $locked->update([
                     'status' => 'succeeded',
@@ -65,7 +67,20 @@ class KopoKopoWebhookController extends Controller
                 if ($locked->cart_session_id) {
                     Cart::where('session_id', $locked->cart_session_id)->delete();
                 }
+
+                return $locked->order?->fresh();
             });
+
+            if ($newlyFundedOrder) {
+                try {
+                    Mail::to($newlyFundedOrder->customer_email)->send(new OrderPlacedCustomer($newlyFundedOrder));
+                } catch (\Throwable $exception) {
+                    Log::warning('Failed to send KopoKopo order confirmation email.', [
+                        'order_id' => $newlyFundedOrder->id,
+                        'exception' => $exception->getMessage(),
+                    ]);
+                }
+            }
         } elseif (in_array($providerStatus, ['failed', 'failure'], true)) {
             $payment->update([
                 'status' => 'failed',

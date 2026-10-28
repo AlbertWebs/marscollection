@@ -15,6 +15,7 @@ use App\Http\Controllers\EconfirmWebhookController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\TrafficController;
+use App\Http\Controllers\OrderTrackingController;
 
 // Home and general pages
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -75,6 +76,8 @@ Route::get('/checkout/mpesa', [CheckoutController::class, 'showMpesaCheckout'])-
 Route::post('/checkout/mpesa/stk', [CheckoutController::class, 'prepareMpesaStk'])->name('checkout.mpesa.stk');
 Route::get('/checkout/mpesa/status/{publicId}', [CheckoutController::class, 'showMpesaStatus'])->name('checkout.mpesa.status');
 Route::get('/checkout/success/{order}', [CheckoutController::class, 'success'])->name('checkout.success');
+Route::get('/track-order', [OrderTrackingController::class, 'create'])->name('orders.track');
+Route::post('/track-order', [OrderTrackingController::class, 'lookup'])->middleware('throttle:10,1')->name('orders.track.lookup');
 Route::post('/payments/kopokopo/callback', [KopoKopoWebhookController::class, 'incomingPayment'])->name('payments.kopokopo.callback');
 
 // Appointment booking belonged to the previous service business. Direct users to shoe support.

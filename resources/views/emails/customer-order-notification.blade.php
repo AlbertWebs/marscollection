@@ -29,6 +29,7 @@
         <div class="content">
             <p>Hi {{ $order->customer_name }},</p>
             <p>Your order <strong>{{ $order->order_number }}</strong> has been successfully placed. We will notify you again once it has shipped!</p>
+            <p><a href="{{ route('orders.track', ['order_number' => $order->order_number]) }}">Track your order status</a> using your order number. No account is required.</p>
             
             <div class="details-box">
                 <div class="detail-row">

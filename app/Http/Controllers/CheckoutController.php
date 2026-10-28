@@ -182,13 +182,19 @@ class CheckoutController extends Controller
             \Illuminate\Support\Facades\Log::error('Failed to send order WhatsApp notification: ' . $e->getMessage());
         }
 
+        $request->session()->put('checkout_success_order_id', $order->id);
         return redirect()->route('checkout.success', $order)->with('success', 'Order placed successfully!');
     }
 
     public function success(Order $order)
     {
-        // Just show a generic success message without any order details
-        return view('checkout.success');
+        abort_unless(
+            (int) request()->session()->get('checkout_success_order_id') === (int) $order->id
+                || (auth()->check() && $order->user_id === auth()->id()),
+            404
+        );
+
+        return view('checkout.success', compact('order'));
     }
 
     private function startEconfirmCheckout(Request $request, array $details, $cartItems)
@@ -364,6 +370,7 @@ class CheckoutController extends Controller
             $request->session()->forget('pending_econfirm_payment_id');
             $request->session()->forget('econfirm_checkout_session.' . $payment->public_id);
             $request->session()->forget('checkout_form');
+            $request->session()->put('checkout_success_order_id', $payment->order_id);
 
             return redirect()->route('checkout.success', $payment->order);
         }

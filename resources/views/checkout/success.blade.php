@@ -18,6 +18,7 @@
             <p class="text-gray-500 text-sm max-w-sm mx-auto">
                 Thank you for your order. We've received it and will begin processing right away.
             </p>
+            <p class="mt-4 text-sm text-gray-500">Order number: <strong class="text-gray-900">{{ $order->order_number }}</strong></p>
         </div>
 
         {{-- What's next --}}
@@ -34,7 +35,7 @@
                 </div>
                 <div class="flex items-start gap-4">
                     <span class="w-6 h-6 rounded-sm bg-amber-50 text-amber-600 text-xs font-bold flex items-center justify-center shrink-0">3</span>
-                    <p class="text-sm text-gray-600">Track your order status in your account dashboard</p>
+                    <p class="text-sm text-gray-600">Check your order status any time with your order number—no account needed.</p>
                 </div>
             </div>
         </div>
@@ -63,6 +64,11 @@
                 Contact Support
             </a>
         </div>
+
+        <a href="{{ route('orders.track', ['order_number' => $order->order_number]) }}"
+           class="mt-3 block w-full border border-amber-600 bg-white py-3 text-center text-sm font-semibold text-amber-700 transition-colors hover:bg-amber-50">
+            Track this order
+        </a>
 
     </div>
 </div>
